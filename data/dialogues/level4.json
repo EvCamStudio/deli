@@ -1,0 +1,51 @@
+{
+  "npc_nelayan": [
+    {
+      "id": "start",
+      "speaker": "Pak Nelayan",
+      "text": "Hei anak muda, hati-hati! Banyak sampah di pesisir ini. Mangrove di sini sudah banyak yang hilang.",
+      "choices": [
+        { "text": "Aku bisa bantu tanam mangrove!", "next": "plant", "effect": { "river_health": 3 } },
+        { "text": "Mengapa mangrove penting?", "next": "why", "effect": {} }
+      ]
+    },
+    {
+      "id": "why",
+      "speaker": "Pak Nelayan",
+      "text": "Mangrove itu rumahnya ikan-ikan kecil, pelindung pantai dari ombak. Kalau hilang, ikan berkurang dan pantai terkikis.",
+      "choices": [
+        { "text": "Aku mengerti. Aku akan tanam!", "next": "plant", "effect": { "river_health": 3 } }
+      ]
+    },
+    {
+      "id": "plant",
+      "speaker": "Pak Nelayan",
+      "text": "Bagus! Titik tanam mangrove ditandai di tepian. Dekati dan tekan tombol aksi. Ada juga satwa kecil yang terjerat sampah, tolong bebaskan!",
+      "choices": [
+        { "text": "Siap!", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Pak Nelayan",
+      "text": "Kami nelayan selalu bergantung pada laut yang sehat. Terima kasih sudah peduli!",
+      "choices": []
+    }
+  ],
+  "npc_penjaga_sungai": [
+    {
+      "id": "boss_intro",
+      "speaker": "Penjaga Sungai",
+      "text": "Lihatlah! Gunungan Sampah menghalangi muara. Kita harus bersihkan dengan memilah sampah ke tong yang benar!",
+      "choices": [
+        { "text": "Ayo kita hadapi bersama!", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Penjaga Sungai",
+      "text": "Lompat ke platform dan tangkap sampah yang jatuh. Ketuk tong yang sesuai jenisnya. Ayo!",
+      "choices": []
+    }
+  ]
+}

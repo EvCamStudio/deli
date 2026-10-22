@@ -1,0 +1,243 @@
+[gd_scene load_steps=16 format=3 uid="uid://level2_desa"]
+
+[ext_resource type="Script" path="res://scripts/level_2_desa.gd" id="1_l2"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box.tscn" id="4_db"]
+[ext_resource type="PackedScene" path="res://scenes/ui/touch_controls.tscn" id="5_tc"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="6_pm"]
+[ext_resource type="Script" path="res://scripts/water_area.gd" id="7_water"]
+[ext_resource type="Script" path="res://scripts/npc.gd" id="8_npc"]
+[ext_resource type="Script" path="res://scripts/level_gate.gd" id="9_gate"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bank_left"]
+size = Vector2(300, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_riverbed"]
+size = Vector2(1320, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bank_right"]
+size = Vector2(300, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_water_vol"]
+size = Vector2(1320, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bridge"]
+size = Vector2(110, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
+size = Vector2(16, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(30, 50)
+
+[node name="Level2Desa" type="Node2D"]
+script = ExtResource("1_l2")
+
+[node name="Sky" type="ColorRect" parent="."]
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 1960.0
+offset_bottom = 120.0
+color = Color(0.45, 0.72, 0.95, 1)
+
+[node name="VillageBg" type="ColorRect" parent="."]
+offset_left = -40.0
+offset_top = 80.0
+offset_right = 1960.0
+offset_bottom = 220.0
+color = Color(0.35, 0.6, 0.25, 1)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(240, 135)
+limit_left = 0
+limit_top = 0
+limit_right = 1920
+limit_bottom = 270
+position_smoothing_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(60, 210)
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("4_db")]
+
+[node name="TouchControls" parent="." instance=ExtResource("5_tc")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("6_pm")]
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="BankLeft" type="StaticBody2D" parent="Platforms"]
+position = Vector2(150, 245)
+
+[node name="Col" type="CollisionShape2D" parent="Platforms/BankLeft"]
+shape = SubResource("RectangleShape2D_bank_left")
+
+[node name="Vis" type="ColorRect" parent="Platforms/BankLeft"]
+offset_left = -150.0
+offset_top = -25.0
+offset_right = 150.0
+offset_bottom = 25.0
+color = Color(0.4, 0.3, 0.15, 1)
+
+[node name="Riverbed" type="StaticBody2D" parent="Platforms"]
+position = Vector2(960, 263)
+
+[node name="Col" type="CollisionShape2D" parent="Platforms/Riverbed"]
+shape = SubResource("RectangleShape2D_riverbed")
+
+[node name="Vis" type="ColorRect" parent="Platforms/Riverbed"]
+offset_left = -660.0
+offset_top = -12.0
+offset_right = 660.0
+offset_bottom = 12.0
+color = Color(0.28, 0.24, 0.18, 1)
+
+[node name="BankRight" type="StaticBody2D" parent="Platforms"]
+position = Vector2(1770, 245)
+
+[node name="Col" type="CollisionShape2D" parent="Platforms/BankRight"]
+shape = SubResource("RectangleShape2D_bank_right")
+
+[node name="Vis" type="ColorRect" parent="Platforms/BankRight"]
+offset_left = -150.0
+offset_top = -25.0
+offset_right = 150.0
+offset_bottom = 25.0
+color = Color(0.4, 0.3, 0.15, 1)
+
+[node name="Bridge1" type="StaticBody2D" parent="Platforms"]
+position = Vector2(600, 210)
+
+[node name="Col" type="CollisionShape2D" parent="Platforms/Bridge1"]
+shape = SubResource("RectangleShape2D_bridge")
+
+[node name="Vis" type="ColorRect" parent="Platforms/Bridge1"]
+offset_left = -55.0
+offset_top = -7.0
+offset_right = 55.0
+offset_bottom = 7.0
+color = Color(0.55, 0.35, 0.2, 1)
+
+[node name="Bridge2" type="StaticBody2D" parent="Platforms"]
+position = Vector2(1250, 210)
+
+[node name="Col" type="CollisionShape2D" parent="Platforms/Bridge2"]
+shape = SubResource("RectangleShape2D_bridge")
+
+[node name="Vis" type="ColorRect" parent="Platforms/Bridge2"]
+offset_left = -55.0
+offset_top = -7.0
+offset_right = 55.0
+offset_bottom = 7.0
+color = Color(0.55, 0.35, 0.2, 1)
+
+[node name="SungaiDeliWater" type="Area2D" parent="."]
+position = Vector2(960, 250)
+script = ExtResource("7_water")
+
+[node name="WaterCol" type="CollisionShape2D" parent="SungaiDeliWater"]
+shape = SubResource("RectangleShape2D_water_vol")
+
+[node name="WaterBody" type="ColorRect" parent="SungaiDeliWater"]
+offset_left = -660.0
+offset_top = -13.0
+offset_right = 660.0
+offset_bottom = 13.0
+color = Color(0.2, 0.5, 0.78, 0.65)
+
+[node name="WaterSurface" type="ColorRect" parent="SungaiDeliWater"]
+offset_left = -660.0
+offset_top = -13.0
+offset_right = 660.0
+offset_bottom = -10.0
+color = Color(0.65, 0.9, 1, 0.85)
+
+[node name="NPCs" type="Node2D" parent="."]
+
+[node name="PakTani" type="CharacterBody2D" parent="NPCs"]
+position = Vector2(240, 220)
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("8_npc")
+npc_key = "npc_pak_tani"
+level_id = 2
+
+[node name="NpcCol" type="CollisionShape2D" parent="NPCs/PakTani"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="NpcVis" type="ColorRect" parent="NPCs/PakTani"]
+offset_left = -8.0
+offset_top = -24.0
+offset_right = 8.0
+offset_bottom = 0.0
+color = Color(0.7, 0.5, 0.2, 1)
+
+[node name="NpcLabel" type="Label" parent="NPCs/PakTani"]
+offset_left = -25.0
+offset_top = -34.0
+offset_right = 25.0
+offset_bottom = -24.0
+text = "Pak Tani"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 6
+theme_override_colors/font_color = Color(1, 1, 0.5, 1)
+
+[node name="IbuSari" type="CharacterBody2D" parent="NPCs"]
+position = Vector2(1250, 203)
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("8_npc")
+npc_key = "npc_ibu_sari"
+level_id = 2
+
+[node name="NpcCol" type="CollisionShape2D" parent="NPCs/IbuSari"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="NpcVis" type="ColorRect" parent="NPCs/IbuSari"]
+offset_left = -8.0
+offset_top = -24.0
+offset_right = 8.0
+offset_bottom = 0.0
+color = Color(0.8, 0.4, 0.5, 1)
+
+[node name="NpcLabel" type="Label" parent="NPCs/IbuSari"]
+offset_left = -25.0
+offset_top = -34.0
+offset_right = 25.0
+offset_bottom = -24.0
+text = "Ibu Sari"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 6
+theme_override_colors/font_color = Color(1, 1, 0.5, 1)
+
+[node name="LevelGate" type="Area2D" parent="."]
+position = Vector2(1860, 220)
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("9_gate")
+
+[node name="GateCol" type="CollisionShape2D" parent="LevelGate"]
+position = Vector2(0, -15)
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="GateVis" type="ColorRect" parent="LevelGate"]
+offset_left = -15.0
+offset_top = -40.0
+offset_right = 15.0
+offset_bottom = 10.0
+color = Color(0.9, 0.7, 0.2, 0.6)
+
+[node name="Label" type="Label" parent="LevelGate"]
+offset_left = -25.0
+offset_top = -52.0
+offset_right = 25.0
+offset_bottom = -40.0
+text = "→ Lanjut"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 7
+theme_override_colors/font_color = Color(1, 1, 0.3, 1)

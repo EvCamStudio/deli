@@ -1,0 +1,43 @@
+{
+  "npc_penjaga_hutan": [
+    {
+      "id": "start",
+      "speaker": "Penjaga Hutan",
+      "text": "Hei, anak muda! Kau lihat mata air di sana? Dulu airnya deras, sekarang hampir kering...",
+      "choices": [
+        { "text": "Kenapa bisa begitu?", "next": "why", "effect": {} },
+        { "text": "Aku bisa bantu!", "next": "help", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "why",
+      "speaker": "Penjaga Hutan",
+      "text": "Pohon-pohon di sini banyak yang ditebang. Tanpa akar pohon, air hujan langsung hanyut, tidak meresap jadi mata air.",
+      "choices": [
+        { "text": "Aku akan tanam pohon lagi!", "next": "plant_prompt", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "help",
+      "speaker": "Penjaga Hutan",
+      "text": "Bagus! Pertama, kita perlu sambungkan saluran air bambu yang rusak. Tekan tombol aksi di dekat potongan bambu untuk memutarnya!",
+      "choices": [
+        { "text": "Siap!", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "plant_prompt",
+      "speaker": "Penjaga Hutan",
+      "text": "Lihat titik-titik tanah yang terbuka? Dekati dan tekan tombol aksi untuk menanam bibit pohon di sana.",
+      "choices": [
+        { "text": "Baik, aku mengerti.", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Penjaga Hutan",
+      "text": "Terima kasih! Setiap pohon yang kau tanam adalah warisan untuk generasi mendatang.",
+      "choices": []
+    }
+  ]
+}

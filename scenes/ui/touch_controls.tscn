@@ -1,0 +1,116 @@
+[gd_scene load_steps=5 format=3 uid="uid://touch_controls"]
+
+[ext_resource type="Script" path="res://scripts/touch_controls.gd" id="1_tc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_btn36"]
+size = Vector2(36, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_btn36_jump"]
+size = Vector2(36, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pause"]
+size = Vector2(24, 20)
+
+[node name="TouchControls" type="CanvasLayer"]
+layer = 10
+script = ExtResource("1_tc")
+
+[node name="LeftButtons" type="HBoxContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -54.0
+offset_right = 96.0
+offset_bottom = -12.0
+theme_override_constants/separation = 8
+
+[node name="LeftBtn" type="TouchScreenButton" parent="LeftButtons"]
+shape = SubResource("RectangleShape2D_btn36")
+action = "move_left"
+passby_press = true
+
+[node name="LeftBg" type="ColorRect" parent="LeftButtons/LeftBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+color = Color(0, 0, 0, 0.4)
+
+[node name="LeftLabel" type="Label" parent="LeftButtons/LeftBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+text = "◀"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="RightBtn" type="TouchScreenButton" parent="LeftButtons"]
+position = Vector2(44, 0)
+shape = SubResource("RectangleShape2D_btn36")
+action = "move_right"
+passby_press = true
+
+[node name="RightBg" type="ColorRect" parent="LeftButtons/RightBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+color = Color(0, 0, 0, 0.4)
+
+[node name="RightLabel" type="Label" parent="LeftButtons/RightBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+text = "▶"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 14
+
+[node name="RightButtons" type="HBoxContainer" parent="."]
+anchors_preset = 9
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -96.0
+offset_top = -54.0
+offset_right = -12.0
+offset_bottom = -12.0
+theme_override_constants/separation = 8
+
+[node name="ActionBtn" type="TouchScreenButton" parent="RightButtons"]
+shape = SubResource("RectangleShape2D_btn36")
+action = "action"
+passby_press = false
+
+[node name="ActionBg" type="ColorRect" parent="RightButtons/ActionBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+color = Color(0.8, 0.5, 0.1, 0.5)
+
+[node name="Label" type="Label" parent="RightButtons/ActionBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+text = "B"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(1, 0.9, 0.3, 1)
+
+[node name="JumpBtn" type="TouchScreenButton" parent="RightButtons"]
+position = Vector2(44, 0)
+shape = SubResource("RectangleShape2D_btn36_jump")
+action = "jump"
+passby_press = false
+
+[node name="JumpBg" type="ColorRect" parent="RightButtons/JumpBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+color = Color(0.1, 0.6, 0.3, 0.5)
+
+[node name="JumpLabel" type="Label" parent="RightButtons/JumpBtn"]
+offset_right = 36.0
+offset_bottom = 36.0
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.4, 1, 0.6, 1)

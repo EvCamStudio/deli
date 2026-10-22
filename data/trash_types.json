@@ -1,0 +1,11 @@
+[
+  { "id": "botol_plastik", "label": "Botol Plastik", "category": "plastik", "sprite": "botol_plastik.png" },
+  { "id": "kantong_plastik", "label": "Kantong Plastik", "category": "plastik", "sprite": "kantong_plastik.png" },
+  { "id": "styrofoam", "label": "Styrofoam", "category": "plastik", "sprite": "styrofoam.png" },
+  { "id": "sisa_makanan", "label": "Sisa Makanan", "category": "organik", "sprite": "sisa_makanan.png" },
+  { "id": "daun_kering", "label": "Daun Kering", "category": "organik", "sprite": "daun_kering.png" },
+  { "id": "karton", "label": "Karton", "category": "organik", "sprite": "karton.png" },
+  { "id": "baterai", "label": "Baterai Bekas", "category": "b3", "sprite": "baterai.png" },
+  { "id": "kaleng_cat", "label": "Kaleng Cat", "category": "b3", "sprite": "kaleng_cat.png" },
+  { "id": "lampu_bekas", "label": "Lampu Bekas", "category": "b3", "sprite": "lampu_bekas.png" }
+]

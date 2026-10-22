@@ -1,0 +1,322 @@
+[gd_scene load_steps=3 format=3 uid="uid://main_menu"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Script" path="res://scripts/knowledge_card_popup.gd" id="2_card_popup"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_main_menu")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.12, 0.25, 1)
+
+[node name="RiverStripe" type="ColorRect" parent="Background"]
+layout_mode = 0
+offset_left = 0.0
+offset_top = 170.0
+offset_right = 480.0
+offset_bottom = 230.0
+color = Color(0.1, 0.35, 0.6, 0.6)
+
+[node name="RiverAnimPlayer" type="AnimationPlayer" parent="Background"]
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -110.0
+offset_right = 110.0
+theme_override_constants/separation = 6
+
+[node name="TitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "DELI REWIND"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.4, 0.9, 1.0, 1)
+
+[node name="SubtitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Selamatkan Sungai Deli"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.7, 0.9, 0.8, 1)
+
+[node name="Spacer" type="Control" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 16)
+
+[node name="Buttons" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="StartBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "▶  Mulai"
+theme_override_font_sizes/font_size = 11
+
+[node name="ContinueBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "⏸  Lanjut"
+theme_override_font_sizes/font_size = 11
+
+[node name="LevelSelectBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "🗺  Pilih Level"
+theme_override_font_sizes/font_size = 11
+
+[node name="CardsBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "📚  Koleksi Kartu"
+theme_override_font_sizes/font_size = 11
+
+[node name="SettingsBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "⚙  Pengaturan"
+theme_override_font_sizes/font_size = 11
+
+[node name="QuitBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 32)
+text = "✕  Keluar"
+theme_override_font_sizes/font_size = 11
+
+[node name="SettingsPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -100.0
+offset_right = 120.0
+offset_bottom = 100.0
+visible = false
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "Pengaturan"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 12
+
+[node name="BGMRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="BGMLabel" type="Label" parent="SettingsPanel/VBox/BGMRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+text = "BGM"
+
+[node name="BGMSlider" type="HSlider" parent="SettingsPanel/VBox/BGMRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFXRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="SFXLabel" type="Label" parent="SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+text = "SFX"
+
+[node name="SFXSlider" type="HSlider" parent="SettingsPanel/VBox/SFXRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="TouchSizeRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="TouchSizeLabel" type="Label" parent="SettingsPanel/VBox/TouchSizeRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+text = "Tombol"
+
+[node name="TouchSizeOptions" type="OptionButton" parent="SettingsPanel/VBox/TouchSizeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OpacityRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="OpacityLabel" type="Label" parent="SettingsPanel/VBox/OpacityRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+text = "Opacity"
+
+[node name="OpacitySlider" type="HSlider" parent="SettingsPanel/VBox/OpacityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.2
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="VibrationRow" type="HBoxContainer" parent="SettingsPanel/VBox"]
+layout_mode = 2
+
+[node name="VibrationLabel" type="Label" parent="SettingsPanel/VBox/VibrationRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(60, 0)
+text = "Getar"
+
+[node name="VibrationCheck" type="CheckButton" parent="SettingsPanel/VBox/VibrationRow"]
+layout_mode = 2
+button_pressed = true
+
+[node name="CloseBtn" type="Button" parent="SettingsPanel/VBox"]
+layout_mode = 2
+text = "Tutup"
+
+[node name="LevelSelectPanel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -140.0
+offset_top = -105.0
+offset_right = 140.0
+offset_bottom = 105.0
+visible = false
+
+[node name="VBox" type="VBoxContainer" parent="LevelSelectPanel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "🗺  Pilih Level"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 12
+theme_override_colors/font_color = Color(0.4, 0.9, 1, 1)
+
+[node name="L1Btn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Level 1: Hulu Sungai (Tanam Pohon)"
+theme_override_font_sizes/font_size = 8
+
+[node name="L2Btn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Level 2: Desa Pertanian (Edukasi Pupuk)"
+theme_override_font_sizes/font_size = 8
+
+[node name="L3Btn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Level 3: Kota Medan (Bantaran & Drainase)"
+theme_override_font_sizes/font_size = 8
+
+[node name="L4Btn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Level 4: Hilir & Muara (Pesisir Mangrove)"
+theme_override_font_sizes/font_size = 8
+
+[node name="L5Btn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Level 5: Epilog (Kondisi Akhir Sungai Deli)"
+theme_override_font_sizes/font_size = 8
+
+[node name="CloseSelectBtn" type="Button" parent="LevelSelectPanel/VBox"]
+layout_mode = 2
+text = "Tutup ✕"
+theme_override_font_sizes/font_size = 8
+
+[node name="KnowledgeCardPopup" type="CanvasLayer" parent="."]
+script = ExtResource("2_card_popup")
+
+[node name="Panel" type="PanelContainer" parent="KnowledgeCardPopup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -80.0
+offset_right = 120.0
+offset_bottom = 80.0
+visible = false
+
+[node name="VBox" type="VBoxContainer" parent="KnowledgeCardPopup/Panel"]
+layout_mode = 2
+
+[node name="CategoryLabel" type="Label" parent="KnowledgeCardPopup/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.5, 0.9, 0.6, 1)
+
+[node name="TitleLabel" type="Label" parent="KnowledgeCardPopup/Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+autowrap_mode = 3
+
+[node name="TextLabel" type="RichTextLabel" parent="KnowledgeCardPopup/Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 50)
+bbcode_enabled = true
+fit_content = true
+theme_override_font_sizes/normal_font_size = 9
+
+[node name="CloseBtn" type="Button" parent="KnowledgeCardPopup/Panel/VBox"]
+layout_mode = 2
+text = "Tutup ✕"
+
+[node name="CollectionPanel" type="PanelContainer" parent="KnowledgeCardPopup"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -130.0
+offset_top = -110.0
+offset_right = 130.0
+offset_bottom = 110.0
+visible = false
+
+[node name="VBox" type="VBoxContainer" parent="KnowledgeCardPopup/CollectionPanel"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="KnowledgeCardPopup/CollectionPanel/VBox"]
+layout_mode = 2
+text = "📚 Koleksi Kartu"
+horizontal_alignment = 1
+
+[node name="CloseBtn" type="Button" parent="KnowledgeCardPopup/CollectionPanel/VBox"]
+layout_mode = 2
+text = "Tutup"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="KnowledgeCardPopup/CollectionPanel"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 150)
+
+[node name="CardList" type="VBoxContainer" parent="KnowledgeCardPopup/CollectionPanel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
