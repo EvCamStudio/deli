@@ -4,14 +4,20 @@ extends Control
 class_name SettingsMenu
 
 # ─── Node ─────────────────────────────────────────────────────────────────────
-@onready var bgm_slider: HSlider = $VBox/BGMRow/BGMSlider
-@onready var sfx_slider: HSlider = $VBox/SFXRow/SFXSlider
-@onready var touch_size_options: OptionButton = $VBox/TouchSizeRow/TouchSizeOptions
-@onready var opacity_slider: HSlider = $VBox/OpacityRow/OpacitySlider
-@onready var vibration_check: CheckButton = $VBox/VibrationRow/VibrationCheck
-@onready var close_btn: Button = $VBox/CloseBtn
+@onready var bgm_slider: HSlider = $Panel/VBox/BGMRow/BGMSlider
+@onready var sfx_slider: HSlider = $Panel/VBox/SFXRow/SFXSlider
+@onready var touch_size_options: OptionButton = $Panel/VBox/TouchSizeRow/TouchSizeOptions
+@onready var opacity_slider: HSlider = $Panel/VBox/OpacityRow/OpacitySlider
+@onready var vibration_check: CheckButton = $Panel/VBox/VibrationRow/VibrationCheck
+@onready var close_btn: Button = $Panel/VBox/CloseBtn
 
 func _ready() -> void:
+	# Isi pilihan ukuran tombol bila scene belum mengisinya.
+	if touch_size_options.item_count == 0:
+		touch_size_options.add_item("Kecil")
+		touch_size_options.add_item("Sedang")
+		touch_size_options.add_item("Besar")
+
 	# Muat nilai saat ini
 	bgm_slider.value = SettingsManager.get_setting("bgm_volume", 0.8)
 	sfx_slider.value = SettingsManager.get_setting("sfx_volume", 1.0)

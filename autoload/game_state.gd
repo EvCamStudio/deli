@@ -22,6 +22,13 @@ var levels_completed: Array[int] = []
 var collected_cards: Array[String] = []
 var choices: Dictionary = {}  # pilihan dialog yang memengaruhi ending
 
+# ─── Life-sim ringan (pilot Citampi) ─────────────────────────────────────────
+var rupiah: int = 0
+var day: int = 1
+var minutes: int = 8 * 60
+var energy: float = 100.0
+var relationships: Dictionary = {}
+
 const SAVE_PATH: String = "user://save.json"
 
 # ─── Fungsi Publik ────────────────────────────────────────────────────────────
@@ -86,7 +93,12 @@ func save_game() -> void:
 		"current_level": current_level,
 		"levels_completed": levels_completed,
 		"collected_cards": collected_cards,
-		"choices": choices
+		"choices": choices,
+		"rupiah": rupiah,
+		"day": day,
+		"minutes": minutes,
+		"energy": energy,
+		"relationships": relationships
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -115,6 +127,11 @@ func load_game() -> bool:
 	levels_completed = data.get("levels_completed", [])
 	collected_cards = data.get("collected_cards", [])
 	choices = data.get("choices", {})
+	rupiah = int(data.get("rupiah", 0))
+	day = int(data.get("day", 1))
+	minutes = int(data.get("minutes", 8 * 60))
+	energy = float(data.get("energy", 100.0))
+	relationships = data.get("relationships", {})
 	return true
 
 func has_save() -> bool:
@@ -129,6 +146,11 @@ func reset() -> void:
 	levels_completed = []
 	collected_cards = []
 	choices = {}
+	rupiah = 0
+	day = 1
+	minutes = 8 * 60
+	energy = 100.0
+	relationships = {}
 
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 

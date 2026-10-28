@@ -20,7 +20,7 @@
     {
       "id": "plant",
       "speaker": "Pak Nelayan",
-      "text": "Bagus! Titik tanam mangrove ditandai di tepian. Dekati dan tekan tombol aksi. Ada juga satwa kecil yang terjerat sampah, tolong bebaskan!",
+      "text": "Bagus! Titik tanam mangrove ditandai di tepian pantai. Dekati dan tekan tombol aksi. Ada juga sampah yang tersangkut di akar mangrove, tolong bersihkan!",
       "choices": [
         { "text": "Siap!", "next": "end", "effect": {} }
       ]
@@ -44,7 +44,7 @@
     {
       "id": "end",
       "speaker": "Penjaga Sungai",
-      "text": "Lompat ke platform dan tangkap sampah yang jatuh. Ketuk tong yang sesuai jenisnya. Ayo!",
+      "text": "Susuri pesisir, pungut sampah yang berserakan, lalu pilah ke tong sesuai jenisnya. Ayo!",
       "choices": []
     }
   ]

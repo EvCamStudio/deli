@@ -1,0 +1,122 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/pilot_journal.gd" id="1_journal"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="2_pixel"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="3_dialog"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_dialog"]
+texture = ExtResource("3_dialog")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[node name="PauseMenu" type="CanvasLayer"]
+process_mode = 3
+layer = 30
+script = ExtResource("1_journal")
+
+[node name="Overlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.12, 0.1, 0.58)
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -138.0
+offset_right = 190.0
+offset_bottom = 138.0
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 22
+text = "JURNAL PERJALANAN"
+horizontal_alignment = 1
+
+[node name="Stats" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.35, 0.3, 0.24, 1)
+theme_override_font_sizes/font_size = 11
+text = "Kejernihan 20%   ·   Rp 0   ·   Hari 1"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="Panel/VBox"]
+layout_mode = 2
+
+[node name="ResumeBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Lanjutkan Perjalanan"
+
+[node name="SaveBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+text = "Simpan Progres"
+
+[node name="SaveHint" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.45, 0.25, 1)
+theme_override_font_sizes/font_size = 10
+text = "Progres tersimpan."
+horizontal_alignment = 1
+visible = false
+
+[node name="Settings" type="VBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 3
+
+[node name="BGM" type="HBoxContainer" parent="Panel/VBox/Settings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBox/Settings/BGM"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Musik"
+
+[node name="Slider" type="HSlider" parent="Panel/VBox/Settings/BGM"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFX" type="HBoxContainer" parent="Panel/VBox/Settings"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/VBox/Settings/SFX"]
+custom_minimum_size = Vector2(48, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "Efek"
+
+[node name="Slider" type="HSlider" parent="Panel/VBox/Settings/SFX"]
+layout_mode = 2
+size_flags_horizontal = 3
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="MenuBtn" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+text = "Kembali ke Menu Utama"

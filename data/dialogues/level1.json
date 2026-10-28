@@ -20,9 +20,9 @@
     {
       "id": "help",
       "speaker": "Penjaga Hutan",
-      "text": "Bagus! Pertama, kita perlu sambungkan saluran air bambu yang rusak. Tekan tombol aksi di dekat potongan bambu untuk memutarnya!",
+      "text": "Bagus! Titik tanam sudah kusiapkan di sekitar hutan. Dekati tanah bertanda, lalu tekan tombol aksi untuk menanam bibit pohon.",
       "choices": [
-        { "text": "Siap!", "next": "end", "effect": {} }
+        { "text": "Siap!", "next": "plant_prompt", "effect": {} }
       ]
     },
     {

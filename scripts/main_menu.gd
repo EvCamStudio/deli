@@ -49,12 +49,12 @@ func _ready() -> void:
 func _setup_level_select_buttons() -> void:
 	if not level_select_panel:
 		return
-	var l1 := get_node_or_null("LevelSelectPanel/VBox/L1Btn") as Button
-	var l2 := get_node_or_null("LevelSelectPanel/VBox/L2Btn") as Button
-	var l3 := get_node_or_null("LevelSelectPanel/VBox/L3Btn") as Button
-	var l4 := get_node_or_null("LevelSelectPanel/VBox/L4Btn") as Button
-	var l5 := get_node_or_null("LevelSelectPanel/VBox/L5Btn") as Button
-	var close_btn := get_node_or_null("LevelSelectPanel/VBox/CloseSelectBtn") as Button
+	var l1 := get_node_or_null("LevelSelectPanel/Panel/VBox/L1Btn") as Button
+	var l2 := get_node_or_null("LevelSelectPanel/Panel/VBox/L2Btn") as Button
+	var l3 := get_node_or_null("LevelSelectPanel/Panel/VBox/L3Btn") as Button
+	var l4 := get_node_or_null("LevelSelectPanel/Panel/VBox/L4Btn") as Button
+	var l5 := get_node_or_null("LevelSelectPanel/Panel/VBox/L5Btn") as Button
+	var close_btn := get_node_or_null("LevelSelectPanel/Panel/VBox/CloseSelectBtn") as Button
 
 	if l1: l1.pressed.connect(func(): _load_level(1))
 	if l2: l2.pressed.connect(func(): _load_level(2))

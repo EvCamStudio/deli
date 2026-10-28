@@ -4,6 +4,8 @@
 extends CharacterBody2D
 class_name NPC
 
+signal talked(npc_key: String)
+
 # ─── Export ───────────────────────────────────────────────────────────────────
 @export var npc_key: String = "npc_pedagang"   # Kunci di file JSON level
 @export var level_id: int = 3                  # Level tempat NPC ini berada
@@ -15,6 +17,7 @@ class_name NPC
 # ─── State ────────────────────────────────────────────────────────────────────
 var _dialogue_data: Array = []
 var _has_talked: bool = false
+var _in_dialogue: bool = false
 
 func _ready() -> void:
 	if exclaim:
@@ -35,11 +38,16 @@ func get_action_label() -> String:
 func interact() -> void:
 	if _dialogue_data.is_empty():
 		return
+	_in_dialogue = true
 	DialogueManager.start_dialogue(_dialogue_data)
 
 func show_exclaim(visible_state: bool) -> void:
 	exclaim.visible = visible_state
 
 func _on_dialogue_finished() -> void:
+	if not _in_dialogue:
+		return
+	_in_dialogue = false
 	_has_talked = true
 	exclaim.hide()
+	talked.emit(npc_key)

@@ -65,9 +65,9 @@ func _fade_in() -> void:
 
 func _level_suffix(level_id: int) -> String:
 	match level_id:
-		1: return "hulu"
-		2: return "desa"
-		3: return "kota"
-		4: return "hilir"
+		1: return "hulu_topdown"
+		2: return "desa_topdown"
+		3: return "kota_topdown"
+		4: return "hilir_topdown"
 		5: return "epilog"
-		_: return "hulu"
+		_: return "hulu_topdown"

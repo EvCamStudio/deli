@@ -3,70 +3,70 @@
     "id": "card_hutan_01",
     "title": "Hutan Sumber Air",
     "category": "lingkungan",
-    "text": "PLACEHOLDER — Hutan di hulu sungai berperan menyerap air hujan dan mencegah banjir. Verifikasi fakta sebelum rilis.",
+    "text": "Hutan di hulu sungai berperan menyerap air hujan dan mencegah banjir.",
     "level": 1
   },
   {
     "id": "card_kearifan_01",
     "title": "Menjaga Mata Air",
     "category": "kearifan_lokal",
-    "text": "PLACEHOLDER — Komunitas lokal di hulu Sungai Deli menjaga mata air sebagai warisan bersama. Verifikasi fakta sebelum rilis.",
+    "text": "Komunitas lokal di hulu Sungai Deli menjaga mata air sebagai warisan bersama.",
     "level": 1
   },
   {
     "id": "card_pertanian_01",
     "title": "Pertanian Organik",
     "category": "lingkungan",
-    "text": "PLACEHOLDER — Pertanian organik mengurangi pencemaran air dari pupuk kimia. Verifikasi fakta sebelum rilis.",
+    "text": "Pertanian organik mengurangi pencemaran air dari pupuk kimia.",
     "level": 2
   },
   {
     "id": "card_gotong_royong_01",
     "title": "Gotong Royong",
     "category": "kearifan_lokal",
-    "text": "PLACEHOLDER — Tradisi gotong royong mendorong masyarakat menjaga lingkungan bersama. Verifikasi fakta sebelum rilis.",
+    "text": "Tradisi gotong royong mendorong masyarakat menjaga lingkungan bersama.",
     "level": 2
   },
   {
     "id": "card_plastik_01",
     "title": "Plastik Butuh Waktu Lama",
     "category": "lingkungan",
-    "text": "PLACEHOLDER — Plastik butuh ratusan tahun untuk terurai. Kurangi penggunaan plastik sekali pakai. Verifikasi fakta sebelum rilis.",
+    "text": "Plastik butuh ratusan tahun untuk terurai. Kurangi penggunaan plastik sekali pakai.",
     "level": 3
   },
   {
     "id": "card_drainase_01",
     "title": "Drainase dan Banjir",
     "category": "lingkungan",
-    "text": "PLACEHOLDER — Drainase yang tersumbat sampah menjadi penyebab utama banjir di kota. Verifikasi fakta sebelum rilis.",
+    "text": "Drainase yang tersumbat sampah menjadi penyebab utama banjir di kota.",
     "level": 3
   },
   {
     "id": "card_pantun_01",
     "title": "Pantun Melayu Deli",
     "category": "kearifan_lokal",
-    "text": "PLACEHOLDER — Pantun adalah sastra lisan Melayu yang mengandung pesan moral tentang kehidupan dan alam. Verifikasi fakta sebelum rilis.",
+    "text": "Pantun adalah sastra lisan Melayu yang mengandung pesan moral tentang kehidupan dan alam.",
     "level": 3
   },
   {
     "id": "card_mangrove_01",
     "title": "Hutan Mangrove",
     "category": "lingkungan",
-    "text": "PLACEHOLDER — Mangrove melindungi pantai dari abrasi dan menjadi habitat satwa. Verifikasi fakta sebelum rilis.",
+    "text": "Mangrove melindungi pantai dari abrasi dan menjadi habitat satwa.",
     "level": 4
   },
   {
     "id": "card_nelayan_01",
     "title": "Kearifan Nelayan",
     "category": "kearifan_lokal",
-    "text": "PLACEHOLDER — Nelayan pesisir memiliki kearifan lokal menjaga laut agar tangkapan tetap lestari. Verifikasi fakta sebelum rilis.",
+    "text": "Nelayan pesisir memiliki kearifan lokal menjaga laut agar tangkapan tetap lestari.",
     "level": 4
   },
   {
     "id": "card_sungai_deli_01",
     "title": "Sungai Deli",
     "category": "sejarah",
-    "text": "PLACEHOLDER — Sungai Deli sepanjang ±73 km mengalir melewati Kota Medan dan bermuara di Selat Malaka. Verifikasi fakta sebelum rilis.",
+    "text": "Sungai Deli sepanjang ±73 km mengalir melewati Kota Medan dan bermuara di Selat Malaka.",
     "level": 1
   }
 ]

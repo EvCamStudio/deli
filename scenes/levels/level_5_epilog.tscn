@@ -1,7 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://level5_epilog"]
+[gd_scene load_steps=4 format=3 uid="uid://level5_epilog"]
 
 [ext_resource type="Script" path="res://scripts/ending_screen.gd" id="1_ending"]
-[ext_resource type="Script" path="res://scripts/knowledge_card_popup.gd" id="2_card"]
+[ext_resource type="PackedScene" path="res://scenes/ui/knowledge_card_popup.tscn" id="2_card"]
 
 [node name="Level5Epilog" type="Control"]
 layout_mode = 3
@@ -84,75 +84,4 @@ custom_minimum_size = Vector2(0, 28)
 text = "✕ Keluar"
 theme_override_font_sizes/font_size = 9
 
-[node name="KnowledgeCardPopup" type="CanvasLayer" parent="."]
-layer = 25
-script = ExtResource("2_card")
-
-[node name="Panel" type="PanelContainer" parent="KnowledgeCardPopup"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -120.0
-offset_top = -80.0
-offset_right = 120.0
-offset_bottom = 80.0
-visible = false
-
-[node name="VBox" type="VBoxContainer" parent="KnowledgeCardPopup/Panel"]
-layout_mode = 2
-
-[node name="CategoryLabel" type="Label" parent="KnowledgeCardPopup/Panel/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 8
-
-[node name="TitleLabel" type="Label" parent="KnowledgeCardPopup/Panel/VBox"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 11
-autowrap_mode = 3
-
-[node name="TextLabel" type="RichTextLabel" parent="KnowledgeCardPopup/Panel/VBox"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 50)
-bbcode_enabled = true
-fit_content = true
-theme_override_font_sizes/normal_font_size = 9
-
-[node name="CloseBtn" type="Button" parent="KnowledgeCardPopup/Panel/VBox"]
-layout_mode = 2
-text = "Tutup ✕"
-
-[node name="CollectionPanel" type="PanelContainer" parent="KnowledgeCardPopup"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -130.0
-offset_top = -110.0
-offset_right = 130.0
-offset_bottom = 110.0
-visible = false
-
-[node name="CVBox" type="VBoxContainer" parent="KnowledgeCardPopup/CollectionPanel"]
-layout_mode = 2
-
-[node name="CTitle" type="Label" parent="KnowledgeCardPopup/CollectionPanel/CVBox"]
-layout_mode = 2
-text = "📚 Koleksi Kartu"
-horizontal_alignment = 1
-
-[node name="CloseBtn" type="Button" parent="KnowledgeCardPopup/CollectionPanel/CVBox"]
-layout_mode = 2
-text = "Tutup"
-
-[node name="ScrollContainer" type="ScrollContainer" parent="KnowledgeCardPopup/CollectionPanel"]
-layout_mode = 2
-custom_minimum_size = Vector2(0, 150)
-
-[node name="CardList" type="VBoxContainer" parent="KnowledgeCardPopup/CollectionPanel/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
+[node name="KnowledgeCardPopup" parent="." instance=ExtResource("2_card")]

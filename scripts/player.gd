@@ -148,13 +148,21 @@ func _clear_interactable() -> void:
 func _update_animation() -> void:
 	if not is_on_floor():
 		if velocity.y < 0:
-			sprite.play("jump")
+			_play_anim("jump")
 		else:
-			sprite.play("fall")
+			_play_anim("fall", "jump")
 	elif abs(velocity.x) > 5.0:
-		sprite.play("walk")
+		_play_anim("walk", "run")
 	else:
-		sprite.play("idle")
+		_play_anim("idle")
+
+func _play_anim(name: String, fallback: String = "") -> void:
+	if sprite == null or sprite.sprite_frames == null:
+		return
+	if sprite.sprite_frames.has_animation(name):
+		sprite.play(name)
+	elif not fallback.is_empty() and sprite.sprite_frames.has_animation(fallback):
+		sprite.play(fallback)
 
 # ─── Dialog ───────────────────────────────────────────────────────────────────
 
