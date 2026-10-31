@@ -36,7 +36,11 @@ func change_level(level_id: int) -> void:
 	var path: String = "res://scenes/levels/level_%d_%s.tscn" % [level_id, _level_suffix(level_id)]
 	change_scene(path)
 
-## Kembali ke main menu.
+## Pindah ke scene intro dramatis.
+func go_to_intro() -> void:
+	change_scene("res://scenes/intro/intro_dramatic.tscn")
+
+## Pindah ke main menu.
 func go_to_main_menu() -> void:
 	change_scene("res://scenes/main_menu/main_menu.tscn")
 

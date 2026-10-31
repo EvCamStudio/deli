@@ -66,7 +66,10 @@ func _setup_level_select_buttons() -> void:
 # ─── Tombol ───────────────────────────────────────────────────────────────────
 
 func _on_start() -> void:
-	_load_level(1)
+	# Mulai permainan baru: reset state lalu jalankan intro dramatis
+	# (Bab 1 Jakarta input nama → Bab 2 PHK → Bab 3 Reunion Medan)
+	GameState.reset()
+	SceneManager.go_to_intro()
 
 func _load_level(id: int) -> void:
 	GameState.reset()

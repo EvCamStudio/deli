@@ -22,6 +22,12 @@ var levels_completed: Array[int] = []
 var collected_cards: Array[String] = []
 var choices: Dictionary = {}  # pilihan dialog yang memengaruhi ending
 
+# ─── Intro & Scriptwriting (baru) ──────────────────────────────────────────────
+var player_name: String = ""
+var debt_amount: int = 500000  # utang awal (contoh: 500 ribu rupiah untuk pemulihan warung)
+var parent_shop_status: String = "rusak"  # "rusak" → "pulih" → "hidup"
+var quest_progress: int = 0
+
 # ─── Life-sim ringan (pilot Citampi) ─────────────────────────────────────────
 var rupiah: int = 0
 var day: int = 1
@@ -98,7 +104,11 @@ func save_game() -> void:
 		"day": day,
 		"minutes": minutes,
 		"energy": energy,
-		"relationships": relationships
+		"relationships": relationships,
+		"player_name": player_name,
+		"debt_amount": debt_amount,
+		"parent_shop_status": parent_shop_status,
+		"quest_progress": quest_progress
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -132,6 +142,10 @@ func load_game() -> bool:
 	minutes = int(data.get("minutes", 8 * 60))
 	energy = float(data.get("energy", 100.0))
 	relationships = data.get("relationships", {})
+	player_name = str(data.get("player_name", ""))
+	debt_amount = int(data.get("debt_amount", 500000))
+	parent_shop_status = str(data.get("parent_shop_status", "rusak"))
+	quest_progress = int(data.get("quest_progress", 0))
 	return true
 
 func has_save() -> bool:
@@ -151,6 +165,10 @@ func reset() -> void:
 	minutes = 8 * 60
 	energy = 100.0
 	relationships = {}
+	player_name = ""
+	debt_amount = 500000
+	parent_shop_status = "rusak"
+	quest_progress = 0
 
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 
