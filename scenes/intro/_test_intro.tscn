@@ -1,0 +1,141 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/intro/_test_stage.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="3_panel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_story"]
+texture = ExtResource("3_panel")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_portrait"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.945098, 0.921569, 0.85098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.278431, 0.188235, 0.117647, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[node name="IntroDramatic" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_script")
+
+[node name="ChapterRoot" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="StoryPanel" type="PanelContainer" parent="MarginContainer/VBox"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_story")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBox/StoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="PortraitFrame" type="PanelContainer" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_portrait")
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/VBox/StoryPanel/VBox/HBox/PortraitFrame"]
+custom_minimum_size = Vector2(80, 100)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
+[node name="DialogueBox" type="RichTextLabel" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.227451, 0.164706, 0.117647, 1)
+theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/bold_font_size = 12
+theme_override_font_sizes/italics_font_size = 11
+bbcode_enabled = true
+text = "Intro Dramatis — Deli Rewind"
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
+layout_mode = 2
+alignment = 2
+theme_override_constants/separation = 8
+
+[node name="NameInput" type="LineEdit" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.227451, 0.164706, 0.117647, 1)
+theme_override_colors/font_placeholder_color = Color(0.451, 0.369, 0.29, 1)
+theme_override_colors/caret_color = Color(0.227451, 0.164706, 0.117647, 1)
+placeholder_text = "Ketik namamu, lalu tekan Enter..."
+max_length = 20
+
+[node name="NextBtn" type="Button" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
+custom_minimum_size = Vector2(200, 32)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+text = "Lanjut →"
+
+[node name="FadeRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0)
+mouse_filter = 2

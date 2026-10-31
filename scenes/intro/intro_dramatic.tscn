@@ -1,20 +1,34 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/intro/intro_dramatic.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/ui/menu_bg.png" id="2_bg"]
-[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_pixel"]
-[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="4_panel"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="3_panel"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBox_story"]
-texture = ExtResource("4_panel")
+texture = ExtResource("3_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
 texture_margin_bottom = 16.0
-content_margin_left = 22.0
+content_margin_left = 20.0
 content_margin_top = 16.0
-content_margin_right = 22.0
+content_margin_right = 20.0
 content_margin_bottom = 16.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_portrait"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.945098, 0.921569, 0.85098, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.278431, 0.188235, 0.117647, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="IntroDramatic" type="Control"]
 layout_mode = 3
@@ -25,7 +39,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_script")
 
-[node name="Background" type="TextureRect" parent="."]
+[node name="ChapterRoot" type="Control" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -33,19 +47,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-texture = ExtResource("2_bg")
-expand_mode = 1
-stretch_mode = 6
-
-[node name="Tint" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.0470588, 0.0862745, 0.0627451, 0.45)
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -54,51 +55,83 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 40
-theme_override_constants/margin_top = 14
-theme_override_constants/margin_right = 40
-theme_override_constants/margin_bottom = 14
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
 
 [node name="VBox" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
-[node name="Header" type="Label" parent="MarginContainer/VBox"]
+[node name="Spacer" type="Control" parent="MarginContainer/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(1, 0.972549, 0.905882, 1)
-theme_override_colors/font_shadow_color = Color(0.117647, 0.0705882, 0.0392157, 0.85)
-theme_override_constants/shadow_offset_x = 2
-theme_override_constants/shadow_offset_y = 2
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 24
-text = "DELI REWIND"
-horizontal_alignment = 1
+size_flags_vertical = 3
+mouse_filter = 2
 
-[node name="DialogueBox" type="RichTextLabel" parent="MarginContainer/VBox"]
+[node name="StoryPanel" type="PanelContainer" parent="MarginContainer/VBox"]
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBox_story")
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBox/StoryPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="HBox" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="PortraitFrame" type="PanelContainer" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_portrait")
+
+[node name="Portrait" type="TextureRect" parent="MarginContainer/VBox/StoryPanel/VBox/HBox/PortraitFrame"]
+custom_minimum_size = Vector2(96, 120)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DialogueBox" type="RichTextLabel" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.227451, 0.164706, 0.117647, 1)
 theme_override_font_sizes/normal_font_size = 14
 theme_override_font_sizes/bold_font_size = 14
 theme_override_font_sizes/italics_font_size = 13
-theme_override_styles/normal = SubResource("StyleBox_story")
+theme_override_constants/line_separation = 4
 bbcode_enabled = true
 text = "Intro Dramatis — Deli Rewind"
+fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="NameInput" type="LineEdit" parent="MarginContainer/VBox"]
-custom_minimum_size = Vector2(0, 34)
+[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
 layout_mode = 2
-placeholder_text = "Ketik namamu di sini, lalu tekan Enter..."
-alignment = 1
+alignment = 2
+theme_override_constants/separation = 12
+
+[node name="NameInput" type="LineEdit" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_colors/font_color = Color(0.227451, 0.164706, 0.117647, 1)
+theme_override_colors/font_placeholder_color = Color(0.451, 0.369, 0.29, 1)
+theme_override_colors/caret_color = Color(0.227451, 0.164706, 0.117647, 1)
+theme_override_font_sizes/font_size = 14
+placeholder_text = "Ketik namamu, lalu tekan Enter..."
 max_length = 20
 
-[node name="NextBtn" type="Button" parent="MarginContainer/VBox"]
-custom_minimum_size = Vector2(220, 40)
+[node name="NextBtn" type="Button" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
+custom_minimum_size = Vector2(200, 36)
 layout_mode = 2
-size_flags_horizontal = 4
-text = "Lanjut →"
+size_flags_horizontal = 8
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 14
+text = "Lanjut"
 
 [node name="FadeRect" type="ColorRect" parent="."]
 layout_mode = 1
