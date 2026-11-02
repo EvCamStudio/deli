@@ -152,7 +152,7 @@ func _refresh_interactable() -> void:
 	if text.is_empty():
 		action_label.visible = false
 		return
-	action_label.text = "[E] %s" % text
+	action_label.text = text
 	action_label.visible = true
 
 # ─── Dialog ───────────────────────────────────────────────────────────────────

@@ -4,6 +4,7 @@ class_name PortraitDialogue
 
 @onready var tap_area: Button = $TapArea
 @onready var panel: PanelContainer = $Root/Panel
+@onready var backdrop: Panel = $Root/Backdrop
 @onready var portrait: TextureRect = $Root/Portrait
 @onready var name_plate: PanelContainer = $Root/NamePlate
 @onready var speaker_label: Label = $Root/NamePlate/Speaker
@@ -35,6 +36,7 @@ var _current_node: Dictionary = {}
 
 func _ready() -> void:
 	panel.hide()
+	backdrop.hide()
 	portrait.hide()
 	name_plate.hide()
 	tap_area.hide()
@@ -46,6 +48,7 @@ func show_node(node: Dictionary) -> void:
 	_clear_choices()
 	panel.show()
 	portrait.show()
+	backdrop.show()
 	name_plate.show()
 	tap_area.show()
 
@@ -54,6 +57,7 @@ func show_node(node: Dictionary) -> void:
 
 	var full_text: String = str(node.get("text", ""))
 	var choices: Array = node.get("choices", [])
+	_fit_panel(full_text, choices.size())
 	_has_choices = not choices.is_empty()
 	continue_hint.visible = not _has_choices
 	_start_typewriter(full_text)
@@ -62,6 +66,20 @@ func show_node(node: Dictionary) -> void:
 		await _wait_typewriter_done()
 		if is_inside_tree():
 			_show_choices(choices)
+
+func _fit_panel(text: String, choice_count: int) -> void:
+	# Perkirakan tinggi kotak dari jumlah baris teks + pilihan, supaya tidak
+	# menyisakan ruang kosong besar saat dialog pendek.
+	var est_lines: int = maxi(1, int(ceil(text.length() / 64.0)))
+	var content_h: int = 18 + est_lines * 22 + 4
+	if choice_count > 0:
+		content_h += choice_count * 24
+	else:
+		content_h += 14
+	var panel_top: float = -float(clampi(content_h, 80, 130))
+	panel.offset_top = panel_top
+	name_plate.offset_top = panel_top - 32.0
+	name_plate.offset_bottom = panel_top - 4.0
 
 func _update_portrait(node: Dictionary) -> void:
 	var key: String = str(node.get("portrait", ""))
@@ -74,8 +92,10 @@ func _update_portrait(node: Dictionary) -> void:
 	if ResourceLoader.exists(path):
 		portrait.texture = load(path)
 		portrait.show()
+		backdrop.show()
 	else:
 		portrait.hide()
+		backdrop.hide()
 
 	var tween := create_tween()
 	portrait.modulate.a = 0.0
@@ -110,9 +130,9 @@ func _show_choices(choices: Array) -> void:
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
 		btn.text = "  %s" % str(choice.get("text", ""))
-		btn.custom_minimum_size = Vector2(0, 28)
+		btn.custom_minimum_size = Vector2(0, 24)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
-		btn.add_theme_font_size_override("font_size", 12)
+		btn.add_theme_font_size_override("font_size", 11)
 		var idx: int = i
 		btn.pressed.connect(func(): _on_choice_selected(idx))
 		choices_container.add_child(btn)
@@ -154,6 +174,7 @@ func _on_choice_selected(index: int) -> void:
 
 func hide_box() -> void:
 	panel.hide()
+	backdrop.hide()
 	portrait.hide()
 	name_plate.hide()
 	tap_area.hide()

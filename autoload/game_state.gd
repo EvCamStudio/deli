@@ -7,6 +7,10 @@ extends Node
 signal river_health_changed(new_value: float)
 signal card_unlocked(card_id: String)
 signal level_completed(level_id: int)
+signal energy_changed(new_value: float)
+signal rupiah_changed(new_value: int)
+signal day_changed(new_day: int)
+signal zone_opened(zone: String)
 
 # ─── State ────────────────────────────────────────────────────────────────────
 var river_health: float = 20.0 :
@@ -29,11 +33,26 @@ var parent_shop_status: String = "rusak"  # "rusak" → "pulih" → "hidup"
 var quest_progress: int = 0
 
 # ─── Life-sim ringan (pilot Citampi) ─────────────────────────────────────────
-var rupiah: int = 0
-var day: int = 1
+var rupiah: int = 0 :
+	set(value):
+		rupiah = value
+		rupiah_changed.emit(rupiah)
+
+var day: int = 1 :
+	set(value):
+		day = value
+		day_changed.emit(day)
+
 var minutes: int = 8 * 60
-var energy: float = 100.0
+
+var energy: float = 100.0 :
+	set(value):
+		energy = clamp(value, 0.0, 100.0)
+		energy_changed.emit(energy)
+
 var relationships: Dictionary = {}
+var zone_unlocked: Dictionary = {"hulu": true, "desa": false, "kota": false, "hilir": false}
+var debt_paid: int = 0  # track cicilan yang sudah dibayar
 
 const SAVE_PATH: String = "user://save.json"
 
@@ -88,6 +107,45 @@ func get_total_trash() -> int:
 		total += trash_collected[key]
 	return total
 
+## Pay debt (cicilan)
+func pay_debt(amount: int) -> bool:
+	if rupiah < amount:
+		return false
+	rupiah -= amount
+	debt_paid += amount
+	debt_amount -= amount
+	if debt_amount < 0:
+		debt_amount = 0
+	return true
+
+## Unlock zone by river health threshold
+func unlock_zone(zone: String) -> void:
+	if zone not in zone_unlocked:
+		return
+	if zone_unlocked[zone]:
+		return
+	zone_unlocked[zone] = true
+	zone_opened.emit(zone)
+
+## Spend energy
+func spend_energy(amount: float) -> bool:
+	if energy < amount:
+		return false
+	energy -= amount
+	return true
+
+## Restore energy
+func restore_energy(amount: float) -> void:
+	energy += amount
+
+## Sleep (reset day, restore energy, reset daily quests)
+func sleep() -> void:
+	day += 1
+	energy = 100.0
+	minutes = 8 * 60
+	# Trigger daily event atau quest reset via QuestManager
+	save_game()
+
 # ─── Save / Load ──────────────────────────────────────────────────────────────
 
 func save_game() -> void:
@@ -108,7 +166,9 @@ func save_game() -> void:
 		"player_name": player_name,
 		"debt_amount": debt_amount,
 		"parent_shop_status": parent_shop_status,
-		"quest_progress": quest_progress
+		"quest_progress": quest_progress,
+		"zone_unlocked": zone_unlocked,
+		"debt_paid": debt_paid
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:
@@ -146,6 +206,8 @@ func load_game() -> bool:
 	debt_amount = int(data.get("debt_amount", 500000))
 	parent_shop_status = str(data.get("parent_shop_status", "rusak"))
 	quest_progress = int(data.get("quest_progress", 0))
+	zone_unlocked = data.get("zone_unlocked", {"hulu": true, "desa": false, "kota": false, "hilir": false})
+	debt_paid = int(data.get("debt_paid", 0))
 	return true
 
 func has_save() -> bool:
@@ -169,6 +231,8 @@ func reset() -> void:
 	debt_amount = 500000
 	parent_shop_status = "rusak"
 	quest_progress = 0
+	zone_unlocked = {"hulu": true, "desa": false, "kota": false, "hilir": false}
+	debt_paid = 0
 
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 

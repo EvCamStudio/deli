@@ -1,52 +1,249 @@
-[gd_scene load_steps=2 format=3 uid="uid://hud_scene"]
+[gd_scene load_steps=10 format=3 uid="uid://hud_scene"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/droplet.png" id="2_droplet"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/clock.png" id="3_clock"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/coin.png" id="4_coin"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/leaf.png" id="5_leaf"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/home.png" id="6_home"]
+[ext_resource type="Texture2D" path="res://assets/ui/icons/card.png" id="7_card"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_paper.png" id="8_paper"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="9_pixel"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_card"]
+texture = ExtResource("8_paper")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
 
 [node name="HUD" type="CanvasLayer"]
+process_mode = 3
 layer = 5
 script = ExtResource("1_hud")
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 10
 
-[node name="TopBar" type="HBoxContainer" parent="SafeMargin"]
+[node name="Root" type="Control" parent="SafeMargin"]
 layout_mode = 2
-size_flags_vertical = 1
-theme_override_constants/separation = 8
 
-[node name="RiverBar" type="ProgressBar" parent="SafeMargin/TopBar"]
+[node name="TopBar" type="HBoxContainer" parent="SafeMargin/Root"]
+layout_mode = 0
+anchor_right = 1.0
+offset_bottom = 30.0
+theme_override_constants/separation = 5
+
+[node name="ClarityCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
-custom_minimum_size = Vector2(80, 12)
 size_flags_vertical = 4
-min_value = 0.0
-max_value = 100.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/ClarityCard"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("2_droplet")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
+custom_minimum_size = Vector2(62, 9)
+layout_mode = 2
+size_flags_vertical = 4
 value = 20.0
 show_percentage = false
 
-[node name="RiverLabel" type="Label" parent="SafeMargin/TopBar"]
+[node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
+custom_minimum_size = Vector2(30, 0)
 layout_mode = 2
-custom_minimum_size = Vector2(70, 0)
-text = "Kejernihan: 20%"
-theme_override_font_sizes/font_size = 8
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = "20%"
 
-[node name="TrashLabel" type="Label" parent="SafeMargin/TopBar"]
-layout_mode = 2
-custom_minimum_size = Vector2(55, 0)
-text = "Sampah: 0"
-theme_override_font_sizes/font_size = 8
-
-[node name="MissionLabel" type="Label" parent="SafeMargin/TopBar"]
+[node name="Spacer" type="Control" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = ""
-theme_override_font_sizes/font_size = 8
-clip_text = true
 
-[node name="PauseBtn" type="Button" parent="SafeMargin/TopBar"]
+[node name="TimeCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
-custom_minimum_size = Vector2(24, 18)
-text = "🏠"
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/TimeCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/TimeCard/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("3_clock")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DayLabel" type="Label" parent="SafeMargin/Root/TopBar/TimeCard/Row"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_pixel")
 theme_override_font_sizes/font_size = 10
+text = "Hari 1 · 08:00"
+
+[node name="MoneyCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/MoneyCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/MoneyCard/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("4_coin")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="RupiahLabel" type="Label" parent="SafeMargin/Root/TopBar/MoneyCard/Row"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = "Rp 0"
+
+[node name="EnergyCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/EnergyCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/EnergyCard/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("5_leaf")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="EnergyLabel" type="Label" parent="SafeMargin/Root/TopBar/EnergyCard/Row"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = "100"
+
+[node name="DebtCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/DebtCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/DebtCard/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("6_home")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="DebtLabel" type="Label" parent="SafeMargin/Root/TopBar/DebtCard/Row"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = "Rp 500rb"
+
+[node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
+custom_minimum_size = Vector2(30, 28)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "Jurnal / Menu"
+icon = ExtResource("7_card")
+expand_icon = true
+icon_max_width = 18
+
+[node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
+visible = false
+layout_mode = 0
+offset_top = 36.0
+offset_right = 232.0
+offset_bottom = 84.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="MissionTitle" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 9
+text = "MISI"
+
+[node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = ""
+autowrap_mode = 3
+
+[node name="CarryLabel" type="Label" parent="SafeMargin/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -120.0
+offset_top = -36.0
+offset_right = 120.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
+theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = "Dibawa: 0 sampah"
+horizontal_alignment = 1
+
+[node name="Toast" type="PanelContainer" parent="SafeMargin/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -150.0
+offset_top = -76.0
+offset_right = 150.0
+offset_bottom = -42.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Label" type="Label" parent="SafeMargin/Root/Toast"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 11
+text = "Tersimpan!"
+horizontal_alignment = 1

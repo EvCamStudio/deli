@@ -131,7 +131,7 @@ func _advance() -> void:
 	_last_advance_frame = frame
 
 	stage += 1
-	if stage > 3:
+	if stage >= 3:
 		_fade_and_go()
 	else:
 		_update_stage()
@@ -142,11 +142,12 @@ func _fade_and_go() -> void:
 	_leaving = true
 	next_btn.disabled = true
 	name_input.editable = false
+	QuestManager.start_main_quest()
 	GameState.save_game()
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "color:a", 1.0, 0.6)
 	tween.tween_callback(func():
-		SceneManager.change_level(1)
+		SceneManager.change_scene("res://scenes/world/world_sungai_deli.tscn")
 	)
 
 func _unhandled_input(event: InputEvent) -> void:

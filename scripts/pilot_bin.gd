@@ -10,6 +10,7 @@ class_name PilotBin
 func _ready() -> void:
 	sprite.texture = load("res://assets/sprites/props/bin_%s.png" % bin_category)
 	label.text = _category_name()
+	label.hide()
 	match bin_category:
 		"organik":
 			label.add_theme_color_override("font_color", Color(0.35, 0.55, 0.32))
@@ -17,6 +18,13 @@ func _ready() -> void:
 			label.add_theme_color_override("font_color", Color(0.62, 0.46, 0.14))
 		"b3":
 			label.add_theme_color_override("font_color", Color(0.62, 0.24, 0.2))
+
+func _process(_delta: float) -> void:
+	var player := get_tree().get_first_node_in_group("player") as Node2D
+	if player == null:
+		label.hide()
+		return
+	label.visible = global_position.distance_squared_to(player.global_position) < 48.0 * 48.0
 
 func _category_name() -> String:
 	match bin_category:

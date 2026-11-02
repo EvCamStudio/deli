@@ -2,6 +2,9 @@
 extends CanvasLayer
 class_name PilotJournal
 
+signal opened
+signal closed
+
 @onready var overlay: ColorRect = $Overlay
 @onready var panel: PanelContainer = $Panel
 @onready var stats: Label = $Panel/VBox/Stats
@@ -25,15 +28,19 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 
 func open() -> void:
+	if is_open():
+		return
 	_refresh()
 	overlay.show()
 	panel.show()
 	get_tree().paused = true
+	opened.emit()
 
 func close() -> void:
 	overlay.hide()
 	panel.hide()
 	get_tree().paused = false
+	closed.emit()
 
 func is_open() -> bool:
 	return panel.visible
