@@ -1,76 +1,52 @@
-## TrashBin Script
-# Tong sampah pilah: organik / plastik / b3.
-# Pemain menekan aksi → menu pilih jenis muncul → validasi benar/salah.
+## TrashBin Script (Forgiving Mode)
+# Tong sampah yang menerima semua jenis sampah tanpa penalty.
 extends Area2D
 class_name TrashBin
 
-# ─── Export ───────────────────────────────────────────────────────────────────
-@export var bin_category: String = "plastik"  # organik / plastik / b3
+@export var bin_category: String = "plastik"
 
 @onready var sprite: CanvasItem = get_node_or_null("Sprite2D") as CanvasItem
 @onready var label: Label = get_node_or_null("Label") as Label
-@onready var sort_menu: Control = get_node_or_null("SortMenu") as Control
-
-# ─── Signal ───────────────────────────────────────────────────────────────────
-signal trash_sorted(correct: bool)
 
 func _ready() -> void:
 	if label:
-		label.text = _get_bin_label()
-	if sort_menu:
-		sort_menu.hide()
+		label.hide()
 
 func get_action_label() -> String:
-	# Hanya tampilkan jika ada sampah di inventaris
 	var pending: Array = _get_pending_trash()
 	if pending.is_empty():
 		return ""
-	return "Buang"
+	return "Pilah"
 
 func interact() -> void:
 	var pending: Array = _get_pending_trash()
 	if pending.is_empty():
 		return
-	_show_sort_menu(pending)
-
-# ─── Menu Pilih Sampah ────────────────────────────────────────────────────────
-
-func _show_sort_menu(pending: Array) -> void:
-	if not sort_menu:
-		return
-	# Bersihkan tombol lama
-	for child in sort_menu.get_children():
-		if child is Button:
-			child.queue_free()
-
-	for item in pending:
-		var btn := Button.new()
-		btn.text = item.get("id", "").replace("_", " ").capitalize()
-		btn.custom_minimum_size = Vector2(80, 28)
-		var item_ref: Dictionary = item
-		btn.pressed.connect(func(): _sort_item(item_ref))
-		sort_menu.add_child(btn)
-
-	sort_menu.show()
-
-func _sort_item(item: Dictionary) -> void:
-	sort_menu.hide()
+	
+	var item: Dictionary = pending[0]
+	var item_cat: String = str(item.get("category", bin_category))
+	
 	_remove_from_pending(item)
-
-	var correct: bool = item.get("category", "") == bin_category
-	if correct:
-		GameState.collect_trash(bin_category)
-		GameState.add_river_health(3.0)
-		AudioManager.play_sfx("correct")
-		SettingsManager.vibrate(20)
-	else:
-		GameState.add_river_health(-5.0)
-		AudioManager.play_sfx("wrong")
-		SettingsManager.vibrate(80)
-
-	trash_sorted.emit(correct)
-
-# ─── Inventaris ───────────────────────────────────────────────────────────────
+	
+	# Forgiving: terima semua kategori, no penalty
+	GameState.collect_trash(item_cat)
+	GameState.add_river_health(3.0)
+	GameState.rupiah += 1500
+	AudioManager.play_sfx("correct")
+	SettingsManager.vibrate(20)
+	
+	# Bump animation
+	var tween := create_tween()
+	tween.tween_property(self, "scale", Vector2(1.14, 0.9), 0.08)
+	tween.tween_property(self, "scale", Vector2.ONE, 0.18)
+	
+	# Toast
+	var level := get_tree().get_first_node_in_group("level")
+	if level and level.has_method("toast"):
+		level.toast("Berhasil! Sampah %s dipilah. +Rp1.500" % _display_category(item_cat), true)
+	
+	if level and level.has_method("on_bin_sorted"):
+		level.on_bin_sorted(item_cat)
 
 func _get_pending_trash() -> Array:
 	if GameState.has_meta("pending_trash"):
@@ -85,9 +61,9 @@ func _remove_from_pending(item: Dictionary) -> void:
 			break
 	GameState.set_meta("pending_trash", pending)
 
-func _get_bin_label() -> String:
-	match bin_category:
-		"organik": return "🟫 Organik"
-		"plastik":  return "🟡 Plastik"
-		"b3":       return "🔴 B3"
-		_:          return bin_category.capitalize()
+func _display_category(cat: String) -> String:
+	match cat:
+		"organik": return "organik"
+		"plastik": return "plastik"
+		"b3": return "B3"
+		_: return cat

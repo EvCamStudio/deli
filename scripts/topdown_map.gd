@@ -281,7 +281,7 @@ func _spawn_props() -> void:
 			_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 224), Vector2(80, 22))
 			_spawn_trees([
 				Vector2(40, 120), Vector2(48, 420), Vector2(120, 470), Vector2(220, 200),
-				Vector2(300, 470), Vector2(420, 470), Vector2(560, 200), Vector2(660, 470),
+				Vector2(300, 470), Vector2(560, 200), Vector2(660, 470),
 				Vector2(780, 200), Vector2(900, 420), Vector2(920, 120), Vector2(200, 120),
 				Vector2(720, 120),
 			])

@@ -7,7 +7,6 @@ class_name HUD
 # ─── Node ─────────────────────────────────────────────────────────────────────
 @onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
 @onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
-@onready var day_label: Label = $SafeMargin/Root/TopBar/TimeCard/Row/DayLabel
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
 @onready var energy_label: Label = $SafeMargin/Root/TopBar/EnergyCard/Row/EnergyLabel
 @onready var debt_label: Label = $SafeMargin/Root/TopBar/DebtCard/Row/DebtLabel
@@ -26,7 +25,7 @@ var _bar_low: StyleBoxFlat
 var _bar_mid: StyleBoxFlat
 var _bar_ok: StyleBoxFlat
 
-const SECONDS_PER_MINUTE: float = 2.0
+
 
 func _ready() -> void:
 	_build_bar_styles()
@@ -46,7 +45,7 @@ func _process(delta: float) -> void:
 		return
 
 	_clock_accum += delta
-	if _clock_accum >= SECONDS_PER_MINUTE:
+	if _clock_accum >= 2.0:
 		_clock_accum = 0.0
 		GameState.minutes += 1
 		if GameState.minutes >= 24 * 60:
@@ -110,12 +109,10 @@ func _on_rupiah_changed(value: int) -> void:
 	rupiah_label.text = "Rp %s" % _format_short(value)
 
 func _on_day_changed(_new_day: int) -> void:
-	_update_time()
+	pass
 
 func _update_time() -> void:
-	var hours: int = int(GameState.minutes / 60.0) % 24
-	var mins: int = GameState.minutes % 60
-	day_label.text = "Hari %d · %02d:%02d" % [GameState.day, hours, mins]
+	pass
 
 func _update_debt() -> void:
 	debt_label.text = "Rp %s" % _format_short(GameState.debt_amount)

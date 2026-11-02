@@ -20,7 +20,7 @@ func _spawn_entities() -> void:
 	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(168, 244))
 
 	for pos in [
-		Vector2(240, 232), Vector2(352, 312), Vector2(400, 192),
+		Vector2(160, 320), Vector2(352, 312), Vector2(400, 192),
 		Vector2(592, 240), Vector2(704, 312),
 	]:
 		spawn_tree_spot("tree", pos)

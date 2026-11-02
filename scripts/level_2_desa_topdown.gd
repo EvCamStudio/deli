@@ -20,7 +20,7 @@ func _set_initial_mission() -> void:
 
 func _spawn_entities() -> void:
 	spawn_npc("npc_petani_1", "petani", Vector2(200, 236))
-	spawn_npc("npc_ibu_desa", "ibu", Vector2(520, 236))
+	spawn_npc("npc_ibu_desa", "ibu", Vector2(440, 236))
 
 	var items: Array = [
 		["kulit_pisang", "organik", Vector2(160, 320)],

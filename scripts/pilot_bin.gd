@@ -20,11 +20,7 @@ func _ready() -> void:
 			label.add_theme_color_override("font_color", Color(0.62, 0.24, 0.2))
 
 func _process(_delta: float) -> void:
-	var player := get_tree().get_first_node_in_group("player") as Node2D
-	if player == null:
-		label.hide()
-		return
-	label.visible = global_position.distance_squared_to(player.global_position) < 48.0 * 48.0
+	pass
 
 func _category_name() -> String:
 	match bin_category:

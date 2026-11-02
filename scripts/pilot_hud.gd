@@ -4,7 +4,7 @@ class_name PilotHUD
 
 @onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
 @onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
-@onready var time_label: Label = $SafeMargin/Root/TopBar/TimeCard/Row/TimeLabel
+
 @onready var money_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/MoneyLabel
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
@@ -69,7 +69,6 @@ func _ready() -> void:
 
 	_on_river_health_changed(GameState.river_health)
 	_update_money()
-	_update_time()
 	_update_carry()
 
 	var cont_btn := continue_btn
@@ -89,7 +88,6 @@ func _process(delta: float) -> void:
 		if GameState.minutes >= 60 * 24:
 			GameState.minutes = 6 * 60
 			GameState.day += 1
-		_update_time()
 	_update_money()
 	_update_carry()
 
@@ -103,11 +101,6 @@ func update_mission(text: String) -> void:
 
 func _update_money() -> void:
 	money_label.text = "Rp %s" % _format_number(GameState.rupiah)
-
-func _update_time() -> void:
-	var hours: int = int(GameState.minutes / 60.0)
-	var mins: int = GameState.minutes % 60
-	time_label.text = "Hari %d · %02d:%02d" % [GameState.day, hours, mins]
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])
