@@ -268,7 +268,7 @@ func _spawn_props() -> void:
 		"hulu":
 			_spawn_building("res://assets/sprites/props/house.png", Vector2(112, 208), Vector2(80, 22), Color(0.86, 0.98, 0.86))
 			_spawn_trees([
-				Vector2(40, 120), Vector2(72, 168), Vector2(48, 360), Vector2(96, 470), Vector2(150, 80),
+				Vector2(40, 120), Vector2(48, 360), Vector2(96, 470), Vector2(150, 80),
 				Vector2(210, 120), Vector2(260, 60), Vector2(320, 140), Vector2(360, 100), Vector2(400, 440),
 				Vector2(360, 380), Vector2(250, 460), Vector2(170, 400), Vector2(520, 90), Vector2(560, 140),
 				Vector2(620, 60), Vector2(680, 120), Vector2(740, 80), Vector2(800, 140), Vector2(860, 100),

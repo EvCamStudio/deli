@@ -17,7 +17,7 @@ func _set_initial_mission() -> void:
 	update_mission("Tanam 5 pohon di titik tanam hutan.")
 
 func _spawn_entities() -> void:
-	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(168, 244))
+	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(112, 240))
 
 	for pos in [
 		Vector2(160, 320), Vector2(352, 312), Vector2(400, 192),
