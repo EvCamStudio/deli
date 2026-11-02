@@ -149,13 +149,13 @@ theme_override_font_sizes/font_size = 10
 text = "Rp 500rb"
 
 [node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
-custom_minimum_size = Vector2(30, 28)
+custom_minimum_size = Vector2(38, 34)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Jurnal / Menu"
 icon = ExtResource("7_card")
 expand_icon = true
-icon_max_width = 18
+icon_max_width = 26
 
 [node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
 visible = false

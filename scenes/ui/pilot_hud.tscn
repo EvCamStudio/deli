@@ -85,13 +85,13 @@ theme_override_font_sizes/font_size = 11
 text = "Rp 0"
 
 [node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
-custom_minimum_size = Vector2(34, 30)
+custom_minimum_size = Vector2(40, 36)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Jurnal / Menu"
 icon = ExtResource("5_home")
 expand_icon = true
-icon_max_width = 20
+icon_max_width = 28
 
 [node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
 layout_mode = 0
