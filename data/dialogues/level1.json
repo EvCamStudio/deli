@@ -14,7 +14,7 @@
       "speaker": "Penjaga Hutan",
       "text": "Pohon-pohon di sini banyak yang ditebang. Tanpa akar pohon, air hujan langsung hanyut, tidak meresap jadi mata air.",
       "choices": [
-        { "text": "Aku akan tanam pohon lagi!", "next": "plant_prompt", "effect": { "river_health": 2 } }
+        { "text": "Aku akan tanam pohon lagi!", "next": "plant_prompt", "effect": { "river_health": 2, "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 pohon di Hulu", "target": 10 } } }
       ]
     },
     {
@@ -22,7 +22,7 @@
       "speaker": "Penjaga Hutan",
       "text": "Bagus! Titik tanam sudah kusiapkan di sekitar hutan. Dekati tanah bertanda, lalu tekan tombol aksi untuk menanam bibit pohon.",
       "choices": [
-        { "text": "Siap!", "next": "plant_prompt", "effect": {} }
+        { "text": "Siap!", "next": "plant_prompt", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 pohon di Hulu", "target": 10 } } }
       ]
     },
     {

@@ -48,24 +48,20 @@ func interact() -> void:
 		return
 
 	var item: Dictionary = pending[0]
+	var item_cat: String = str(item.get("category", bin_category))
+	pending.remove_at(0)
+	GameState.set_meta("pending_trash", pending)
+	GameState.collect_trash(item_cat)
+	GameState.add_river_health(3.0)
+	GameState.rupiah += 1500
+	AudioManager.play_sfx("correct")
+	SettingsManager.vibrate(20)
+	_bump()
+	_toast("Berhasil! Sampah %s dipilah. +Rp1.500" % _display_category(item_cat), true)
+	
 	var level := get_tree().get_first_node_in_group("level")
-	if str(item.get("category", "")) == bin_category:
-		pending.remove_at(0)
-		GameState.set_meta("pending_trash", pending)
-		GameState.collect_trash(bin_category)
-		GameState.add_river_health(3.0)
-		GameState.rupiah += 1500
-		AudioManager.play_sfx("correct")
-		SettingsManager.vibrate(20)
-		_bump()
-		_toast("Benar! Sampah masuk tong %s. +Rp1.500" % _category_name(), true)
-		if level and level.has_method("on_bin_sorted"):
-			level.on_bin_sorted(bin_category)
-	else:
-		GameState.add_river_health(-2.0)
-		AudioManager.play_sfx("wrong")
-		SettingsManager.vibrate(70)
-		_toast("Salah tong! Ini sampah %s." % _display_category(str(item.get("category", ""))), false)
+	if level and level.has_method("on_bin_sorted"):
+		level.on_bin_sorted(item_cat)
 
 func _display_category(cat: String) -> String:
 	match cat:

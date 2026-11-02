@@ -24,23 +24,20 @@ func _spawn_entities() -> void:
 
 	var items: Array = [
 		["kulit_pisang", "organik", Vector2(160, 320)],
-		["botol_plastik", "plastik", Vector2(300, 300)],
-		["baterai_bekas", "b3", Vector2(420, 340)],
 		["daun_kering", "organik", Vector2(600, 300)],
-		["kantong_kresek", "plastik", Vector2(700, 350)],
-		["kaleng_bekas", "b3", Vector2(860, 320)],
 		["sisa_sayur", "organik", Vector2(240, 400)],
-		["sedotan_plastik", "plastik", Vector2(480, 400)],
-		["lampu_bekas", "b3", Vector2(640, 400)],
 		["ranting_kering", "organik", Vector2(800, 400)],
+		["kertas_kotor", "organik", Vector2(300, 340)],
+		["kardus_sobek", "organik", Vector2(420, 380)],
+		["sampah_kecil", "organik", Vector2(560, 360)],
+		["sampah_lain", "organik", Vector2(680, 360)],
+		["sampah_daerah", "organik", Vector2(760, 380)],
+		["sampah_akhir", "organik", Vector2(880, 400)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
 	spawn_bin("organik", Vector2(216, 240))
-	spawn_bin("plastik", Vector2(544, 240))
-	spawn_bin("b3", Vector2(752, 240))
-
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Kota")
 
 func on_bin_sorted(category: String) -> void:

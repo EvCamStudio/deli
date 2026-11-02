@@ -122,8 +122,13 @@ func _update_debt() -> void:
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])
-	carry_label.text = "Dibawa: %d sampah" % pending.size()
-	carry_label.visible = not pending.is_empty()
+	if pending.is_empty():
+		carry_label.hide()
+	else:
+		var first: Dictionary = pending[0]
+		var cat: String = str(first.get("category", "")).capitalize()
+		carry_label.text = "Dibawa: %d (%s)" % [pending.size(), cat]
+		carry_label.show()
 
 # ─── Misi ─────────────────────────────────────────────────────────────────────
 

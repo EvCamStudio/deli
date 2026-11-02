@@ -30,22 +30,19 @@ func _spawn_entities() -> void:
 		spawn_tree_spot("mangrove", pos)
 
 	var items: Array = [
-		["kulit_pisang", "organik", Vector2(160, 320)],
+		["kulit_pisang", "plastik", Vector2(160, 320)],
 		["botol_plastik", "plastik", Vector2(300, 340)],
-		["baterai_bekas", "b3", Vector2(440, 320)],
-		["daun_kering", "organik", Vector2(600, 340)],
+		["baterai_bekas", "plastik", Vector2(440, 320)],
+		["daun_kering", "plastik", Vector2(600, 340)],
 		["kantong_kresek", "plastik", Vector2(700, 300)],
-		["kaleng_bekas", "b3", Vector2(860, 340)],
-		["sisa_sayur", "organik", Vector2(260, 408)],
+		["kaleng_bekas", "plastik", Vector2(860, 340)],
+		["sisa_sayur", "plastik", Vector2(260, 408)],
 		["sedotan_plastik", "plastik", Vector2(640, 408)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
-	spawn_bin("organik", Vector2(216, 240))
 	spawn_bin("plastik", Vector2(544, 240))
-	spawn_bin("b3", Vector2(820, 240))
-
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Epilog")
 
 func on_tree_planted(kind: String) -> void:

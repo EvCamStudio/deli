@@ -102,6 +102,13 @@ func _apply_effects(node: Dictionary) -> void:
 		var choice_dict: Dictionary = effect["choice"]
 		for key in choice_dict:
 			GameState.record_choice(key, choice_dict[key])
+	if effect.has("quest"):
+		var quest_data: Dictionary = effect["quest"]
+		var quest_id: String = quest_data.get("id", "")
+		var description: String = quest_data.get("description", "")
+		var target: int = quest_data.get("target", 1)
+		if not quest_id.is_empty():
+			QuestManager.trigger_npc_quest(quest_id, description, target)
 
 func _end_dialogue() -> void:
 	_is_active = false

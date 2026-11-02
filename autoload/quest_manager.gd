@@ -55,6 +55,11 @@ func add_side_quest(quest_id: String, description: String, target: int) -> void:
 	}
 	quest_started.emit(quest_id)
 
+## Add side quest with NPC trigger (used in dialogue effect)
+func trigger_npc_quest(quest_id: String, description: String, target: int) -> void:
+	add_side_quest(quest_id, description, target)
+	GameState.show_toast("Quest diterima: %s" % description, true)
+
 ## Update quest progress
 func update_quest(quest_id: String, amount: int) -> void:
 	if quest_id not in active_quests:

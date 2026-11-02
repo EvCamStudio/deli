@@ -5,7 +5,7 @@
       "speaker": "Pak Pedagang",
       "text": "Dulu sungai ini jernih, Nak. Aku bisa cuci tangan langsung di sini. Sekarang? Bau dan kotor.",
       "choices": [
-        { "text": "Kenapa sekarang kotor?", "next": "why", "effect": { "river_health": 0 } },
+        { "text": "Kenapa sekarang kotor?", "next": "why", "effect": {} },
         { "text": "Ah, bukan urusanku.", "next": "ignore", "effect": { "choice": { "peduli": false } } }
       ]
     },
@@ -26,9 +26,9 @@
     {
       "id": "help",
       "speaker": "Pak Pedagang",
-      "text": "Syukurlah! Ada juga sampah di sini yang perlu dipilah ke tong yang benar. Tong organik, plastik, dan B3 sudah ada.",
+      "text": "Syukurlah! Ada juga sampah di sini yang perlu dipilah ke tong yang benar. Tong organik ada, plastik ada, dan B3 ada.",
       "choices": [
-        { "text": "Siap, aku mengerti.", "next": "end", "effect": {} }
+        { "text": "Siap, aku mengerti.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_desa", "description": "Pilah 8 sampah ke tong yang benar", "target": 8 } } }
       ]
     },
     {
