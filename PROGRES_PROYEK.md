@@ -1,97 +1,108 @@
 # DOKUMEN PROGRES PROYEK & PANDUAN PENGEMBANGAN: DELI REWIND
-> **File Handover / Konteks untuk AI (Claude)**  
-> **Engine**: Godot 4.x (2D Top-Down Life-Sim / RPG)  
-> **Branch**: `heiz` (Repository: `EvCamStudio/deli`)  
-> **Setting**: Bantaran Sungai Deli, Kota Medan, Sumatera Utara
+> **Status**: Full Implementation Complete (Dokumen Utama & Tugas Aisyah Terintegrasi)  
+> **Engine**: Godot 4.6.1 (2D Top-Down Life-Sim / Environmental RPG)  
+> **Branch**: `heiz-dialog` (Repository: `EvCamStudio/deli`)  
+> **Setting**: Bantaran Sungai Deli, Kota Medan, Sumatera Utara  
+> **Backup**: `Tugas Aisyah/` (Tersimpan aman & diabaikan oleh engine via `.gdignore`)
 
 ---
 
-## 1. Ringkasan Eksekutif & Visi Game
+## 1. Ringkasan Eksekutif & Arsitektur Game
 
 * **Judul**: *Deli Rewind*
-* **Genre**: 2D Top-Down Slice-of-Life / Environmental RPG (ala *Citampi Stories* / *Stardew Valley*).
-* **Premis Cerita**:
-  * **MC (Karakter Utama)**: Pemuda berusia 24 tahun yang baru saja terkena **PHK di Jakarta**.
-  * **Kepulangan ke Medan**: MC pulang kampung ke Medan untuk membantu kedua orang tuanya (**Bu Mira & Pak Hendra**) yang mengelola warung kopi & kebutuhan sehari-hari di tepi Sungai Deli.
-  * **Konflik Utama**: Warung keluarga rusak parah akibat banjir bandang luapan Sungai Deli yang tersumbat gunungan sampah. Keluarga terjerat **utang darurat Rp 500.000**.
-  * **Tujuan Akhir**:
-    1. Membersihkan sampah sungai, menanam pohon di hulu, dan merawat mangrove di hilir (*River Health* naik 0–100%).
-    2. Menghasilkan Rupiah dari menjual sampah daur ulang, pekerjaan sampingan, dan memulihkan warung keluarga.
-    3. Melunasi utang keluarga sebelum tenggat waktu.
+* **Genre**: 2D Top-Down Environmental Slice-of-Life / RPG
+* **Target Viewport**: 640 × 360 px (Kamera Zoom 2x, Pixel Art Nearest-Neighbor, bebas blur)
+* **Struktur Alur Utama**:
+  * **Prolog**: `scenes/intro/intro_dramatic.tscn` (Jakarta PHK ➜ Tiba di Medan ➜ Warung Kebanjiran).
+  * **Siklus 7 Hari**: Peta A (Warung) sebagai Basecamp ➜ Peta B (Sungai Deli) ➜ Peta C (Gang Jali) ➜ Peta D (Pintu Air).
+  * **3 Ujian Hujan**: Hari 3 (Hujan Kecil), Hari 5 (Hujan Sedang), Hari 7 (Hujan Lebat / Ujian Akhir).
+  * **Klimaks Hari 7**: Pagi Festival Pantun ➜ Sore Pelunasan Utang Rp 500.000 ke Bang Ucok ➜ Malam Puzzle Pintu Air (Kombinasi 1-3-2) ➜ Epilog & Evaluasi Ending.
 
 ---
 
-## 2. Status Fitur yang Sudah Selesai (Fully Implemented ✅)
+## 2. Status Fitur Terintegrasi (Fully Implemented & Verified ✅)
 
-| Komponen | Status | Keterangan Teknis |
-|---|---|---|
-| **Prolog Narasi 3 Bab** | Selesai | `scenes/intro/intro_dramatic.tscn` (Bab 1: Kantor Jakarta & Input Nama MC ➜ Bab 2: Hujan & Surat PHK ➜ Bab 3: Tiba di Warung Medan & Banjir). |
-| **Movement Top-Down** | Selesai | `scripts/player_topdown.gd` — 4 arah mata angin (Down, Left, Right, Up), responsif dengan WASD/Keyboard dan Virtual Touch Joystick di mobile. Animasi idle diam sudah stabil di Frame 0 (tidak tap-dance). |
-| **Fisika Air (Water Drag)** | Selesai | MC bisa masuk ke badan air Sungai Deli, memicu efek basah dan perlambatan gerak (*water drag*). |
-| **Pilah Sampah 3 Jenis** | Selesai | Memungut sampah dari air/daratan lalu membuang/memilah ke tong: Organik, Plastik, dan B3. |
-| **River Health System** | Selesai | Variabel `river_health` (0–100%) di `autoload/game_state.gd` otomatis memicu sinyal perubahan saat sampah dibersihkan atau pohon ditanam. |
-| **Penanaman Pohon & Mangrove** | Selesai | Interaksi di titik tanam (`tree_spot_topdown.tscn`) menambah River Health. |
-| **Puzzle Tuas Pintu Air** | Selesai | Teka-teki tuas kombinasi untuk membuka pintu air pengendali banjir di kota. |
-| **Sistem Dialog & Portrait** | Selesai | Dialog box dengan ekspresi wajah (Netral, Senang, Sedih, Kaget) dan pilihan ganda yang memengaruhi alur cerita. |
-| **Minigame Pantun Deli** | Selesai | Sambung baris pantun Melayu Deli berhadiah kesehatan sungai dan moral warga. |
-| **Save / Load System** | Selesai | `GameState.save_game()` menyimpan progres ke file `user://save.json`. |
-
----
-
-## 3. Tugas Pengembangan Selanjutnya yang Perlu Dikerjakan Claude
-
-### A. Alur Cerita & Penulisan Quest (Story & Narrative Design)
-1. **Dialog Pertama di Warung (Hari ke-1)**:
-   * Percakapan emosional pasca-banjir antara MC dengan Bu Mira & Pak Hendra.
-   * Penyerahan buku catatan utang (Rp 500.000) dan pembukaan misi harian pertama.
-2. **Quest Harian & Side Quest Warga**:
-   * **Bung Reza** (Penjaga Hutan Hulu): Misi reboisasi dan pencegahan erosi tebing sungai.
-   * **Pak RT / Tokoh Adat**: Penyadartahuan warga tentang larangan membuang kasur/sampah ke sungai & festival pantun.
-   * **Pak Tani** (Desa): Irigasi sawah yang tersumbat sampah plastik.
-   * **Nelayan** (Hilir): Kerusakan jaring dan habitat ikan akibat limbah B3 dan kepunahan mangrove.
-   * **Pengepul Sampah**: Tempat MC menukarkan sampah pilah menjadi Rupiah.
-   * **Penagih Utang**: Datang berkala menagih cicilan dengan batas tenggat waktu.
-
-### B. Desain Mekanik & Siklus Gameplay (Gameplay Loop)
-```
-[Pagi: Bangun Tidur di Warung (⚡ 100)]
-         │
-         ▼
-[Siang: Pungut & Pilah Sampah (-5⚡) / Tanam Pohon (-10⚡) / Side Quest (-15⚡)]
-         │
-         ▼
-[Sore: Jual Sampah ke Pengepul (+Rupiah) / Beli Makan (+⚡) / Bayar Cicilan Utang]
-         │
-         ▼
-[Malam: Tidur di Kasur Warung (Reset Hari 📅, Full Restore ⚡, Arus Membawa Sampah Baru)]
-```
-
-### C. Restorasi Warung Orang Tua
-Warung mengalami 4 tahapan visual & fungsional:
-1. **Tahap 1 (Rusak - Awal)**: Dinding berlumpur, atap bocor, meja retak.
-2. **Tahap 2 (Bersih - Biaya Rp 50.000)**: Lumpur hilang, cat diperbarui, belum bisa jualan.
-3. **Tahap 3 (Buka Kembali - Biaya Rp 150.000 + RH > 40%)**: Bu Mira mulai menjual kopi tubruk & gorengan (memberi passive income Rp 15.000/hari ke MC).
-4. **Tahap 4 (Makmur - Biaya Rp 300.000 + RH > 70%)**: Warung ramai dikunjungi warga bantaran sungai yang kini bersih dan asri.
-
-### D. Sistem 4 Ending (Berdasarkan Skor Akhir)
-* **Ending A (Harapan Baru Deli - Terbaik)**: River Health ≥ 80% & Utang 100% lunas. Sungai jernih, warung makmur, MC menjadi pelopor komunitas lingkungan.
-* **Ending B (Keluarga Mandiri - Baik)**: River Health 60–79% & Utang 70–99% lunas. Warung selamat, kondisi sungai membaik bertahap.
-* **Ending C (Bertahan di Tepian - Netral)**: River Health 40–59% & Utang 50–69%. Utang masih tersisa, sungai masih rawan banjir saat musim hujan lebat.
-* **Ending D (Terpaksa Menyerah - Buruk)**: River Health < 40% & Utang < 50%. Banjir besar kembali menerjang, warung digusur/tutup, keluarga pindah.
+### A. Core Systems & State (`autoload/`)
+1. **`game_state.gd`**:
+   - `meter_bencana` (0–100, default 60): Dinamis terhadap sampah, dialog empati, dan setoran pengepul.
+   - `river_health` = `100.0 - meter_bencana`.
+   - `hari` (1–7): Dikontrol via `tidur_ganti_hari()` dengan penambahan sampah harian sesuai sikap NPC.
+   - `energi` (⚡ 0–100): Dipulihkan penuh saat tidur di kasur, berkurang saat aktivitas berat.
+   - `rupiah` & `utang` (Rp 500.000): Pelunasan cicilan, pendapatan warung bersih (+Rp 15.000/pagi), dan upah pengepul (+Rp 6.000/setor).
+   - `evaluasi_ending()`: Menghitung persentase utang dan meter bencana untuk menentukan Ending A, B, C, atau D.
+   - `reset_ke_hari_1()`: Mekanik *Rewind* khusus Ending D untuk mengulang dari Hari 1 tanpa kehilangan ingatan naratif.
+2. **`dialogue_manager.gd`**:
+   - Mendukung format JSON Section 14 (`teks`, `pilihan`, `tipe`, `emosi`, `next`) sekaligus kompatibilitas format lama.
+   - Otomatis mengeksekusi `delta_meter` dan sinyal `sampah_balasan`.
+3. **`empati_manager.gd`**:
+   - Menghitung 3 tingkat respon empati: Pilihan A (0 pt), Pilihan B (+3 pt w/ reprompt), Pilihan C (+5 pt w/ sampah balasan).
+   - Menghitung transparansi Datuk Sampan berdasarkan jumlah NPC yang berhasil disadarkan (`0.4 + 0.2 * count_peduli`).
+   - Sinyal `tps_terbuka` (TPS Gang Bang Jali) dan `jelantah_terbuka` (Gerobak Kak Rina).
 
 ---
 
-## 5. Format & Standar Aset Visual (Untuk Panduan Integrasi Aset Nanti)
+### B. 4 Peta Dunia (World Maps) Sesuai Section 11 GDD
+Semua peta telah diuji coba dan lulus verifikasi Godot Headless Engine tanpa error:
+1. **Peta A: Warung (`scenes/maps/map_a_warung.tscn`)**:
+   - Hub utama pemain, tempat Bu Mira, Kasur MC tidur, Warung interactable, Pengepul Sampah, Kak Rina + Gerobak Gorengan, Bang Ucok (Hari 7).
+   - Gerbang timur menuju Peta B (Sungai Deli), gerbang selatan menuju Peta C (Gang Jali).
+2. **Peta B: Tepi Sungai Deli (`scenes/maps/map_b_sungai.tscn`)**:
+   - Datuk Sampan di atas perahu (opacity dinamis).
+   - Pak Darwis & Bale Bambu di bawah rindang pohon.
+   - 3 Tong Sampah Terpilah (Organik, Plastik, B3) & Titik Tanam Pohon.
+   - Papan Pantun Melayu Deli & sebaran sampah sungai harian.
+   - Gerbang barat menuju Warung, gerbang timur menuju Pintu Air.
+3. **Peta C: Gang Bang Jali (`scenes/maps/map_c_gang_jali.tscn`)**:
+   - Bang Jali di depan lorong gang.
+   - Area TPS Gang dinamis (sebelum vs sesudah disadarkan).
+   - Gerbang utara kembali ke Warung.
+4. **Peta D: Pintu Air Bendungan (`scenes/maps/map_d_pintu_air.tscn`)**:
+   - Bendungan pengendali banjir kota dengan 3 tuas mekanis.
+   - Puzzle kombinasi tuas: **1 - 3 - 2**.
+   - Event Hujan Lebat Hari 7 & transisi ke Ending Epilog.
 
-* **Spritesheet Karakter Top-Down**:
-  * Ukuran file: `64 × 96 px` (Grid 4 baris × 4 kolom @ `16 × 24 px` per frame).
-  * Format baris: Baris 0 = Bawah (Down), Baris 1 = Kiri (Left), Baris 2 = Kanan (Right), Baris 3 = Atas (Up).
-  * Frame 0 = Idle diam (posisi kaki rapat).
-* **Portrait Kotak Dialog**:
-  * Ukuran file: `160 × 200 px` PNG transparan.
-  * 4 varian emosi: `_neutral.png`, `_happy.png`, `_sad.png`, `_surprised.png`.
-* **Objek Lingkungan (Props)**:
-  * Pohon: `32 × 48 px` | Mangrove: `32 × 40 px` | Rumah/Warung: `96 × 64 px`.
-  * Tong Sampah: `16 × 24 px` | Sampah Tergeletak: `12 × 12 px`.
-  * Tileset: Grid `16 × 16 px`.
+---
 
+### C. Aset Props & Pixel Art (Section 13 Sesuai Standar Resolusi)
+Semua tekstur telah dibuat dan dirender dengan Nearest-Neighbor:
+- `warung_rusak.png` & `warung_bersih.png` (96 × 64 px)
+- `kasur_mc.png` (32 × 32 px)
+- `tps_sebelum.png` & `tps_sesudah.png` (32 × 32 px)
+- `gerobak_gorengan.png` (32 × 32 px)
+- `botol_jelantah.png` (16 × 24 px)
+- `bale_darwis.png` (48 × 32 px)
+- `sampan_datuk.png` (48 × 32 px)
+- `lapak_pengepul.png` (32 × 32 px)
+
+---
+
+### D. Dialog & Lore (Section 14 Verbatim)
+16 file JSON dialog lengkap di `data/dialog/`:
+- `h1_warung.json`, `h1_datuk.json`
+- `h2_jali.json`, `h3_jali.json`, `ujian1.json`
+- `h4_rina.json`, `h5_rina.json`, `ujian2.json`
+- `h6_darwis.json`
+- `h7_pantun.json`, `h7_ucok.json`, `h7_ujian_akhir.json`
+- `ending_a.json`, `ending_b.json`, `ending_c.json`, `ending_d.json`
+- `data/pantun_data.json`: 3 Pantun otentik Melayu Deli (Sungai, Jelantah Kak Rina, TPS Bang Jali).
+
+---
+
+### E. 4 Ending & Kriteria Evaluasi (Section 12 & 15)
+- **Ending A (Sungai Deli Bangkit - Terbaik)**: Meter Bencana ≤ 30 & Utang Lunas 100%.
+- **Ending B (Langkah Kecil Berarti - Baik)**: Meter Bencana 31–50 & Utang Lunas ≥ 50%.
+- **Ending C (Dilema Bertahan - Netral)**: Meter Bencana 51–70 atau Utang Lunas < 50%.
+- **Ending D (Air Mata Deli - Buruk + Rewind)**: Meter Bencana > 70. Muncul tombol *"Putar Kembali Waktu"* yang memicu reset ke Hari 1.
+- Evaluasi otomatis & bibliografi juri formal di `scripts/ending_screen.gd` dan [CREDITS.md](file:///home/arisyah/.gemini/antigravity/scratch/deli/CREDITS.md).
+
+---
+
+## 3. Direktori Backup: `Tugas Aisyah/`
+Folder backup terisolasi penuh berisi seluruh pengerjaan awal tugas Orang 2:
+- `Tugas Aisyah/autoload/`
+- `Tugas Aisyah/data/`
+- `Tugas Aisyah/scenes/`
+- `Tugas Aisyah/scripts/`
+- `Tugas Aisyah/project.godot`
+- `Tugas Aisyah/.gdignore` (mencegah konflik scan oleh Godot engine)
+- `Tugas Aisyah/README.md`
