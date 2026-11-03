@@ -12,15 +12,15 @@ config_version=5
 
 config/name="Deli Rewind"
 config/version="0.1.0"
-config/features=PackedStringArray("4.7", "Mobile")
-config/icon="res://icon.svg"
 run/main_scene="res://scenes/main_menu/main_menu.tscn"
-boot_splash/minimum_display_time=0
+config/features=PackedStringArray("4.6", "Mobile")
+config/icon="res://icon.svg"
 
 [autoload]
 
 GameState="*res://autoload/game_state.gd"
 DialogueManager="*res://autoload/dialogue_manager.gd"
+EmpatiManager="*res://autoload/empati_manager.gd"
 SceneManager="*res://autoload/scene_manager.gd"
 AudioManager="*res://autoload/audio_manager.gd"
 SettingsManager="*res://autoload/settings_manager.gd"
@@ -31,11 +31,13 @@ window/size/viewport_width=640
 window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
-window/size/mode=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
-window/per_pixel_transparency/allowed=false
+
+[gui]
+
+theme/custom="res://assets/ui/theme/citampi_theme.tres"
 
 [input]
 
@@ -81,18 +83,10 @@ pause={
 ]
 }
 
-[gui]
-
-theme/custom="res://assets/ui/theme/citampi_theme.tres"
-
-[physics]
-
-2d/default_gravity=980.0
-
 [rendering]
 
+textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="gl_compatibility"
-textures/canvas_textures/default_texture_filter=0
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

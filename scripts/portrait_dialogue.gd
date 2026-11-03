@@ -24,6 +24,17 @@ const PORTRAITS: Dictionary = {
 	"Penjaga Sungai": "pakrt",
 	"Player": "player",
 	"Kamu": "player",
+	"MC": "player",
+	"Bu Mira": "ibu",
+	"Pak Hendra": "pakrt",
+	"Bang Jali": "pedagang",
+	"Kak Rina": "ibu",
+	"Pak Darwis": "penjaga_hutan",
+	"Datuk Sampan": "penjaga_hutan",
+	"Bang Ucok": "pakrt",
+	"Warga": "petani",
+	"Warga 1": "petani",
+	"Warga 2": "pedagang",
 }
 
 var _full_text: String = ""
@@ -52,8 +63,8 @@ func show_node(node: Dictionary) -> void:
 	speaker_label.text = str(node.get("speaker", ""))
 	_update_portrait(node)
 
-	var full_text: String = str(node.get("text", ""))
-	var choices: Array = node.get("choices", [])
+	var full_text: String = str(node.get("teks", node.get("text", "")))
+	var choices: Array = node.get("pilihan", node.get("choices", []))
 	_has_choices = not choices.is_empty()
 	continue_hint.visible = not _has_choices
 	_start_typewriter(full_text)
@@ -67,7 +78,7 @@ func _update_portrait(node: Dictionary) -> void:
 	var key: String = str(node.get("portrait", ""))
 	if key.is_empty():
 		key = PORTRAITS.get(str(node.get("speaker", "")), "player")
-	var emotion: String = str(node.get("emotion", "neutral"))
+	var emotion: String = str(node.get("emosi", node.get("emotion", "neutral")))
 	var path: String = "res://assets/sprites/portraits/%s_%s.png" % [key, emotion]
 	if not ResourceLoader.exists(path):
 		path = "res://assets/sprites/portraits/%s_neutral.png" % key
@@ -109,7 +120,11 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
-		btn.text = "  %s" % str(choice.get("text", ""))
+		var label_str: String = str(choice.get("teks", choice.get("text", "")))
+		if choice.has("tipe"):
+			btn.text = " [%s] %s" % [choice.get("tipe"), label_str]
+		else:
+			btn.text = "  %s" % label_str
 		btn.custom_minimum_size = Vector2(0, 28)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
 		btn.add_theme_font_size_override("font_size", 12)
@@ -135,7 +150,8 @@ func _finish_typewriter() -> void:
 	text_label.text = _full_text
 	text_label.visible_characters = -1
 	if _has_choices:
-		_show_choices(_current_node.get("choices", []))
+		var choices: Array = _current_node.get("pilihan", _current_node.get("choices", []))
+		_show_choices(choices)
 
 func _input(event: InputEvent) -> void:
 	if not panel.visible:

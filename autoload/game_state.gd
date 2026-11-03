@@ -7,12 +7,30 @@ extends Node
 signal river_health_changed(new_value: float)
 signal card_unlocked(card_id: String)
 signal level_completed(level_id: int)
+signal ujian_hujan_selesai(nomor: int, hasil: String)
+signal ending_ditentukan(kode: String)
+signal npc_sikap_changed(npc: String, nilai: int)
 
 # ─── State ────────────────────────────────────────────────────────────────────
-var river_health: float = 20.0 :
+var river_health: float = 40.0 :
 	set(value):
 		river_health = clamp(value, 0.0, 100.0)
 		river_health_changed.emit(river_health)
+
+var meter_bencana: float = 60.0 :
+	set(value):
+		meter_bencana = clamp(value, 0.0, 100.0)
+		river_health = 100.0 - meter_bencana
+
+var npc_sikap: Dictionary = {
+	"jali": 0,    # -1: Menolak, 0: Acuh, 1: Ragu, 2: Peduli
+	"rina": 0,
+	"darwis": 0
+}
+var hari: int = 1:
+	set(value):
+		hari = value
+		day = value
 
 var trash_collected: Dictionary = { "organik": 0, "plastik": 0, "b3": 0 }
 var trees_planted: int = 0
@@ -41,6 +59,22 @@ const SAVE_PATH: String = "user://save.json"
 
 func add_river_health(amount: float) -> void:
 	river_health += amount
+	meter_bencana = clamp(100.0 - river_health, 0.0, 100.0)
+
+## Kontrak Orang 1 & 2: Ubah Meter Bencana (+ naik/bahaya, - turun/aman)
+func ubah_meter(delta: float) -> void:
+	meter_bencana = clamp(meter_bencana + delta, 0.0, 100.0)
+	river_health = 100.0 - meter_bencana
+
+## Kontrak Orang 1 & 2: Set sikap NPC (-1: Menolak, 0: Acuh, 1: Ragu, 2: Peduli)
+func set_sikap(npc: String, nilai: int) -> void:
+	var key: String = npc.to_lower()
+	npc_sikap[key] = nilai
+	npc_sikap_changed.emit(key, nilai)
+
+## Kontrak Orang 1 & 2: Kurangi uang
+func kurangi_uang(n: int) -> void:
+	rupiah = maxi(0, rupiah - n)
 
 func collect_trash(category: String) -> void:
 	if trash_collected.has(category):

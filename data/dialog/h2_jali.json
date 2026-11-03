@@ -1,0 +1,116 @@
+[
+  {
+    "id": "start",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Apa lihat-lihat, Bang?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bang, aku baru pulang. Boleh cerita, kenapa buang di sini?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step1_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Bang, sungai lagi sakit. Tolong jangan buang sampah ya.",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step1_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Kalian ini jorok! Gara-gara kalian kampung banjir!",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step1_c"
+      }
+    ]
+  },
+  {
+    "id": "step1_a",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Haha, cemana lagi. Tong sampah di ujung jalan itu jauh, Bang. Truknya pun tak masuk gang.",
+    "next": "datuk_1"
+  },
+  {
+    "id": "step1_b",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Iya, iya, nanti. (Bang Jali bergegas pergi).",
+    "next": "bisik_b1"
+  },
+  {
+    "id": "bisik_b1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Kau belum mendengar alasannya. Tanyakan lagi.",
+    "next": "start"
+  },
+  {
+    "id": "step1_c",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Siapa kau ceramahi aku? Baru pulang sudah sok pintar!",
+    "next": "end"
+  },
+  {
+    "id": "datuk_1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Kau sudah mendengar jawabnya. Sekarang tanyakan pada dirimu, apa akar sebenarnya?",
+    "next": "step2"
+  },
+  {
+    "id": "step2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Apa akar masalah Bang Jali?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Berarti bukan karena malas. Tempat pembuangannya yang tidak terjangkau.",
+        "delta_sikap": 1,
+        "delta_meter": 0,
+        "next": "step2_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Mungkin kau terburu-buru karena kerja ya.",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step2_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Pokoknya malas! Anak muda sekarang begitu semua.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step2_c"
+      }
+    ]
+  },
+  {
+    "id": "step2_a",
+    "speaker": "Bang Jali",
+    "emosi": "happy",
+    "teks": "Nah itu dia, Bang! Akhirnya ada yang ngerti.",
+    "next": "end"
+  },
+  {
+    "id": "step2_b",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Ada benarnya. Tapi bukan itu saja.",
+    "next": "end"
+  },
+  {
+    "id": "step2_c",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Sudahlah, aku tak mau bicara lagi.",
+    "next": "end"
+  }
+]

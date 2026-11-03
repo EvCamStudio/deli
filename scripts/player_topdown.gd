@@ -72,7 +72,7 @@ func _build_frames() -> void:
 			atlas.atlas = texture
 			atlas.region = Rect2(col * 16.0, row * 24.0, 16.0, 24.0)
 			frames.add_frame(walk_name, atlas)
-			if col == 0 or col == 2:
+			if col == 0:
 				frames.add_frame(idle_name, atlas)
 	sprite.sprite_frames = frames
 	sprite.play("idle_down")
