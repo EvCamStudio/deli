@@ -68,3 +68,4 @@ func _on_body_entered(body: Node) -> void:
 func _on_body_exited(body: Node) -> void:
 	if body.is_in_group("player") and exclaim_label:
 		exclaim_label.text = "!"
+

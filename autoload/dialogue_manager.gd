@@ -91,6 +91,28 @@ func mulai(id_dialog: String) -> void:
 
 	_show_node(start_node_id)
 
+## Muat file dialog level dari JSON, kembalikan Dictionary semua NPC (kompatibilitas level lama).
+func load_dialogue_file(level_id: int) -> Dictionary:
+	var path: String = "res://data/dialogues/level%d.json" % level_id
+	if not FileAccess.file_exists(path):
+		path = "res://data/dialog/level%d.json" % level_id
+	if not FileAccess.file_exists(path):
+		return {}
+	var file := FileAccess.open(path, FileAccess.READ)
+	if not file:
+		return {}
+	var text: String = file.get_as_text()
+	file.close()
+
+	var json := JSON.new()
+	if json.parse(text) != OK:
+		push_error("DialogueManager: gagal parse JSON: " + path)
+		return {}
+	var data = json.get_data()
+	if data is Dictionary:
+		return data
+	return {}
+
 ## Kompatibilitas dengan kode lama: start_dialogue(array)
 func start_dialogue(npc_data: Array) -> void:
 	_ensure_dialogue_box()

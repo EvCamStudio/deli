@@ -129,3 +129,4 @@ func get_jumlah_peduli() -> int:
 ## Transparansi Datuk mengikuti jumlah NPC Peduli: 0.4 + 0.2 * jumlah_peduli
 func get_datuk_opacity() -> float:
 	return clamp(0.4 + 0.2 * float(get_jumlah_peduli()), 0.4, 1.0)
+
