@@ -146,7 +146,7 @@ func _fade_and_go() -> void:
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "color:a", 1.0, 0.6)
 	tween.tween_callback(func():
-		SceneManager.change_level(1)
+		SceneManager.change_scene("res://scenes/maps/map_a_warung.tscn")
 	)
 
 func _unhandled_input(event: InputEvent) -> void:

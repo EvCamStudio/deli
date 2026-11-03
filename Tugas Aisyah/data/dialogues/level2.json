@@ -1,0 +1,66 @@
+{
+  "npc_petani_1": [
+    {
+      "id": "start",
+      "speaker": "Pak Tani",
+      "text": "Sudah bertahun-tahun kami pakai pupuk kimia. Hasilnya memang banyak, tapi sungainya jadi keruh...",
+      "choices": [
+        { "text": "Ada cara lain yang lebih baik?", "next": "organic", "effect": {} },
+        { "text": "Yang penting hasil panen banyak.", "next": "ignore", "effect": { "choice": { "peduli_alam": false } } }
+      ]
+    },
+    {
+      "id": "organic",
+      "speaker": "Pak Tani",
+      "text": "Ada! Pupuk kompos dari sisa tanaman. Lebih lambat hasilnya, tapi sungai tetap bersih dan tanah tetap subur.",
+      "choices": [
+        { "text": "Ayo kita coba cara itu!", "next": "end_good", "effect": { "river_health": 5, "choice": { "peduli_alam": true } } }
+      ]
+    },
+    {
+      "id": "ignore",
+      "speaker": "Pak Tani",
+      "text": "Hmm... Kau ada benarnya juga. Tapi anak cucuku juga harus hidup di sini nanti...",
+      "choices": [
+        { "text": "Maaf, kau benar.", "next": "end_good", "effect": { "river_health": 2, "choice": { "peduli_alam": true } } },
+        { "text": "Terserah kau saja.", "next": "end_bad", "effect": {} }
+      ]
+    },
+    {
+      "id": "end_good",
+      "speaker": "Pak Tani",
+      "text": "Gotong royong kita jaga kebun dan sungai ini. Pilah dulu limbah pertanian di wadah yang tersedia ya!",
+      "choices": []
+    },
+    {
+      "id": "end_bad",
+      "speaker": "Pak Tani",
+      "text": "Ya sudah... Mungkin nanti saja kami pikirkan.",
+      "choices": []
+    }
+  ],
+  "npc_ibu_desa": [
+    {
+      "id": "start",
+      "speaker": "Ibu Sari",
+      "text": "Kau mau bantu bersihkan sungai? Wah, kalau dulu warga sini selalu gotong royong setiap minggu bersihkan sungai.",
+      "choices": [
+        { "text": "Sekarang sudah tidak lagi?", "next": "now", "effect": {} }
+      ]
+    },
+    {
+      "id": "now",
+      "speaker": "Ibu Sari",
+      "text": "Orang sibuk sendiri-sendiri sekarang. Padahal kalau bareng-bareng, kerja jadi ringan dan sungai bisa bersih.",
+      "choices": [
+        { "text": "Aku akan mulai dari diri sendiri dulu.", "next": "end", "effect": { "river_health": 3 } }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Ibu Sari",
+      "text": "Bagus! Mulai dari yang kecil, lama-lama jadi besar. Semangat ya!",
+      "choices": []
+    }
+  ]
+}

@@ -1,0 +1,87 @@
+[gd_scene load_steps=4 format=3 uid="uid://level5_epilog"]
+
+[ext_resource type="Script" path="res://scripts/ending_screen.gd" id="1_ending"]
+[ext_resource type="PackedScene" path="res://scenes/ui/knowledge_card_popup.tscn" id="2_card"]
+
+[node name="Level5Epilog" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_ending")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.15, 0.3, 1)
+
+[node name="RiverVisual" type="ColorRect" parent="Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.0
+anchor_top = 0.6
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.2, 0.6, 0.9, 0.8)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -140.0
+offset_right = 140.0
+theme_override_constants/separation = 8
+
+[node name="EndingTitle" type="Label" parent="VBox"]
+layout_mode = 2
+text = "Ending..."
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.4, 0.9, 1.0, 1)
+
+[node name="EndingMessage" type="RichTextLabel" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+bbcode_enabled = true
+fit_content = false
+theme_override_font_sizes/normal_font_size = 9
+
+[node name="StatsLabel" type="RichTextLabel" parent="VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 70)
+bbcode_enabled = true
+fit_content = false
+theme_override_font_sizes/normal_font_size = 9
+theme_override_colors/default_color = Color(0.85, 0.95, 0.85, 1)
+
+[node name="Buttons" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="PlayAgainBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 28)
+text = "🔄 Main Lagi"
+theme_override_font_sizes/font_size = 9
+
+[node name="CardsBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 28)
+text = "📚 Koleksi"
+theme_override_font_sizes/font_size = 9
+
+[node name="QuitBtn" type="Button" parent="VBox/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+custom_minimum_size = Vector2(0, 28)
+text = "✕ Keluar"
+theme_override_font_sizes/font_size = 9
+
+[node name="KnowledgeCardPopup" parent="." instance=ExtResource("2_card")]

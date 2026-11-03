@@ -1,0 +1,129 @@
+{
+  "npc_pedagang": [
+    {
+      "id": "start",
+      "speaker": "Pak Pedagang",
+      "text": "Dulu sungai ini jernih, Nak. Aku bisa cuci tangan langsung di sini. Sekarang? Bau dan kotor.",
+      "choices": [
+        { "text": "Kenapa sekarang kotor?", "next": "why", "effect": { "river_health": 0 } },
+        { "text": "Ah, bukan urusanku.", "next": "ignore", "effect": { "choice": { "peduli": false } } }
+      ]
+    },
+    {
+      "id": "why",
+      "speaker": "Pak Pedagang",
+      "text": "Sampah dari warung-warung, limbah rumah tangga, semuanya masuk sungai. Drainase juga tersumbat. Waktu hujan, banjir!",
+      "choices": [
+        { "text": "Aku akan bantu bersihkan.", "next": "help", "effect": { "river_health": 3, "choice": { "peduli": true } } }
+      ]
+    },
+    {
+      "id": "ignore",
+      "speaker": "Pak Pedagang",
+      "text": "Hmm... Semoga kau tidak menyesal nanti.",
+      "choices": []
+    },
+    {
+      "id": "help",
+      "speaker": "Pak Pedagang",
+      "text": "Syukurlah! Ada juga sampah di sini yang perlu dipilah ke tong yang benar. Tong organik, plastik, dan B3 sudah ada.",
+      "choices": [
+        { "text": "Siap, aku mengerti.", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Pak Pedagang",
+      "text": "Terima kasih ya, Nak. Kalau semua orang peduli begini, sungai pasti bisa pulih.",
+      "choices": []
+    }
+  ],
+  "npc_ibu_rumah": [
+    {
+      "id": "start",
+      "speaker": "Ibu Rumah Tangga",
+      "text": "Aduh, banjir lagi! Setiap hujan lebat pasti banjir karena got di depan tersumbat.",
+      "choices": [
+        { "text": "Aku bisa bantu buka sumbatannya!", "next": "help", "effect": {} },
+        { "text": "Memangnya penyebabnya apa?", "next": "reason", "effect": {} }
+      ]
+    },
+    {
+      "id": "reason",
+      "speaker": "Ibu Rumah Tangga",
+      "text": "Sampah plastik, kantong, dan sisa makanan. Orang buang begitu saja ke got. Kasihan...",
+      "choices": [
+        { "text": "Kita harus ubah kebiasaan ini.", "next": "help", "effect": { "river_health": 3, "choice": { "kebiasaan_baik": true } } }
+      ]
+    },
+    {
+      "id": "help",
+      "speaker": "Ibu Rumah Tangga",
+      "text": "Tuas pengatur pintu air ada di ujung got. Tekan dalam urutan yang benar, air bisa mengalir lagi!",
+      "choices": [
+        { "text": "Aku coba!", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Ibu Rumah Tangga",
+      "text": "Alhamdulillah! Terima kasih banyak ya!",
+      "choices": []
+    }
+  ],
+  "npc_anak_sekolah": [
+    {
+      "id": "start",
+      "speaker": "Budi",
+      "text": "Kak, tau tidak? Di sekolah kami belajar pantun Melayu Deli. Ada pesan soal menjaga alam juga di sana!",
+      "choices": [
+        { "text": "Coba ajarkan aku pantunnya!", "next": "pantun", "effect": {} },
+        { "text": "Sibuk dulu, Dik.", "next": "skip", "effect": {} }
+      ]
+    },
+    {
+      "id": "pantun",
+      "speaker": "Budi",
+      "text": "Oke! Ada gerbang yang terkunci di jembatan itu. Kunci cuma bisa dibuka dengan melengkapi pantun yang tepat. Ayo coba!",
+      "choices": [
+        { "text": "Asyik, aku suka tantangan!", "next": "end", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "skip",
+      "speaker": "Budi",
+      "text": "Oh... ya sudah, Kak. Kapan-kapan saja.",
+      "choices": []
+    },
+    {
+      "id": "end",
+      "speaker": "Budi",
+      "text": "Ingat ya Kak, ketuk baris yang bersajak dengan baris pertama untuk melengkapi pantunnya!",
+      "choices": []
+    }
+  ],
+  "npc_tokoh_masyarakat": [
+    {
+      "id": "start",
+      "speaker": "Pak RT",
+      "text": "Dalam budaya Melayu Deli, ada pepatah: 'Sungai adalah urat nadi kehidupan.' Kita wajib jaga bersama.",
+      "choices": [
+        { "text": "Bagaimana caranya?", "next": "how", "effect": {} }
+      ]
+    },
+    {
+      "id": "how",
+      "speaker": "Pak RT",
+      "text": "Musyawarah, gotong royong, dan kesadaran tiap pribadi. Dimulai dari hal kecil: jangan buang sampah sembarangan.",
+      "choices": [
+        { "text": "Aku akan mulai dari diri sendiri.", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true } } }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Pak RT",
+      "text": "Itulah jiwa gotong royong kita. Semoga sungai Deli kembali jernih untuk anak cucu kita.",
+      "choices": []
+    }
+  ]
+}

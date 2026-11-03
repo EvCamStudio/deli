@@ -33,8 +33,23 @@ func change_scene(scene_path: String) -> void:
 ## Pindah ke level berdasarkan ID (1–5).
 func change_level(level_id: int) -> void:
 	GameState.current_level = level_id
+	if level_id == 1:
+		change_scene("res://scenes/maps/map_a_warung.tscn")
+		return
+	elif level_id == 5:
+		change_scene("res://scenes/levels/level_5_epilog.tscn")
+		return
 	var path: String = "res://scenes/levels/level_%d_%s.tscn" % [level_id, _level_suffix(level_id)]
 	change_scene(path)
+
+## Pindah ke 4 peta Dokumen Utama ("warung", "sungai", "gang_jali", "pintu_air")
+func change_map(map_key: String) -> void:
+	match map_key.to_lower():
+		"warung": change_scene("res://scenes/maps/map_a_warung.tscn")
+		"sungai": change_scene("res://scenes/maps/map_b_sungai.tscn")
+		"gang_jali", "gang": change_scene("res://scenes/maps/map_c_gang_jali.tscn")
+		"pintu_air": change_scene("res://scenes/maps/map_d_pintu_air.tscn")
+		_: change_scene("res://scenes/maps/map_a_warung.tscn")
 
 ## Pindah ke scene intro dramatis.
 func go_to_intro() -> void:

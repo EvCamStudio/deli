@@ -1,0 +1,192 @@
+[gd_scene load_steps=18 format=3]
+
+[ext_resource type="Script" path="res://scripts/map_a_warung.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/topdown_map.gd" id="2_topdown"]
+[ext_resource type="PackedScene" path="res://scenes/player/player_topdown.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portrait_dialogue.tscn" id="5_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_touch.tscn" id="6_touch"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_journal.tscn" id="7_journal"]
+[ext_resource type="PackedScene" path="res://scenes/world/npc_topdown.tscn" id="8_npc"]
+[ext_resource type="Script" path="res://scripts/warung_interactable.gd" id="9_warung"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/warung_rusak.png" id="10_warung_tex"]
+[ext_resource type="Script" path="res://scripts/kasur_mc.gd" id="11_kasur"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/kasur_mc.png" id="12_kasur_tex"]
+[ext_resource type="Script" path="res://scripts/pengepul_lapak.gd" id="13_pengepul"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/lapak_pengepul.png" id="14_pengepul_tex"]
+[ext_resource type="Script" path="res://scripts/map_gate.gd" id="15_gate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/gerobak_gorengan.png" id="16_gerobak"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(32, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(24, 64)
+
+[node name="MapAWarung" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_map")
+map_name = "Warung"
+
+[node name="TopdownMap" type="Node2D" parent="."]
+script = ExtResource("2_topdown")
+theme = "desa"
+
+[node name="Ground" type="TileMapLayer" parent="TopdownMap"]
+z_index = -20
+
+[node name="Water" type="TileMapLayer" parent="TopdownMap"]
+z_index = -19
+
+[node name="Bridge" type="TileMapLayer" parent="TopdownMap"]
+z_index = -18
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(180, 200)
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 544
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(140, 230)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue")]
+
+[node name="TouchControls" parent="." instance=ExtResource("6_touch")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_journal")]
+
+[node name="Warung" type="Node2D" parent="."]
+position = Vector2(100, 160)
+script = ExtResource("9_warung")
+
+[node name="Sprite2D" type="Sprite2D" parent="Warung"]
+texture = ExtResource("10_warung_tex")
+
+[node name="InteractArea" type="Area2D" parent="Warung"]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Warung/InteractArea"]
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Label" type="Label" parent="Warung"]
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = -28.0
+theme_override_font_sizes/font_size = 11
+text = "[E] Bersihkan Warung"
+horizontal_alignment = 1
+
+[node name="KasurMC" type="Node2D" parent="."]
+position = Vector2(60, 210)
+script = ExtResource("11_kasur")
+
+[node name="Sprite2D" type="Sprite2D" parent="KasurMC"]
+texture = ExtResource("12_kasur_tex")
+
+[node name="InteractArea" type="Area2D" parent="KasurMC"]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KasurMC/InteractArea"]
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Label" type="Label" parent="KasurMC"]
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 10
+text = "[E] Tidur"
+horizontal_alignment = 1
+
+[node name="Pengepul" type="Node2D" parent="."]
+position = Vector2(250, 160)
+script = ExtResource("13_pengepul")
+
+[node name="Sprite2D" type="Sprite2D" parent="Pengepul"]
+texture = ExtResource("14_pengepul_tex")
+
+[node name="InteractArea" type="Area2D" parent="Pengepul"]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pengepul/InteractArea"]
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Label" type="Label" parent="Pengepul"]
+offset_left = -40.0
+offset_top = -34.0
+offset_right = 40.0
+offset_bottom = -18.0
+theme_override_font_sizes/font_size = 10
+text = "[E] Jual Sampah"
+horizontal_alignment = 1
+
+[node name="BuMira" parent="." instance=ExtResource("8_npc")]
+position = Vector2(120, 200)
+sprite_key = "ibu"
+dialog_id = "h1_warung"
+
+[node name="KakRina" parent="." instance=ExtResource("8_npc")]
+position = Vector2(330, 210)
+sprite_key = "ibu"
+empati_npc = "rina"
+
+[node name="GerobakGorengan" type="Sprite2D" parent="KakRina"]
+position = Vector2(18, 0)
+texture = ExtResource("16_gerobak")
+
+[node name="BangUcok" parent="." instance=ExtResource("8_npc")]
+position = Vector2(200, 250)
+sprite_key = "pakrt"
+dialog_id = "h7_ucok"
+
+[node name="GateKeSungai" type="Area2D" parent="."]
+position = Vector2(920, 260)
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("15_gate")
+target_scene_path = "res://scenes/maps/map_b_sungai.tscn"
+gate_name = "Ke Tepi Sungai Deli"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeSungai"]
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="Label" type="Label" parent="GateKeSungai"]
+offset_left = -70.0
+offset_top = -30.0
+offset_right = 70.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 11
+text = "→ Ke Tepi Sungai Deli"
+horizontal_alignment = 1
+
+[node name="GateKeGang" type="Area2D" parent="."]
+position = Vector2(400, 480)
+rotation = 1.5708
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("15_gate")
+target_scene_path = "res://scenes/maps/map_c_gang_jali.tscn"
+gate_name = "Ke Gang Bang Jali"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeGang"]
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="Label" type="Label" parent="GateKeGang"]
+offset_left = -60.0
+offset_top = -30.0
+offset_right = 60.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 11
+text = "↓ Ke Gang Bang Jali"
+horizontal_alignment = 1

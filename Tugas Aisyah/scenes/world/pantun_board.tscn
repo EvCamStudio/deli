@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/pilot_pantun_board.gd" id="1_board"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/pantun_board.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_board"]
+size = Vector2(22, 24)
+
+[node name="PantunBoard" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_board")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("2_texture")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_board")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -40.0
+offset_top = -40.0
+offset_right = 40.0
+offset_bottom = -26.0
+theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
+theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 8
+text = "Pantun"
+horizontal_alignment = 1

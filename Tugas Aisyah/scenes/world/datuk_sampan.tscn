@@ -1,0 +1,39 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/datuk_sampan.gd" id="1_datuk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/penjaga_hutan.png" id="2_sprite"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_pixel"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
+radius = 24.0
+
+[node name="DatukSampan" type="Node2D"]
+script = ExtResource("1_datuk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.4)
+texture = ExtResource("2_sprite")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 24)
+
+[node name="InteractArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource("CircleShape2D_interact")
+
+[node name="ExclaimLabel" type="Label" parent="."]
+offset_left = -24.0
+offset_top = -32.0
+offset_right = 24.0
+offset_bottom = -12.0
+theme_override_colors/font_color = Color(0.9, 0.85, 0.5, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.15, 0.1, 1)
+theme_override_constants/outline_size = 4
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 12
+text = "!"
+horizontal_alignment = 1
+vertical_alignment = 1
+

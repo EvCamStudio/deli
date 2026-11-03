@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/player_topdown.gd" id="1_player"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/shadow.png" id="2_shadow"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(10, 8)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_interact"]
+radius = 22.0
+
+[node name="PlayerTopDown" type="CharacterBody2D"]
+collision_layer = 1
+collision_mask = 1
+motion_mode = 1
+script = ExtResource("1_player")
+
+[node name="Shadow" type="Sprite2D" parent="."]
+position = Vector2(0, -1)
+texture = ExtResource("2_shadow")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="InteractArea" type="Area2D" parent="."]
+position = Vector2(0, -8)
+collision_layer = 0
+collision_mask = 2
+
+[node name="InteractCollision" type="CollisionShape2D" parent="InteractArea"]
+shape = SubResource("CircleShape2D_interact")
+
+[node name="ActionLabel" type="Label" parent="."]
+offset_left = -60.0
+offset_top = -44.0
+offset_right = 60.0
+offset_bottom = -28.0
+theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
+theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 10
+text = "[E] Bicara"
+horizontal_alignment = 1
+vertical_alignment = 1
+visible = false

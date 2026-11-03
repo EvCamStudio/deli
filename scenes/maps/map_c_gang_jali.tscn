@@ -1,0 +1,106 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/map_c_gang_jali.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/topdown_map.gd" id="2_topdown"]
+[ext_resource type="PackedScene" path="res://scenes/player/player_topdown.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portrait_dialogue.tscn" id="5_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_touch.tscn" id="6_touch"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_journal.tscn" id="7_journal"]
+[ext_resource type="PackedScene" path="res://scenes/world/npc_topdown.tscn" id="8_npc"]
+[ext_resource type="Script" path="res://scripts/tps_gang.gd" id="9_tps"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tps_sebelum.png" id="10_tps_tex"]
+[ext_resource type="Script" path="res://scripts/map_gate.gd" id="11_gate"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(32, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(64, 24)
+
+[node name="MapCGangJali" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_map")
+map_name = "Gang Jali"
+
+[node name="TopdownMap" type="Node2D" parent="."]
+script = ExtResource("2_topdown")
+theme = "desa"
+
+[node name="Ground" type="TileMapLayer" parent="TopdownMap"]
+z_index = -20
+
+[node name="Water" type="TileMapLayer" parent="TopdownMap"]
+z_index = -19
+
+[node name="Bridge" type="TileMapLayer" parent="TopdownMap"]
+z_index = -18
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(240, 200)
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 544
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(240, 100)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue")]
+
+[node name="TouchControls" parent="." instance=ExtResource("6_touch")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_journal")]
+
+[node name="BangJali" parent="." instance=ExtResource("8_npc")]
+position = Vector2(240, 220)
+sprite_key = "pedagang"
+empati_npc = "jali"
+
+[node name="TPSGang" type="Node2D" parent="."]
+position = Vector2(320, 220)
+script = ExtResource("9_tps")
+
+[node name="Sprite2D" type="Sprite2D" parent="TPSGang"]
+texture = ExtResource("10_tps_tex")
+
+[node name="InteractArea" type="Area2D" parent="TPSGang"]
+collision_layer = 2
+collision_mask = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TPSGang/InteractArea"]
+shape = SubResource("RectangleShape2D_box")
+
+[node name="Label" type="Label" parent="TPSGang"]
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = -16.0
+theme_override_font_sizes/font_size = 10
+text = "[E] TPS Gang"
+horizontal_alignment = 1
+
+[node name="GateKeWarung" type="Area2D" parent="."]
+position = Vector2(240, 40)
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("11_gate")
+target_scene_path = "res://scenes/maps/map_a_warung.tscn"
+gate_name = "Kembali ke Warung"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeWarung"]
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="Label" type="Label" parent="GateKeWarung"]
+offset_left = -60.0
+offset_top = -24.0
+offset_right = 60.0
+offset_bottom = -8.0
+theme_override_font_sizes/font_size = 11
+text = "↑ Kembali ke Warung"
+horizontal_alignment = 1

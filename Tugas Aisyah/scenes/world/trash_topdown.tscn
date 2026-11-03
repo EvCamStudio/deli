@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/pilot_trash.gd" id="1_trash"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_trash"]
+radius = 13.0
+
+[node name="Trash" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_trash")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -6)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_trash")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -30.0
+offset_top = -28.0
+offset_right = 30.0
+offset_bottom = -16.0
+theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
+theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 8
+text = "Sampah"
+horizontal_alignment = 1
+visible = false

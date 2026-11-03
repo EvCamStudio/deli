@@ -1,0 +1,116 @@
+[
+  {
+    "id": "start",
+    "speaker": "Kak Rina",
+    "emosi": "happy",
+    "teks": "Eh, Dek, mau gorengan? Baru angkat, panas.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kak, minyak bekas itu biasanya dibuang ke mana?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step1_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Kak, minyak jangan dibuang ke selokan ya, nanti mencemari.",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step1_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Kakak sadar tidak, minyak itu bikin sungai rusak?",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step1_c"
+      }
+    ]
+  },
+  {
+    "id": "step1_a",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Ke selokan belakang, Dek. Mau ke mana lagi? Sayang botol, sayang tempat.",
+    "next": "datuk_rina"
+  },
+  {
+    "id": "step1_b",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Iya, iya, nanti Kakak lihat.",
+    "next": "bisik_b1"
+  },
+  {
+    "id": "bisik_b1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Kau memberi tahu sebelum bertanya. Tanyakan dulu keadaannya.",
+    "next": "start"
+  },
+  {
+    "id": "step1_c",
+    "speaker": "Kak Rina",
+    "emosi": "sad",
+    "teks": "Adek baru pulang sudah menyalahkan orang yang cari makan?!",
+    "next": "end"
+  },
+  {
+    "id": "datuk_rina",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Bunyi perut orang lebih nyaring daripada ceramah. Cari tahu apa yang dia butuhkan.",
+    "next": "step2"
+  },
+  {
+    "id": "step2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Bagaimana memahami kondisi Kak Rina?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Jadi Kakak tidak punya tempat menampung, dan belum tahu minyak itu menyumbat selokan?",
+        "delta_sikap": 1,
+        "delta_meter": 0,
+        "next": "step2_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Mungkin biar hemat ya, Kak?",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step2_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Pasti sengaja biar gampang.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step2_c"
+      }
+    ]
+  },
+  {
+    "id": "step2_a",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Betul, Dek. Kakak kira minyak itu cair, hanyut saja.",
+    "next": "end"
+  },
+  {
+    "id": "step2_b",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Ya, ada juga alasannya begitu.",
+    "next": "end"
+  },
+  {
+    "id": "step2_c",
+    "speaker": "Kak Rina",
+    "emosi": "sad",
+    "teks": "Sudahlah. Aku mau jualan, jangan ganggu!",
+    "next": "end"
+  }
+]

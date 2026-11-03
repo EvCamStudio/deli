@@ -1,0 +1,51 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Hujan kecil mulai turun di bantaran Sungai Deli...",
+    "next": "check"
+  },
+  {
+    "id": "aman",
+    "speaker": "Bu Mira",
+    "emosi": "happy",
+    "teks": "Air naik sedikit saja. Syukurlah warung kita aman.",
+    "next": "aman_datuk"
+  },
+  {
+    "id": "aman_datuk",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Akar yang kuat tak takut angin.",
+    "next": "end"
+  },
+  {
+    "id": "genangan",
+    "speaker": "Pak Hendra",
+    "emosi": "sad",
+    "teks": "Air masuk lagi, Nak. Tidak parah, tapi merepotkan.",
+    "next": "genangan_datuk"
+  },
+  {
+    "id": "genangan_datuk",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Air hanya mencari jalan. Salahkan jalan yang tertutup, bukan airnya.",
+    "next": "end"
+  },
+  {
+    "id": "banjir",
+    "speaker": "Bu Mira",
+    "emosi": "sad",
+    "teks": "(Menangis pelan) Kita ulang dari awal lagi... warung kita kotor lagi.",
+    "next": "banjir_datuk"
+  },
+  {
+    "id": "banjir_datuk",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Jangan berhenti. Satu hari buruk bukan akhir sungai.",
+    "next": "end"
+  }
+]

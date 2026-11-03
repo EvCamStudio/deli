@@ -1,0 +1,23 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Warung kopi keluarga berhasil selamat dari gusuran dan utang pokok lunas.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Bu Mira",
+    "emosi": "happy",
+    "teks": "Kondisi sungai membaik pelan-pelan berkat warga yang mulai sadar.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Kau tidak sendirian lagi, Nak. Perjalananmu membuahkan hasil. Teruskan.",
+    "next": "end"
+  }
+]

@@ -1,0 +1,147 @@
+[gd_scene load_steps=17 format=3]
+
+[ext_resource type="Script" path="res://scripts/map_b_sungai.gd" id="1_map"]
+[ext_resource type="Script" path="res://scripts/topdown_map.gd" id="2_topdown"]
+[ext_resource type="PackedScene" path="res://scenes/player/player_topdown.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portrait_dialogue.tscn" id="5_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_touch.tscn" id="6_touch"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_journal.tscn" id="7_journal"]
+[ext_resource type="PackedScene" path="res://scenes/world/datuk_sampan.tscn" id="8_datuk"]
+[ext_resource type="PackedScene" path="res://scenes/world/npc_topdown.tscn" id="9_npc"]
+[ext_resource type="PackedScene" path="res://scenes/world/bin_topdown.tscn" id="10_bin"]
+[ext_resource type="PackedScene" path="res://scenes/world/tree_spot_topdown.tscn" id="11_tree"]
+[ext_resource type="PackedScene" path="res://scenes/world/pantun_board.tscn" id="12_pantun"]
+[ext_resource type="PackedScene" path="res://scenes/world/trash_topdown.tscn" id="13_trash"]
+[ext_resource type="Script" path="res://scripts/map_gate.gd" id="14_gate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/bale_darwis.png" id="15_bale"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gate"]
+size = Vector2(24, 64)
+
+[node name="MapBSungai" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_map")
+map_name = "Sungai"
+
+[node name="TopdownMap" type="Node2D" parent="."]
+script = ExtResource("2_topdown")
+theme = "hulu"
+
+[node name="Ground" type="TileMapLayer" parent="TopdownMap"]
+z_index = -20
+
+[node name="Water" type="TileMapLayer" parent="TopdownMap"]
+z_index = -19
+
+[node name="Bridge" type="TileMapLayer" parent="TopdownMap"]
+z_index = -18
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(100, 272)
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 544
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(90, 272)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue")]
+
+[node name="TouchControls" parent="." instance=ExtResource("6_touch")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_journal")]
+
+[node name="DatukSampan" parent="." instance=ExtResource("8_datuk")]
+position = Vector2(480, 220)
+
+[node name="BaleDarwis" type="Sprite2D" parent="."]
+position = Vector2(280, 160)
+texture = ExtResource("15_bale")
+
+[node name="PakDarwis" parent="." instance=ExtResource("9_npc")]
+position = Vector2(280, 175)
+sprite_key = "penjaga_hutan"
+empati_npc = "darwis"
+
+[node name="BinOrganik" parent="." instance=ExtResource("10_bin")]
+position = Vector2(200, 240)
+bin_category = "organik"
+
+[node name="BinPlastik" parent="." instance=ExtResource("10_bin")]
+position = Vector2(230, 240)
+bin_category = "plastik"
+
+[node name="BinB3" parent="." instance=ExtResource("10_bin")]
+position = Vector2(260, 240)
+bin_category = "b3"
+
+[node name="TreeSpot1" parent="." instance=ExtResource("11_tree")]
+position = Vector2(160, 120)
+
+[node name="TreeSpot2" parent="." instance=ExtResource("11_tree")]
+position = Vector2(360, 120)
+
+[node name="TreeSpot3" parent="." instance=ExtResource("11_tree")]
+position = Vector2(620, 120)
+
+[node name="PantunBoard" parent="." instance=ExtResource("12_pantun")]
+position = Vector2(400, 320)
+
+[node name="Trash1" parent="." instance=ExtResource("13_trash")]
+position = Vector2(440, 260)
+category = "plastik"
+
+[node name="Trash2" parent="." instance=ExtResource("13_trash")]
+position = Vector2(520, 280)
+category = "organik"
+
+[node name="Trash3" parent="." instance=ExtResource("13_trash")]
+position = Vector2(490, 310)
+category = "b3"
+
+[node name="GateKeWarung" type="Area2D" parent="."]
+position = Vector2(30, 272)
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("14_gate")
+target_scene_path = "res://scenes/maps/map_a_warung.tscn"
+gate_name = "Kembali ke Warung"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeWarung"]
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="Label" type="Label" parent="GateKeWarung"]
+offset_left = -60.0
+offset_top = -30.0
+offset_right = 60.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 11
+text = "← Ke Warung"
+horizontal_alignment = 1
+
+[node name="GateKePintuAir" type="Area2D" parent="."]
+position = Vector2(930, 272)
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("14_gate")
+target_scene_path = "res://scenes/maps/map_d_pintu_air.tscn"
+gate_name = "Ke Pintu Air Bendungan"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GateKePintuAir"]
+shape = SubResource("RectangleShape2D_gate")
+
+[node name="Label" type="Label" parent="GateKePintuAir"]
+offset_left = -70.0
+offset_top = -30.0
+offset_right = 70.0
+offset_bottom = -14.0
+theme_override_font_sizes/font_size = 11
+text = "→ Ke Pintu Air"
+horizontal_alignment = 1

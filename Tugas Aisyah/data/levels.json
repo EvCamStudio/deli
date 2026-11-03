@@ -1,0 +1,42 @@
+[
+  {
+    "id": 1,
+    "name": "Hulu - Hutan dan Mata Air",
+    "scene": "res://scenes/levels/level_1_hulu_topdown.tscn",
+    "river_health_target": 40,
+    "cards_available": ["card_hutan_01", "card_sungai_deli_01"],
+    "checkpoints": [0, 480]
+  },
+  {
+    "id": 2,
+    "name": "Desa / Pertanian",
+    "scene": "res://scenes/levels/level_2_desa_topdown.tscn",
+    "river_health_target": 55,
+    "cards_available": ["card_pertanian_01", "card_gotong_royong_01"],
+    "checkpoints": [0, 480]
+  },
+  {
+    "id": 3,
+    "name": "Kota Medan (Bantaran)",
+    "scene": "res://scenes/levels/level_3_kota_topdown.tscn",
+    "river_health_target": 55,
+    "cards_available": ["card_plastik_01", "card_drainase_01", "card_pantun_01"],
+    "checkpoints": [0, 480, 960]
+  },
+  {
+    "id": 4,
+    "name": "Hilir (Pesisir)",
+    "scene": "res://scenes/levels/level_4_hilir_topdown.tscn",
+    "river_health_target": 85,
+    "cards_available": ["card_mangrove_01", "card_nelayan_01"],
+    "checkpoints": [0, 480]
+  },
+  {
+    "id": 5,
+    "name": "Epilog",
+    "scene": "res://scenes/levels/level_5_epilog.tscn",
+    "river_health_target": 0,
+    "cards_available": [],
+    "checkpoints": [0]
+  }
+]

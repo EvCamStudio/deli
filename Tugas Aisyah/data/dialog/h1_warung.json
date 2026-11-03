@@ -1,0 +1,73 @@
+[
+  {
+    "id": "start",
+    "speaker": "Bu Mira",
+    "emosi": "sad",
+    "teks": "Nak, kau sudah sampai. Maaf ya, warung kita jadi begini.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Ibu jangan minta maaf. Harusnya aku pulang lebih cepat.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Pak Hendra",
+    "emosi": "sad",
+    "teks": "Banjirnya tinggi sekali, Nak. Kopi, gula, kursi, semua hanyut. Dinding pun berlumpur.",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "Bu Mira",
+    "emosi": "sad",
+    "teks": "Ini catatan utang kita. Lima ratus ribu, untuk beli bahan dan memperbaiki dinding. Tapi dindingnya rusak lagi.",
+    "next": "4"
+  },
+  {
+    "id": "4",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "(Baru di-PHK di Jakarta, sekarang ini...)",
+    "next": "5"
+  },
+  {
+    "id": "5",
+    "speaker": "Pak Hendra",
+    "emosi": "neutral",
+    "teks": "Sungai itu tidak jahat, Nak. Tapi sampah di mana-mana, alirannya buntu. Air tidak punya jalan, jadi masuk ke rumah kita.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Aku bantu bersihkan sungai dulu.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "res_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Aku cari kerja lagi saja.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "res_b"
+      }
+    ]
+  },
+  {
+    "id": "res_a",
+    "speaker": "Bu Mira",
+    "emosi": "happy",
+    "teks": "Terima kasih, Nak. Jagalah sungai kita.",
+    "next": "end"
+  },
+  {
+    "id": "res_b",
+    "speaker": "Bu Mira",
+    "emosi": "neutral",
+    "teks": "Boleh, tapi bantu kami dulu sebentar ya.",
+    "next": "end"
+  }
+]

@@ -1,0 +1,30 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/pilot_lever.gd" id="1_lever"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lever"]
+size = Vector2(16, 18)
+
+[node name="Lever" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_lever")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -12)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_lever")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -30.0
+offset_top = -32.0
+offset_right = 30.0
+offset_bottom = -18.0
+theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
+theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/font_size = 8
+text = "Tuas"
+horizontal_alignment = 1

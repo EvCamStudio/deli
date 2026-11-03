@@ -1,0 +1,364 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_main_menu"]
+[ext_resource type="Texture2D" path="res://assets/ui/menu_bg.png" id="2_bg"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_pixel"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="4_dialog"]
+[ext_resource type="Script" path="res://scripts/settings_menu.gd" id="5_settings"]
+[ext_resource type="PackedScene" path="res://scenes/ui/knowledge_card_popup.tscn" id="6_cards"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_dialog"]
+texture = ExtResource("4_dialog")
+texture_margin_left = 16.0
+texture_margin_top = 16.0
+texture_margin_right = 16.0
+texture_margin_bottom = 16.0
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_main_menu")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Tint" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+color = Color(0.08, 0.12, 0.1, 0.14)
+
+[node name="Badge" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -176.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = 46.0
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="Label" type="Label" parent="Badge"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 12
+text = "PILOT · KOTA MEDAN"
+horizontal_alignment = 1
+
+[node name="MenuCard" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -318.0
+offset_right = 304.0
+offset_bottom = -18.0
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 42.0
+offset_top = -302.0
+offset_right = 286.0
+offset_bottom = -34.0
+theme_override_constants/separation = 3
+
+[node name="TitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_colors/font_shadow_color = Color(0.96, 0.91, 0.78, 0.65)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 34
+text = "DELI REWIND"
+horizontal_alignment = 1
+
+[node name="SubtitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.27, 0.48, 0.28, 1)
+theme_override_font_sizes/font_size = 13
+text = "Selamatkan Sungai Deli"
+horizontal_alignment = 1
+
+[node name="Tagline" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.38, 0.29, 1)
+theme_override_font_sizes/font_size = 9
+text = "Kisah lingkungan dari hulu ke hilir"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="VBox"]
+custom_minimum_size = Vector2(0, 4)
+layout_mode = 2
+
+[node name="Buttons" type="VBoxContainer" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 4
+
+[node name="StartBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Mulai Perjalanan"
+
+[node name="ContinueBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Lanjutkan"
+
+[node name="LevelSelectBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Pilih Bab"
+
+[node name="CardsBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Koleksi Kartu"
+
+[node name="SettingsBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Pengaturan"
+
+[node name="QuitBtn" type="Button" parent="VBox/Buttons"]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+size_flags_vertical = 3
+text = "Keluar"
+
+[node name="Footer" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.44, 0.34, 1)
+theme_override_font_sizes/font_size = 8
+text = "Bab 1-5  ·  Bahasa Indonesia"
+horizontal_alignment = 1
+
+[node name="SettingsPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("5_settings")
+
+[node name="Dim" type="ColorRect" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.12, 0.1, 0.62)
+
+[node name="Panel" type="PanelContainer" parent="SettingsPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -196.0
+offset_top = -140.0
+offset_right = 196.0
+offset_bottom = 140.0
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="SettingsPanel/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 24
+text = "PENGATURAN"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+
+[node name="BGMRow" type="HBoxContainer" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BGMLabel" type="Label" parent="SettingsPanel/Panel/VBox/BGMRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Musik"
+
+[node name="BGMSlider" type="HSlider" parent="SettingsPanel/Panel/VBox/BGMRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFXRow" type="HBoxContainer" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SFXLabel" type="Label" parent="SettingsPanel/Panel/VBox/SFXRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Efek"
+
+[node name="SFXSlider" type="HSlider" parent="SettingsPanel/Panel/VBox/SFXRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.0
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="TouchSizeRow" type="HBoxContainer" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="TouchSizeLabel" type="Label" parent="SettingsPanel/Panel/VBox/TouchSizeRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Tombol"
+
+[node name="TouchSizeOptions" type="OptionButton" parent="SettingsPanel/Panel/VBox/TouchSizeRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="OpacityRow" type="HBoxContainer" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="OpacityLabel" type="Label" parent="SettingsPanel/Panel/VBox/OpacityRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Opasitas"
+
+[node name="OpacitySlider" type="HSlider" parent="SettingsPanel/Panel/VBox/OpacityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+min_value = 0.2
+max_value = 1.0
+step = 0.05
+value = 0.7
+
+[node name="VibrationRow" type="HBoxContainer" parent="SettingsPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="VibrationLabel" type="Label" parent="SettingsPanel/Panel/VBox/VibrationRow"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+text = "Getar"
+
+[node name="VibrationCheck" type="CheckButton" parent="SettingsPanel/Panel/VBox/VibrationRow"]
+layout_mode = 2
+button_pressed = true
+
+[node name="CloseBtn" type="Button" parent="SettingsPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Tutup"
+
+[node name="LevelSelectPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="LevelSelectPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.09, 0.12, 0.1, 0.62)
+
+[node name="Panel" type="PanelContainer" parent="LevelSelectPanel"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -142.0
+offset_right = 220.0
+offset_bottom = 142.0
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="LevelSelectPanel/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="Title" type="Label" parent="LevelSelectPanel/Panel/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 24
+text = "PILIH BAB"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="LevelSelectPanel/Panel/VBox"]
+layout_mode = 2
+
+[node name="L1Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Bab 1 · Hulu Sungai"
+
+[node name="L2Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Bab 2 · Desa Pertanian"
+
+[node name="L3Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Bab 3 · Kota Medan (Pilot)"
+
+[node name="L4Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Bab 4 · Hilir & Muara"
+
+[node name="L5Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+text = "Bab 5 · Epilog"
+
+[node name="CloseSelectBtn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
+custom_minimum_size = Vector2(0, 28)
+layout_mode = 2
+text = "Tutup"
+
+[node name="KnowledgeCardPopup" parent="." instance=ExtResource("6_cards")]

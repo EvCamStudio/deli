@@ -1,0 +1,23 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Banjir bandang besar menerjang kembali. Warung orang tua terendam lumpur pekat dan akhirnya digusur...",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Sungai tidak membenci siapa pun. Ia hanya kembali ke jalannya... (Datuk Sampan memudar dan lenyap).",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Satu orang membuang sampah, semua yang menanggung bencana.",
+    "next": "end"
+  }
+]

@@ -1,0 +1,50 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/level_2_desa_topdown.gd" id="1_level"]
+[ext_resource type="Script" path="res://scripts/topdown_map.gd" id="2_map"]
+[ext_resource type="PackedScene" path="res://scenes/player/player_topdown.tscn" id="3_player"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/portrait_dialogue.tscn" id="5_dialogue"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_touch.tscn" id="6_touch"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pilot_journal.tscn" id="7_journal"]
+[ext_resource type="PackedScene" path="res://scenes/ui/knowledge_card_popup.tscn" id="8_cards"]
+
+[node name="Level2Desa" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_level")
+
+[node name="TopdownMap" type="Node2D" parent="."]
+script = ExtResource("2_map")
+theme = "desa"
+
+[node name="Ground" type="TileMapLayer" parent="TopdownMap"]
+z_index = -20
+
+[node name="Water" type="TileMapLayer" parent="TopdownMap"]
+z_index = -19
+
+[node name="Bridge" type="TileMapLayer" parent="TopdownMap"]
+z_index = -18
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(320, 180)
+zoom = Vector2(2, 2)
+limit_left = 0
+limit_top = 0
+limit_right = 960
+limit_bottom = 544
+position_smoothing_enabled = true
+position_smoothing_speed = 7.0
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+position = Vector2(64, 272)
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]
+
+[node name="DialogueBox" parent="." instance=ExtResource("5_dialogue")]
+
+[node name="TouchControls" parent="." instance=ExtResource("6_touch")]
+
+[node name="PauseMenu" parent="." instance=ExtResource("7_journal")]
+
+[node name="KnowledgeCardPopup" parent="." instance=ExtResource("8_cards")]
