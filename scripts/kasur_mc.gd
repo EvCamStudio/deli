@@ -10,7 +10,16 @@ func _ready() -> void:
 	if interact_area:
 		interact_area.body_entered.connect(_on_body_entered)
 		interact_area.body_exited.connect(_on_body_exited)
-	if label:
+	_update_label_state()
+	GameState.h1_fase_changed.connect(func(_f): _update_label_state())
+
+func _update_label_state() -> void:
+	if not label:
+		return
+	if GameState.hari == 1 and GameState.h1_fase == 4:
+		label.text = "[E] Tidur (Kasur)"
+		label.show()
+	else:
 		label.text = "[E] Tidur"
 		label.hide()
 
@@ -31,9 +40,13 @@ func interact() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("player") and label:
+		label.text = "[E] Tidur"
 		label.show()
 
 func _on_body_exited(body: Node) -> void:
 	if body.is_in_group("player") and label:
-		label.hide()
-
+		if GameState.hari == 1 and GameState.h1_fase == 4:
+			label.text = "[E] Tidur (Kasur)"
+			label.show()
+		else:
+			label.hide()

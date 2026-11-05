@@ -113,18 +113,10 @@ collision_mask = 1
 script = ExtResource("14_gate")
 target_scene_path = "res://scenes/maps/map_a_warung.tscn"
 gate_name = "Kembali ke Warung"
+target_spawn_position = Vector2(860, 260)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeWarung"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKeWarung"]
-offset_left = -60.0
-offset_top = -30.0
-offset_right = 60.0
-offset_bottom = -14.0
-theme_override_font_sizes/font_size = 11
-text = "← Ke Warung"
-horizontal_alignment = 1
 
 [node name="GateKePintuAir" type="Area2D" parent="."]
 position = Vector2(930, 272)
@@ -133,15 +125,7 @@ collision_mask = 1
 script = ExtResource("14_gate")
 target_scene_path = "res://scenes/maps/map_d_pintu_air.tscn"
 gate_name = "Ke Pintu Air Bendungan"
+target_spawn_position = Vector2(80, 272)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKePintuAir"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKePintuAir"]
-offset_left = -70.0
-offset_top = -30.0
-offset_right = 70.0
-offset_bottom = -14.0
-theme_override_font_sizes/font_size = 11
-text = "→ Ke Pintu Air"
-horizontal_alignment = 1

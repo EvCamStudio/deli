@@ -39,6 +39,7 @@ var hari: int = 1 :
 
 var day: int = 1
 var player_name: String = "Pemain"
+var next_spawn_position: Vector2 = Vector2.ZERO
 
 # ─── 3. Energi & Stamina (⚡ 0–100) ───────────────────────────────────────────
 var energi: float = 100.0 :
@@ -150,24 +151,46 @@ func get_current_objective() -> String:
 	match hari:
 		1:
 			match h1_fase:
-				0: return "Pergi ke Tepi Sungai Deli (gerbang kanan) untuk melihat kondisi sungai."
-				1: return "Kutip 3 sampah di sekitar tepi sungai (%d/3)." % [mini(h1_sampah_kutip, 3)]
-				2: return "Cari sumber suara misterius yang memanggil di tepi sungai."
-				3: return "Kembali ke Warung dan temui Ibu (Bu Mira) untuk mencari tahu masalah warga."
-				4: return "Tidur di Kasur Warung untuk memulihkan energi dan berganti hari."
+				0: return "Hari 1: Pergi ke Tepi Sungai Deli (gerbang kanan) untuk melihat kondisi sungai."
+				1: return "Hari 1: Kutip 3 sampah di sekitar tepi sungai (%d/3)." % [mini(h1_sampah_kutip, 3)]
+				2: return "Hari 1: Cari sumber suara misterius yang memanggil di tepi sungai."
+				3: return "Hari 1: Temui Ibu (Bu Mira) di depan warung (jalan ke barat/kiri)."
+				4: return "Hari 1: Masuk ke dalam warung dan tidur di Kasur MC untuk memulihkan energi."
 				_: return "Hari 1 selesai. Istirahatlah di kasur warung."
 		2:
-			return "Hari 2: Temui Bang Jali di gang (gerbang bawah warung). Dengarkan keluhannya."
+			if npc_sikap.get("jali", 0) <= 0:
+				return "Hari 2: Temui Bang Jali di Gang (gerbang bawah warung). Dengarkan keluhannya."
+			else:
+				return "Hari 2: Kumpulkan & pilah sampah di sungai, setor ke Lapak Pengepul (+Rp 6.000), lalu tidur di kasur."
 		3:
-			return "Hari 3: Beri solusi TPS ke Bang Jali. Bersiap hadapi Hujan Kecil sore nanti!"
+			if not ujian1_selesai:
+				return "Hari 3: Temui Bang Jali di Gang untuk memberi solusi TPS. Bersiap hadapi Hujan Sore!"
+			else:
+				return "Hari 3: Hujan Kecil terlewati! Kumpulkan uang cicilan utang & tidur di kasur warung."
 		4:
-			return "Hari 4: Temui Kak Rina di gerobak gorengan. Cari tahu masalah minyak jelantah."
+			if npc_sikap.get("rina", 0) <= 0:
+				return "Hari 4: Temui Kak Rina di gerobak gorengan depan warung. Cari tahu masalah jelantah."
+			else:
+				return "Hari 4: Rawat sungai & bersihkan warung orang tua (Rp 50.000) agar ada pemasukan harian."
 		5:
-			return "Hari 5: Tawarkan solusi botol jerigen ke Kak Rina. Bersiap Hujan Sedang!"
+			if not ujian2_selesai:
+				return "Hari 5: Tawarkan solusi botol jerigen ke Kak Rina. Bersiap Hujan Sedang sore nanti!"
+			else:
+				return "Hari 5: Hujan Sedang terlewati! Kumpulkan tabungan utang & tidur di kasur warung."
 		6:
-			return "Hari 6: Temui Pak Darwis di bale tepi sungai. Ingatkan kearifan orang tua dulu."
+			if npc_sikap.get("darwis", 0) <= 0:
+				return "Hari 6: Temui Pak Darwis di Bale Bambu Tepi Sungai. Ingatkan kearifan leluhur Deli."
+			else:
+				return "Hari 6: Tanam pohon di titik tanam tepi sungai untuk perkuat tanggul, lalu tidur di kasur."
 		7:
-			return "Hari 7: Ikuti Festival Pantun pagi, lunasi utang sore, jaga tanggul malam!"
+			if not choices.get("pantun_done", false):
+				return "Hari 7: Ikuti Festival Pantun Melayu Deli di papan tepi sungai."
+			elif utang > 0 and not choices.get("ucok_done", false):
+				return "Hari 7 (Sore): Temui Bang Ucok di Warung dan lunasi utang darurat keluarga (Rp 500.000)!"
+			elif not ujian_akhir_selesai:
+				return "Hari 7 (Malam): Banjir bandang menerjang! Lari ke Pintu Air Bendungan dan atur 3 tuas (1-3-2)!"
+			else:
+				return "Ujian Akhir selesai! Menuju evaluasi akhir nasib Sungai Deli..."
 		_:
 			return "Bersihkan sampah sungai dan rawat lingkungan Sungai Deli."
 

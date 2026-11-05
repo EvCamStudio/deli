@@ -75,15 +75,7 @@ collision_mask = 1
 script = ExtResource("10_map_gate")
 target_scene_path = "res://scenes/maps/map_b_sungai.tscn"
 gate_name = "Kembali ke Tepi Sungai"
+target_spawn_position = Vector2(870, 272)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeSungai"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKeSungai"]
-offset_left = -60.0
-offset_top = -30.0
-offset_right = 60.0
-offset_bottom = -14.0
-theme_override_font_sizes/font_size = 11
-text = "← Ke Tepi Sungai"
-horizontal_alignment = 1

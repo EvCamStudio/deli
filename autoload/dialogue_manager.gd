@@ -17,6 +17,7 @@ var _current_node: Dictionary = {}
 var _current_dialog_id: String = ""
 var _current_npc_key: String = ""
 var _is_active: bool = false
+var last_choice_selected: Dictionary = {}
 
 func _ready() -> void:
 	# Hubungkan sinyal ke GameState jika ada
@@ -156,6 +157,7 @@ func advance(choice_index: int = -1) -> void:
 
 	if choice_index >= 0 and choice_index < pilihan.size():
 		var chosen: Dictionary = pilihan[choice_index]
+		last_choice_selected = chosen
 		_apply_choice_effects(chosen)
 		var next_id: String = str(chosen.get("next", "end"))
 		_show_node(next_id)

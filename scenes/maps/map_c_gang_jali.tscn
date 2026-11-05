@@ -92,15 +92,7 @@ collision_mask = 1
 script = ExtResource("11_gate")
 target_scene_path = "res://scenes/maps/map_a_warung.tscn"
 gate_name = "Kembali ke Warung"
+target_spawn_position = Vector2(400, 430)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeWarung"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKeWarung"]
-offset_left = -60.0
-offset_top = -24.0
-offset_right = 60.0
-offset_bottom = -8.0
-theme_override_font_sizes/font_size = 11
-text = "↑ Kembali ke Warung"
-horizontal_alignment = 1

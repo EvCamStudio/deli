@@ -113,3 +113,18 @@ Folder backup terisolasi penuh berisi seluruh pengerjaan awal tugas Orang 2:
 - `Tugas Aisyah/project.godot`
 - `Tugas Aisyah/.gdignore` (mencegah konflik scan oleh Godot engine)
 - `Tugas Aisyah/README.md`
+
+---
+
+## 4. Pembaruan Logika Alur, Transisi Peta & Quest Loop (Terbaru)
+1. **Hilangnya Datuk Sampan**:
+   - Begitu dialog `h1_datuk` selesai, Datuk memudar halus dengan transisi kabut (`modulate:a -> 0.0`) dan menghilang dari tepi sungai (`queue_free()`).
+   - Jika pemain kembali ke peta sungai pada Hari 1 (fase 3+), Datuk sudah tidak berada di sampan lagi.
+2. **Penghapusan Tulisan di Lantai**:
+   - Seluruh label teks di lantai gerbang antar-peta telah dihapus bersih.
+3. **Mulusnya Transisi & Titik Spawn (Spawn Position Fix)**:
+   - Gerbang peta kini membawa `target_spawn_position` yang presisi. Pemain yang kembali dari tepi sungai ke warung akan otomatis muncul di jalan masuk timur warung (`860, 260`) menghadap ke barat secara natural, tidak lagi spawn mendadak di depan rumah/kasur.
+4. **Pembaruan Misi & Indikator Interaktif**:
+   - Setelah berbicara dengan Datuk: objektif HUD langsung berganti mengarahkan pemain kembali ke Warung menemui Bu Mira, dengan tanda seru `!` yang berdenyut aktif di atas kepala Bu Mira.
+   - Setelah dialog Bu Mira (`h1_warung`) selesai: objektif HUD berganti mengarahkan tidur di kasur, kasur warung memunculkan petunjuk interaksi `[E] Tidur (Kasur)`, dan konfirmasi dialog tidur hanya mengganti hari jika pemain memilih opsi A (Ya).
+   - Seluruh alur Hari 1 sampai Hari 7 kini terhubung secara berkesinambungan dan objektif dinamis terus diperbarui.

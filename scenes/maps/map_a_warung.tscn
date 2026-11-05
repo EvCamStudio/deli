@@ -132,7 +132,7 @@ text = "[E] Jual Sampah"
 horizontal_alignment = 1
 
 [node name="BuMira" parent="." instance=ExtResource("8_npc")]
-position = Vector2(120, 200)
+position = Vector2(160, 220)
 sprite_key = "ibu"
 dialog_id = "h1_warung"
 
@@ -157,18 +157,10 @@ collision_mask = 1
 script = ExtResource("15_gate")
 target_scene_path = "res://scenes/maps/map_b_sungai.tscn"
 gate_name = "Ke Tepi Sungai Deli"
+target_spawn_position = Vector2(80, 272)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeSungai"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKeSungai"]
-offset_left = -70.0
-offset_top = -30.0
-offset_right = 70.0
-offset_bottom = -14.0
-theme_override_font_sizes/font_size = 11
-text = "→ Ke Tepi Sungai Deli"
-horizontal_alignment = 1
 
 [node name="GateKeGang" type="Area2D" parent="."]
 position = Vector2(400, 480)
@@ -178,15 +170,7 @@ collision_mask = 1
 script = ExtResource("15_gate")
 target_scene_path = "res://scenes/maps/map_c_gang_jali.tscn"
 gate_name = "Ke Gang Bang Jali"
+target_spawn_position = Vector2(240, 80)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="GateKeGang"]
 shape = SubResource("RectangleShape2D_gate")
-
-[node name="Label" type="Label" parent="GateKeGang"]
-offset_left = -60.0
-offset_top = -30.0
-offset_right = 60.0
-offset_bottom = -14.0
-theme_override_font_sizes/font_size = 11
-text = "↓ Ke Gang Bang Jali"
-horizontal_alignment = 1

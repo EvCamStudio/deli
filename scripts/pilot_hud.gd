@@ -72,6 +72,7 @@ func _on_utang_changed(_val: int) -> void:
 
 func _on_hari_berganti(_hari_baru: int) -> void:
 	_update_time()
+	_update_mission_by_day()
 	show_toast("🌅 HARI %d DIMULAI! Energi pulih penuh ⚡ 100" % _hari_baru)
 
 func _on_npc_sikap_changed(_npc: String, _nilai: int) -> void:
@@ -130,7 +131,10 @@ func tampilkan_konfirmasi_tidur() -> void:
 	DialogueManager.start_dialogue(confirm_node)
 
 func _on_tidur_dialog_selesai(_id: String) -> void:
-	GameState.tidur_ganti_hari()
+	if DialogueManager.last_choice_selected.get("tipe", "") == "A":
+		GameState.tidur_ganti_hari()
+	else:
+		show_toast("Tidur dibatalkan. Masih bisa beraktivitas.")
 
 func _format_number(value: int) -> String:
 	var s: String = str(value)

@@ -6,6 +6,8 @@ extends MapBase
 @onready var bang_ucok: Node2D = get_node_or_null("BangUcok") as Node2D
 @onready var bu_mira: Node2D = get_node_or_null("BuMira") as Node2D
 
+var _exclaim_tween: Tween = null
+
 func _ready() -> void:
 	map_name = "Warung"
 	super._ready()
@@ -23,8 +25,17 @@ func _ready() -> void:
 func _update_bu_mira_indicator() -> void:
 	if not bu_mira:
 		return
-	if GameState.hari == 1:
-		var exclaim := bu_mira.get_node_or_null("ExclaimLabel") as Label
-		if exclaim:
-			# Bu Mira hanya punya tanda seru '!' jika pemain sudah mendapat arahan dari Datuk (Fase 3)
+	var exclaim := bu_mira.get_node_or_null("ExclaimLabel") as Label
+	if exclaim:
+		if _exclaim_tween:
+			_exclaim_tween.kill()
+		if GameState.hari == 1:
 			exclaim.visible = (GameState.h1_fase == 3)
+			if exclaim.visible:
+				exclaim.text = "!"
+				var start_y := exclaim.position.y
+				_exclaim_tween = create_tween().set_loops()
+				_exclaim_tween.tween_property(exclaim, "position:y", start_y - 4.0, 0.45).set_trans(Tween.TRANS_SINE)
+				_exclaim_tween.tween_property(exclaim, "position:y", start_y, 0.45).set_trans(Tween.TRANS_SINE)
+		else:
+			exclaim.visible = false

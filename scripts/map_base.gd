@@ -22,6 +22,11 @@ func _ready() -> void:
 	if dialogue_box and DialogueManager:
 		DialogueManager.register_dialogue_box(dialogue_box)
 
+	# Setup Player spawn jika datang dari gerbang peta lain
+	if GameState.next_spawn_position != Vector2.ZERO and player:
+		player.position = GameState.next_spawn_position
+		GameState.next_spawn_position = Vector2.ZERO
+
 	# Setup Camera smooth follow
 	if camera and player:
 		camera.position = player.position

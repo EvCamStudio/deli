@@ -21,7 +21,7 @@ func _ready() -> void:
 	GameState.h1_fase_changed.connect(func(_f): _update_datuk_indicator())
 
 func _update_datuk_indicator() -> void:
-	if not datuk_sampan:
+	if not is_instance_valid(datuk_sampan):
 		return
 	if GameState.hari == 1:
 		var exclaim := datuk_sampan.get_node_or_null("ExclaimLabel") as Label
