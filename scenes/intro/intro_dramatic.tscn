@@ -1,30 +1,85 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/intro/intro_dramatic.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="3_panel"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="2_panel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/portraits/player_neutral.png" id="3_default_portrait"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_story"]
-texture = ExtResource("3_panel")
+[sub_resource type="StyleBoxFlat" id="StyleBox_banner"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.24, 0.16, 0.1, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.72, 0.45, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_caption"]
+content_margin_left = 16.0
+content_margin_top = 12.0
+content_margin_right = 16.0
+content_margin_bottom = 12.0
+bg_color = Color(0.97, 0.94, 0.88, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.24, 0.16, 0.1, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 4
+shadow_offset = Vector2(2, 2)
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_dialog"]
+texture = ExtResource("2_panel")
 texture_margin_left = 16.0
 texture_margin_top = 16.0
 texture_margin_right = 16.0
 texture_margin_bottom = 16.0
-content_margin_left = 20.0
-content_margin_top = 16.0
-content_margin_right = 20.0
-content_margin_bottom = 16.0
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_thought"]
+content_margin_left = 16.0
+content_margin_top = 14.0
+content_margin_right = 16.0
+content_margin_bottom = 14.0
+bg_color = Color(0.93, 0.95, 0.98, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.32, 0.42, 0.55, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0.1, 0.15, 0.25, 0.2)
+shadow_size = 4
+shadow_offset = Vector2(2, 2)
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_portrait"]
 content_margin_left = 3.0
 content_margin_top = 3.0
 content_margin_right = 3.0
 content_margin_bottom = 3.0
-bg_color = Color(0.945098, 0.921569, 0.85098, 1)
+bg_color = Color(0.95, 0.92, 0.85, 1)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.278431, 0.188235, 0.117647, 1)
+border_color = Color(0.24, 0.16, 0.1, 1)
 corner_radius_top_left = 4
 corner_radius_top_right = 4
 corner_radius_bottom_right = 4
@@ -48,90 +103,184 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="TapAdvanceBtn" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 24
+flat = true
 
-[node name="VBox" type="VBoxContainer" parent="MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Spacer" type="Control" parent="MarginContainer/VBox"]
-layout_mode = 2
-size_flags_vertical = 3
+[node name="HeaderBanner" type="PanelContainer" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 16.0
+offset_right = 360.0
+offset_bottom = 44.0
 mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_banner")
 
-[node name="StoryPanel" type="PanelContainer" parent="MarginContainer/VBox"]
+[node name="HeaderLabel" type="Label" parent="HeaderBanner"]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBox_story")
+theme_override_colors/font_color = Color(0.98, 0.92, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "BAB 1 · JAKARTA — HARI PERTAMA KERJA"
+vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="MarginContainer/VBox/StoryPanel"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="HBox" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 16
-
-[node name="PortraitFrame" type="PanelContainer" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
-layout_mode = 2
-size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBox_portrait")
-
-[node name="Portrait" type="TextureRect" parent="MarginContainer/VBox/StoryPanel/VBox/HBox/PortraitFrame"]
-custom_minimum_size = Vector2(96, 120)
-layout_mode = 2
+[node name="CaptionBox" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 28.0
+offset_top = 54.0
+offset_right = -28.0
+offset_bottom = 126.0
+grow_horizontal = 2
 mouse_filter = 2
-expand_mode = 1
-stretch_mode = 5
+theme_override_styles/panel = SubResource("StyleBox_caption")
 
-[node name="DialogueBox" type="RichTextLabel" parent="MarginContainer/VBox/StoryPanel/VBox/HBox"]
+[node name="VBox" type="VBoxContainer" parent="CaptionBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CaptionText" type="RichTextLabel" parent="CaptionBox/VBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_colors/default_color = Color(0.227451, 0.164706, 0.117647, 1)
-theme_override_font_sizes/normal_font_size = 14
-theme_override_font_sizes/bold_font_size = 14
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.24, 0.16, 0.1, 1)
+theme_override_font_sizes/normal_font_size = 13
 theme_override_font_sizes/italics_font_size = 13
-theme_override_constants/line_separation = 4
 bbcode_enabled = true
-text = "Intro Dramatis — Deli Rewind"
+text = "[i]Pagi di Jakarta. Gedung PT Cahaya Nusantara menjulang di antara kemacetan.[/i]"
 fit_content = true
 scroll_active = false
 autowrap_mode = 3
 
-[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/VBox/StoryPanel/VBox"]
+[node name="HintRow" type="HBoxContainer" parent="CaptionBox/VBox"]
 layout_mode = 2
 alignment = 2
+
+[node name="HintLabel" type="Label" parent="CaptionBox/VBox/HintRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.38, 0.28, 1)
+theme_override_font_sizes/font_size = 10
+text = "Tap / Tekan Spasi ▶"
+
+[node name="DialogueContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -140.0
+offset_right = -24.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="DialogPanel" type="PanelContainer" parent="DialogueContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_dialog")
+
+[node name="VBox" type="VBoxContainer" parent="DialogueContainer/DialogPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpeakerRow" type="HBoxContainer" parent="DialogueContainer/DialogPanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="SpeakerTag" type="PanelContainer" parent="DialogueContainer/DialogPanel/VBox/SpeakerRow"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_banner")
+
+[node name="SpeakerLabel" type="Label" parent="DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.94, 0.82, 1)
+theme_override_font_sizes/font_size = 11
+text = "Manajer"
+
+[node name="BodyHBox" type="HBoxContainer" parent="DialogueContainer/DialogPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 12
 
-[node name="NameInput" type="LineEdit" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
-custom_minimum_size = Vector2(0, 36)
+[node name="PortraitFrame" type="PanelContainer" parent="DialogueContainer/DialogPanel/VBox/BodyHBox"]
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_portrait")
+
+[node name="Portrait" type="TextureRect" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/PortraitFrame"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_default_portrait")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ContentVBox" type="VBoxContainer" parent="DialogueContainer/DialogPanel/VBox/BodyHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
-theme_override_colors/font_color = Color(0.227451, 0.164706, 0.117647, 1)
-theme_override_colors/font_placeholder_color = Color(0.451, 0.369, 0.29, 1)
-theme_override_colors/caret_color = Color(0.227451, 0.164706, 0.117647, 1)
-theme_override_font_sizes/font_size = 14
-placeholder_text = "Ketik namamu, lalu tekan Enter..."
+theme_override_constants/separation = 6
+
+[node name="SpeechText" type="RichTextLabel" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.24, 0.16, 0.1, 1)
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 13
+theme_override_font_sizes/italics_font_size = 13
+theme_override_constants/line_separation = 3
+bbcode_enabled = true
+text = "Halo, anak baru. Siapa namamu? Kita perlu nama lengkap untuk catatan perusahaan."
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="InputRow" type="HBoxContainer" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox"]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="NameInput" type="LineEdit" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.24, 0.16, 0.1, 1)
+theme_override_colors/font_placeholder_color = Color(0.5, 0.4, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+placeholder_text = "Ketik namamu di sini..."
 max_length = 20
 
-[node name="NextBtn" type="Button" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
-custom_minimum_size = Vector2(200, 36)
+[node name="ConfirmBtn" type="Button" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow"]
+custom_minimum_size = Vector2(130, 30)
 layout_mode = 2
-size_flags_horizontal = 8
-size_flags_vertical = 4
-theme_override_font_sizes/font_size = 14
-text = "Lanjut"
+theme_override_font_sizes/font_size = 12
+text = "Konfirmasi Nama"
+
+[node name="DialogHintRow" type="HBoxContainer" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox"]
+layout_mode = 2
+alignment = 2
+
+[node name="DialogHint" type="Label" parent="DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.38, 0.28, 1)
+theme_override_font_sizes/font_size = 10
+text = "Tap / Tekan Spasi ▶"
 
 [node name="FadeRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -140,5 +289,5 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0)
 mouse_filter = 2
+color = Color(0, 0, 0, 0)
