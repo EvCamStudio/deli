@@ -27,7 +27,7 @@ func _ready() -> void:
 		interact_area.body_exited.connect(_on_body_exited)
 
 	if exclaim_label:
-		exclaim_label.visible = true
+		exclaim_label.visible = (GameState.hari != 1 or GameState.h1_fase == 2)
 
 	# Animasi melayang/terapung pelan di atas sampan
 	_start_floating_animation()
@@ -49,16 +49,27 @@ func _start_floating_animation() -> void:
 
 ## Dipanggil oleh player saat menekan tombol interaksi [E]
 func interact() -> void:
-	# Tentukan dialog berdasarkan hari saat ini
-	var cur_day: int = GameState.hari if "hari" in GameState else GameState.day
-	var target_dialog := "h1_datuk"
-	match cur_day:
-		1: target_dialog = "h1_datuk"
+	if GameState.hari == 1:
+		if GameState.h1_fase < 2:
+			var hud := get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_toast"):
+				hud.show_toast("Sosok di atas sampan terlihat samar di balik kabut... Kutip dulu sampah di tepian.")
+			return
+		elif GameState.h1_fase == 2:
+			DialogueManager.mulai("h1_datuk")
+			return
+		else:
+			var hud := get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_toast"):
+				hud.show_toast("Datuk Sampan: 'Pergilah temui ibumu di warung, anak muda. Dengarkan mereka.'")
+			return
+
+	# Hari-hari lainnya
+	var target_dialog := dialog_id
+	match GameState.hari:
 		3: target_dialog = "h3_jali"
 		5: target_dialog = "h5_rina"
 		7: target_dialog = "h7_pantun"
-		_: target_dialog = dialog_id
-
 	DialogueManager.mulai(target_dialog)
 
 func _on_body_entered(body: Node) -> void:
@@ -68,4 +79,3 @@ func _on_body_entered(body: Node) -> void:
 func _on_body_exited(body: Node) -> void:
 	if body.is_in_group("player") and exclaim_label:
 		exclaim_label.text = "!"
-

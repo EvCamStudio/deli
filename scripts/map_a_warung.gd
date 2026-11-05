@@ -4,17 +4,11 @@
 extends MapBase
 
 @onready var bang_ucok: Node2D = get_node_or_null("BangUcok") as Node2D
+@onready var bu_mira: Node2D = get_node_or_null("BuMira") as Node2D
 
 func _ready() -> void:
 	map_name = "Warung"
 	super._ready()
-
-	# Dialog pembuka Hari 1 di warung jika belum pernah bicara
-	if GameState.hari == 1 and not GameState.choices.has("h1_warung_done"):
-		get_tree().create_timer(0.6).timeout.connect(func():
-			DialogueManager.mulai("h1_warung")
-			GameState.choices["h1_warung_done"] = true
-		)
 
 	# Bang Ucok hanya muncul di sore Hari 7
 	if bang_ucok:
@@ -23,3 +17,14 @@ func _ready() -> void:
 		if col:
 			col.disabled = not (GameState.hari == 7)
 
+	_update_bu_mira_indicator()
+	GameState.h1_fase_changed.connect(func(_f): _update_bu_mira_indicator())
+
+func _update_bu_mira_indicator() -> void:
+	if not bu_mira:
+		return
+	if GameState.hari == 1:
+		var exclaim := bu_mira.get_node_or_null("ExclaimLabel") as Label
+		if exclaim:
+			# Bu Mira hanya punya tanda seru '!' jika pemain sudah mendapat arahan dari Datuk (Fase 3)
+			exclaim.visible = (GameState.h1_fase == 3)

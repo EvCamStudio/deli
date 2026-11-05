@@ -55,6 +55,18 @@ func interact() -> void:
 		return
 
 	if not dialog_id.is_empty():
+		if dialog_id == "h1_warung" and GameState.hari == 1:
+			if GameState.h1_fase < 3:
+				var hud := get_tree().get_first_node_in_group("hud")
+				if hud and hud.has_method("show_toast"):
+					hud.show_toast("Bu Mira: 'Nak, kau baru sampai... Coba tengok dulu kondisi sungai di sebelah timur (kanan).'")
+				return
+			elif GameState.h1_fase >= 4:
+				var hud := get_tree().get_first_node_in_group("hud")
+				if hud and hud.has_method("show_toast"):
+					hud.show_toast("Bu Mira: 'Istirahatlah di kasur warung, Nak. Besok kita mulai lagi perjuangan kita.'")
+				return
+
 		_in_dialogue = true
 		DialogueManager.mulai(dialog_id)
 		return

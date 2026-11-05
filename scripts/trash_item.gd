@@ -31,6 +31,11 @@ func interact() -> void:
 
 	# Tambah ke inventaris global sementara (akan diproses di tong pilah)
 	_add_to_inventory()
+
+	# Cek progres misi Hari 1
+	if GameState.hari == 1 and GameState.h1_fase == 1:
+		GameState.tambah_sampah_h1()
+
 	queue_free()
 
 func _add_to_inventory() -> void:

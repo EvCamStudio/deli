@@ -16,6 +16,7 @@ signal ujian_hujan_dipicu(nomor_ujian: int)
 signal ending_ditentukan(kode: String)
 signal card_unlocked(card_id: String)
 signal level_completed(level_id: int)
+signal h1_fase_changed(fase_baru: int)
 
 # ─── 1. Status Utama (Meter Bencana & Sungai) ──────────────────────────────────
 # Meter Bencana: 0 (Aman/Jernih) s/d 100 (Bencana/Banjir). Mulai di 60.
@@ -77,6 +78,16 @@ var npc_sikap: Dictionary = {
 var tps_aktif: bool = false
 var jelantah_aktif: bool = false
 
+# ─── 6. Sistem Alur Misi Hari 1 ───────────────────────────────────────────────
+# 0: Tiba di Warung -> Misi: "Pergi ke Tepi Sungai Deli untuk melihat kondisi sungai."
+# 1: Tiba di Sungai -> Misi: "Kutip 3 sampah di sekitar sungai (0/3)."
+# 2: 3 Sampah Terkumpul -> Suara misterius -> Misi: "Cari sumber suara misterius di tepi sungai."
+# 3: Selesai bicara Datuk -> Misi: "Kembali ke Warung dan temui Ibu (Bu Mira) untuk mencari tahu masalah warga."
+# 4: Selesai bicara Bu Mira -> Misi: "Tidur di Kasur Warung untuk memulihkan energi dan berganti hari."
+# 5: Selesai Hari 1 (setelah tidur)
+var h1_fase: int = 0
+var h1_sampah_kutip: int = 0
+
 # Batasan Harian
 var setoran_sampah_hari_ini: int = 0
 var pohon_ditanam_hari_ini: int = 0
@@ -94,6 +105,71 @@ var collected_cards: Array[String] = []
 var choices: Dictionary = {}
 
 const SAVE_PATH: String = "user://save_deli.json"
+
+func _ready() -> void:
+	call_deferred("_setup_dialog_listener")
+
+func _setup_dialog_listener() -> void:
+	if DialogueManager:
+		DialogueManager.dialog_selesai.connect(_on_dialog_selesai)
+
+func _on_dialog_selesai(id_dialog: String) -> void:
+	if hari == 1:
+		if id_dialog == "h1_datuk" and h1_fase == 2:
+			h1_fase = 3
+			h1_fase_changed.emit(3)
+			var hud := get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_toast"):
+				hud.show_toast("Misi Diperbarui: Temui Ibu di warung!")
+		elif id_dialog == "h1_warung" and h1_fase == 3:
+			h1_fase = 4
+			h1_fase_changed.emit(4)
+			var hud := get_tree().get_first_node_in_group("hud")
+			if hud and hud.has_method("show_toast"):
+				hud.show_toast("Misi: Istirahatlah di kasur warung (Tidur).")
+
+## Tambah progres kutip sampah pada Misi Hari 1
+func tambah_sampah_h1() -> void:
+	if hari != 1 or h1_fase != 1:
+		return
+	h1_sampah_kutip += 1
+	var hud := get_tree().get_first_node_in_group("hud")
+	if h1_sampah_kutip < 3:
+		if hud and hud.has_method("show_toast"):
+			hud.show_toast("Kutip Sampah: %d / 3" % h1_sampah_kutip)
+	else:
+		h1_fase = 2
+		h1_fase_changed.emit(2)
+		if hud and hud.has_method("show_toast"):
+			hud.show_toast("Terdengar suara berat nan lembut: 'Anak muda... kemarilah...'")
+		if AudioManager:
+			AudioManager.play_sfx("correct")
+
+## Ambil teks misi yang sedang aktif saat ini
+func get_current_objective() -> String:
+	match hari:
+		1:
+			match h1_fase:
+				0: return "Pergi ke Tepi Sungai Deli (gerbang kanan) untuk melihat kondisi sungai."
+				1: return "Kutip 3 sampah di sekitar tepi sungai (%d/3)." % [mini(h1_sampah_kutip, 3)]
+				2: return "Cari sumber suara misterius yang memanggil di tepi sungai."
+				3: return "Kembali ke Warung dan temui Ibu (Bu Mira) untuk mencari tahu masalah warga."
+				4: return "Tidur di Kasur Warung untuk memulihkan energi dan berganti hari."
+				_: return "Hari 1 selesai. Istirahatlah di kasur warung."
+		2:
+			return "Hari 2: Temui Bang Jali di gang (gerbang bawah warung). Dengarkan keluhannya."
+		3:
+			return "Hari 3: Beri solusi TPS ke Bang Jali. Bersiap hadapi Hujan Kecil sore nanti!"
+		4:
+			return "Hari 4: Temui Kak Rina di gerobak gorengan. Cari tahu masalah minyak jelantah."
+		5:
+			return "Hari 5: Tawarkan solusi botol jerigen ke Kak Rina. Bersiap Hujan Sedang!"
+		6:
+			return "Hari 6: Temui Pak Darwis di bale tepi sungai. Ingatkan kearifan orang tua dulu."
+		7:
+			return "Hari 7: Ikuti Festival Pantun pagi, lunasi utang sore, jaga tanggul malam!"
+		_:
+			return "Bersihkan sampah sungai dan rawat lingkungan Sungai Deli."
 
 # ─── Fungsi Perubahan State Publik ────────────────────────────────────────────
 
@@ -195,6 +271,8 @@ func tidur_ganti_hari() -> void:
 
 	# 5. Ganti Hari
 	if hari < 7:
+		if hari == 1:
+			h1_fase = 5
 		self.hari += 1
 		hari_berganti.emit(hari)
 		save_game()
@@ -259,6 +337,8 @@ func reset_ke_hari_1() -> void:
 	ujian1_selesai = false
 	ujian2_selesai = false
 	ujian_akhir_selesai = false
+	h1_fase = 0
+	h1_sampah_kutip = 0
 	save_game()
 
 func reset() -> void:
@@ -286,6 +366,8 @@ func save_game() -> void:
 		"npc_sikap": npc_sikap,
 		"tps_aktif": tps_aktif,
 		"jelantah_aktif": jelantah_aktif,
+		"h1_fase": h1_fase,
+		"h1_sampah_kutip": h1_sampah_kutip,
 		"player_name": player_name
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
@@ -315,6 +397,8 @@ func load_game() -> bool:
 		npc_sikap = d.get("npc_sikap", {"jali": 0, "rina": 0, "darwis": 0})
 		tps_aktif = bool(d.get("tps_aktif", false))
 		jelantah_aktif = bool(d.get("jelantah_aktif", false))
+		h1_fase = int(d.get("h1_fase", 0))
+		h1_sampah_kutip = int(d.get("h1_sampah_kutip", 0))
 		player_name = str(d.get("player_name", "Pemain"))
 		return true
 	return false

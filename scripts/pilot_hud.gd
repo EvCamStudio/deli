@@ -34,6 +34,7 @@ func _ready() -> void:
 	GameState.utang_changed.connect(_on_utang_changed)
 	GameState.hari_berganti.connect(_on_hari_berganti)
 	GameState.npc_sikap_changed.connect(_on_npc_sikap_changed)
+	GameState.h1_fase_changed.connect(func(_f): _update_mission_by_day())
 
 	_low_style.bg_color = Color(0.85, 0.35, 0.25)
 	_ok_style.bg_color = Color(0.25, 0.65, 0.45)
@@ -93,17 +94,7 @@ func _update_time() -> void:
 func _update_mission_by_day() -> void:
 	if not mission_label:
 		return
-	var text := ""
-	match GameState.hari:
-		1: text = "Hari 1: Berbicara dengan Ibu di warung, lalu temui Datuk Sampan di tepi sungai."
-		2: text = "Hari 2: Dekati Bang Jali di gang. Dengarkan alasannya buang sampah."
-		3: text = "Hari 3: Beri solusi TPS ke Bang Jali. Bersiap hadapi Hujan Kecil sore nanti!"
-		4: text = "Hari 4: Temui Kak Rina di lapak gorengan. Cari tahu masalah minyak jelantah."
-		5: text = "Hari 5: Tawarkan solusi botol jelantah ke Kak Rina. Bersiap Hujan Sedang!"
-		6: text = "Hari 6: Temui Pak Darwis di bale tepi sungai. Ingatkan kearifan orang tua dulu."
-		7: text = "Hari 7: Festival pantun pagi, lunasi utang ke Bang Ucok sore, jaga tanggul malam!"
-		_: text = "Bersihkan sampah sungai dan rawat lingkungan Sungai Deli."
-	mission_label.text = text
+	mission_label.text = GameState.get_current_objective()
 
 func tampilkan_konfirmasi_tidur() -> void:
 	var dialog_teks := "Apakah kamu ingin tidur di kasur warung?\n(Hari akan berganti, energi pulih penuh ⚡100, dan sampah malam dievaluasi)."

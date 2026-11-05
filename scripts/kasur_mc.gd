@@ -15,6 +15,12 @@ func _ready() -> void:
 		label.hide()
 
 func interact() -> void:
+	if GameState.hari == 1 and GameState.h1_fase < 4:
+		var hud := get_tree().get_first_node_in_group("hud")
+		if hud and hud.has_method("show_toast"):
+			hud.show_toast("Hari belum selesai. Periksa kondisi sungai dan bicara dengan Ibu terlebih dahulu.")
+		return
+
 	# Buka konfirmasi tidur
 	var hud := get_tree().get_first_node_in_group("hud")
 	if hud and hud.has_method("tampilkan_konfirmasi_tidur"):
