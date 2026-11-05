@@ -53,6 +53,7 @@ func _on_settings() -> void:
 	settings_panel.show()
 
 func _on_main_menu() -> void:
+	GameState.save_game()
 	get_tree().paused = false
 	SceneManager.go_to_main_menu()
 

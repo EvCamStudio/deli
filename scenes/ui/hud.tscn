@@ -62,18 +62,18 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(62, 9)
+custom_minimum_size = Vector2(54, 9)
 layout_mode = 2
 size_flags_vertical = 4
-value = 20.0
+value = 60.0
 show_percentage = false
 
 [node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(30, 0)
+custom_minimum_size = Vector2(62, 0)
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_pixel")
 theme_override_font_sizes/font_size = 10
-text = "20%"
+text = "Bencana 60%"
 
 [node name="Spacer" type="Control" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2

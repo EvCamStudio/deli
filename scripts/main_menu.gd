@@ -77,7 +77,10 @@ func _load_level(id: int) -> void:
 
 func _on_continue() -> void:
 	if GameState.load_game():
-		SceneManager.change_level(GameState.current_level)
+		var target_scene: String = GameState.saved_scene
+		if target_scene.is_empty() or not ResourceLoader.exists(target_scene):
+			target_scene = "res://scenes/world/world_sungai_deli.tscn"
+		SceneManager.change_scene(target_scene)
 
 func _on_level_select() -> void:
 	if level_select_panel:

@@ -16,6 +16,8 @@ const ZONE_HEIGHT: int = 34
 var _current_zone: String = "hulu"
 var _dialogue_active: bool = false
 var _zone_containers: Dictionary = {}
+var _lever_sequence: Array[int] = [1, 3, 2]
+var _lever_pressed: Array[int] = []
 var _spawn_positions: Dictionary = {
 	"hulu": Vector2(8, 10) * TILE,
 	"desa": Vector2(8, 10) * TILE,
@@ -46,9 +48,15 @@ func _ready() -> void:
 	if GameState.quest_progress == 0:
 		hud.hide_mission()
 	else:
+		QuestManager.start_main_quest()
 		_refresh_mission()
 
-	change_zone("hulu")
+	var initial_zone: String = GameState.saved_zone if GameState.saved_zone in _zone_containers else "hulu"
+	var has_saved_pos: bool = GameState.saved_player_x >= 0.0 and GameState.saved_player_y >= 0.0
+	var restored_pos := Vector2(GameState.saved_player_x, GameState.saved_player_y)
+	change_zone(initial_zone)
+	if has_saved_pos:
+		player.global_position = restored_pos
 
 func _build_zones() -> void:
 	# Zona Hulu: Warung + mata air hutan
@@ -151,6 +159,7 @@ func _spawn_gameplay_objects() -> void:
 	
 	_spawn_zone_trash("kota", 20, ["plastik", "b3"])
 	_spawn_zone_bins("kota", ["plastik", "b3"])
+	_spawn_zone_levers("kota")
 	
 	_spawn_zone_trash("hilir", 10, ["plastik", "b3"])
 	_spawn_zone_bins("hilir", ["plastik", "b3"])
@@ -159,13 +168,16 @@ func _spawn_gameplay_objects() -> void:
 func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	for i in range(count):
+		var tid: String = "%s_trash_%d" % [zone, i]
+		if tid in GameState.picked_trash_ids:
+			continue
 		var trash := trash_scene.instantiate()
 		var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
 		var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
 		if y >= 15 and y <= 18:
 			y += 6
 		trash.position = Vector2(x, y) * TILE
-		trash.set("trash_id", "%s_trash_%d" % [zone, i])
+		trash.set("trash_id", tid)
 		trash.set("category", categories[i % categories.size()])
 		_zone_containers[zone].add_child(trash)
 
@@ -187,7 +199,21 @@ func _spawn_zone_tree_spots(zone: String, count: int, kind: String) -> void:
 		var y: int = 6 + (i * 43 + 31) % 8
 		spot.position = Vector2(x, y) * TILE
 		spot.set("kind", kind)
+		spot.set("spot_id", "%s_tree_%d" % [zone, i])
 		_zone_containers[zone].add_child(spot)
+
+func _spawn_zone_levers(zone: String) -> void:
+	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
+	var positions: Array[Vector2] = [
+		Vector2(42, 13) * TILE,
+		Vector2(48, 13) * TILE,
+		Vector2(45, 21) * TILE,
+	]
+	for i in range(3):
+		var lever := lever_scene.instantiate()
+		lever.position = positions[i]
+		lever.set("lever_id", i + 1)
+		_zone_containers[zone].add_child(lever)
 
 func _setup_camera() -> void:
 	camera.limit_left = 0
@@ -235,12 +261,16 @@ func _refresh_mission() -> void:
 
 # ─── Callback gameplay ───────────────────────────────────────────────────────
 
-func on_trash_picked(category: String, _trash_id: String) -> void:
+func on_trash_picked(category: String, trash_id: String) -> void:
+	if not trash_id.is_empty() and trash_id not in GameState.picked_trash_ids:
+		GameState.picked_trash_ids.append(trash_id)
 	GameState.rupiah += 500
 	toast("Sampah %s dipungut. +Rp500" % category, true)
+	GameState.save_game()
 
 func on_bin_sorted(category: String) -> void:
 	toast("Sampah %s terpilah. Sungai membaik." % category, true)
+	GameState.save_game()
 
 func on_tree_planted(kind: String) -> void:
 	var label: String = "Mangrove" if kind == "mangrove" else "Pohon"
@@ -248,6 +278,29 @@ func on_tree_planted(kind: String) -> void:
 
 func on_npc_talked(_npc_key: String) -> void:
 	pass
+
+## Integrasi Puzzle Tuas Pintu Air (urutan 1-3-2) untuk Hari 7 malam
+func lever_pressed(lever_id: int) -> void:
+	_lever_pressed.append(lever_id)
+	for i in range(_lever_pressed.size()):
+		if _lever_pressed[i] != _lever_sequence[i]:
+			_lever_pressed.clear()
+			GameState.ubah_meter(2.0)
+			for lever in get_tree().get_nodes_in_group("pilot_lever"):
+				if lever.has_method("reset_lever"):
+					lever.reset_lever()
+			toast("Urutan tuas salah! Mulai dari tuas 1 (urutan: 1-3-2).", false)
+			return
+
+	if _lever_pressed.size() == _lever_sequence.size():
+		AudioManager.play_sfx("correct")
+		toast("Pintu air terbuka! Aliran sungai lancar.", true)
+		if GameState.hari == 7:
+			GameState.selesaikan_puzzle_pintu_air()
+		else:
+			GameState.ubah_meter(-10.0)
+	else:
+		toast("Tuas %d benar (%d/3)." % [lever_id, _lever_pressed.size()], true)
 
 # ─── Kontrol & pause ─────────────────────────────────────────────────────────
 
