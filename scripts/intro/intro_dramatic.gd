@@ -164,7 +164,7 @@ func _show_chapter(chapter_idx: int) -> void:
 	_current_chapter_node.modulate.a = 0.0
 
 	var tw := create_tween()
-	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.4)
+	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.3)
 
 # ─── Render Panel Sesuai Tipe (Narasi / Dialog / Pikiran / Telepon) ────────────
 
@@ -175,7 +175,7 @@ func _render_current_step() -> void:
 
 	var chapter_entries: Array = SCRIPT_DATA[_current_chapter]
 	if _current_step >= chapter_entries.size():
-		_next_chapter()
+		_finish_intro()
 		return
 
 	var entry: Dictionary = chapter_entries[_current_step]
@@ -203,7 +203,7 @@ func _render_current_step() -> void:
 
 	match tipe:
 		"narasi":
-			# Sembunyikan Balon Dialog, Tampilkan Caption Box di atas/tengah
+			# Sembunyikan Balon Dialog, Tampilkan Caption Box
 			dialogue_container.hide()
 			caption_box.show()
 			caption_text.text = "[i]%s[/i]" % processed_teks
@@ -211,28 +211,29 @@ func _render_current_step() -> void:
 		"dialog":
 			caption_box.hide()
 			dialogue_container.show()
-			speech_text.text = processed_teks
-			_setup_dialog_speaker(speaker, player_name, false)
+			speech_text.text = "\"%s\"" % processed_teks
+			_setup_dialog_speaker(speaker, player_name)
 
 		"pikiran":
+			# Pikiran MC: cukup tanda kurung tanpa embel-embel "(Dalam Hati)" pada nama
 			caption_box.hide()
 			dialogue_container.show()
-			speech_text.text = "[i]\"%s\"[/i]" % processed_teks
+			speech_text.text = "[i](%s)[/i]" % processed_teks
 			_setup_thought_speaker(speaker, player_name)
 
 		"telepon":
 			caption_box.hide()
 			dialogue_container.show()
-			speech_text.text = processed_teks
+			speech_text.text = "(Lewat telepon) \"%s\"" % processed_teks
 			_setup_phone_speaker(speaker)
 
-func _setup_dialog_speaker(speaker: String, player_name: String, _is_thought: bool) -> void:
+func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 	match speaker:
 		"mc":
 			speaker_label.text = player_name
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 		"manajer":
-			speaker_label.text = "Manajer PT Cahaya Nusantara"
+			speaker_label.text = "Manajer"
 			portrait.texture = load(PORTRAITS["manajer"]) as Texture2D
 		"ibu":
 			speaker_label.text = "Bu Mira"
@@ -242,19 +243,19 @@ func _setup_dialog_speaker(speaker: String, player_name: String, _is_thought: bo
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_thought_speaker(speaker: String, player_name: String) -> void:
+	# Cukup nama karakter saja tanpa tulisan "(Dalam Hati)"
 	if speaker == "mc":
-		speaker_label.text = "💭 %s (Dalam Hati)" % player_name
-		# Di Bab 2 dan 3 gunakan potret sedih untuk memperkuat emosi PHK & banjir
+		speaker_label.text = player_name
 		if _current_chapter >= 1:
 			portrait.texture = load(PORTRAITS["player_sad"]) as Texture2D
 		else:
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 	else:
-		speaker_label.text = "💭 %s" % speaker.capitalize()
+		speaker_label.text = speaker.capitalize()
 		portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_phone_speaker(_speaker: String) -> void:
-	speaker_label.text = "📞 Bu Mira (Panggilan Telepon)"
+	speaker_label.text = "Bu Mira"
 	portrait.texture = load(PORTRAITS["ibu"]) as Texture2D
 
 # ─── Navigasi & Input ─────────────────────────────────────────────────────────
@@ -265,33 +266,41 @@ func _on_tap_advanced() -> void:
 	_advance_step()
 
 func _advance_step() -> void:
+	if _is_waiting_input or _is_transitioning:
+		return
+
 	var frame := Engine.get_process_frames()
 	if frame == _last_advance_frame:
 		return
 	_last_advance_frame = frame
 
 	_current_step += 1
-	_render_current_step()
+	var chapter_entries: Array = SCRIPT_DATA[_current_chapter]
+	if _current_step >= chapter_entries.size():
+		# Bab saat ini telah selesai
+		if _current_chapter + 1 >= SCRIPT_DATA.size():
+			# Bab 3 selesai -> transisi langsung ke game (Peta A Warung Hari 1)
+			_finish_intro()
+		else:
+			_next_chapter(_current_chapter + 1)
+	else:
+		_render_current_step()
 
-func _next_chapter() -> void:
+func _next_chapter(next_ch: int) -> void:
 	if _is_transitioning:
 		return
 	_is_transitioning = true
 
-	var next_ch := _current_chapter + 1
-	if next_ch >= SCRIPT_DATA.size():
-		_finish_intro()
-		return
-
 	# Fade transisi antar bab
 	var tw := create_tween()
-	tw.tween_property(fade_rect, "color:a", 1.0, 0.3)
+	tw.tween_property(fade_rect, "color:a", 1.0, 0.25)
 	tw.tween_callback(func():
+		_current_chapter = next_ch
 		_current_step = 0
-		_show_chapter(next_ch)
+		_show_chapter(_current_chapter)
 		_render_current_step()
 	)
-	tw.tween_property(fade_rect, "color:a", 0.0, 0.3)
+	tw.tween_property(fade_rect, "color:a", 0.0, 0.25)
 	tw.tween_callback(func():
 		_is_transitioning = false
 	)
@@ -300,14 +309,15 @@ func _finish_intro() -> void:
 	if _is_transitioning:
 		return
 	_is_transitioning = true
+	tap_advance_btn.disabled = true
 
-	# Pastikan data tersimpan
+	# Simpan nama pemain dan status awal
 	GameState.save_game()
 
+	# Fade to black lalu pindah ke Peta A Warung
 	var tw := create_tween()
-	tw.tween_property(fade_rect, "color:a", 1.0, 0.7)
+	tw.tween_property(fade_rect, "color:a", 1.0, 0.5)
 	tw.tween_callback(func():
-		# Transisi langsung ke Peta A (Warung) Hari 1
 		SceneManager.change_scene("res://scenes/maps/map_a_warung.tscn")
 	)
 
@@ -341,5 +351,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_waiting_input or _is_transitioning:
 		return
 	if event.is_action_pressed("ui_accept"):
+		_advance_step()
+		get_viewport().set_input_as_handled()
+	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		_advance_step()
 		get_viewport().set_input_as_handled()
