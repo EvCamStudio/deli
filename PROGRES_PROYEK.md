@@ -13,7 +13,7 @@
 * **Genre**: 2D Top-Down Environmental Slice-of-Life / RPG
 * **Target Viewport**: 640 × 360 px (Kamera Zoom 2x, Pixel Art Nearest-Neighbor, bebas blur)
 * **Struktur Alur Utama**:
-  * **Prolog**: `scenes/intro/intro_dramatic.tscn` (Jakarta PHK ➜ Tiba di Medan ➜ Warung Kebanjiran).
+  * **Prolog Komik Interaktif**: `scenes/intro/intro_dramatic.tscn` (Pemisahan visual komik antara *Caption Narasi*, *Balon Dialog Karakter*, dan *Balon Monolog Pikiran MC*, dengan naskah Bab 1 Jakarta PHK ➜ Bab 2 Refleksi Pulang ➜ Bab 3 Tiba di Medan & Warung Kebanjiran).
   * **Siklus 7 Hari**: Peta A (Warung) sebagai Basecamp ➜ Peta B (Sungai Deli) ➜ Peta C (Gang Jali) ➜ Peta D (Pintu Air).
   * **3 Ujian Hujan**: Hari 3 (Hujan Kecil), Hari 5 (Hujan Sedang), Hari 7 (Hujan Lebat / Ujian Akhir).
   * **Klimaks Hari 7**: Pagi Festival Pantun ➜ Sore Pelunasan Utang Rp 500.000 ke Bang Ucok ➜ Malam Puzzle Pintu Air (Kombinasi 1-3-2) ➜ Epilog & Evaluasi Ending.
