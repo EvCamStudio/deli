@@ -14,7 +14,7 @@
       "speaker": "Penjaga Hutan",
       "text": "Pohon-pohon di sini banyak yang ditebang. Tanpa akar pohon, air hujan langsung hanyut, tidak meresap jadi mata air.",
       "choices": [
-        { "text": "Aku akan tanam pohon lagi!", "next": "plant_prompt", "effect": { "river_health": 2, "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 pohon di Hulu", "target": 10 } } }
+        { "text": "Aku akan tanam pohon lagi!", "next": "plant_prompt", "effect": { "river_health": 2, "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 pohon di Hulu", "target": 5 } } }
       ]
     },
     {
@@ -22,7 +22,7 @@
       "speaker": "Penjaga Hutan",
       "text": "Bagus! Titik tanam sudah kusiapkan di sekitar hutan. Dekati tanah bertanda, lalu tekan tombol aksi untuk menanam bibit pohon.",
       "choices": [
-        { "text": "Siap!", "next": "plant_prompt", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 pohon di Hulu", "target": 10 } } }
+        { "text": "Siap!", "next": "plant_prompt", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 pohon di Hulu", "target": 5 } } }
       ]
     },
     {
@@ -37,6 +37,31 @@
       "id": "end",
       "speaker": "Penjaga Hutan",
       "text": "Terima kasih! Setiap pohon yang kau tanam adalah warisan untuk generasi mendatang.",
+      "choices": []
+    }
+  ],
+  "npc_ibu_mc": [
+    {
+      "id": "start",
+      "speaker": "Ibu",
+      "text": "Nak, kau sudah pulang? Ibu lihat sungai di depan makin keruh. Dulu anak-anak bisa mandi di sana.",
+      "choices": [
+        { "text": "Aku akan bantu jaga sungainya, Bu.", "next": "janji", "effect": { "river_health": 2 } },
+        { "text": "Iya, Bu. Aku cuma mampir sebentar.", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "janji",
+      "speaker": "Ibu",
+      "text": "Ibu bangga. Mulailah dari hutan di hulu. Pohon yang kau tanam akan menjaga mata air untuk kampung ini.",
+      "choices": [
+        { "text": "Baik, Bu.", "next": "end", "effect": {} }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Ibu",
+      "text": "Hati-hati di jalan. Kalau lelah, rumah ini selalu terbuka untukmu.",
       "choices": []
     }
   ]

@@ -59,7 +59,7 @@ layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
 theme_override_fonts/font = ExtResource("3_pixel")
 theme_override_font_sizes/font_size = 12
-text = "PILOT · KOTA MEDAN"
+text = "HULU KE HILIR"
 horizontal_alignment = 1
 
 [node name="MenuCard" type="PanelContainer" parent="."]
@@ -344,7 +344,7 @@ text = "Bab 2 · Desa Pertanian"
 [node name="L3Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
-text = "Bab 3 · Kota Medan (Pilot)"
+text = "Bab 3 · Kota Medan"
 
 [node name="L4Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
 custom_minimum_size = Vector2(0, 30)

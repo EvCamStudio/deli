@@ -28,7 +28,7 @@
       "speaker": "Pak Pedagang",
       "text": "Syukurlah! Ada juga sampah di sini yang perlu dipilah ke tong yang benar. Tong organik ada, plastik ada, dan B3 ada.",
       "choices": [
-        { "text": "Siap, aku mengerti.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_desa", "description": "Pilah 8 sampah ke tong yang benar", "target": 8 } } }
+        { "text": "Siap, aku mengerti.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_kota", "description": "Pilah 6 sampah kota ke tong yang benar", "target": 6 } } }
       ]
     },
     {

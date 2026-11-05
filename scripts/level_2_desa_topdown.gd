@@ -19,25 +19,26 @@ func _set_initial_mission() -> void:
 	update_mission("Bicara dengan petani & warga, lalu pilah 10 sampah.")
 
 func _spawn_entities() -> void:
-	spawn_npc("npc_petani_1", "petani", Vector2(200, 236))
-	spawn_npc("npc_ibu_desa", "ibu", Vector2(440, 236))
+	spawn_npc("npc_petani_1", "petani", Vector2(136, 236))
+	spawn_npc("npc_ibu_desa", "ibu", Vector2(480, 236))
 
 	var items: Array = [
 		["kulit_pisang", "organik", Vector2(160, 320)],
 		["daun_kering", "organik", Vector2(600, 300)],
 		["sisa_sayur", "organik", Vector2(240, 400)],
 		["ranting_kering", "organik", Vector2(800, 400)],
-		["kertas_kotor", "organik", Vector2(300, 340)],
-		["kardus_sobek", "organik", Vector2(420, 380)],
-		["sampah_kecil", "organik", Vector2(560, 360)],
-		["sampah_lain", "organik", Vector2(680, 360)],
-		["sampah_daerah", "organik", Vector2(760, 380)],
-		["sampah_akhir", "organik", Vector2(880, 400)],
+		["kertas_kotor", "plastik", Vector2(300, 340)],
+		["kardus_sobek", "plastik", Vector2(420, 380)],
+		["sampah_kecil", "plastik", Vector2(560, 360)],
+		["sampah_lain", "plastik", Vector2(680, 360)],
+		["sampah_daerah", "plastik", Vector2(760, 380)],
+		["sampah_akhir", "plastik", Vector2(880, 400)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
-	spawn_bin("organik", Vector2(216, 240))
+	spawn_bin("organik", Vector2(200, 272))
+	spawn_bin("plastik", Vector2(400, 272))
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Kota")
 
 func on_bin_sorted(category: String) -> void:
@@ -63,7 +64,7 @@ func _refresh_mission() -> void:
 		toast("Warga bergotong royong! +Rp1.500", true)
 
 	if _sorted >= TRASH_TARGET and talked_count() >= NPC_TARGET:
-		update_mission("Misi selesai! Menuju gerbang di ujung timur →")
+		update_mission("Misi selesai! Menuju gerbang di ujung timur.")
 	elif talked_count() < NPC_TARGET:
 		update_mission("Bicara warga: %d/%d · Sampah terpilah: %d/%d" % [talked_count(), NPC_TARGET, _sorted, TRASH_TARGET])
 	else:

@@ -22,7 +22,7 @@
       "speaker": "Pak Nelayan",
       "text": "Bagus! Titik tanam mangrove ditandai di tepian pantai. Dekati dan tekan tombol aksi. Ada juga sampah yang tersangkut di akar mangrove, tolong bersihkan!",
       "choices": [
-        { "text": "Siap!", "next": "end", "effect": { "quest": { "id": "pilah_sampah_hilir", "description": "Pilah 8 sampah plastik ke tong", "target": 8 } } }
+        { "text": "Siap!", "next": "end", "effect": { "quest": { "id": "pilah_sampah_hilir", "description": "Pilah 8 sampah ke tong yang benar", "target": 8 } } }
       ]
     },
     {
@@ -38,7 +38,7 @@
       "speaker": "Penjaga Sungai",
       "text": "Lihatlah! Gunungan Sampah menghalangi muara. Kita harus bersihkan dengan memilah sampah ke tong yang benar!",
       "choices": [
-        { "text": "Ayo kita hadapi bersama!", "next": "end", "effect": { "quest": { "id": "pilah_sampah_hilir", "description": "Pilah 8 sampah plastik ke tong", "target": 8 } } }
+        { "text": "Ayo kita hadapi bersama!", "next": "end", "effect": { "quest": { "id": "pilah_sampah_hilir", "description": "Pilah 8 sampah ke tong yang benar", "target": 8 } } }
       ]
     },
     {

@@ -29,8 +29,8 @@ func _set_initial_mission() -> void:
 
 func _spawn_entities() -> void:
 	# NPC — posisi di depan bangunan dan area publik.
-	_spawn_npc("npc_pedagang", "pedagang", Vector2(152, 150))
-	_spawn_npc("npc_ibu_rumah", "ibu", Vector2(432, 150))
+	_spawn_npc("npc_pedagang", "pedagang", Vector2(136, 160))
+	_spawn_npc("npc_ibu_rumah", "ibu", Vector2(480, 160))
 	_spawn_npc("npc_anak_sekolah", "budi", Vector2(320, 184))
 	_spawn_npc("npc_tokoh_masyarakat", "pakrt", Vector2(700, 184))
 

@@ -177,7 +177,7 @@ func _spawn_trees() -> void:
 	var positions: Array[Vector2] = [
 		Vector2(40, 90), Vector2(70, 120), Vector2(230, 84), Vector2(280, 116),
 		Vector2(360, 70), Vector2(410, 96), Vector2(560, 92), Vector2(610, 120),
-		Vector2(700, 80), Vector2(760, 104), Vector2(900, 90),
+		Vector2(700, 80), Vector2(760, 104), Vector2(916, 84),
 		Vector2(48, 470), Vector2(120, 500), Vector2(250, 480), Vector2(330, 512),
 		Vector2(460, 486), Vector2(590, 508), Vector2(680, 474), Vector2(820, 505),
 		Vector2(920, 480), Vector2(150, 360), Vector2(690, 360), Vector2(790, 370),

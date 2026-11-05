@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://level3_kota"]
+[gd_scene load_steps=25 format=3 uid="uid://level3_kota"]
 
 [ext_resource type="Script" path="res://scripts/level_3_kota.gd" id="1_l3"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]

@@ -82,7 +82,7 @@ func _test_level_1() -> void:
 	await _frames(6)
 
 	var nodes := _collect(level)
-	_check(nodes["npcs"].size() == 1, "L1: 1 NPC spawned")
+	_check(nodes["npcs"].size() == 2, "L1: 2 NPCs spawned")
 	_check(nodes["spots"].size() == 5, "L1: 5 tree spots spawned")
 	_check(nodes["gate"] != null and nodes["gate"]._open, "L1: gate starts open")
 
@@ -91,7 +91,12 @@ func _test_level_1() -> void:
 	_check(player._interactable == nodes["spots"][0], "L1: player detects tree spot")
 	_check(nodes["spots"][0].get_action_label() == "Tanam Pohon", "L1: tree spot action label")
 
-	var npc: Node = nodes["npcs"][0]
+	var npc: Node = null
+	for candidate in nodes["npcs"]:
+		if candidate.npc_key == "npc_penjaga_hutan":
+			npc = candidate
+			break
+	_check(npc != null, "L1: penjaga hutan found")
 	npc.interact()
 	await _frames(2)
 	_check(DialogueManager.is_active(), "L1: penjaga dialogue starts")
@@ -127,7 +132,7 @@ func _test_level_2() -> void:
 	var nodes := _collect(level)
 	_check(nodes["npcs"].size() == 2, "L2: 2 NPCs spawned")
 	_check(nodes["trash"].size() == 10, "L2: 10 trash spawned")
-	_check(nodes["bins"].size() == 3, "L2: 3 bins spawned")
+	_check(nodes["bins"].size() == 2, "L2: 2 bins spawned")
 	_check(nodes["gate"] != null and nodes["gate"]._open, "L2: gate starts open")
 
 	for npc in nodes["npcs"]:

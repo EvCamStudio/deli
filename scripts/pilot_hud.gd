@@ -4,7 +4,7 @@ class_name PilotHUD
 
 @onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
 @onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
-
+@onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
 @onready var money_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/MoneyLabel
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
@@ -15,6 +15,14 @@ class_name PilotHUD
 @onready var completion_title: Label = $Completion/Panel/VBox/Title
 @onready var completion_text: RichTextLabel = $Completion/Panel/VBox/Text
 @onready var continue_btn: Button = $Completion/Panel/VBox/ContinueBtn
+
+const LOCATION_NAMES: Dictionary = {
+	1: "HULU SUNGAI DELI",
+	2: "DESA SUNGAI DELI",
+	3: "KOTA MEDAN",
+	4: "HILIR SUNGAI DELI",
+	5: "EPILOG",
+}
 
 const COMPLETION_INFO: Dictionary = {
 	1: {
@@ -47,6 +55,7 @@ var _toast_tween: Tween = null
 var _clock_accum: float = 0.0
 var _next_level: int = 0
 var _low_style := StyleBoxFlat.new()
+var _mid_style := StyleBoxFlat.new()
 var _ok_style := StyleBoxFlat.new()
 
 func _ready() -> void:
@@ -66,10 +75,15 @@ func _ready() -> void:
 	_ok_style.corner_radius_top_right = 4
 	_ok_style.corner_radius_bottom_left = 4
 	_ok_style.corner_radius_bottom_right = 4
+	_mid_style.bg_color = Color(0.82, 0.66, 0.22)
+	_mid_style.corner_radius_top_left = 4
+	_mid_style.corner_radius_top_right = 4
+	_mid_style.corner_radius_bottom_left = 4
+	_mid_style.corner_radius_bottom_right = 4
 
 	_on_river_health_changed(GameState.river_health)
 	_update_money()
-	_update_carry()
+	_update_location()
 
 	var cont_btn := continue_btn
 	var menu_btn := completion.get_node_or_null("Panel/VBox/MenuBtn") as Button
@@ -89,18 +103,29 @@ func _process(delta: float) -> void:
 			GameState.minutes = 6 * 60
 			GameState.day += 1
 	_update_money()
+	_update_location()
 	_update_carry()
 
 func _on_river_health_changed(value: float) -> void:
 	river_bar.value = value
-	river_label.text = "%d%%" % int(value)
-	river_bar.add_theme_stylebox_override("fill", _ok_style if value >= 55.0 else _low_style)
+	river_label.text = "%d%%" % int(round(value))
+	if value >= 70.0:
+		river_bar.add_theme_stylebox_override("fill", _ok_style)
+	elif value >= 40.0:
+		river_bar.add_theme_stylebox_override("fill", _mid_style)
+	else:
+		river_bar.add_theme_stylebox_override("fill", _low_style)
 
 func update_mission(text: String) -> void:
 	mission_label.text = text
 
 func _update_money() -> void:
 	money_label.text = "Rp %s" % _format_number(GameState.rupiah)
+
+func _update_location() -> void:
+	var location_name: String = LOCATION_NAMES.get(GameState.current_level, "")
+	if not location_name.is_empty():
+		location_label.text = location_name
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])

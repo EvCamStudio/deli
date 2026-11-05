@@ -6,6 +6,20 @@ class_name WorldSungaiDeli
 const TILE: int = 16
 const ZONE_WIDTH: int = 60  # tile per zona
 const ZONE_HEIGHT: int = 34
+const ZONE_LABELS: Dictionary = {
+	"hulu": "HULU SUNGAI DELI",
+	"desa": "DESA SUNGAI DELI",
+	"kota": "KOTA MEDAN",
+	"hilir": "HILIR SUNGAI DELI",
+}
+
+# Footprint bangunan (dalam satuan tile) supaya sampah/pohon tidak menimpa atap.
+const BUILDING_RECTS: Dictionary = {
+	"hulu": [Rect2(4, 9, 6, 4)],
+	"desa": [Rect2(5.5, 9, 6, 4), Rect2(27, 9, 6, 4), Rect2(49.5, 10, 6, 4)],
+	"kota": [Rect2(5.5, 4.25, 6, 4), Rect2(27, 4.25, 6, 4), Rect2(49.5, 5.25, 6, 4)],
+	"hilir": [Rect2(4, 9, 6, 4), Rect2(22, 9, 6, 4), Rect2(49.5, 9, 6, 4)],
+}
 
 @onready var player: CharacterBody2D = $Player
 @onready var camera: Camera2D = $Player/Camera2D
@@ -17,10 +31,10 @@ var _current_zone: String = "hulu"
 var _dialogue_active: bool = false
 var _zone_containers: Dictionary = {}
 var _spawn_positions: Dictionary = {
-	"hulu": Vector2(8, 10) * TILE,
-	"desa": Vector2(8, 10) * TILE,
-	"kota": Vector2(8, 10) * TILE,
-	"hilir": Vector2(8, 10) * TILE,
+	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
+	"desa": Vector2(8, 15) * TILE,   # depan warung
+	"kota": Vector2(8, 10) * TILE,   # trotoar kota
+	"hilir": Vector2(8, 15) * TILE,  # depan warung nelayan
 }
 
 func _ready() -> void:
@@ -114,21 +128,21 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
-	# Hulu: Ibu di warung (trigger quest) + penjaga hutan
-	_create_npc("hulu", "npc_ibu_desa", "ibu", Vector2(6, 12) * TILE, 2)
+	# Hulu: Ibu di depan rumah (trigger quest) + penjaga hutan
+	_create_npc("hulu", "npc_ibu_desa", "ibu", Vector2(7, 15) * TILE, 2)
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 14) * TILE, 1)
 	
-	# Desa: Petani, ibu desa
-	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 10) * TILE, 2)
-	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 10) * TILE, 2)
+	# Desa: Petani, ibu desa — semua berdiri di halaman depan bangunan
+	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 15) * TILE, 2)
+	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 16) * TILE, 2)
 	
 	# Kota: Pedagang, anak sekolah
 	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(30, 10) * TILE, 3)
 	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(50, 13) * TILE, 3)
 	
 	# Hilir: Nelayan, penjaga sungai
-	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(10, 14) * TILE, 4)
-	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(50, 12) * TILE, 4)
+	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(13, 15) * TILE, 4)
+	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(50, 15) * TILE, 4)
 
 func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int) -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
@@ -160,31 +174,49 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	for i in range(count):
 		var trash := trash_scene.instantiate()
-		var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
-		var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
-		if y >= 15 and y <= 18:
-			y += 6
+		var x: float = float(4 + (i * 73 + 17) % (ZONE_WIDTH - 8))
+		var y: float = float(4 + (i * 37 + 11) % (ZONE_HEIGHT - 8))
+		if y >= 15.0 and y <= 18.0:
+			y += 6.0
+		# Hindari atap bangunan; geser ke samping lalu ke bawah bila perlu.
+		if _blocked_by_building(zone, Rect2(x - 0.5, y - 0.5, 1.0, 1.0)):
+			x += 3.0
+		if _blocked_by_building(zone, Rect2(x - 0.5, y - 0.5, 1.0, 1.0)):
+			y += 3.0
+		if _blocked_by_building(zone, Rect2(x - 0.5, y - 0.5, 1.0, 1.0)):
+			continue
 		trash.position = Vector2(x, y) * TILE
 		trash.set("trash_id", "%s_trash_%d" % [zone, i])
 		trash.set("category", categories[i % categories.size()])
 		_zone_containers[zone].add_child(trash)
 
+func _blocked_by_building(zone: String, rect: Rect2) -> bool:
+	for building in BUILDING_RECTS.get(zone, []):
+		var b: Rect2 = building
+		if rect.intersects(b):
+			return true
+	return false
+
 func _spawn_zone_bins(zone: String, categories: Array) -> void:
 	var bin_scene := preload("res://scenes/world/bin_topdown.tscn")
+	# Di kota sungai lebih lebar, jadi tong diletakkan di trotoar (bukan di air).
+	var y_tiles: int = 13 if zone == "kota" else 20
 	for i in range(categories.size()):
 		var bin := bin_scene.instantiate()
 		var x: int = 10 + i * 15
-		var y: int = 20
-		bin.position = Vector2(x, y) * TILE
+		bin.position = Vector2(x, y_tiles) * TILE
 		bin.set("bin_category", categories[i])
 		_zone_containers[zone].add_child(bin)
 
 func _spawn_zone_tree_spots(zone: String, count: int, kind: String) -> void:
 	var tree_scene := preload("res://scenes/world/tree_spot_topdown.tscn")
 	for i in range(count):
-		var spot := tree_scene.instantiate()
 		var x: int = 8 + (i * 61 + 23) % (ZONE_WIDTH - 16)
 		var y: int = 6 + (i * 43 + 31) % 8
+		# Jangan sampai pohon tumbuh menembus atap bangunan.
+		if _blocked_by_building(zone, Rect2(x - 1.0, y - 3.0, 2.0, 3.0)):
+			continue
+		var spot := tree_scene.instantiate()
 		spot.position = Vector2(x, y) * TILE
 		spot.set("kind", kind)
 		_zone_containers[zone].add_child(spot)
@@ -215,10 +247,12 @@ func change_zone(zone: String) -> void:
 	if zone in _spawn_positions:
 		player.global_position = _zone_containers[zone].global_position + _spawn_positions[zone]
 	
-	# Update camera limits
+	# Update kamera & label lokasi
 	var zone_offset: int = ["hulu", "desa", "kota", "hilir"].find(zone)
 	camera.limit_left = zone_offset * ZONE_WIDTH * TILE
 	camera.limit_right = (zone_offset + 1) * ZONE_WIDTH * TILE
+	if hud and hud.has_method("set_location"):
+		hud.set_location(ZONE_LABELS.get(zone, zone.capitalize()))
 	
 	# Toast
 	toast("Memasuki zona: %s" % zone.capitalize(), true)

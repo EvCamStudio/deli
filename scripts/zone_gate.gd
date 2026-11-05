@@ -43,7 +43,7 @@ func _update_gate_state() -> void:
 	_open = should_open
 	if _open:
 		sprite.texture = load("res://assets/sprites/props/gate_open.png")
-		label.text = "→ " + target_zone.capitalize()
+		label.text = "Ke " + target_zone.capitalize()
 		blocker.queue_free()
 		if _player_in_range:
 			_interact_prompt_show()

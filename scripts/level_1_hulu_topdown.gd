@@ -17,7 +17,8 @@ func _set_initial_mission() -> void:
 	update_mission("Tanam 5 pohon di titik tanam hutan.")
 
 func _spawn_entities() -> void:
-	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(112, 240))
+	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(168, 244))
+	spawn_npc("npc_ibu_mc", "ibu", Vector2(112, 232))
 
 	for pos in [
 		Vector2(160, 320), Vector2(352, 312), Vector2(400, 192),
@@ -32,7 +33,7 @@ func on_tree_planted(_kind: String) -> void:
 	if _trees >= TREES_TARGET:
 		GameState.unlock_card("card_hutan_01")
 		GameState.rupiah += 1000
-		update_mission("Pohon selesai! Menuju gerbang di ujung timur →")
+		update_mission("Pohon selesai! Menuju gerbang di ujung timur.")
 		toast("Hutan kembali rimbun! +Rp1.000", true)
 	else:
 		update_mission("Tanam pohon: %d/%d" % [_trees, TREES_TARGET])

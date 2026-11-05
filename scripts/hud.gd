@@ -1,15 +1,14 @@
 ## HUD Script
-# HUD ringkas untuk gameplay: kejernihan sungai, hari/jam, rupiah,
-# energi, sisa utang, misi aktif, dan notifikasi singkat.
+# HUD ringkas untuk gameplay: kejernihan sungai, lokasi, rupiah,
+# misi aktif, sampah yang dibawa, dan notifikasi singkat.
 extends CanvasLayer
 class_name HUD
 
 # ─── Node ─────────────────────────────────────────────────────────────────────
 @onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
 @onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
+@onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
-@onready var energy_label: Label = $SafeMargin/Root/TopBar/EnergyCard/Row/EnergyLabel
-@onready var debt_label: Label = $SafeMargin/Root/TopBar/DebtCard/Row/DebtLabel
 @onready var mission_card: PanelContainer = $SafeMargin/Root/MissionCard
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
@@ -25,14 +24,18 @@ var _bar_low: StyleBoxFlat
 var _bar_mid: StyleBoxFlat
 var _bar_ok: StyleBoxFlat
 
-
+const LOCATION_NAMES: Dictionary = {
+	1: "HULU SUNGAI DELI",
+	2: "DESA SUNGAI DELI",
+	3: "KOTA MEDAN",
+	4: "HILIR SUNGAI DELI",
+	5: "EPILOG",
+}
 
 func _ready() -> void:
 	_build_bar_styles()
 	GameState.river_health_changed.connect(_on_river_health_changed)
-	GameState.energy_changed.connect(_on_energy_changed)
 	GameState.rupiah_changed.connect(_on_rupiah_changed)
-	GameState.day_changed.connect(_on_day_changed)
 
 	_apply_safe_area()
 	pause_btn.pressed.connect(_on_pause_pressed)
@@ -51,14 +54,13 @@ func _process(delta: float) -> void:
 		if GameState.minutes >= 24 * 60:
 			GameState.minutes = 6 * 60
 			GameState.day += 1
-		_update_time()
 
 	_update_carry()
 
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
 func _build_bar_styles() -> void:
-	_bar_low = _make_bar_style(Color(0.72, 0.32, 0.26))
+	_bar_low = _make_bar_style(Color(0.78, 0.38, 0.31))
 	_bar_mid = _make_bar_style(Color(0.82, 0.66, 0.22))
 	_bar_ok = _make_bar_style(Color(0.24, 0.63, 0.74))
 
@@ -86,11 +88,18 @@ func _apply_safe_area() -> void:
 
 func update_all() -> void:
 	_on_river_health_changed(GameState.river_health)
-	_on_energy_changed(GameState.energy)
 	_on_rupiah_changed(GameState.rupiah)
-	_update_time()
-	_update_debt()
 	_update_carry()
+	_update_location()
+
+func _update_location() -> void:
+	var zone_name: String = LOCATION_NAMES.get(GameState.current_level, "")
+	if not zone_name.is_empty():
+		location_label.text = zone_name
+
+## Dipakai world map saat berpindah zona.
+func set_location(zone_name: String) -> void:
+	location_label.text = zone_name
 
 func _on_river_health_changed(value: float) -> void:
 	river_bar.value = value
@@ -102,20 +111,8 @@ func _on_river_health_changed(value: float) -> void:
 	else:
 		river_bar.add_theme_stylebox_override("fill", _bar_low)
 
-func _on_energy_changed(value: float) -> void:
-	energy_label.text = "%d" % int(round(value))
-
 func _on_rupiah_changed(value: int) -> void:
 	rupiah_label.text = "Rp %s" % _format_short(value)
-
-func _on_day_changed(_new_day: int) -> void:
-	pass
-
-func _update_time() -> void:
-	pass
-
-func _update_debt() -> void:
-	debt_label.text = "Rp %s" % _format_short(GameState.debt_amount)
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])

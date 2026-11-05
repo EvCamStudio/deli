@@ -9,7 +9,7 @@ class_name LevelGate
 
 func _ready() -> void:
 	if label:
-		label.text = "→ Lanjut"
+		label.text = "Lanjut"
 	body_entered.connect(_on_body_entered)
 
 func _on_body_entered(body: Node) -> void:

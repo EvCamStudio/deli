@@ -80,23 +80,14 @@ func _paint_ground() -> void:
 		"hilir": _paint_hilir_ground()
 
 func _paint_hulu_ground() -> void:
-	# Jalur tanah menuju pondok penjaga dan tepi sungai.
-	for y in range(10, PATH_ROW + 1):
-		ground.set_cell(Vector2i(8, y), 0, Vector2i(3, 0), 0)
-		ground.set_cell(Vector2i(9, y), 0, Vector2i(4, 0), 0)
-	for y in range(12, 21):
-		ground.set_cell(Vector2i(44, y), 0, Vector2i(3, 0), 0)
-		ground.set_cell(Vector2i(45, y), 0, Vector2i(4, 0), 0)
-	# Halaman pondok.
-	for x in range(4, 11):
-		for y in range(11, 14):
-			ground.set_cell(Vector2i(x, y), 0, Vector2i(3 + _hash(x, y) % 2, 0), 0)
+	# Jalur tanah dari pintu rumah Ibu ke jalan utama.
+	_paint_door_path(6, 7, 13)
 
 func _paint_desa_ground() -> void:
-	# Jalan kampung bercabang.
-	for y in range(8, PATH_ROW + 1):
-		for x in [8, 9, 30, 31, 52, 53]:
-			ground.set_cell(Vector2i(x, y), 0, Vector2i(3 + _hash(x, y) % 2, 0), 0)
+	# Jalur tanah dari pintu tiap bangunan ke jalan utama.
+	_paint_door_path(8, 9, 13)
+	_paint_door_path(30, 31, 13)
+	_paint_door_path(52, 53, 13)
 	# Jalan menuju dermaga di tepi sungai.
 	for y in range(PATH_ROW, 27):
 		ground.set_cell(Vector2i(30, y), 0, Vector2i(3, 0), 0)
@@ -110,17 +101,19 @@ func _paint_desa_ground() -> void:
 				ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
 func _paint_hilir_ground() -> void:
-	# Jalur kampung nelayan.
-	for y in range(10, PATH_ROW + 1):
-		ground.set_cell(Vector2i(8, y), 0, Vector2i(3 + _hash(8, y) % 2, 0), 0)
-		ground.set_cell(Vector2i(9, y), 0, Vector2i(4, 0), 0)
-	for y in range(12, PATH_ROW + 1):
-		ground.set_cell(Vector2i(50, y), 0, Vector2i(3, 0), 0)
-		ground.set_cell(Vector2i(51, y), 0, Vector2i(4, 0), 0)
+	# Jalur tanah dari pintu tiap bangunan ke jalan utama.
+	_paint_door_path(6, 7, 13)
+	_paint_door_path(24, 25, 13)
+	_paint_door_path(52, 53, 13)
 	# Pantai berpasir.
 	for x in range(MAP_W):
 		for y in range(24, 28):
 			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 1), 0)
+
+func _paint_door_path(x_left: int, x_right: int, y_top: int) -> void:
+	for y in range(y_top, PATH_ROW + 1):
+		ground.set_cell(Vector2i(x_left, y), 0, Vector2i(3, 0), 0)
+		ground.set_cell(Vector2i(x_right, y), 0, Vector2i(4, 0), 0)
 
 # ─── Water ───────────────────────────────────────────────────────────────────
 
@@ -280,9 +273,9 @@ func _spawn_props() -> void:
 			_spawn_building("res://assets/sprites/props/house.png", Vector2(480, 208), Vector2(80, 22))
 			_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 224), Vector2(80, 22))
 			_spawn_trees([
-				Vector2(40, 120), Vector2(48, 420), Vector2(120, 470), Vector2(220, 200),
-				Vector2(300, 470), Vector2(560, 200), Vector2(660, 470),
-				Vector2(780, 200), Vector2(900, 420), Vector2(920, 120), Vector2(200, 120),
+				Vector2(40, 120), Vector2(48, 420), Vector2(120, 424), Vector2(220, 200),
+				Vector2(300, 424), Vector2(560, 200), Vector2(660, 424),
+				Vector2(772, 200), Vector2(900, 420), Vector2(920, 120), Vector2(200, 120),
 				Vector2(720, 120),
 			])
 		"hilir":
@@ -291,8 +284,8 @@ func _spawn_props() -> void:
 			_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 208), Vector2(80, 22))
 			_spawn_trees([
 				Vector2(40, 120), Vector2(160, 80), Vector2(320, 120), Vector2(520, 80),
-				Vector2(680, 120), Vector2(880, 80), Vector2(120, 200), Vector2(600, 200),
-				Vector2(900, 200), Vector2(300, 470), Vector2(700, 470),
+				Vector2(680, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
+				Vector2(908, 200), Vector2(260, 440), Vector2(760, 440),
 			])
 			for pos in [Vector2(120, 432), Vector2(400, 440), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
 				_spawn_mangrove(pos)
