@@ -31,6 +31,13 @@
    - `rupiah` & `utang` (Rp 500.000): Pelunasan cicilan, pendapatan warung bersih (+Rp 15.000/pagi), dan upah pengepul (+Rp 6.000/setor).
    - `evaluasi_ending()`: Menghitung persentase utang dan meter bencana untuk menentukan Ending A, B, C, atau D.
    - `reset_ke_hari_1()`: Mekanik *Rewind* khusus Ending D untuk mengulang dari Hari 1 tanpa kehilangan ingatan naratif.
+   - **Alur Misi Step-by-Step Hari 1 (`h1_fase`)**:
+     1. Fase 0: Tiba di Warung ➜ Misi: *"Pergi ke Tepi Sungai Deli untuk melihat kondisi sungai."*
+     2. Fase 1: Sampai di Peta B Sungai ➜ Misi: *"Kutip 3 sampah di sekitar tepi sungai (0/3)."*
+     3. Fase 2: Kutip 3 sampah selesai ➜ Suara misterius memanggil & tanda seru `!` muncul di atas Datuk ➜ Misi: *"Cari sumber suara misterius di tepi sungai."*
+     4. Fase 3: Bertemu & berbicara dengan Datuk Sampan (`h1_datuk`: wejangan memahami alasan/psikologis warga) ➜ Misi: *"Kembali ke Warung dan temui Ibu (Bu Mira) untuk mencari tahu masalah warga."*
+     5. Fase 4: Bertemu Bu Mira (`h1_warung`: utang darurat Rp 500rb & latar belakang 3 warga) ➜ Misi: *"Tidur di Kasur Warung untuk memulihkan energi dan berganti hari."*
+     6. Fase 5: MC tidur di kasur ➜ Berganti ke Hari 2.
 2. **`dialogue_manager.gd`**:
    - Mendukung format JSON Section 14 (`teks`, `pilihan`, `tipe`, `emosi`, `next`) sekaligus kompatibilitas format lama.
    - Otomatis mengeksekusi `delta_meter` dan sinyal `sampah_balasan`.
