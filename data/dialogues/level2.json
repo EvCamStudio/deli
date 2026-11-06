@@ -14,7 +14,7 @@
       "speaker": "Pak Tani",
       "text": "Ada! Pupuk kompos dari sisa tanaman. Lebih lambat hasilnya, tapi sungai tetap bersih dan tanah tetap subur.",
       "choices": [
-        { "text": "Ayo kita coba cara itu!", "next": "end_good", "effect": { "river_health": 5, "choice": { "peduli_alam": true } } }
+        { "text": "Ayo kita coba cara itu!", "next": "end_good", "effect": { "river_health": 5, "choice": { "peduli_alam": true }, "quest": { "id": "pilah_desa", "description": "Pilah 10 sampah desa", "target": 10 } } }
       ]
     },
     {
@@ -22,7 +22,7 @@
       "speaker": "Pak Tani",
       "text": "Hmm... Kau ada benarnya juga. Tapi anak cucuku juga harus hidup di sini nanti...",
       "choices": [
-        { "text": "Maaf, kau benar.", "next": "end_good", "effect": { "river_health": 2, "choice": { "peduli_alam": true } } },
+        { "text": "Maaf, kau benar.", "next": "end_good", "effect": { "river_health": 2, "choice": { "peduli_alam": true }, "quest": { "id": "pilah_desa", "description": "Pilah 10 sampah desa", "target": 10 } } },
         { "text": "Terserah kau saja.", "next": "end_bad", "effect": {} }
       ]
     },
@@ -53,7 +53,7 @@
       "speaker": "Ibu Sari",
       "text": "Orang sibuk sendiri-sendiri sekarang. Padahal kalau bareng-bareng, kerja jadi ringan dan sungai bisa bersih.",
       "choices": [
-        { "text": "Aku akan mulai dari diri sendiri dulu.", "next": "end", "effect": { "river_health": 3 } }
+        { "text": "Aku akan mulai dari diri sendiri dulu.", "next": "end", "effect": { "river_health": 3, "quest": { "id": "gotong_royong", "description": "Bicara dengan 2 warga desa", "target": 2 } } }
       ]
     },
     {

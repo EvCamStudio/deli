@@ -3,6 +3,8 @@ extends Area2D
 class_name PilotBin
 
 @export var bin_category: String = "plastik"
+@export var required_quest: String = ""
+@export var quest_hint: String = "Bicara dulu dengan warga yang memberi misi."
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var label: Label = $Label
@@ -38,6 +40,9 @@ func _pending() -> Array:
 	return []
 
 func interact() -> void:
+	if not required_quest.is_empty() and not GameState.has_quest(required_quest):
+		_toast(quest_hint, false)
+		return
 	var pending: Array = _pending()
 	if pending.is_empty():
 		_toast("Bawa sampah dulu ke tong ini.", false)

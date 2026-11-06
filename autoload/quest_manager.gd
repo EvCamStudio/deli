@@ -40,6 +40,7 @@ func add_daily_quest(quest_id: String, description: String, target: int) -> void
 		"target": target,
 	}
 	daily_quests.append(quest_id)
+	GameState.start_quest(quest_id, target)
 	quest_started.emit(quest_id)
 
 ## Add side quest
@@ -53,6 +54,7 @@ func add_side_quest(quest_id: String, description: String, target: int) -> void:
 		"progress": 0,
 		"target": target,
 	}
+	GameState.start_quest(quest_id, target)
 	quest_started.emit(quest_id)
 
 ## Add side quest with NPC trigger (used in dialogue effect)
@@ -60,7 +62,10 @@ func trigger_npc_quest(quest_id: String, description: String, target: int) -> vo
 	add_side_quest(quest_id, description, target)
 	var level := get_tree().get_first_node_in_group("level")
 	if level and level.has_method("toast"):
-		level.toast("Quest diterima: %s" % description, true)
+		level.toast("Misi baru: %s" % description, true)
+
+func has_quest(quest_id: String) -> bool:
+	return GameState.has_quest(quest_id)
 
 ## Update quest progress
 func update_quest(quest_id: String, amount: int) -> void:

@@ -1,4 +1,4 @@
-## Ambil tangkapan layar Level 1, 2, dan 4 top-down untuk inspeksi visual.
+## Ambil tangkapan layar Level 1, 2, 3, dan 4 top-down untuk inspeksi visual.
 extends Node
 
 func _ready() -> void:
@@ -46,5 +46,6 @@ func _capture(path: String, tag: String) -> void:
 func _run() -> void:
 	await _capture("res://scenes/levels/level_1_hulu_topdown.tscn", "l1")
 	await _capture("res://scenes/levels/level_2_desa_topdown.tscn", "l2")
+	await _capture("res://scenes/levels/level_3_kota_topdown.tscn", "l3")
 	await _capture("res://scenes/levels/level_4_hilir_topdown.tscn", "l4")
 	get_tree().quit()

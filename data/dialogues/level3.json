@@ -61,7 +61,7 @@
       "speaker": "Ibu Rumah Tangga",
       "text": "Tuas pengatur pintu air ada di ujung got. Tekan dalam urutan yang benar, air bisa mengalir lagi!",
       "choices": [
-        { "text": "Aku coba!", "next": "end", "effect": {} }
+        { "text": "Aku coba!", "next": "end", "effect": { "quest": { "id": "edukasi_industri", "description": "Buka kartu industri & kenali sampah B3", "target": 1 } } }
       ]
     },
     {
@@ -86,7 +86,7 @@
       "speaker": "Budi",
       "text": "Oke! Ada gerbang yang terkunci di jembatan itu. Kunci cuma bisa dibuka dengan melengkapi pantun yang tepat. Ayo coba!",
       "choices": [
-        { "text": "Asyik, aku suka tantangan!", "next": "end", "effect": { "river_health": 2 } }
+        { "text": "Asyik, aku suka tantangan!", "next": "end", "effect": { "river_health": 2, "quest": { "id": "pantun_kota", "description": "Lengkapi pantun Melayu Deli", "target": 1 } } }
       ]
     },
     {
@@ -116,7 +116,7 @@
       "speaker": "Pak RT",
       "text": "Musyawarah, gotong royong, dan kesadaran tiap pribadi. Dimulai dari hal kecil: jangan buang sampah sembarangan.",
       "choices": [
-        { "text": "Aku akan mulai dari diri sendiri.", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true } } }
+        { "text": "Aku akan mulai dari diri sendiri.", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true }, "quest": { "id": "drainase_kota", "description": "Tarik tuas drainase 1-3-2", "target": 3 } } }
       ]
     },
     {

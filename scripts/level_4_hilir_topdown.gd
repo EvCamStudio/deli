@@ -1,9 +1,9 @@
 ## Level 4 Hilir — top-down pesisir dan muara.
-## Misi: tanam 8 mangrove, pilah 8 sampah, dan bicara dengan 2 warga.
+## Misi: tanam 8 mangrove, pilah 10 sampah, dan bicara dengan 2 warga.
 extends TopdownLevelBase
 
 const MANGROVE_TARGET: int = 8
-const TRASH_TARGET: int = 8
+const TRASH_TARGET: int = 10
 const NPC_TARGET: int = 2
 
 var _sorted: int = 0
@@ -17,7 +17,7 @@ func _ready() -> void:
 	_spawn_entities()
 
 func _set_initial_mission() -> void:
-	update_mission("Tanam 8 mangrove dan bersihkan pesisir.")
+	_refresh_mission()
 
 func _spawn_entities() -> void:
 	spawn_npc("npc_nelayan", "nelayan", Vector2(200, 236))
@@ -30,21 +30,23 @@ func _spawn_entities() -> void:
 		spawn_tree_spot("mangrove", pos)
 
 	var items: Array = [
-		["kulit_pisang", "organik", Vector2(160, 320)],
-		["botol_plastik", "plastik", Vector2(300, 340)],
-		["baterai_bekas", "b3", Vector2(440, 320)],
-		["daun_kering", "organik", Vector2(600, 340)],
-		["kantong_kresek", "plastik", Vector2(700, 300)],
-		["kaleng_bekas", "plastik", Vector2(860, 340)],
-		["sisa_sayur", "organik", Vector2(260, 408)],
-		["sedotan_plastik", "plastik", Vector2(640, 408)],
+		["kulit_pisang", "organik", Vector2(240, 320)],
+		["daun_kering", "organik", Vector2(320, 340)],
+		["sisa_sayur", "organik", Vector2(400, 380)],
+		["sampah_organik", "organik", Vector2(300, 360)],
+		["botol_plastik", "plastik", Vector2(440, 320)],
+		["kantong_kresek", "plastik", Vector2(560, 340)],
+		["kaleng_bekas", "plastik", Vector2(620, 300)],
+		["sedotan_plastik", "plastik", Vector2(480, 380)],
+		["sampah_plastik", "plastik", Vector2(560, 380)],
+		["baterai_bekas", "b3", Vector2(700, 320)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
-	spawn_bin("organik", Vector2(360, 240))
-	spawn_bin("plastik", Vector2(500, 240))
-	spawn_bin("b3", Vector2(640, 240))
+	spawn_bin("organik", Vector2(360, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
+	spawn_bin("plastik", Vector2(500, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
+	spawn_bin("b3", Vector2(640, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Epilog")
 
 func on_tree_planted(kind: String) -> void:
@@ -55,6 +57,8 @@ func on_tree_planted(kind: String) -> void:
 		GameState.unlock_card("card_mangrove_01")
 		GameState.rupiah += 2000
 		toast("Mangrove lengkap! +Rp2.000", true)
+	else:
+		toast("Mangrove ditanam! (%d/%d) +Rp2.000" % [_mangroves, MANGROVE_TARGET], true)
 	_refresh_mission()
 
 func on_bin_sorted(category: String) -> void:
@@ -72,11 +76,24 @@ func _refresh_mission() -> void:
 	var mangrove_done: bool = _mangroves >= MANGROVE_TARGET
 	var trash_done: bool = _sorted >= TRASH_TARGET
 	var talk_done: bool = talked_count() >= NPC_TARGET
-	if mangrove_done and trash_done and talk_done:
-		update_mission("Pesisir pulih! Menuju gerbang di ujung timur.")
+	if not GameState.has_quest("tanam_mangrove") or not GameState.has_quest("pilah_hilir"):
+		var hint: String = "Bicara Nelayan & Penjaga Sungai dulu"
+		if GameState.has_quest("tanam_mangrove") and not GameState.has_quest("pilah_hilir"):
+			hint = "Bicara Penjaga Sungai dulu"
+		elif GameState.has_quest("pilah_hilir") and not GameState.has_quest("tanam_mangrove"):
+			hint = "Bicara Nelayan dulu"
+		update_mission_lines("Pulihkan Pesisir", [hint, "Lokasi: tepi pantai"])
+	elif mangrove_done and trash_done and talk_done:
+		update_mission_lines("Pulihkan Pesisir", [
+			"Warga: %d/%d" % [talked_count(), NPC_TARGET],
+			"Mangrove: %d/%d" % [_mangroves, MANGROVE_TARGET],
+			"Sampah: %d/%d" % [_sorted, TRASH_TARGET],
+		])
 	else:
-		update_mission("Mangrove: %d/%d · Sampah: %d/%d · Warga: %d/%d" % [
-			_mangroves, MANGROVE_TARGET, _sorted, TRASH_TARGET, talked_count(), NPC_TARGET,
+		update_mission_lines("Pulihkan Pesisir", [
+			"Mangrove: %d/%d" % [_mangroves, MANGROVE_TARGET],
+			"Sampah: %d/%d" % [_sorted, TRASH_TARGET],
+			"Warga: %d/%d" % [talked_count(), NPC_TARGET],
 		])
 
 func _mission_ready() -> bool:
@@ -86,5 +103,5 @@ func _not_ready_message() -> String:
 	if _mangroves < MANGROVE_TARGET:
 		return "Tanam dulu 8 mangrove di tepian pantai."
 	if _sorted < TRASH_TARGET:
-		return "Pilah dulu 8 sampah ke tong yang benar."
+		return "Pilah dulu 10 sampah ke tong yang benar."
 	return "Bicara dulu dengan nelayan dan penjaga sungai."

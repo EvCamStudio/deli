@@ -18,6 +18,33 @@ func _frames(count: int) -> void:
 
 func _run() -> void:
 	GameState.reset()
+	# Save/load round-trip.
+	GameState.river_health = 42.5
+	GameState.trees_planted = 3
+	GameState.current_level = 2
+	GameState.levels_completed.append(1)
+	GameState.collected_cards.append("card_sungai_deli_01")
+	GameState.active_quests = { "tanam_pohon_hulu": 5 }
+	GameState.rupiah = 1234
+	GameState.save_game()
+	GameState.river_health = 0.0
+	GameState.trees_planted = 0
+	GameState.current_level = 1
+	GameState.levels_completed.clear()
+	GameState.collected_cards.clear()
+	GameState.active_quests.clear()
+	GameState.rupiah = 0
+	_check(GameState.has_save(), "save file detected")
+	_check(GameState.load_game(), "save file loads")
+	_check(is_equal_approx(GameState.river_health, 42.5), "save keeps river health")
+	_check(GameState.trees_planted == 3, "save keeps trees")
+	_check(GameState.current_level == 2, "save keeps level")
+	_check(GameState.levels_completed.has(1), "save keeps completed levels")
+	_check(GameState.collected_cards.has("card_sungai_deli_01"), "save keeps cards")
+	_check(int(GameState.active_quests.get("tanam_pohon_hulu", 0)) == 5, "save keeps quests")
+	_check(GameState.rupiah == 1234, "save keeps rupiah")
+	GameState.reset()
+	_check(not GameState.has_save(), "reset deletes save")
 	# Keep this test node alive across scene changes.
 	get_tree().current_scene = null
 	var menu: Node = load("res://scenes/main_menu/main_menu.tscn").instantiate()

@@ -11,6 +11,7 @@ signal energy_changed(new_value: float)
 signal rupiah_changed(new_value: int)
 signal day_changed(new_day: int)
 signal zone_opened(zone: String)
+signal quest_started(quest_id: String)
 
 # ─── State ────────────────────────────────────────────────────────────────────
 var river_health: float = 20.0 :
@@ -25,6 +26,7 @@ var current_level: int = 1
 var levels_completed: Array[int] = []
 var collected_cards: Array[String] = []
 var choices: Dictionary = {}  # pilihan dialog yang memengaruhi ending
+var active_quests: Dictionary = {}  # quest_id -> target (progress dari counter nyata)
 
 # ─── Intro & Scriptwriting (baru) ──────────────────────────────────────────────
 var player_name: String = ""
@@ -80,6 +82,22 @@ func unlock_card(card_id: String) -> void:
 
 func record_choice(key: String, value: Variant) -> void:
 	choices[key] = value
+
+## Tandai quest aktif. Progress tidak disimpan di sini — pakai counter nyata.
+func start_quest(quest_id: String, target: int) -> bool:
+	if quest_id.is_empty():
+		return false
+	if active_quests.has(quest_id):
+		return false
+	active_quests[quest_id] = target
+	quest_started.emit(quest_id)
+	return true
+
+func has_quest(quest_id: String) -> bool:
+	return active_quests.has(quest_id)
+
+func quest_target(quest_id: String) -> int:
+	return int(active_quests.get(quest_id, 0))
 
 func complete_level(level_id: int) -> void:
 	if level_id not in levels_completed:
@@ -158,6 +176,7 @@ func save_game() -> void:
 		"levels_completed": levels_completed,
 		"collected_cards": collected_cards,
 		"choices": choices,
+		"active_quests": active_quests,
 		"rupiah": rupiah,
 		"day": day,
 		"minutes": minutes,
@@ -193,10 +212,15 @@ func load_game() -> bool:
 	trash_collected = data.get("trash_collected", { "organik": 0, "plastik": 0, "b3": 0 })
 	trees_planted = data.get("trees_planted", 0)
 	mangroves_planted = data.get("mangroves_planted", 0)
-	current_level = data.get("current_level", 1)
-	levels_completed = data.get("levels_completed", [])
-	collected_cards = data.get("collected_cards", [])
+	current_level = int(data.get("current_level", 1))
+	levels_completed.clear()
+	for level in data.get("levels_completed", []):
+		levels_completed.append(int(level))
+	collected_cards.clear()
+	for card in data.get("collected_cards", []):
+		collected_cards.append(str(card))
 	choices = data.get("choices", {})
+	active_quests = data.get("active_quests", {})
 	rupiah = int(data.get("rupiah", 0))
 	day = int(data.get("day", 1))
 	minutes = int(data.get("minutes", 8 * 60))
@@ -211,7 +235,22 @@ func load_game() -> bool:
 	return true
 
 func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+	if not FileAccess.file_exists(SAVE_PATH):
+		return false
+	var file := FileAccess.open(SAVE_PATH, FileAccess.READ)
+	if not file:
+		return false
+	var text: String = file.get_as_text()
+	file.close()
+	var json := JSON.new()
+	if json.parse(text) != OK:
+		return false
+	return json.get_data() is Dictionary
+
+func delete_save() -> void:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 
 func reset() -> void:
 	river_health = 20.0
@@ -222,6 +261,7 @@ func reset() -> void:
 	levels_completed = []
 	collected_cards = []
 	choices = {}
+	active_quests = {}
 	rupiah = 0
 	day = 1
 	minutes = 8 * 60
@@ -233,6 +273,7 @@ func reset() -> void:
 	quest_progress = 0
 	zone_unlocked = {"hulu": true, "desa": false, "kota": false, "hilir": false}
 	debt_paid = 0
+	delete_save()
 
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 

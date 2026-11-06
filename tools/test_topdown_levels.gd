@@ -168,7 +168,7 @@ func _test_level_4() -> void:
 	var nodes := _collect(level)
 	_check(nodes["npcs"].size() == 2, "L4: 2 NPCs spawned")
 	_check(nodes["spots"].size() == 8, "L4: 8 mangrove spots spawned")
-	_check(nodes["trash"].size() == 8, "L4: 8 trash spawned")
+	_check(nodes["trash"].size() == 10, "L4: 10 trash spawned")
 	_check(nodes["bins"].size() == 3, "L4: 3 bins spawned")
 	_check(nodes["gate"] != null and nodes["gate"]._open, "L4: gate starts open")
 
@@ -186,7 +186,7 @@ func _test_level_4() -> void:
 	_check(GameState.collected_cards.has("card_mangrove_01"), "L4: mangrove card unlocked")
 
 	await _sort_all(nodes["trash"], nodes["bins"])
-	_check(level._sorted == 8, "L4: 8 trash sorted")
+	_check(level._sorted == 10, "L4: 10 trash sorted")
 	_check(GameState.river_health >= 85.0, "L4: river health reaches target")
 
 	level.try_complete_level()

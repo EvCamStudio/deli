@@ -126,6 +126,28 @@ func _paint_water() -> void:
 func _paint_water_cell(x: int, y: int) -> void:
 	water.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 2, 1), 0)
 
+## Rect air per tema — dipakai untuk validasi spawn (pohon/sampah/NPC/tong).
+func _water_rects() -> Array:
+	match theme:
+		"desa":
+			return [Rect2(Vector2(0, 27 * TILE), Vector2(MAP_W * TILE, 4 * TILE))]
+		"hilir":
+			return [
+				Rect2(Vector2(0, 28 * TILE), Vector2(MAP_W * TILE, 6 * TILE)),
+				Rect2(Vector2(44 * TILE, 8 * TILE), Vector2(4 * TILE, 20 * TILE)),
+			]
+		_:
+			return [
+				Rect2(Vector2(28 * TILE, 0), Vector2(4 * TILE, MAP_H * TILE)),
+				Rect2(Vector2(23 * TILE, 3 * TILE), Vector2(14 * TILE, 5 * TILE)),
+			]
+
+func is_in_water(pos: Vector2) -> bool:
+	for rect in _water_rects():
+		if rect.has_point(pos):
+			return true
+	return false
+
 func _paint_sand_cell(x: int, y: int) -> void:
 	ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 1), 0)
 
@@ -314,6 +336,8 @@ func _spawn_trees(positions: Array[Vector2]) -> void:
 		_spawn_tree(pos)
 
 func _spawn_tree(pos: Vector2) -> void:
+	if is_in_water(pos):
+		return
 	var texture: Texture2D = load("res://assets/sprites/props/tree.png")
 	var body := StaticBody2D.new()
 	body.position = pos
@@ -332,6 +356,8 @@ func _spawn_tree(pos: Vector2) -> void:
 	get_parent().add_child.call_deferred(body)
 
 func _spawn_mangrove(pos: Vector2) -> void:
+	if is_in_water(pos):
+		return
 	var texture: Texture2D = load("res://assets/sprites/props/mangrove.png")
 	var body := StaticBody2D.new()
 	body.position = pos

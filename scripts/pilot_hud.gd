@@ -7,6 +7,7 @@ class_name PilotHUD
 @onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
 @onready var money_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/MoneyLabel
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
+@onready var mission_title: Label = $SafeMargin/Root/MissionCard/VBox/MissionTitle
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
@@ -117,7 +118,13 @@ func _on_river_health_changed(value: float) -> void:
 		river_bar.add_theme_stylebox_override("fill", _low_style)
 
 func update_mission(text: String) -> void:
-	mission_label.text = text
+	var lines: PackedStringArray = text.split("\n")
+	if lines.size() > 1:
+		mission_title.text = "MISI: " + lines[0]
+		mission_label.text = "\n".join(lines.slice(1))
+	else:
+		mission_title.text = "MISI"
+		mission_label.text = text
 
 func _update_money() -> void:
 	money_label.text = "Rp %s" % _format_number(GameState.rupiah)

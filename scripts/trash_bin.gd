@@ -4,6 +4,8 @@ extends Area2D
 class_name TrashBin
 
 @export var bin_category: String = "plastik"
+@export var required_quest: String = ""
+@export var quest_hint: String = "Bicara dulu dengan warga yang memberi misi."
 
 @onready var sprite: CanvasItem = get_node_or_null("Sprite2D") as CanvasItem
 @onready var label: Label = get_node_or_null("Label") as Label
@@ -19,6 +21,9 @@ func get_action_label() -> String:
 	return "Pilah"
 
 func interact() -> void:
+	if not required_quest.is_empty() and not GameState.has_quest(required_quest):
+		_show_locked()
+		return
 	var pending: Array = _get_pending_trash()
 	if pending.is_empty():
 		return
@@ -60,6 +65,11 @@ func _remove_from_pending(item: Dictionary) -> void:
 			pending.remove_at(i)
 			break
 	GameState.set_meta("pending_trash", pending)
+
+func _show_locked() -> void:
+	var level := get_tree().get_first_node_in_group("level")
+	if level and level.has_method("toast"):
+		level.toast(quest_hint, false)
 
 func _display_category(cat: String) -> String:
 	match cat:

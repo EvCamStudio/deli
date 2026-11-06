@@ -127,7 +127,7 @@ visible = false
 layout_mode = 0
 offset_top = 62.0
 offset_right = 250.0
-offset_bottom = 118.0
+offset_bottom = 134.0
 theme_override_styles/panel = SubResource("StyleBox_card")
 
 [node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]

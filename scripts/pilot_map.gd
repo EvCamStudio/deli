@@ -103,7 +103,7 @@ func _river_top(x: int) -> int:
 func _paint_water() -> void:
 	for x in range(MAP_W):
 		var top: int = _river_top(x)
-		var bottom: int = top + 5
+		var bottom: int = top + 3
 		# tepi pasir
 		ground.set_cell(Vector2i(x, top - 1), 0, Vector2i(4 + _hash(x, top) % 2, 1), 0)
 		ground.set_cell(Vector2i(x, bottom + 1), 0, Vector2i(4 + _hash(x, bottom) % 2, 1), 0)
@@ -114,6 +114,14 @@ func _paint_water() -> void:
 			else:
 				water.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 2, 1), 0)
 
+func is_in_water(pos: Vector2) -> bool:
+	var tile_x: int = int(floor(pos.x / TILE))
+	if tile_x < 0 or tile_x >= MAP_W:
+		return false
+	var top: int = _river_top(tile_x)
+	var bottom: int = top + 3
+	return pos.y >= top * TILE and pos.y < (bottom + 1) * TILE
+
 func _build_boundaries() -> void:
 	var w: float = MAP_W * TILE
 	var h: float = MAP_H * TILE
@@ -123,16 +131,27 @@ func _build_boundaries() -> void:
 	_add_collision(Vector2(w + 8, h * 0.5), Vector2(16, h))
 
 func _build_water_areas() -> void:
-	_add_water_rect(Vector2(0, 0), 20)
-	_add_water_rect(Vector2(22, 0), 22)
-	_add_water_rect(Vector2(46, 0), 14)
+	# Pecah per segmen agar kolom jembatan tetap bisa dilewati tanpa efek air.
+	_add_river_segment(0, 20)
+	_add_river_segment(22, 44)
+	_add_river_segment(46, MAP_W)
 
-func _add_water_rect(start_tile: Vector2, width_tiles: int) -> void:
+func _add_river_segment(x_start: int, x_end: int) -> void:
+	if x_end <= x_start:
+		return
+	var top_min: int = 999
+	var bottom_max: int = -1
+	for x in range(x_start, x_end):
+		var top: int = _river_top(x)
+		top_min = mini(top_min, top)
+		bottom_max = maxi(bottom_max, top + 3)
+	var y0: float = float(top_min * TILE)
+	var y1: float = float((bottom_max + 1) * TILE)
 	var area := Area2D.new()
 	area.set_script(load("res://scripts/water_area.gd"))
-	area.position = Vector2((start_tile.x + width_tiles * 0.5) * TILE, 18.5 * TILE)
+	area.position = Vector2((x_start + x_end) * 0.5 * TILE, (y0 + y1) * 0.5)
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(width_tiles * TILE, 6.0 * TILE)
+	shape.size = Vector2((x_end - x_start) * TILE, y1 - y0)
 	var col := CollisionShape2D.new()
 	col.shape = shape
 	area.add_child(col)
@@ -186,6 +205,8 @@ func _spawn_trees() -> void:
 		_spawn_tree(pos)
 
 func _spawn_tree(pos: Vector2) -> void:
+	if is_in_water(pos):
+		return
 	var texture: Texture2D = load("res://assets/sprites/props/tree.png")
 	var body := StaticBody2D.new()
 	body.position = pos

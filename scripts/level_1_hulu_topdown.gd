@@ -14,7 +14,7 @@ func _ready() -> void:
 	_spawn_entities()
 
 func _set_initial_mission() -> void:
-	update_mission("Tanam 5 pohon di titik tanam hutan.")
+	_refresh_mission()
 
 func _spawn_entities() -> void:
 	spawn_npc("npc_penjaga_hutan", "penjaga_hutan", Vector2(168, 244))
@@ -28,22 +28,38 @@ func _spawn_entities() -> void:
 
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Desa")
 
+func _refresh_mission() -> void:
+	if not GameState.has_quest("tanam_pohon_hulu"):
+		update_mission_lines("Tanam Pohon Hulu", [
+			"Bicara Penjaga Hutan dulu",
+			"Lokasi: dekat mata air",
+		])
+	elif _trees >= TREES_TARGET:
+		update_mission_lines("Tanam Pohon Hulu", [
+			"Pohon: %d/%d" % [_trees, TREES_TARGET],
+			"Menuju gerbang di ujung timur",
+		])
+	else:
+		update_mission_lines("Tanam Pohon Hulu", [
+			"Pohon: %d/%d" % [_trees, TREES_TARGET],
+			"Lokasi: area hutan",
+		])
+
 func on_tree_planted(_kind: String) -> void:
 	_trees += 1
 	if _trees >= TREES_TARGET:
 		GameState.unlock_card("card_hutan_01")
 		GameState.rupiah += 1000
-		update_mission("Pohon selesai! Menuju gerbang di ujung timur.")
 		toast("Hutan kembali rimbun! +Rp1.000", true)
 	else:
-		update_mission("Tanam pohon: %d/%d" % [_trees, TREES_TARGET])
+		toast("Pohon ditanam! (%d/%d) +Rp500" % [_trees, TREES_TARGET], true)
+	_refresh_mission()
 
 func on_npc_talked(npc_key: String) -> void:
 	if npc_key == "npc_penjaga_hutan":
 		GameState.unlock_card("card_sungai_deli_01")
 		toast("Kartu Sungai Deli terbuka!", true)
-		if _trees < TREES_TARGET:
-			update_mission("Tanam pohon: %d/%d" % [_trees, TREES_TARGET])
+		_refresh_mission()
 
 func _mission_ready() -> bool:
 	return _trees >= TREES_TARGET

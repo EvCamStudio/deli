@@ -13,6 +13,8 @@ var _lever_pressed: Array[int] = []
 var _gate_open: bool = false
 var _pantun_done: bool = false
 var _gate: Node = null
+var _talked: Dictionary = {}
+var _sorted: int = 0
 
 func _ready() -> void:
 	level_id = 3
@@ -24,8 +26,7 @@ func _ready() -> void:
 	_spawn_entities()
 
 func _set_initial_mission() -> void:
-	if hud and hud.has_method("update_mission"):
-		hud.update_mission("Bersihkan sampah, pilah ke tong, lalu tarik tuas 1-3-2.")
+	_refresh_mission()
 
 func _spawn_entities() -> void:
 	# NPC — posisi di depan bangunan dan area publik.
@@ -34,27 +35,27 @@ func _spawn_entities() -> void:
 	_spawn_npc("npc_anak_sekolah", "budi", Vector2(320, 184))
 	_spawn_npc("npc_tokoh_masyarakat", "pakrt", Vector2(700, 184))
 
-	# Sampah di air dan di bantaran.
-	_spawn_trash("kulit_pisang", "organik", Vector2(192, 304))
-	_spawn_trash("botol_plastik", "plastik", Vector2(480, 288))
-	_spawn_trash("baterai_bekas", "b3", Vector2(608, 320))
-	_spawn_trash("kantong_kresek", "plastik", Vector2(736, 272))
-	_spawn_trash("daun_kering", "organik", Vector2(256, 224))
-	_spawn_trash("kaleng_bekas", "plastik", Vector2(528, 368))
+	# Sampah tersebar di bantaran utara, dekat tong masing-masing (bukan di air).
+	_spawn_trash("kulit_pisang", "organik", Vector2(176, 208))
+	_spawn_trash("daun_kering", "organik", Vector2(256, 216))
+	_spawn_trash("botol_plastik", "plastik", Vector2(496, 208))
+	_spawn_trash("kaleng_bekas", "plastik", Vector2(592, 200))
+	_spawn_trash("baterai_bekas", "b3", Vector2(704, 208))
+	_spawn_trash("kantong_kresek", "plastik", Vector2(800, 216))
 
-	# Tiga tong pilah di jalur utama.
+	# Tiga tong pilah di jalur utama (terkunci sampai bicara Pedagang).
 	_spawn_bin("organik", Vector2(216, 208))
 	_spawn_bin("plastik", Vector2(544, 208))
 	_spawn_bin("b3", Vector2(752, 208))
 
 	# Tuas drainase.
 	_spawn_lever(1, Vector2(816, 224))
-	_spawn_lever(2, Vector2(912, 224))
+	_spawn_lever(2, Vector2(912, 216))
 	_spawn_lever(3, Vector2(864, 352))
 
 	# Papan pantun di dekat jembatan.
 	var board := BOARD_SCENE.instantiate()
-	board.position = Vector2(384, 224)
+	board.position = Vector2(384, 216)
 	add_child(board)
 
 	# Gerbang akhir.
@@ -69,6 +70,7 @@ func _spawn_npc(dialogue_key: String, sprite_key: String, pos: Vector2) -> void:
 	npc.npc_key = dialogue_key
 	npc.sprite_key = sprite_key
 	npc.level_id = 3
+	npc.talked.connect(_on_npc_talked)
 	add_child(npc)
 
 func _spawn_trash(trash_id: String, category: String, pos: Vector2) -> void:
@@ -82,6 +84,8 @@ func _spawn_bin(category: String, pos: Vector2) -> void:
 	var bin := BIN_SCENE.instantiate()
 	bin.position = pos
 	bin.bin_category = category
+	bin.required_quest = "pilah_sampah_kota"
+	bin.quest_hint = "Bicara dulu dengan Pedagang."
 	add_child(bin)
 
 func _spawn_lever(id: int, pos: Vector2) -> void:
@@ -97,9 +101,26 @@ func on_trash_picked(category: String, _trash_id: String) -> void:
 	toast("Sampah %s dipungut. +Rp500" % category, true)
 
 func on_bin_sorted(_category: String) -> void:
-	toast("Sampah terpilah! Sungai membaik.", true)
-	if GameState.get_total_trash() >= 4 and hud:
-		hud.update_mission("Bagus! Lanjut tarik tuas 1-3-2 di drainase timur.")
+	_sorted += 1
+	_refresh_mission()
+
+func _on_npc_talked(npc_key: String) -> void:
+	_talked[npc_key] = true
+	_refresh_mission()
+
+func _refresh_mission() -> void:
+	if not GameState.has_quest("pilah_sampah_kota"):
+		update_mission_lines("Buka Drainase Kota", [
+			"Bicara Pedagang dulu",
+			"Lokasi: depan warung",
+		])
+		return
+	var lever_count: int = 3 if _gate_open else _lever_pressed.size()
+	update_mission_lines("Buka Drainase Kota", [
+		"Warga: %d/4" % _talked.size(),
+		"Sampah: %d/6" % _sorted,
+		"Tuas: %d/3 (1-3-2)" % lever_count,
+	])
 
 func lever_pressed(lever_id: int) -> void:
 	_lever_pressed.append(lever_id)
@@ -109,13 +130,13 @@ func lever_pressed(lever_id: int) -> void:
 			GameState.add_river_health(-2.0)
 			_reset_levers()
 			toast("Urutan tuas salah! Mulai dari tuas 1.", false)
+			_refresh_mission()
 			return
 	if _lever_pressed.size() == _lever_sequence.size():
 		_open_gate()
 	else:
-		if hud:
-			hud.update_mission("Tuas benar %d/3. Lanjutkan urutan." % _lever_pressed.size())
 		toast("Tuas %d benar." % lever_id, true)
+		_refresh_mission()
 
 func _reset_levers() -> void:
 	for lever in get_tree().get_nodes_in_group("pilot_lever"):
@@ -133,8 +154,7 @@ func _open_gate() -> void:
 	if _gate and _gate.has_method("open"):
 		_gate.open()
 	toast("Drainase terbuka! +Rp2.500", true)
-	if hud:
-		hud.update_mission("Gerbang kota terbuka. Selesaikan misi di ujung timur.")
+	_refresh_mission()
 
 func open_pantun() -> void:
 	if _pantun_done:
@@ -152,8 +172,7 @@ func on_pantun_completed() -> void:
 	GameState.rupiah += 2000
 	GameState.unlock_card("card_pantun_01")
 	toast("Pantun lengkap! +Rp2.000", true)
-	if hud:
-		hud.update_mission("Pantun terjaga. Buka drainase dengan tuas 1-3-2.")
+	_refresh_mission()
 
 func try_complete_level() -> void:
 	if not _gate_open:

@@ -11,6 +11,7 @@ class_name HUD
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
 @onready var mission_card: PanelContainer = $SafeMargin/Root/MissionCard
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
+@onready var mission_title: Label = $SafeMargin/Root/MissionCard/VBox/MissionTitle
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast_panel: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
@@ -127,7 +128,13 @@ func _update_carry() -> void:
 # ─── Misi ─────────────────────────────────────────────────────────────────────
 
 func update_mission(text: String) -> void:
-	mission_label.text = text
+	var lines: PackedStringArray = text.split("\n")
+	if lines.size() > 1:
+		mission_title.text = "MISI: " + lines[0]
+		mission_label.text = "\n".join(lines.slice(1))
+	else:
+		mission_title.text = "MISI"
+		mission_label.text = text
 	mission_card.show()
 
 func show_mission() -> void:

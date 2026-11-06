@@ -16,29 +16,30 @@ func _ready() -> void:
 	_spawn_entities()
 
 func _set_initial_mission() -> void:
-	update_mission("Bicara dengan petani & warga, lalu pilah 10 sampah.")
+	_refresh_mission()
 
 func _spawn_entities() -> void:
 	spawn_npc("npc_petani_1", "petani", Vector2(136, 236))
 	spawn_npc("npc_ibu_desa", "ibu", Vector2(480, 236))
 
+	# Sampah dikelompokkan dekat tong masing-masing (maks. 10 tile).
 	var items: Array = [
 		["kulit_pisang", "organik", Vector2(160, 320)],
-		["daun_kering", "organik", Vector2(600, 300)],
-		["sisa_sayur", "organik", Vector2(240, 400)],
-		["ranting_kering", "organik", Vector2(800, 400)],
-		["kertas_kotor", "plastik", Vector2(300, 340)],
-		["kardus_sobek", "plastik", Vector2(420, 380)],
-		["sampah_kecil", "plastik", Vector2(560, 360)],
-		["sampah_lain", "plastik", Vector2(680, 360)],
-		["sampah_daerah", "plastik", Vector2(760, 380)],
-		["sampah_akhir", "plastik", Vector2(880, 400)],
+		["daun_kering", "organik", Vector2(240, 344)],
+		["sisa_sayur", "organik", Vector2(304, 320)],
+		["ranting_kering", "organik", Vector2(192, 384)],
+		["sampah_organik", "organik", Vector2(136, 360)],
+		["kertas_kotor", "plastik", Vector2(560, 320)],
+		["kardus_sobek", "plastik", Vector2(608, 344)],
+		["sampah_kecil", "plastik", Vector2(688, 320)],
+		["sampah_lain", "plastik", Vector2(560, 400)],
+		["sampah_akhir", "plastik", Vector2(720, 360)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
-	spawn_bin("organik", Vector2(200, 272))
-	spawn_bin("plastik", Vector2(400, 272))
+	spawn_bin("organik", Vector2(240, 272), "pilah_desa", "Bicara dulu dengan Pak Tani di depan warung.")
+	spawn_bin("plastik", Vector2(640, 272), "pilah_desa", "Bicara dulu dengan Pak Tani di depan warung.")
 	spawn_gate(Vector2(912, 264), true, "Jalan ke Kota")
 
 func on_bin_sorted(category: String) -> void:
@@ -63,12 +64,23 @@ func _refresh_mission() -> void:
 		GameState.rupiah += 1500
 		toast("Warga bergotong royong! +Rp1.500", true)
 
-	if _sorted >= TRASH_TARGET and talked_count() >= NPC_TARGET:
-		update_mission("Misi selesai! Menuju gerbang di ujung timur.")
-	elif talked_count() < NPC_TARGET:
-		update_mission("Bicara warga: %d/%d · Sampah terpilah: %d/%d" % [talked_count(), NPC_TARGET, _sorted, TRASH_TARGET])
+	if not GameState.has_quest("pilah_desa"):
+		update_mission_lines("Bersihkan Desa", [
+			"Bicara Pak Tani dulu",
+			"Lokasi: depan warung",
+		])
+	elif _sorted >= TRASH_TARGET and talked_count() >= NPC_TARGET:
+		update_mission_lines("Bersihkan Desa", [
+			"Warga: %d/%d" % [talked_count(), NPC_TARGET],
+			"Sampah: %d/%d" % [_sorted, TRASH_TARGET],
+			"Menuju gerbang di ujung timur",
+		])
 	else:
-		update_mission("Pilah sampah: %d/%d" % [_sorted, TRASH_TARGET])
+		update_mission_lines("Bersihkan Desa", [
+			"Warga: %d/%d" % [talked_count(), NPC_TARGET],
+			"Sampah: %d/%d" % [_sorted, TRASH_TARGET],
+			"Lokasi: jalan utama desa",
+		])
 
 func _mission_ready() -> bool:
 	return _sorted >= TRASH_TARGET and talked_count() >= NPC_TARGET

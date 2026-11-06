@@ -22,8 +22,20 @@ func get_action_label() -> String:
 		return ""
 	return "Tanam Mangrove" if kind == "mangrove" else "Tanam Pohon"
 
+func _required_quest() -> String:
+	return "tanam_mangrove" if kind == "mangrove" else "tanam_pohon_hulu"
+
+func _show_locked_message() -> void:
+	var guide: String = "Nelayan" if kind == "mangrove" else "Penjaga Hutan"
+	var level := get_tree().get_first_node_in_group("level")
+	if level and level.has_method("toast"):
+		level.toast("Bicara dulu dengan %s." % guide, false)
+
 func interact() -> void:
 	if _planted:
+		return
+	if not GameState.has_quest(_required_quest()):
+		_show_locked_message()
 		return
 	_planted = true
 	marker.hide()
@@ -32,9 +44,11 @@ func interact() -> void:
 	if kind == "mangrove":
 		GameState.plant_mangrove()
 		GameState.add_river_health(5.0)
+		GameState.rupiah += 2000
 	else:
 		GameState.plant_tree()
 		GameState.add_river_health(4.0)
+		GameState.rupiah += 500
 
 	AudioManager.play_sfx("correct")
 	SettingsManager.vibrate(30)

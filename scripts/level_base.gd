@@ -24,6 +24,7 @@ var _player: Node2D = null
 func _ready() -> void:
 	add_to_group("level")
 	add_to_group("pause_menu")
+	GameState.current_level = level_id
 
 	_player = get_node_or_null("Player") as Node2D
 
@@ -83,6 +84,17 @@ func toast(text: String, good: bool = true) -> void:
 		hud.show_toast(text, good)
 	elif hud and hud.has_method("update_mission"):
 		hud.update_mission(text)
+
+func update_mission(text: String) -> void:
+	if hud and hud.has_method("update_mission"):
+		hud.update_mission(text)
+
+## Mission card ringkas: judul + maksimal 3 baris progress.
+func update_mission_lines(title: String, lines: Array) -> void:
+	var text: String = title
+	for line in lines:
+		text += "\n" + str(line)
+	update_mission(text)
 
 ## Dipanggil oleh LevelGate saat pemain mencapai gerbang akhir.
 func try_complete_level() -> void:
