@@ -126,27 +126,13 @@ func _paint_water() -> void:
 func _paint_water_cell(x: int, y: int) -> void:
 	water.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 2, 1), 0)
 
-## Rect air per tema — dipakai untuk validasi spawn (pohon/sampah/NPC/tong).
-func _water_rects() -> Array:
-	match theme:
-		"desa":
-			return [Rect2(Vector2(0, 27 * TILE), Vector2(MAP_W * TILE, 4 * TILE))]
-		"hilir":
-			return [
-				Rect2(Vector2(0, 28 * TILE), Vector2(MAP_W * TILE, 6 * TILE)),
-				Rect2(Vector2(44 * TILE, 8 * TILE), Vector2(4 * TILE, 20 * TILE)),
-			]
-		_:
-			return [
-				Rect2(Vector2(28 * TILE, 0), Vector2(4 * TILE, MAP_H * TILE)),
-				Rect2(Vector2(23 * TILE, 3 * TILE), Vector2(14 * TILE, 5 * TILE)),
-			]
-
+## Cek memakai tile air yang benar-benar tergambar supaya bentuk sungai
+## yang berkelok/kolam lonjong tetap akurat.
 func is_in_water(pos: Vector2) -> bool:
-	for rect in _water_rects():
-		if rect.has_point(pos):
-			return true
-	return false
+	var cell := Vector2i(int(floor(pos.x / TILE)), int(floor(pos.y / TILE)))
+	if cell.x < 0 or cell.x >= MAP_W or cell.y < 0 or cell.y >= MAP_H:
+		return false
+	return _is_water_cell(cell)
 
 func _paint_sand_cell(x: int, y: int) -> void:
 	ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 1), 0)
@@ -155,23 +141,59 @@ func _paint_bridge_cell(x: int, y: int) -> void:
 	bridge.set_cell(Vector2i(x, y), 0, Vector2i(6 + _hash(x, y) % 2, 1), 0)
 
 func _water_hulu() -> void:
-	# Mata air di hulu: kolam kecil dengan tepi pasir.
-	for x in range(23, 37):
-		for y in range(3, 8):
-			if x == 23 or x == 36 or y == 3 or y == 7:
-				_paint_sand_cell(x, y)
-			else:
-				_paint_water_cell(x, y)
-	# Sungai kecil membelah peta dari utara ke selatan.
+	# Bentuk air dihitung dulu sebagai satu kesatuan, lalu digambar.
+	# Dengan begitu kolam mata air benar-benar menyatu dengan sungai
+	# (tidak terpotong garis pasir seperti versi sebelumnya).
+	var water_cells: Dictionary = {}
+
+	# Sungai utama: lebar 4 tile, mengalir utara → selatan dengan
+	# lengkung halus agar tidak terlihat seperti balok.
 	for y in range(MAP_H):
-		for x in range(28, 32):
-			if y in [PATH_ROW, PATH_ROW + 1]:
-				_paint_bridge_cell(x, y)
-			elif not (y >= 3 and y <= 7):
-				_paint_water_cell(x, y)
-		if not (y >= 3 and y <= 7):
-			_paint_sand_cell(27, y)
-			_paint_sand_cell(32, y)
+		var bend: float = 0.0
+		# Lengkung hanya di hilir jembatan supaya sambungan kolam–sungai
+		# tetap lurus dan tidak terlihat patah.
+		if y >= PATH_ROW:
+			bend = sin(PI * float(y - PATH_ROW) / 16.0)
+		var center: int = 30 + int(round(bend))
+		for x in range(center - 2, center + 2):
+			water_cells[Vector2i(x, y)] = true
+
+	# Mata air: kolam lonjong di hulu, menyatu dengan aliran sungai.
+	# Sedikit variasi radial membuat tepinya tidak terlihat seperti balok.
+	var pond_center := Vector2(30.0, 6.5)
+	var pond_radius := Vector2(5.4, 4.2)
+	for y in range(0, 13):
+		for x in range(21, 40):
+			var dx: float = float(x) + 0.5 - pond_center.x
+			var dy: float = float(y) + 0.5 - pond_center.y
+			var nx: float = dx / pond_radius.x
+			var ny: float = dy / pond_radius.y
+			var angle: float = atan2(ny, nx)
+			var wobble: float = 1.0 + 0.10 * sin(angle * 3.0 + 0.9) + 0.06 * sin(angle * 5.0 - 1.3)
+			if nx * nx + ny * ny <= wobble * wobble:
+				water_cells[Vector2i(x, y)] = true
+
+	# Air sungai + jembatan kayu di jalan utama.
+	for cell: Vector2i in water_cells.keys():
+		if cell.y == PATH_ROW or cell.y == PATH_ROW + 1:
+			_paint_bridge_cell(cell.x, cell.y)
+		else:
+			_paint_water_cell(cell.x, cell.y)
+
+	# Tepi pasir mengikuti kontur air, tanpa menutup jalan.
+	for cell: Vector2i in water_cells.keys():
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if dx == 0 and dy == 0:
+					continue
+				var n := Vector2i(cell.x + dx, cell.y + dy)
+				if water_cells.has(n):
+					continue
+				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
+					continue
+				if n.y == PATH_ROW or n.y == PATH_ROW + 1:
+					continue
+				_paint_sand_cell(n.x, n.y)
 
 func _water_desa() -> void:
 	# Sungai lebar di sisi selatan desa.
@@ -206,6 +228,11 @@ func _is_open_grass(x: int, y: int) -> bool:
 	if x < 1 or x >= MAP_W - 1 or y < 1 or y >= MAP_H - 1:
 		return false
 	if y >= PATH_ROW - 1 and y <= PATH_ROW + 2:
+		return false
+	# Jangan menaruh semak/batu di atas air atau jembatan.
+	if water.get_cell_source_id(Vector2i(x, y)) != -1:
+		return false
+	if bridge.get_cell_source_id(Vector2i(x, y)) != -1:
 		return false
 	var atlas: Vector2i = ground.get_cell_atlas_coords(Vector2i(x, y))
 	return atlas.y == 0 and atlas.x <= 2
@@ -242,27 +269,34 @@ func _build_boundaries() -> void:
 	_add_collision(Vector2(-8, h * 0.5), Vector2(16, h))
 	_add_collision(Vector2(w + 8, h * 0.5), Vector2(16, h))
 
-func _build_water_areas() -> void:
-	match theme:
-		"hulu":
-			_add_water_rect(Vector2(30.0 * TILE, 17.0 * TILE), Vector2(4.0 * TILE, 34.0 * TILE))
-			_add_water_rect(Vector2(29.5 * TILE, 5.5 * TILE), Vector2(14.0 * TILE, 5.0 * TILE))
-		"desa":
-			_add_water_rect(Vector2(30.0 * TILE, 29.0 * TILE), Vector2(60.0 * TILE, 4.0 * TILE))
-		"hilir":
-			_add_water_rect(Vector2(30.0 * TILE, 31.0 * TILE), Vector2(60.0 * TILE, 6.0 * TILE))
-			_add_water_rect(Vector2(46.0 * TILE, 18.0 * TILE), Vector2(4.0 * TILE, 20.0 * TILE))
+func _is_water_cell(cell: Vector2i) -> bool:
+	return water.get_cell_source_id(cell) != -1 and bridge.get_cell_source_id(cell) == -1
 
-func _add_water_rect(center: Vector2, size: Vector2) -> void:
+func _build_water_areas() -> void:
+	# Area air dibangun dari tile air yang sudah digambar supaya bentuk
+	# kolam/sungai yang tidak kotak tetap terdeteksi dengan tepat.
 	var area := Area2D.new()
 	area.set_script(load("res://scripts/water_area.gd"))
-	area.position = center
-	var shape := RectangleShape2D.new()
-	shape.size = size
-	var col := CollisionShape2D.new()
-	col.shape = shape
-	area.add_child(col)
-	get_parent().add_child.call_deferred(area)
+	var shape_total: int = 0
+	for y in range(MAP_H):
+		var x: int = 0
+		while x < MAP_W:
+			if not _is_water_cell(Vector2i(x, y)):
+				x += 1
+				continue
+			var start: int = x
+			while x < MAP_W and _is_water_cell(Vector2i(x, y)):
+				x += 1
+			var width: int = x - start
+			var shape := RectangleShape2D.new()
+			shape.size = Vector2(width * TILE, TILE)
+			var col := CollisionShape2D.new()
+			col.shape = shape
+			col.position = Vector2((start + width * 0.5) * TILE, (y + 0.5) * TILE)
+			area.add_child(col)
+			shape_total += 1
+	if shape_total > 0:
+		get_parent().add_child.call_deferred(area)
 
 func _add_collision(pos: Vector2, size: Vector2) -> void:
 	var body := StaticBody2D.new()
@@ -378,12 +412,7 @@ func _spawn_mangrove(pos: Vector2) -> void:
 func _spawn_reeds() -> void:
 	match theme:
 		"hulu":
-			for i in range(18):
-				var side: int = 27 if i % 2 == 0 else 32
-				var y: int = 40 + _hash(i, 3, 9) % 460
-				if y > PATH_ROW * TILE - 12 and y < (PATH_ROW + 2) * TILE + 8:
-					continue
-				_spawn_reed(Vector2(side * TILE + 8, y))
+			_spawn_reeds_on_banks(22)
 		"desa":
 			for i in range(22):
 				var x: int = 20 + _hash(i, 4, 9) % 920
@@ -394,6 +423,34 @@ func _spawn_reeds() -> void:
 			for i in range(24):
 				var x: int = 16 + _hash(i, 5, 9) % 928
 				_spawn_reed(Vector2(x, 27 * TILE + 2))
+
+## Sebaran alang-alang tepat di tepi pasir yang bersebelahan dengan air,
+## jadi selalu mengikuti kontur sungai/kolam.
+func _spawn_reeds_on_banks(count: int) -> void:
+	var spots: Array[Vector2] = []
+	for y in range(1, MAP_H - 1):
+		for x in range(1, MAP_W - 1):
+			var cell := Vector2i(x, y)
+			if water.get_cell_source_id(cell) != -1:
+				continue
+			var atlas: Vector2i = ground.get_cell_atlas_coords(cell)
+			if atlas.y != 1 or atlas.x < 4 or atlas.x > 5:
+				continue
+			if not _touches_water(cell):
+				continue
+			spots.append(Vector2(x * TILE + TILE * 0.5, y * TILE + TILE * 0.5))
+	for i in range(count):
+		if spots.is_empty():
+			return
+		var idx: int = _hash(i, 3, 9) % spots.size()
+		_spawn_reed(spots[idx])
+		spots.remove_at(idx)
+
+func _touches_water(cell: Vector2i) -> bool:
+	for offset: Vector2i in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+		if water.get_cell_source_id(cell + offset) != -1:
+			return true
+	return false
 
 func _spawn_reed(pos: Vector2) -> void:
 	var reed := Sprite2D.new()

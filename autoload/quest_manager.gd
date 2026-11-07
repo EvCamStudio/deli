@@ -94,21 +94,38 @@ func reset_daily_quests() -> void:
 		active_quests.erase(quest_id)
 	daily_quests.clear()
 
-## Get current main quest text — satu tujuan singkat, bukan dump statistik.
+## Get current main quest text — judul + detail progress + lokasi.
+## Baris pertama dipakai HUD sebagai judul misi, sisanya sebagai detail.
 func get_main_quest_text() -> String:
 	if MAIN_QUEST_ID not in active_quests:
 		return ""
-	
+
 	var river_pct: int = int(round(GameState.river_health))
+	var trash: int = GameState.get_total_trash()
 	if river_pct < 40:
-		return "Bersihkan Hulu — %d%% / 40%%" % river_pct
+		var hulu_hint: String = "Pohon: %d | Sampah: %d" % [GameState.trees_planted, trash]
+		if not GameState.has_quest("tanam_pohon_hulu"):
+			hulu_hint = "Bicara Penjaga Hutan dulu"
+		return "Pulihkan Hulu Sungai Deli\nKejernihan: %d%% / 40%%\n%s\nLokasi: hutan & mata air" % [
+			river_pct, hulu_hint
+		]
 	if river_pct < 60:
-		return "Bersihkan Desa — %d%% / 60%%" % river_pct
+		var desa_hint: String = "Sampah dipilah: %d" % trash
+		if not GameState.has_quest("pilah_desa"):
+			desa_hint = "Bicara Pak Tani dulu"
+		return "Bersihkan Desa Sungai Deli\nKejernihan: %d%% / 60%%\n%s\nLokasi: kampung & sawah" % [
+			river_pct, desa_hint
+		]
 	if river_pct < 80:
-		return "Bersihkan Kota — %d%% / 80%%" % river_pct
+		var kota_hint: String = "Sampah dipilah: %d" % trash
+		if not GameState.has_quest("pilah_sampah_kota"):
+			kota_hint = "Bicara Pedagang dulu"
+		return "Bersihkan Kota Medan\nKejernihan: %d%% / 80%%\n%s\nLokasi: drainase kota" % [
+			river_pct, kota_hint
+		]
 	if GameState.debt_amount > 0:
-		return "Lunasi utang warung — sisa Rp %s" % _format_rupiah(GameState.debt_amount)
-	return "Sungai pulih! Kembali ke warung Ibu."
+		return "Lunasi Utang Warung\nSisa utang: Rp %s\nLokasi: warung Ibu" % _format_rupiah(GameState.debt_amount)
+	return "Sungai Deli Pulih!\nKembali ke warung Ibu\nLokasi: warung Ibu"
 
 func _format_rupiah(amount: int) -> String:
 	var s: String = str(amount)

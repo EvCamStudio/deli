@@ -44,6 +44,7 @@ func _ready() -> void:
 	DialogueManager.dialogue_finished.connect(_on_dialogue_finished)
 	GameState.river_health_changed.connect(func(_value: float): _refresh_mission())
 	GameState.rupiah_changed.connect(func(_value: int): _refresh_mission())
+	GameState.quest_started.connect(func(_quest_id: String): _refresh_mission())
 
 	_build_zones()
 	_spawn_gates()
@@ -185,7 +186,15 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 			y += 3.0
 		if _blocked_by_building(zone, Rect2(x - 0.5, y - 0.5, 1.0, 1.0)):
 			continue
-		trash.position = Vector2(x, y) * TILE
+		# Jangan menaruh sampah di tengah sungai/kolam.
+		var pos := Vector2(x, y) * TILE
+		if _zone_in_water(zone, pos):
+			pos.y += 3.0 * TILE
+		if _zone_in_water(zone, pos):
+			pos.x += 3.0 * TILE
+		if _zone_in_water(zone, pos):
+			continue
+		trash.position = pos
 		trash.set("trash_id", "%s_trash_%d" % [zone, i])
 		trash.set("category", categories[i % categories.size()])
 		_zone_containers[zone].add_child(trash)
@@ -196,6 +205,22 @@ func _blocked_by_building(zone: String, rect: Rect2) -> bool:
 		if rect.intersects(b):
 			return true
 	return false
+
+## Ambil node peta zona (TopdownMap) untuk validasi air.
+func _zone_map(zone: String) -> Node:
+	var container: Node = _zone_containers.get(zone)
+	if container == null:
+		return null
+	for child in container.get_children():
+		if child.has_method("is_in_water"):
+			return child
+	return null
+
+func _zone_in_water(zone: String, pos: Vector2) -> bool:
+	var map := _zone_map(zone)
+	if map == null:
+		return false
+	return bool(map.call("is_in_water", pos))
 
 func _spawn_zone_bins(zone: String, categories: Array) -> void:
 	var bin_scene := preload("res://scenes/world/bin_topdown.tscn")
@@ -213,11 +238,31 @@ func _spawn_zone_tree_spots(zone: String, count: int, kind: String) -> void:
 	for i in range(count):
 		var x: int = 8 + (i * 61 + 23) % (ZONE_WIDTH - 16)
 		var y: int = 6 + (i * 43 + 31) % 8
-		# Jangan sampai pohon tumbuh menembus atap bangunan.
-		if _blocked_by_building(zone, Rect2(x - 1.0, y - 3.0, 2.0, 3.0)):
+		# Jangan sampai pohon tumbuh menembus atap bangunan atau di air.
+		var base := Vector2i(x, y)
+		var candidates: Array[Vector2i] = [
+			base,
+			base + Vector2i(3, 0), base + Vector2i(-3, 0),
+			base + Vector2i(0, 3), base + Vector2i(0, -3),
+			base + Vector2i(3, 3), base + Vector2i(-3, -3),
+		]
+		var chosen := Vector2i(-1, -1)
+		for candidate in candidates:
+			if candidate.x < 1 or candidate.x >= ZONE_WIDTH - 1:
+				continue
+			if candidate.y < 1 or candidate.y >= ZONE_HEIGHT - 1:
+				continue
+			var world_pos := Vector2(candidate) * TILE
+			if _zone_in_water(zone, world_pos):
+				continue
+			if _blocked_by_building(zone, Rect2(Vector2(candidate) - Vector2(1, 3), Vector2(2, 3))):
+				continue
+			chosen = candidate
+			break
+		if chosen.x < 0:
 			continue
 		var spot := tree_scene.instantiate()
-		spot.position = Vector2(x, y) * TILE
+		spot.position = Vector2(chosen) * TILE
 		spot.set("kind", kind)
 		_zone_containers[zone].add_child(spot)
 
