@@ -975,26 +975,22 @@ func get_guidance_target() -> Node2D:
 				return _nearest_unplanted("tree")
 			return _exit_target("desa")
 		"desa":
-			if GameState.zone_stat("desa", "sorted") < 10:
+			if GameState.zone_stat("desa", "sorted") < 10 or GameState.river_health < 60.0:
 				return _nearest_trash_or_bin()
-			if GameState.zone_talked_count("desa") < 2:
-				return _nearest_untalked_npc()
 			return _exit_target("kota")
 		"kota":
-			if GameState.zone_stat("kota", "sorted") < 6:
-				return _nearest_trash_or_bin()
+			if not _drainase_open:
+				return _nearest_unpressed_lever()
 			if GameState.zone_talked_count("kota") < 4:
 				return _nearest_untalked_npc()
-			if not _drainase_open and GameState.river_health < 80.0:
-				return _nearest_unpressed_lever()
+			if GameState.zone_stat("kota", "sorted") < 6 or GameState.river_health < 75.0:
+				return _nearest_trash_or_bin()
 			return _exit_target("hilir")
 		"hilir":
 			if GameState.zone_stat("hilir", "mangroves") < 8:
 				return _nearest_unplanted("mangrove")
-			if GameState.zone_stat("hilir", "sorted") < 10:
+			if GameState.zone_stat("hilir", "sorted") < 10 or GameState.river_health < 80.0:
 				return _nearest_trash_or_bin()
-			if GameState.zone_talked_count("hilir") < 2:
-				return _nearest_untalked_npc()
 			return _exit_target("epilog")
 	return null
 
@@ -1032,6 +1028,8 @@ func _zone_intro_npc() -> Node2D:
 			var talked_hilir: Array = GameState.zone_progress.get("hilir", {}).get("talked_keys", [])
 			if "npc_nelayan" not in talked_hilir:
 				return _npc_by_key("npc_nelayan")
+			if GameState.zone_stat("hilir", "mangroves") < 8:
+				return null
 			if "npc_penjaga_sungai" not in talked_hilir:
 				return _npc_by_key("npc_penjaga_sungai")
 	return null
