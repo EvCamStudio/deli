@@ -1,0 +1,83 @@
+[
+  {
+    "id": "pantun_sungai",
+    "tokoh": "Datuk Sampan",
+    "tema": "Pelestarian Sungai Deli",
+    "sampiran": [
+      "Sampan kecil menyusur tebing,",
+      "Pagi berkabut di hulu Deli."
+    ],
+    "pilihan": [
+      {
+        "isi": [
+          "Sungai dijaga hati tak runsing,",
+          "Sampah dibuang kita sendiri rugi."
+        ],
+        "benar": true,
+        "delta_meter": -2
+      },
+      {
+        "isi": [
+          "Sungai kotor biarkan saja,",
+          "Nanti hanyut sendiri nanti."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      }
+    ]
+  },
+  {
+    "id": "pantun_jelantah",
+    "tokoh": "Kak Rina",
+    "tema": "Pengelolaan Jelantah & Selokan",
+    "sampiran": [
+      "Pagi hari menggoreng pisang,",
+      "Minyak bekas dikumpul rapi."
+    ],
+    "pilihan": [
+      {
+        "isi": [
+          "Jelantah tak dibuang sembarang,",
+          "Selokan lancar sungai pun asri."
+        ],
+        "benar": true,
+        "delta_meter": -2
+      },
+      {
+        "isi": [
+          "Buang saja ke selokan lapang,",
+          "Biar hilang tak perlu dicari."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      }
+    ]
+  },
+  {
+    "id": "pantun_tps",
+    "tokoh": "Bang Jali",
+    "tema": "TPS Gang & Gotong Royong",
+    "sampiran": [
+      "Lewat gang membawa karung,",
+      "Menuju TPS di ujung jalan."
+    ],
+    "pilihan": [
+      {
+        "isi": [
+          "Sampah terkumpul hati tak murung,",
+          "Sungai bersih semua senang."
+        ],
+        "benar": true,
+        "delta_meter": -2
+      },
+      {
+        "isi": [
+          "Buang ke sungai tak usah susah,",
+          "Biar saja air membawa."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      }
+    ]
+  }
+]

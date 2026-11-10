@@ -1,0 +1,159 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Dulu kami buang kasur rusak ke sungai, hanyut, hilang. Sekarang kalian bilang itu masalah. Zaman memang aneh.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Pak, ceritakan dulu bagaimana sungai waktu Bapak muda.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step1_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Pak, kebiasaan itu sudah tidak cocok sekarang.",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step1_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Bapak sendiri yang mengajari warga buang sampah ke sungai!",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step1_c"
+      }
+    ]
+  },
+  {
+    "id": "step1_a",
+    "speaker": "Pak Darwis",
+    "emosi": "happy",
+    "teks": "Airnya bening, Nak. Kami mandi, mencuci, ambil air. Penduduk sedikit. Apa yang hanyut ya hanyut ke laut.",
+    "next": "step2"
+  },
+  {
+    "id": "step1_b",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Hmm... anak kemarin sore tahu apa soal zaman dulu.",
+    "next": "end"
+  },
+  {
+    "id": "step1_c",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Kau menuduhku?! Tak sopan kau bicara begitu pada orang tua!",
+    "next": "end"
+  },
+  {
+    "id": "step2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Bagaimana menyampaikan realita sekarang ke Pak Darwis?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Jadi bukan Bapak tak peduli. Dulu sungai sanggup menampung, sekarang penduduk padat dan plastik tidak hanyut.",
+        "delta_sikap": 1,
+        "delta_meter": 0,
+        "next": "step2_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Mungkin Bapak sudah terbiasa.",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "step2_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Bapak ketinggalan zaman.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step2_c"
+      }
+    ]
+  },
+  {
+    "id": "step2_a",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Plastik tidak hanyut ya... Benar juga, kasur busa pun sekarang isinya plastik.",
+    "next": "datuk_darwis"
+  },
+  {
+    "id": "step2_b",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Ya, mungkin. Tapi orang tua susah diubah.",
+    "next": "end"
+  },
+  {
+    "id": "step2_c",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Pergi kau dari sini!",
+    "next": "end"
+  },
+  {
+    "id": "datuk_darwis",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Orang tua tidak ditegur dengan angka. Ingatkan dengan ingatannya.",
+    "next": "step3"
+  },
+  {
+    "id": "step3",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Solusi kearifan lokal bersama Pak Darwis:",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Pak, dulu orang tua Bapak pesan apa soal sungai? Kalau berkenan, ceritakan itu ke warga saat kerja bakti.",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "solusi_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Pak, sebaiknya Bapak ikut kerja bakti ya.",
+        "delta_sikap": 1,
+        "delta_meter": 3,
+        "next": "solusi_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Kalau Bapak tak berubah, warga lain ikut-ikutan.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "solusi_c"
+      }
+    ]
+  },
+  {
+    "id": "solusi_a",
+    "speaker": "Pak Darwis",
+    "emosi": "happy",
+    "teks": "Almarhum bapakku dulu selalu cuci tangan dan kaki di sungai sebelum pulang, katanya sebagai terima kasih sudah dikasih air. Aku lupa kebiasaan itu. Baik, besok kusampaikan ke warga.",
+    "next": "end"
+  },
+  {
+    "id": "solusi_b",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Nanti kupikirkan kalau badanku tidak pegal.",
+    "next": "end"
+  },
+  {
+    "id": "solusi_c",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Cukup. Jangan kau atur-atur hidupku.",
+    "next": "end"
+  }
+]

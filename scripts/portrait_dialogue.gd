@@ -25,6 +25,17 @@ const PORTRAITS: Dictionary = {
 	"Penjaga Sungai": "pakrt",
 	"Player": "player",
 	"Kamu": "player",
+	"MC": "player",
+	"Bu Mira": "ibu",
+	"Pak Hendra": "pakrt",
+	"Bang Jali": "pedagang",
+	"Kak Rina": "ibu",
+	"Pak Darwis": "penjaga_hutan",
+	"Datuk Sampan": "penjaga_hutan",
+	"Bang Ucok": "pakrt",
+	"Warga": "petani",
+	"Warga 1": "petani",
+	"Warga 2": "pedagang",
 }
 
 var _full_text: String = ""

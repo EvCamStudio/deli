@@ -1,0 +1,30 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Beberapa bulan kemudian... Sungai Deli kini jernih dan asri. Warung kopi Bu Mira dan Pak Hendra ramai pembeli.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Pak Hendra",
+    "emosi": "happy",
+    "teks": "Utang lunas, warung pulih, dan warga sekarang rutin kerja bakti menjaga tanggul sungai.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama kalian ingat dan peduli, aku ada.",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "(Datuk Sampan tersenyum, tubuhnya bercahaya terang keemasan, lalu perlahan menyatu dengan aliran air yang jernih).",
+    "next": "end"
+  }
+]

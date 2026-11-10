@@ -1,0 +1,52 @@
+[
+  {
+    "id": "start",
+    "speaker": "Bang Ucok",
+    "emosi": "neutral",
+    "teks": "Selamat sore, Dek. Hari ini jadwal pembayaran sisa utang warung orang tuamu.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Ini, kubayar semua lunas Rp 500.000.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "lunas"
+      },
+      {
+        "tipe": "B",
+        "teks": "Kubayar sebagian dulu seadanya uangku.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "sebagian"
+      },
+      {
+        "tipe": "C",
+        "teks": "Beri aku waktu lagi, Bang.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "tunda"
+      }
+    ]
+  },
+  {
+    "id": "lunas",
+    "speaker": "Bang Ucok",
+    "emosi": "happy",
+    "teks": "Lunas semua! Hebat kau, Dek. Warung orang tuamu sekarang aman dan bisa jalan terus!",
+    "next": "end"
+  },
+  {
+    "id": "sebagian",
+    "speaker": "Bang Ucok",
+    "emosi": "neutral",
+    "teks": "Boleh. Kuterima sebagian. Sisanya kutunggu ya, jangan terlalu lama.",
+    "next": "end"
+  },
+  {
+    "id": "tunda",
+    "speaker": "Bang Ucok",
+    "emosi": "sad",
+    "teks": "(Menghela napas) Baik, tapi lain kali jangan begini. Bunga utang akan terus jalan.",
+    "next": "end"
+  }
+]

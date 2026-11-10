@@ -1,0 +1,16 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Pagi hari ke-7 di bantaran Sungai Deli. Warga berkumpul untuk festival pantun kearifan lokal!",
+    "next": "datuk"
+  },
+  {
+    "id": "datuk",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Dengar dulu sebelum menegur, paham dulu sebelum menunjuk. Mari bersenandung bersama sungai.",
+    "next": "end"
+  }
+]

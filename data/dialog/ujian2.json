@@ -1,0 +1,73 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Hujan sedang mengguyur kota Medan sore ini...",
+    "next": "check"
+  },
+  {
+    "id": "aman",
+    "speaker": "Bu Mira",
+    "emosi": "happy",
+    "teks": "Warung kering! Besok kita bisa buka jualan kembali.",
+    "next": "aman_hendra"
+  },
+  {
+    "id": "aman_hendra",
+    "speaker": "Pak Hendra",
+    "emosi": "happy",
+    "teks": "Syukur sekali, Nak. Usahamu membersihkan sungai ada hasilnya.",
+    "next": "end"
+  },
+  {
+    "id": "genangan",
+    "speaker": "Warga 1",
+    "emosi": "sad",
+    "teks": "Gara-gara sampah plastik di gang ini selokan mampet!",
+    "next": "genangan_w2"
+  },
+  {
+    "id": "genangan_w2",
+    "speaker": "Warga 2",
+    "emosi": "sad",
+    "teks": "Kau juga buang sampah sembarangan kemarin! Jangan tunjuk orang!",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Mari kita bagi tugas, bukan bagi salah!",
+        "delta_sikap": 0,
+        "delta_meter": -3,
+        "next": "genangan_damai"
+      },
+      {
+        "tipe": "B",
+        "teks": "(Diam saja dan membiarkan mereka ribut)",
+        "delta_sikap": 0,
+        "delta_meter": 3,
+        "next": "genangan_ribut"
+      }
+    ]
+  },
+  {
+    "id": "genangan_damai",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Kalau kita saling menyalahkan air tak akan surut. Ayo gotong royong bersihkan sumbatan!",
+    "next": "end"
+  },
+  {
+    "id": "genangan_ribut",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "(Warga terus bertengkar dan selokan tetap meluap ke jalan).",
+    "next": "end"
+  },
+  {
+    "id": "banjir",
+    "speaker": "Warga",
+    "emosi": "sad",
+    "teks": "Kukira sudah berubah, ternyata kampung kita masih banjir begini juga... percuma peduli.",
+    "next": "end"
+  }
+]

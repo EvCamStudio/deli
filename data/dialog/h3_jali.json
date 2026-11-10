@@ -1,0 +1,59 @@
+[
+  {
+    "id": "start",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Pangkal masalah jauh di sana, ujungnya dekat di sini. Dekatkan ujungnya.",
+    "next": "solusi"
+  },
+  {
+    "id": "solusi",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Solusi apa yang paling tepat untuk Bang Jali?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bagaimana kalau kita buat TPS kecil di ujung gang, dengan jadwal angkut bergilir seminggu dua kali?",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "solusi_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Biar aku yang bawa sampahmu tiap pagi.",
+        "delta_sikap": 1,
+        "delta_meter": 3,
+        "next": "solusi_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Kalau masih buang, kulaporkan ke RT.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "solusi_c"
+      }
+    ]
+  },
+  {
+    "id": "solusi_a",
+    "speaker": "Bang Jali",
+    "emosi": "happy",
+    "teks": "Boleh itu! Biar aku yang atur jadwal dengan anak-anak gang. Dulu aku cuek, Bang. Sekarang lihat plastik di sungai rasanya ngilu. Kau yang ajar aku.",
+    "next": "end"
+  },
+  {
+    "id": "solusi_b",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Wah, mantap! Terima kasih ya, Bang. (Energi MC berkurang tiap hari).",
+    "next": "end"
+  },
+  {
+    "id": "solusi_c",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Lapor sajalah! Aku tak takut!",
+    "next": "end"
+  }
+]

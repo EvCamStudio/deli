@@ -1,0 +1,16 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Hujan lebat berikutnya datang kembali. Warung bertahan, tetapi utang masih tersisa dan sungai masih rawan.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Sungai belajar dari kita, sebagaimana kita belajar darinya. Jalanmu masih panjang, jangan menyerah.",
+    "next": "end"
+  }
+]

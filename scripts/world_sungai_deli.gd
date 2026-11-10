@@ -198,18 +198,18 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
-	# Hulu: Ibu di depan rumah + penjaga hutan + datuk (kearifan lokal).
-	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 15) * TILE, 1)
+	# Hulu: Bu Mira di depan warung + penjaga hutan + Datuk Sampan di tepi sungai.
+	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 15) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 14) * TILE, 1)
-	_create_npc("hulu", "npc_datuk", "pakrt", Vector2(22, 15) * TILE, 1)
+	_create_npc("hulu", "npc_datuk", "penjaga_hutan", Vector2(22, 15) * TILE, 1, "h1_datuk")
 
-	# Desa: Petani, ibu desa, pemuka desa.
-	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 15) * TILE, 2)
-	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 16) * TILE, 2)
+	# Desa: Pak Darwis di bale bambu, Kak Rina penjual gorengan, pemuka desa.
+	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 15) * TILE, 2, "h6_darwis")
+	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 16) * TILE, 2, "h4_rina")
 	_create_npc("desa", "npc_pemuka_desa", "pakrt", Vector2(35, 15) * TILE, 2)
 
-	# Kota: Pedagang, ibu rumah, anak sekolah, tokoh masyarakat.
-	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 10) * TILE, 3)
+	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat.
+	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 10) * TILE, 3, "h2_jali")
 	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 10) * TILE, 3)
 	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(50, 13) * TILE, 3)
 	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 9) * TILE, 3)
@@ -218,13 +218,15 @@ func _spawn_npcs() -> void:
 	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(13, 15) * TILE, 4)
 	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(50, 15) * TILE, 4)
 
-func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int) -> void:
+func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int, custom_dialog_id: String = "") -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
 	var npc := npc_scene.instantiate()
 	npc.position = pos
 	npc.set("npc_key", dialogue_key)
 	npc.set("sprite_key", sprite_key)
 	npc.set("level_id", npc_level)
+	if not custom_dialog_id.is_empty():
+		npc.set("dialog_id", custom_dialog_id)
 	npc.add_to_group("world_npc")
 	npc.talked.connect(on_npc_talked)
 	_zone_containers[zone].add_child(npc)

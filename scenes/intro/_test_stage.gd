@@ -10,5 +10,5 @@ func _ready() -> void:
 		elif arg.begins_with("name="):
 			name_arg = arg.substr(5)
 	GameState.player_name = name_arg
-	stage = target_stage
+	_current_chapter = target_stage
 	super._ready()
