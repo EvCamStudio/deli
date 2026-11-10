@@ -107,12 +107,10 @@ func _ready() -> void:
 	change_zone(start_zone)
 	_show_zone_wisdom = true
 
-	# Mission card hanya tampil setelah cerita utama dimulai.
-	if GameState.quest_progress == 0:
-		hud.hide_mission()
-	else:
-		QuestManager.start_main_quest()
-		_refresh_mission()
+	# Pastikan cerita utama dan mission card selalu aktif di world
+	GameState.quest_progress = 1
+	QuestManager.start_main_quest()
+	_refresh_mission()
 
 	var has_saved_pos: bool = GameState.saved_player_x >= 0.0 and GameState.saved_player_y >= 0.0
 	if has_saved_pos:
@@ -527,74 +525,93 @@ func can_finish_journey() -> bool:
 func _refresh_mission() -> void:
 	if hud == null:
 		return
+	# Pastikan cerita utama dan mission card selalu aktif di world
 	if GameState.quest_progress == 0:
-		hud.hide_mission()
-		return
+		GameState.quest_progress = 1
 
 	var zone: String = _current_zone
 	var lines: Array[String] = []
-	var title: String = ZONE_LABELS.get(zone, zone.to_upper())
+	var title: String = ""
 	var cleared: bool = is_zone_cleared(zone)
+	var river_pct: int = int(round(GameState.river_health))
+	var talked_keys: Array = GameState.zone_progress.get(zone, {}).get("talked_keys", [])
 
 	match zone:
 		"hulu":
-			title = "Pulihkan Hulu Sungai"
-			if not GameState.has_quest("tanam_pohon_hulu"):
-				lines = ["Bicara Penjaga Hutan dulu", "Gerbang desa: 40% air + 5 pohon", "Ikuti kompas di atas layar"]
-			else:
-				var trees: int = mini(GameState.zone_stat("hulu", "trees"), 5)
-				lines = ["Pohon: %d/5" % trees]
-				if cleared:
-					lines.append("Hutan hulu pulih! Gerbang desa terbuka")
-					lines.append("Bicara warga desa dulu")
-				else:
-					lines.append("Gerbang desa: 40% air + 5 pohon")
-					lines.append("Pilah sampah juga menaikkan air")
+			title = "HULU SUNGAI DELI"
+			var talked_ibu: bool = "npc_ibu_mc" in talked_keys
+			var talked_datuk: bool = "npc_datuk" in talked_keys
+			var talked_penjaga: bool = "npc_penjaga_hutan" in talked_keys
+			var trees: int = mini(GameState.zone_stat("hulu", "trees"), 5)
+
+			if not talked_ibu:
+				lines.append("• Bicara Mak & Bapak di depan warung")
+			elif not talked_datuk:
+				lines.append("• Temui Datuk Sampan di tepi sungai")
+			elif not talked_penjaga and trees == 0:
+				lines.append("• Bicara Penjaga Hutan di hulu")
+
+			lines.append("• Tanam Pohon di Hutan: %d/5" % trees)
+			lines.append("• Pilah Sampah Hulu ke tong")
+			lines.append("• Kesehatan Air: %d%% (Syarat: 40%%)" % river_pct)
+			if cleared and GameState.river_health >= 40.0:
+				lines.append("✓ Hulu pulih! Gerbang Desa TERBUKA")
+
 		"desa":
-			title = "Bersihkan Desa Sungai Deli"
-			if not GameState.has_quest("pilah_desa"):
-				lines = ["Bicara Pak Tani dulu", "Gerbang kota: 60% air + misi desa", "Ikuti kompas di atas layar"]
+			title = "DESA SUNGAI DELI"
+			var sorted: int = mini(GameState.zone_stat("desa", "sorted"), 10)
+			var talked_darwis: bool = "npc_petani_1" in talked_keys
+			var talked_rina: bool = "npc_ibu_desa" in talked_keys
+			var talked_count: int = mini(GameState.zone_talked_count("desa"), 2)
+
+			lines.append("• Pilah Sampah Desa: %d/10" % sorted)
+			if not talked_darwis and not talked_rina:
+				lines.append("• Bicara: Pak Darwis & Kak Rina (%d/2)" % talked_count)
+			elif not talked_darwis:
+				lines.append("• Bicara: Temui Pak Darwis (%d/2)" % talked_count)
+			elif not talked_rina:
+				lines.append("• Bicara: Temui Kak Rina (%d/2)" % talked_count)
 			else:
-				var sorted: int = mini(GameState.zone_stat("desa", "sorted"), 10)
-				var talked: int = mini(GameState.zone_talked_count("desa"), 2)
-				lines = ["Sampah: %d/10" % sorted, "Warga: %d/2" % talked]
-				if cleared:
-					lines.append("Desa bersih! Gerbang kota terbuka")
-				else:
-					lines.append("Gerbang kota: 60% air + misi desa")
+				lines.append("• Warga Kunci Tersadarkan (%d/2)" % talked_count)
+
+			lines.append("• Kesehatan Air: %d%% (Syarat: 60%%)" % river_pct)
+			if cleared and GameState.river_health >= 60.0:
+				lines.append("✓ Desa bersih! Gerbang Kota TERBUKA")
+
 		"kota":
-			title = "Bersihkan Kota Medan"
-			if not GameState.has_quest("pilah_sampah_kota"):
-				lines = ["Bicara Pedagang dulu", "Gerbang hilir: 80% air + misi kota", "Ikuti kompas di atas layar"]
+			title = "KOTA MEDAN"
+			var sorted: int = mini(GameState.zone_stat("kota", "sorted"), 6)
+			var talked_count: int = mini(GameState.zone_talked_count("kota"), 4)
+			var talked_jali: bool = "npc_pedagang" in talked_keys
+
+			lines.append("• Pilah Sampah Kota: %d/6" % sorted)
+			if not talked_jali:
+				lines.append("• Temui Bang Jali di mulut gang (%d/4)" % talked_count)
 			else:
-				var sorted: int = mini(GameState.zone_stat("kota", "sorted"), 6)
-				var talked: int = mini(GameState.zone_talked_count("kota"), 4)
-				lines = ["Sampah: %d/6" % sorted, "Warga: %d/4" % talked]
-				if cleared:
-					lines.append("Kota bersih! Gerbang hilir terbuka")
-				elif _drainase_open:
-					lines.append("Drainase terbuka. Cari gerbang hilir")
-				else:
-					lines.append("Bonus drainase: tuas 1-3-2")
+				lines.append("• Bicara Warga Kota: %d/4" % talked_count)
+
+			if _drainase_open:
+				lines.append("• Pintu Air Drainase: Terbuka & Lancar")
+			else:
+				lines.append("• Bonus: Tarik tuas drainase 1-3-2")
+
+			lines.append("• Kesehatan Air: %d%% (Syarat: 75%%)" % river_pct)
+			if cleared and GameState.river_health >= 75.0:
+				lines.append("✓ Kota tertata! Gerbang Hilir TERBUKA")
+
 		"hilir":
-			title = "Pulihkan Pesisir Sungai Deli"
-			var has_mangrove: bool = GameState.has_quest("tanam_mangrove")
-			var has_trash: bool = GameState.has_quest("pilah_hilir")
-			if not has_mangrove and not has_trash:
-				lines = ["Bicara Nelayan & Penjaga dulu", "Gerbang epilog: 80% air + misi pesisir", "Ikuti kompas di atas layar"]
-			elif not has_mangrove:
-				lines = ["Bicara Nelayan dulu", "Titik mangrove ada di pesisir", "Gerbang epilog: 80% air + misi"]
-			elif not has_trash:
-				lines = ["Bicara Penjaga Sungai dulu", "Lokasi: muara & pesisir", "Gerbang epilog: 80% air + misi"]
-			else:
-				var mangroves: int = mini(GameState.zone_stat("hilir", "mangroves"), 8)
-				var sorted: int = mini(GameState.zone_stat("hilir", "sorted"), 10)
-				var talked: int = mini(GameState.zone_talked_count("hilir"), 2)
-				lines = ["Mangrove: %d/8" % mangroves, "Sampah: %d/10" % sorted, "Warga: %d/2" % talked]
-				if cleared and GameState.river_health >= 80.0:
-					lines[2] = "Gerbang epilog terbuka!"
-				else:
-					lines[2] = "Gerbang: 80% air + misi pesisir"
+			title = "HILIR & MUARA DELI"
+			var mangroves: int = mini(GameState.zone_stat("hilir", "mangroves"), 8)
+			var sorted: int = mini(GameState.zone_stat("hilir", "sorted"), 10)
+			var talked_count: int = mini(GameState.zone_talked_count("hilir"), 2)
+
+			lines.append("• Tanam Mangrove di Pantai: %d/8" % mangroves)
+			lines.append("• Pilah Sampah Pesisir: %d/10" % sorted)
+			lines.append("• Bicara Nelayan & Penjaga: %d/2" % talked_count)
+			lines.append("• Lengkapi Pantun di Papan Muara")
+			lines.append("• Kesehatan Air: %d%% (Syarat: 80%%)" % river_pct)
+			if can_finish_journey():
+				lines.append("✓ Pesisir pulih! Gerbang Epilog TERBUKA")
 
 	var text: String = title
 	for line in lines:
@@ -669,16 +686,46 @@ func on_npc_talked(npc_key: String) -> void:
 		return
 
 	match npc_key:
-		"npc_datuk": GameState.unlock_card("card_kearifan_02")
-		"npc_pemuka_desa": GameState.unlock_card("card_adat_01")
-		"npc_petani_1": GameState.unlock_card("card_pertanian_01")
-		"npc_ibu_desa": GameState.unlock_card("card_gotong_royong_01")
-		"npc_pedagang": GameState.unlock_card("card_plastik_01")
-		"npc_ibu_rumah": GameState.unlock_card("card_b3_01")
-		"npc_anak_sekolah": GameState.unlock_card("card_pantun_01")
-		"npc_tokoh_masyarakat": GameState.unlock_card("card_drainase_01")
-		"npc_nelayan": GameState.unlock_card("card_nelayan_01")
-		"npc_penjaga_sungai": GameState.unlock_card("card_pesisir_01")
+		"npc_ibu_mc":
+			pass
+		"npc_datuk":
+			GameState.unlock_card("card_kearifan_02")
+		"npc_penjaga_hutan":
+			if not GameState.has_quest("tanam_pohon_hulu"):
+				GameState.start_quest("tanam_pohon_hulu", 5)
+				QuestManager.trigger_npc_quest("tanam_pohon_hulu", "Tanam 5 pohon di Hulu", 5)
+			GameState.unlock_card("card_hutan_01")
+		"npc_pemuka_desa":
+			GameState.unlock_card("card_adat_01")
+		"npc_petani_1", "npc_ibu_desa":
+			if not GameState.has_quest("pilah_desa"):
+				GameState.start_quest("pilah_desa", 10)
+				QuestManager.trigger_npc_quest("pilah_desa", "Pilah 10 sampah desa", 10)
+			if npc_key == "npc_petani_1":
+				GameState.unlock_card("card_pertanian_01")
+			else:
+				GameState.unlock_card("card_gotong_royong_01")
+		"npc_pedagang":
+			if not GameState.has_quest("pilah_sampah_kota"):
+				GameState.start_quest("pilah_sampah_kota", 6)
+				QuestManager.trigger_npc_quest("pilah_sampah_kota", "Pilah 6 sampah kota", 6)
+			GameState.unlock_card("card_plastik_01")
+		"npc_ibu_rumah":
+			GameState.unlock_card("card_b3_01")
+		"npc_anak_sekolah":
+			GameState.unlock_card("card_pantun_01")
+		"npc_tokoh_masyarakat":
+			GameState.unlock_card("card_drainase_01")
+		"npc_nelayan":
+			if not GameState.has_quest("tanam_mangrove"):
+				GameState.start_quest("tanam_mangrove", 8)
+				QuestManager.trigger_npc_quest("tanam_mangrove", "Tanam 8 mangrove di pesisir", 8)
+			GameState.unlock_card("card_nelayan_01")
+		"npc_penjaga_sungai":
+			if not GameState.has_quest("pilah_hilir"):
+				GameState.start_quest("pilah_hilir", 10)
+				QuestManager.trigger_npc_quest("pilah_hilir", "Pilah 10 sampah pesisir", 10)
+			GameState.unlock_card("card_pesisir_01")
 
 	var target: int = zone_target(zone, "talked")
 	var count: int = GameState.zone_talked_count(zone)
@@ -688,6 +735,7 @@ func on_npc_talked(npc_key: String) -> void:
 
 	_refresh_mission()
 	_refresh_gates()
+	_update_guidance()
 	GameState.save_game()
 
 # ─── Puzzle drainase kota (bonus) ────────────────────────────────────────────
@@ -893,18 +941,28 @@ func _exit_target(next_zone: String) -> Node2D:
 func _zone_intro_npc() -> Node2D:
 	match _current_zone:
 		"hulu":
-			if not GameState.has_quest("tanam_pohon_hulu"):
+			var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
+			if "npc_ibu_mc" not in talked_hulu:
+				return _npc_by_key("npc_ibu_mc")
+			if "npc_datuk" not in talked_hulu:
+				return _npc_by_key("npc_datuk")
+			if "npc_penjaga_hutan" not in talked_hulu and not GameState.has_quest("tanam_pohon_hulu"):
 				return _npc_by_key("npc_penjaga_hutan")
 		"desa":
-			if not GameState.has_quest("pilah_desa"):
+			var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
+			if "npc_petani_1" not in talked_desa:
 				return _npc_by_key("npc_petani_1")
+			if "npc_ibu_desa" not in talked_desa:
+				return _npc_by_key("npc_ibu_desa")
 		"kota":
-			if not GameState.has_quest("pilah_sampah_kota"):
+			var talked_kota: Array = GameState.zone_progress.get("kota", {}).get("talked_keys", [])
+			if "npc_pedagang" not in talked_kota:
 				return _npc_by_key("npc_pedagang")
 		"hilir":
-			if not GameState.has_quest("tanam_mangrove"):
+			var talked_hilir: Array = GameState.zone_progress.get("hilir", {}).get("talked_keys", [])
+			if "npc_nelayan" not in talked_hilir:
 				return _npc_by_key("npc_nelayan")
-			if not GameState.has_quest("pilah_hilir"):
+			if "npc_penjaga_sungai" not in talked_hilir:
 				return _npc_by_key("npc_penjaga_sungai")
 	return null
 

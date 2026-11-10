@@ -126,8 +126,8 @@ icon_max_width = 28
 visible = false
 layout_mode = 0
 offset_top = 62.0
-offset_right = 250.0
-offset_bottom = 134.0
+offset_right = 260.0
+offset_bottom = 140.0
 theme_override_styles/panel = SubResource("StyleBox_card")
 
 [node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]
@@ -142,7 +142,7 @@ theme_override_font_sizes/font_size = 9
 text = "MISI"
 
 [node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
-custom_minimum_size = Vector2(210, 0)
+custom_minimum_size = Vector2(220, 0)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
 theme_override_fonts/font = ExtResource("9_pixel")

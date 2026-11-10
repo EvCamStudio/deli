@@ -293,11 +293,12 @@ func update_mission(text: String) -> void:
 		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
-		mission_title.text = "MISI: " + lines[0]
+		mission_title.text = lines[0].to_upper()
 		mission_label.text = "\n".join(lines.slice(1))
 	else:
-		mission_title.text = "MISI"
+		mission_title.text = "MISI AKTIF"
 		mission_label.text = text
+	mission_card.reset_size()
 	mission_card.show()
 
 func show_mission() -> void:
