@@ -65,6 +65,7 @@ var _zone_containers: Dictionary = {}
 var _guidance: Node2D = null
 var _guidance_accum: float = 0.0
 var _show_zone_wisdom: bool = false
+var _last_mission_title: String = ""
 var _spawn_positions: Dictionary = {
 	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
 	"desa": Vector2(8, 15) * TILE,   # depan warung
@@ -525,7 +526,6 @@ func can_finish_journey() -> bool:
 func _refresh_mission() -> void:
 	if hud == null:
 		return
-	# Pastikan cerita utama dan mission card selalu aktif di world
 	if GameState.quest_progress == 0:
 		GameState.quest_progress = 1
 
@@ -538,84 +538,154 @@ func _refresh_mission() -> void:
 
 	match zone:
 		"hulu":
-			title = "HULU SUNGAI DELI"
 			var talked_ibu: bool = "npc_ibu_mc" in talked_keys
 			var talked_datuk: bool = "npc_datuk" in talked_keys
 			var talked_penjaga: bool = "npc_penjaga_hutan" in talked_keys
 			var trees: int = mini(GameState.zone_stat("hulu", "trees"), 5)
 
 			if not talked_ibu:
-				lines.append("• Bicara Mak & Bapak di depan warung")
+				title = "MISI HULU · LANGKAH 1"
+				lines = [
+					"Temui Mak & Bapak di depan warung.",
+					"Periksa kondisi setelah diterjang banjir."
+				]
 			elif not talked_datuk:
-				lines.append("• Temui Datuk Sampan di tepi sungai")
+				title = "MISI HULU · LANGKAH 2"
+				lines = [
+					"Temui Datuk Sampan di tepi sungai.",
+					"Dengarkan petuah tentang menjaga sungai."
+				]
 			elif not talked_penjaga and trees == 0:
-				lines.append("• Bicara Penjaga Hutan di hulu")
-
-			lines.append("• Tanam Pohon di Hutan: %d/5" % trees)
-			lines.append("• Pilah Sampah Hulu ke tong")
-			lines.append("• Kesehatan Air: %d%% (Syarat: 40%%)" % river_pct)
-			if cleared and GameState.river_health >= 40.0:
-				lines.append("✓ Hulu pulih! Gerbang Desa TERBUKA")
+				title = "MISI HULU · LANGKAH 3"
+				lines = [
+					"Temui Penjaga Hutan di area mata air.",
+					"Minta bibit pohon untuk penghijauan."
+				]
+			elif not cleared or river_pct < 40:
+				title = "MISI HULU · LANGKAH 4"
+				lines = [
+					"Tanam pohon di titik bertanda: %d/5" % trees,
+					"Pilah sampah ke tong (Air: %d%% / 40%%)" % river_pct
+				]
+			else:
+				title = "HULU SUNGAI PULIH!"
+				lines = [
+					"Pohon tertanam dan air mencapai %d%%." % river_pct,
+					"Masuk ke Gerbang Desa di sebelah timur."
+				]
 
 		"desa":
-			title = "DESA SUNGAI DELI"
 			var sorted: int = mini(GameState.zone_stat("desa", "sorted"), 10)
 			var talked_darwis: bool = "npc_petani_1" in talked_keys
 			var talked_rina: bool = "npc_ibu_desa" in talked_keys
-			var talked_count: int = mini(GameState.zone_talked_count("desa"), 2)
 
-			lines.append("• Pilah Sampah Desa: %d/10" % sorted)
-			if not talked_darwis and not talked_rina:
-				lines.append("• Bicara: Pak Darwis & Kak Rina (%d/2)" % talked_count)
-			elif not talked_darwis:
-				lines.append("• Bicara: Temui Pak Darwis (%d/2)" % talked_count)
+			if not talked_darwis:
+				title = "MISI DESA · LANGKAH 1"
+				lines = [
+					"Temui Pak Darwis di bale kebun sayur.",
+					"Dengarkan alasannya membuang kasur rusak."
+				]
 			elif not talked_rina:
-				lines.append("• Bicara: Temui Kak Rina (%d/2)" % talked_count)
+				title = "MISI DESA · LANGKAH 2"
+				lines = [
+					"Temui Kak Rina di gerobak gorengan.",
+					"Ajak kelola minyak jelantah untuk biodiesel."
+				]
+			elif sorted < 10 or river_pct < 60:
+				title = "MISI DESA · LANGKAH 3"
+				lines = [
+					"Pilah 10 sampah desa ke tong: %d/10" % sorted,
+					"Pulihkan kesehatan air (%d%% / 60%%)" % river_pct
+				]
 			else:
-				lines.append("• Warga Kunci Tersadarkan (%d/2)" % talked_count)
-
-			lines.append("• Kesehatan Air: %d%% (Syarat: 60%%)" % river_pct)
-			if cleared and GameState.river_health >= 60.0:
-				lines.append("✓ Desa bersih! Gerbang Kota TERBUKA")
+				title = "DESA TELAH BERSIH!"
+				lines = [
+					"Warga sadar dan sungai desa membaik.",
+					"Masuk ke Gerbang Kota Medan di timur."
+				]
 
 		"kota":
-			title = "KOTA MEDAN"
 			var sorted: int = mini(GameState.zone_stat("kota", "sorted"), 6)
 			var talked_count: int = mini(GameState.zone_talked_count("kota"), 4)
 			var talked_jali: bool = "npc_pedagang" in talked_keys
 
-			lines.append("• Pilah Sampah Kota: %d/6" % sorted)
 			if not talked_jali:
-				lines.append("• Temui Bang Jali di mulut gang (%d/4)" % talked_count)
+				title = "MISI KOTA · LANGKAH 1"
+				lines = [
+					"Temui Bang Jali di mulut gang sempit.",
+					"Cari solusi bersama untuk sampah gang."
+				]
+			elif not _drainase_open:
+				title = "MISI KOTA · LANGKAH 2"
+				lines = [
+					"Buka pintu air drainase di bawah jembatan.",
+					"Tarik 3 tuas dengan urutan: 1 → 3 → 2."
+				]
+			elif talked_count < 4:
+				title = "MISI KOTA · LANGKAH 3"
+				lines = [
+					"Ajak bicara warga kota lainnya (%d/4):" % talked_count,
+					"Temui Ibu Rumah Tangga, Budi, atau Pak RT."
+				]
+			elif sorted < 6 or river_pct < 75:
+				title = "MISI KOTA · LANGKAH 4"
+				lines = [
+					"Pilah 6 sampah kota ke tong: %d/6" % sorted,
+					"Pulihkan kesehatan air (%d%% / 75%%)" % river_pct
+				]
 			else:
-				lines.append("• Bicara Warga Kota: %d/4" % talked_count)
-
-			if _drainase_open:
-				lines.append("• Pintu Air Drainase: Terbuka & Lancar")
-			else:
-				lines.append("• Bonus: Tarik tuas drainase 1-3-2")
-
-			lines.append("• Kesehatan Air: %d%% (Syarat: 75%%)" % river_pct)
-			if cleared and GameState.river_health >= 75.0:
-				lines.append("✓ Kota tertata! Gerbang Hilir TERBUKA")
+				title = "KOTA MEDAN TERTATA!"
+				lines = [
+					"Drainase lancar dan sampah terkelola.",
+					"Masuk ke Gerbang Hilir di muara sungai."
+				]
 
 		"hilir":
-			title = "HILIR & MUARA DELI"
 			var mangroves: int = mini(GameState.zone_stat("hilir", "mangroves"), 8)
 			var sorted: int = mini(GameState.zone_stat("hilir", "sorted"), 10)
-			var talked_count: int = mini(GameState.zone_talked_count("hilir"), 2)
+			var talked_nelayan: bool = "npc_nelayan" in talked_keys
+			var talked_penjaga: bool = "npc_penjaga_sungai" in talked_keys
 
-			lines.append("• Tanam Mangrove di Pantai: %d/8" % mangroves)
-			lines.append("• Pilah Sampah Pesisir: %d/10" % sorted)
-			lines.append("• Bicara Nelayan & Penjaga: %d/2" % talked_count)
-			lines.append("• Lengkapi Pantun di Papan Muara")
-			lines.append("• Kesehatan Air: %d%% (Syarat: 80%%)" % river_pct)
-			if can_finish_journey():
-				lines.append("✓ Pesisir pulih! Gerbang Epilog TERBUKA")
+			if not talked_nelayan:
+				title = "MISI HILIR · LANGKAH 1"
+				lines = [
+					"Temui Pak Nelayan di dekat perahu.",
+					"Pelajari pentingnya benteng hutan bakau."
+				]
+			elif mangroves < 8:
+				title = "MISI HILIR · LANGKAH 2"
+				lines = [
+					"Tanam 8 bibit mangrove di pantai: %d/8" % mangroves,
+					"Dekati titik tanah bertanda di pesisir."
+				]
+			elif not talked_penjaga:
+				title = "MISI HILIR · LANGKAH 3"
+				lines = [
+					"Temui Penjaga Sungai di pos pemantau.",
+					"Dengarkan wejangan tentang muara Deli."
+				]
+			elif sorted < 10 or river_pct < 80:
+				title = "MISI HILIR · LANGKAH 4"
+				lines = [
+					"Pilah sampah pesisir (%d/10) & lengkapi pantun." % sorted,
+					"Pulihkan kesehatan air (%d%% / 80%%)" % river_pct
+				]
+			else:
+				title = "SUNGAI DELI TELAH PULIH!"
+				lines = [
+					"Muara bersih dan mangrove tumbuh asri.",
+					"Masuk ke Gerbang Epilog untuk akhir perjalanan."
+				]
 
 	var text: String = title
 	for line in lines:
 		text += "\n" + line
+
+	# Beri notifikasi toast bila langkah misi baru saja berganti
+	if _last_mission_title != "" and _last_mission_title != title and not _dialogue_active:
+		toast("Misi Baru: %s" % title, true)
+	_last_mission_title = title
+
 	hud.update_mission(text)
 
 func _refresh_gates() -> void:
@@ -946,7 +1016,7 @@ func _zone_intro_npc() -> Node2D:
 				return _npc_by_key("npc_ibu_mc")
 			if "npc_datuk" not in talked_hulu:
 				return _npc_by_key("npc_datuk")
-			if "npc_penjaga_hutan" not in talked_hulu and not GameState.has_quest("tanam_pohon_hulu"):
+			if "npc_penjaga_hutan" not in talked_hulu and GameState.zone_stat("hulu", "trees") < 5:
 				return _npc_by_key("npc_penjaga_hutan")
 		"desa":
 			var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
