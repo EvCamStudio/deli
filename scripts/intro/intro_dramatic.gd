@@ -24,93 +24,102 @@ const PORTRAITS: Dictionary = {
 
 # ─── Naskah Perbaikan Bab 1, 2, 3 Sesuai Kontrak Dokumen Utama ───────────────
 const SCRIPT_DATA: Array = [
-	# Bab 1: Jakarta, hari pertama kerja
+	# Bab 1 · Jakarta, Hari Pertama Kerja
 	[
 		{
 			"tipe": "narasi",
-			"teks": "Pagi di Jakarta. Gedung PT Cahaya Nusantara menjulang di antara kemacetan. Kemeja baru, kopi masih hangat."
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Akhirnya kerja tetap. Gaji pertama kukirim ke rumah."
+			"teks": "Lantai dua puluh dua. Pagi itu kaca gedung memantulkan langit sebersih kertas baru, dan kopi di mejaku masih mengepul."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "manajer",
-			"teks": "Halo, anak baru. Siapa namamu? Kita perlu nama lengkap untuk catatan perusahaan.",
+			"teks": "Selamat datang. Isi formulir ini dulu untuk data HRD. Nama lengkap, jangan disingkat.",
 			"input_nama": true
 		},
 		{
 			"tipe": "dialog",
+			"speaker": "manajer",
+			"teks": "{nama}. Oke. Kontrak satu tahun. Jangan buat saya menyesal."
+		},
+		{
+			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "{nama}, Pak. Mohon bimbingannya."
+			"teks": "Gaji pertama sudah kuhitung di kepala. Separuhnya untuk Medan, untuk atap warung yang bocor tiap hujan."
+		},
+		{
+			"tipe": "pikiran",
+			"speaker": "mc",
+			"teks": "Bapak selalu bilang atap itu urusan sebelum hujan, bukan sesudahnya. Aku tersenyum. Sebelum hujan, ada waktu."
+		}
+	],
+	# Bab 2 · Jakarta, PHK
+	[
+		{
+			"tipe": "narasi",
+			"teks": "Sebelas bulan kemudian, hujan mengetuk kaca seperti orang yang tak sabar. Separuh meja di lantai ini sudah kosong. Yang tersisa hanya bekas debu berbentuk kotak."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "manajer",
-			"teks": "Selamat bergabung, {nama}. Di sini kita seperti keluarga."
-		},
-		{
-			"tipe": "telepon",
-			"speaker": "ibu",
-			"teks": "Selamat ya, Nak, kerja barumu. Warung sehat, sungai tenang. Jangan lupa makan."
-		}
-	],
-	# Bab 2: Jakarta, beberapa bulan kemudian
-	[
-		{
-			"tipe": "narasi",
-			"teks": "Beberapa bulan kemudian. Hujan deras mengguyur Jakarta, dan separuh meja kantor sudah kosong."
-		},
-		{
-			"tipe": "dialog",
-			"speaker": "manajer",
-			"teks": "{nama}, perusahaan sedang efisiensi. Kontrakmu tidak bisa dilanjutkan. Maaf."
+			"teks": "Duduk dulu, {nama}. Perusahaan sedang efisiensi. Kontrakmu tidak diperpanjang. Saya minta maaf."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Surat PHK tergeletak di meja."
+			"teks": "Selembar surat, dua paragraf. Sebelas bulanku muat di sana, dan masih menyisakan ruang kosong."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "mc",
-			"teks": "Saya mengerti, Pak. Terima kasih sudah memberi kesempatan."
+			"teks": "Baik, Pak. Terima kasih."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Jakarta tidak lagi punya tempat untukku. Aku pulang, bukan karena kalah, tapi demi keluarga."
+			"teks": "Terima kasih. Kata yang paling sopan untuk sesuatu yang sebenarnya tak ingin kuucapkan."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Saat kardus itu penuh, ponselku bergetar di atas meja. Di layar: Mak."
 		},
 		{
 			"tipe": "telepon",
 			"speaker": "ibu",
-			"teks": "Nak, hujan di sini deras sekali dan sungai naik. Pulanglah, ibu dan bapak butuh kau."
+			"teks": "Nak… sungai naik. Bapakmu lagi angkat kursi ke atas meja. Kau tak usah pulang, kerja sajalah di sana... Eh. Pulang lah, kalau sempat."
+		},
+		{
+			"tipe": "dialog",
+			"speaker": "mc",
+			"teks": "Mak? Mak…"
+		},
+		{
+			"tipe": "pikiran",
+			"speaker": "mc",
+			"teks": "Sambungan putus. Hujan di Jakarta dan hujan di Medan. Aku tak tahu itu hujan yang sama atau bukan, tapi malam itu aku membeli tiket."
 		}
 	],
-	# Bab 3: Medan
+	# Bab 3 · Medan, Kembali ke Warung
 	[
 		{
 			"tipe": "narasi",
-			"teks": "Medan, dua hari kemudian. Sungai Deli sudah surut, tapi meninggalkan lumpur dan sampah di sepanjang tebing."
+			"teks": "Medan, dua hari kemudian. Deli sudah surut, tetapi surut bukan berarti pergi. Ia meninggalkan jejaknya setinggi dada di dinding setiap rumah."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Warung keluarga di bantaran sungai: dinding berlumpur, kursi terbalik, kopi hanyut entah ke mana."
+			"teks": "Warung kami berdiri miring di bantaran, seperti orang yang menahan tangis. Garis lumpur melintang di dindingnya, lurus dan tak bisa dibantah. Kursi-kursi telentang. Toples gula entah di mana."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Warung yang dulu penuh tawa. Sekarang..."
+			"teks": "Dulu pukul lima pagi di sini ada bunyi sendok beradu gelas. Sekarang hanya air yang menetes dari atap."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Di tepi sungai, gunungan sampah menyumbat aliran: kasur bekas, plastik, botol."
+			"teks": "Di tepi sungai, sampah menumpuk setinggi pinggang: kasur, kantong plastik, botol, dan sepasang sandal yang masih berpasangan. Air telah mencari jalannya, dan jalan itu sudah diambil."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Jadi ini yang membuat air tak punya jalan."
+			"teks": "Sebanyak ini. Sejak kapan ia menumpuk? Dan kenapa aku tak pernah melihatnya?"
 		}
 	]
 ]

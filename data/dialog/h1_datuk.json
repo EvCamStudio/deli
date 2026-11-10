@@ -3,49 +3,49 @@
     "id": "start",
     "speaker": "MC",
     "emosi": "surprised",
-    "teks": "Siapa itu? Aku pasti terlalu capek.",
+    "teks": "Siapa di situ?",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Capek memang. Tapi orang yang termenung di tepi sungai tidak pernah luput dari mataku.",
+    "teks": "Orang yang melamun di tepi air biasanya tak sadar ada yang menemani.",
     "next": "2"
   },
   {
     "id": "2",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Kau halusinasi. Aku butuh tidur.",
+    "teks": "Aku terlalu capek. Kalau kau halusinasi, tolong cepat hilang.",
     "next": "3"
   },
   {
     "id": "3",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Kalau begitu halusinasimu ini tahu banyak cerita tentang sungai. Panggil saja aku Datuk Sampan.",
+    "teks": "Kalau aku halusinasi, aku halusinasi yang tahu nama setiap batu di sungai ini. Panggil saja Datuk Sampan. Aku kenal bapakmu waktu ia setinggi itu.",
     "next": "4"
   },
   {
     "id": "4",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Ingat ini baik-baik: sungai tidak minta dipuji, ia hanya minta dijaga.",
+    "teks": "Sungai tak minta dipuji, Nak. Ia hanya minta dijaga.",
     "next": "5"
   },
   {
     "id": "5",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "Menjaga sungai sendirian? Mustahil.",
+    "teks": "Menjaga sungai sendirian? Aku bahkan tak bisa menjaga pekerjaanku.",
     "next": "6"
   },
   {
     "id": "6",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Memang mustahil sendirian. Besok, jangan mulai dengan tangan. Mulailah dengan telinga. Dengarkan orang-orang di sini.",
+    "teks": "Tak ada yang bisa sendirian. Makanya, besok jangan mulai dengan tangan. Mulailah dengan telinga. Setiap orang di sini punya alasan untuk sampah yang mereka buang. Dengar alasannya dulu.",
     "next": "end"
   }
 ]

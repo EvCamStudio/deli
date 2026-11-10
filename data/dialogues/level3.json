@@ -2,39 +2,25 @@
   "npc_pedagang": [
     {
       "id": "start",
-      "speaker": "Pak Pedagang",
-      "text": "Dulu sungai ini jernih, Nak. Aku bisa cuci tangan langsung di sini. Sekarang? Bau dan kotor.",
+      "speaker": "Bang Jali",
+      "text": "Apa lihat-lihat, Bang? Tong sampah itu di ujung jalan sana, dua ratus meter. Truknya pun tak muat masuk gang.",
       "choices": [
-        { "text": "Kenapa sekarang kotor?", "next": "why", "effect": {} },
-        { "text": "Ah, bukan urusanku.", "next": "ignore", "effect": { "choice": { "peduli": false } } }
+        { "text": "Bagaimana kalau kita buat bak sampah roda di mulut gang?", "next": "help", "effect": { "river_health": 3, "choice": { "jali_peduli": true } } },
+        { "text": "Jangan buang ke got, Bang.", "next": "end", "effect": {} }
       ]
-    },
-    {
-      "id": "why",
-      "speaker": "Pak Pedagang",
-      "text": "Sampah dari warung-warung, limbah rumah tangga, semuanya masuk sungai. Drainase juga tersumbat. Waktu hujan, banjir!",
-      "choices": [
-        { "text": "Aku akan bantu bersihkan.", "next": "help", "effect": { "river_health": 3, "choice": { "peduli": true } } }
-      ]
-    },
-    {
-      "id": "ignore",
-      "speaker": "Pak Pedagang",
-      "text": "Hmm... Semoga kau tidak menyesal nanti.",
-      "choices": []
     },
     {
       "id": "help",
-      "speaker": "Pak Pedagang",
-      "text": "Syukurlah! Ada juga sampah di sini yang perlu dipilah ke tong yang benar. Tong organik ada, plastik ada, dan B3 ada.",
+      "speaker": "Bang Jali",
+      "text": "Mantap kali ide Abang! Nanti kubilang sama anak-anak muda sini, kita iuran buat bak sampah roda bergiliran.",
       "choices": [
-        { "text": "Siap, aku mengerti.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_kota", "description": "Pilah 6 sampah kota ke tong yang benar", "target": 6 } } }
+        { "text": "Siap, ayo kita pilah juga sampahnya.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_kota", "description": "Pilah 6 sampah kota ke tong yang benar", "target": 6 } } }
       ]
     },
     {
       "id": "end",
-      "speaker": "Pak Pedagang",
-      "text": "Terima kasih ya, Nak. Kalau semua orang peduli begini, sungai pasti bisa pulih.",
+      "speaker": "Bang Jali",
+      "text": "Baguslah kalau ada solusi bersama. Tak mau juga kami kampung ini kumuh.",
       "choices": []
     }
   ],
@@ -42,32 +28,23 @@
     {
       "id": "start",
       "speaker": "Ibu Rumah Tangga",
-      "text": "Aduh, banjir lagi! Setiap hujan lebat pasti banjir karena got di depan tersumbat.",
+      "text": "Got di belakang rumahku mampat lagi. Kemarin kuangkat plastiknya, hari ini sudah penuh. Yang buang entah siapa.",
       "choices": [
-        { "text": "Aku bisa bantu buka sumbatannya!", "next": "help", "effect": {} },
-        { "text": "Memangnya penyebabnya apa?", "next": "reason", "effect": {} }
+        { "text": "Di mana saluran utamanya, Bu?", "next": "pintu_air", "effect": {} }
       ]
     },
     {
-      "id": "reason",
+      "id": "pintu_air",
       "speaker": "Ibu Rumah Tangga",
-      "text": "Sampah plastik, kantong, dan sisa makanan. Orang buang begitu saja ke got. Kasihan...",
+      "text": "Di bawah jembatan ada pintu air dengan tiga tuas. Buka yang paling depan dulu (1), lalu yang paling belakang (3), baru yang tengah (2). Supaya air tak datang sekaligus.",
       "choices": [
-        { "text": "Kita harus ubah kebiasaan ini.", "next": "help", "effect": { "river_health": 3, "choice": { "kebiasaan_baik": true } } }
-      ]
-    },
-    {
-      "id": "help",
-      "speaker": "Ibu Rumah Tangga",
-      "text": "Tuas pengatur pintu air ada di ujung got. Tekan dalam urutan yang benar, air bisa mengalir lagi!",
-      "choices": [
-        { "text": "Aku coba!", "next": "end", "effect": { "quest": { "id": "edukasi_industri", "description": "Buka kartu industri & kenali sampah B3", "target": 1 } } }
+        { "text": "Aku akan buka tuasnya (1-3-2)!", "next": "end", "effect": { "quest": { "id": "edukasi_industri", "description": "Buka kartu industri & kenali sampah B3", "target": 1 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Ibu Rumah Tangga",
-      "text": "Alhamdulillah! Terima kasih banyak ya!",
+      "text": "Hati-hati ya, Nak. Baterai dan lampu bekas jangan dicampur sampah biasa ya!",
       "choices": []
     }
   ],
@@ -75,30 +52,23 @@
     {
       "id": "start",
       "speaker": "Budi",
-      "text": "Kak, tau tidak? Di sekolah kami belajar pantun Melayu Deli. Ada pesan soal menjaga alam juga di sana!",
+      "text": "Bang! Tadi di sekolah Ibu Guru suruh kami hafal pantun. Kata Ibu Guru, pantun itu cara orang Melayu menyampaikan yang berat dengan cara yang ringan. Jadi tak ada yang tersinggung.",
       "choices": [
-        { "text": "Coba ajarkan aku pantunnya!", "next": "pantun", "effect": {} },
-        { "text": "Sibuk dulu, Dik.", "next": "skip", "effect": {} }
+        { "text": "Keren sekali kearifan lokal itu, Budi!", "next": "pantun", "effect": {} }
       ]
     },
     {
       "id": "pantun",
       "speaker": "Budi",
-      "text": "Oke! Ada gerbang yang terkunci di jembatan itu. Kunci cuma bisa dibuka dengan melengkapi pantun yang tepat. Ayo coba!",
+      "text": "Nanti di muara hilir ada papan pantun tua. Abang harus lengkapi sampiran dengan isi yang bersajak benar ya!",
       "choices": [
-        { "text": "Asyik, aku suka tantangan!", "next": "end", "effect": { "river_health": 2, "quest": { "id": "pantun_kota", "description": "Lengkapi pantun Melayu Deli", "target": 1 } } }
+        { "text": "Pasti, aku akan lengkapi pantunnya!", "next": "end", "effect": { "river_health": 2, "quest": { "id": "pantun_kota", "description": "Lengkapi pantun Melayu Deli", "target": 1 } } }
       ]
-    },
-    {
-      "id": "skip",
-      "speaker": "Budi",
-      "text": "Oh... ya sudah, Kak. Kapan-kapan saja.",
-      "choices": []
     },
     {
       "id": "end",
       "speaker": "Budi",
-      "text": "Ingat ya Kak, ketuk baris yang bersajak dengan baris pertama untuk melengkapi pantunnya!",
+      "text": "Semoga berhasil, Bang! Jaga sungai Deli tercinta kita!",
       "choices": []
     }
   ],
@@ -106,23 +76,23 @@
     {
       "id": "start",
       "speaker": "Pak RT",
-      "text": "Dalam budaya Melayu Deli, ada pepatah: 'Sungai adalah urat nadi kehidupan.' Kita wajib jaga bersama.",
+      "text": "Orang Melayu Deli sejak dulu menyebut sungai 'urat nadi'. Kalau urat nadi tersumbat, seluruh tubuh ikut sakit.",
       "choices": [
-        { "text": "Bagaimana caranya?", "next": "how", "effect": {} }
+        { "text": "Bagaimana kita memulihkannya, Pak?", "next": "how", "effect": {} }
       ]
     },
     {
       "id": "how",
       "speaker": "Pak RT",
-      "text": "Musyawarah, gotong royong, dan kesadaran tiap pribadi. Dimulai dari hal kecil: jangan buang sampah sembarangan.",
+      "text": "Musyawarah dan gotong royong itu bukan sekadar hiasan, Nak. Itu cara kami mengangkat sesuatu yang tak mungkin sanggup diangkat satu orang.",
       "choices": [
-        { "text": "Aku akan mulai dari diri sendiri.", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true }, "quest": { "id": "drainase_kota", "description": "Tarik tuas drainase 1-3-2", "target": 3 } } }
+        { "text": "Aku siap bergotong royong!", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true }, "quest": { "id": "drainase_kota", "description": "Tarik tuas drainase 1-3-2", "target": 3 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Pak RT",
-      "text": "Itulah jiwa gotong royong kita. Semoga sungai Deli kembali jernih untuk anak cucu kita.",
+      "text": "Bagus, Nak. Semoga aliran sungai kita kembali lancar dan berkah untuk semua warga.",
       "choices": []
     }
   ]

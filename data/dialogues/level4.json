@@ -3,32 +3,32 @@
     {
       "id": "start",
       "speaker": "Pak Nelayan",
-      "text": "Hei anak muda, hati-hati! Banyak sampah di pesisir ini. Mangrove di sini sudah banyak yang hilang.",
+      "text": "Hati-hati melangkah, Nak. Banyak pecahan botol. Dulu sepanjang pantai ini bakau semua. Sekarang tinggal gigi-gigi yang ompong.",
       "choices": [
-        { "text": "Aku bisa bantu tanam mangrove!", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } },
-        { "text": "Mengapa mangrove penting?", "next": "why", "effect": {} }
+        { "text": "Aku bisa bantu tanam mangrove.", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } },
+        { "text": "Kenapa mangrove sepenting itu, Pak?", "next": "why", "effect": {} }
       ]
     },
     {
       "id": "why",
       "speaker": "Pak Nelayan",
-      "text": "Mangrove itu rumahnya ikan-ikan kecil, pelindung pantai dari ombak. Kalau hilang, ikan berkurang dan pantai terkikis.",
+      "text": "Di bawah akarnya, anak ikan bersembunyi sampai cukup besar untuk takut. Pantai pun begitu: kalau akarnya hilang, ombak makan tanah sedikit demi sedikit, tak pernah sekaligus. Makanya orang tak sadar.",
       "choices": [
-        { "text": "Aku mengerti. Aku akan tanam!", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } }
+        { "text": "Kalau begitu aku tanam sekarang!", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } }
       ]
     },
     {
       "id": "plant",
       "speaker": "Pak Nelayan",
-      "text": "Bagus! Titik tanam mangrove ditandai di tepian pantai. Dekati dan tekan tombol aksi. Ada juga sampah yang tersangkut di akar mangrove, tolong bersihkan!",
+      "text": "Titik tanamnya kutandai di tepian. Dekati, tekan tombol aksi. Kami cari makan dari laut yang sehat. Kalau laut sakit, anak-anak kami yang pergi merantau.",
       "choices": [
-        { "text": "Siap!", "next": "end", "effect": {} }
+        { "text": "Siap, aku akan jaga muara ini!", "next": "end", "effect": {} }
       ]
     },
     {
       "id": "end",
       "speaker": "Pak Nelayan",
-      "text": "Kami nelayan selalu bergantung pada laut yang sehat. Terima kasih sudah peduli!",
+      "text": "Terima kasih banyak, Nak. Semoga bakau yang kau tanam mengembalikan ikan ke tepian.",
       "choices": []
     }
   ],
@@ -36,15 +36,15 @@
     {
       "id": "start",
       "speaker": "Penjaga Sungai",
-      "text": "Lihatlah! Gunungan Sampah menghalangi muara. Kita harus bersihkan dengan memilah sampah ke tong yang benar!",
+      "text": "Lihat itu. Semua yang dibuang di hulu akhirnya sampai ke sini. Muara itu tempat sungai menyerahkan semua yang dibawanya.",
       "choices": [
-        { "text": "Ayo kita hadapi bersama!", "next": "end", "effect": { "quest": { "id": "pilah_hilir", "description": "Pilah 10 sampah ke tong yang benar", "target": 10 } } }
+        { "text": "Ayo kita hadapi bersama.", "next": "end", "effect": { "quest": { "id": "pilah_hilir", "description": "Pilah 10 sampah ke tong yang benar", "target": 10 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Penjaga Sungai",
-      "text": "Susuri pesisir, pungut sampah yang berserakan, lalu pilah ke tong sesuai jenisnya. Ayo!",
+      "text": "Susuri pesisir, pungut yang berserakan, pilah sesuai jenisnya. Pelan-pelan saja. Gunungan ini juga tak datang dalam sehari.",
       "choices": []
     }
   ]

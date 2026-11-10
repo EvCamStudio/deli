@@ -3,21 +3,28 @@
     "id": "start",
     "speaker": "MC",
     "emosi": "happy",
-    "teks": "Warung kopi keluarga berhasil selamat dari gusuran dan utang pokok lunas.",
+    "teks": "Hujan datang lagi bulan itu, deras seperti dulu. Warung kami basah, tapi tidak tenggelam.",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "Bu Mira",
     "emosi": "happy",
-    "teks": "Kondisi sungai membaik pelan-pelan berkat warga yang mulai sadar.",
+    "teks": "Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.",
     "next": "2"
   },
   {
     "id": "2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Utang pokok sudah hampir tak bersisa di buku Mak, seperti sebuah janji yang belum jatuh tempo.",
+    "next": "3"
+  },
+  {
+    "id": "3",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Kau tidak sendirian lagi, Nak. Perjalananmu membuahkan hasil. Teruskan.",
+    "teks": "Kau tak sendirian lagi, Nak. Yang tadinya hanya mendengar, sekarang ada yang ikut menjaga. Teruskan.",
     "next": "end"
   }
 ]

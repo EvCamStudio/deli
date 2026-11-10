@@ -3,21 +3,21 @@
     "id": "start",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "Banjir bandang besar menerjang kembali. Warung orang tua terendam lumpur pekat dan akhirnya digusur...",
+    "teks": "Banjir bandang datang malam hari tanpa aba-aba. Air coklat pekat menelan bantaran dan warung keluarga. Pagi harinya, hanya tiang yang tersisa dan sandal yang masih berpasangan.",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "Datuk Sampan",
     "emosi": "sad",
-    "teks": "Sungai tidak membenci siapa pun. Ia hanya kembali ke jalannya... (Datuk Sampan memudar dan lenyap).",
+    "teks": "Sungai tak membenci siapa pun, Nak. Ia hanya kembali ke jalannya. Kalau kau diberi kesempatan sekali lagi, dengarkan dulu sebelum bicara.",
     "next": "2"
   },
   {
     "id": "2",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "Satu orang membuang sampah, semua yang menanggung bencana.",
+    "teks": "Satu orang membuang. Semua yang menanggung.",
     "next": "end"
   }
 ]

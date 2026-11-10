@@ -7,14 +7,14 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Bang, aku baru pulang. Boleh cerita, kenapa buang di sini?",
+        "teks": "Aku baru pulang, Bang. Boleh aku tanya, kenapa dibuang di situ?",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "step1_a"
       },
       {
         "tipe": "B",
-        "teks": "Bang, sungai lagi sakit. Tolong jangan buang sampah ya.",
+        "teks": "Sungai lagi sakit, Bang. Tolong jangan buang sampah ya.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step1_b"
@@ -32,22 +32,15 @@
     "id": "step1_a",
     "speaker": "Bang Jali",
     "emosi": "neutral",
-    "teks": "Haha, cemana lagi. Tong sampah di ujung jalan itu jauh, Bang. Truknya pun tak masuk gang.",
-    "next": "datuk_1"
+    "teks": "Haha. Cemana lagi, Bang? Tong sampah itu di ujung jalan sana, dua ratus meter. Truknya pun tak muat masuk gang. Kau mau bawa kantong ini tiap pagi, sambil kerja, sambil gendong anak?",
+    "next": "step2"
   },
   {
     "id": "step1_b",
     "speaker": "Bang Jali",
     "emosi": "neutral",
-    "teks": "Iya, iya, nanti. (Bang Jali bergegas pergi).",
-    "next": "bisik_b1"
-  },
-  {
-    "id": "bisik_b1",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Kau belum mendengar alasannya. Tanyakan lagi.",
-    "next": "start"
+    "teks": "Sakit? Aku yang sakit, Bang.",
+    "next": "end"
   },
   {
     "id": "step1_c",
@@ -57,28 +50,21 @@
     "next": "end"
   },
   {
-    "id": "datuk_1",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Kau sudah mendengar jawabnya. Sekarang tanyakan pada dirimu, apa akar sebenarnya?",
-    "next": "step2"
-  },
-  {
     "id": "step2",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Apa akar masalah Bang Jali?",
+    "teks": "Apa yang sebenarnya jadi masalahnya?",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Berarti bukan karena malas. Tempat pembuangannya yang tidak terjangkau.",
+        "teks": "Berarti bukan karena malas. Tempat buangnya yang tak terjangkau.",
         "delta_sikap": 1,
         "delta_meter": 0,
         "next": "step2_a"
       },
       {
         "tipe": "B",
-        "teks": "Mungkin kau terburu-buru karena kerja ya.",
+        "teks": "Mungkin Abang buru-buru karena kerja ya.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step2_b"
@@ -96,21 +82,71 @@
     "id": "step2_a",
     "speaker": "Bang Jali",
     "emosi": "happy",
-    "teks": "Nah itu dia, Bang! Akhirnya ada yang ngerti.",
-    "next": "end"
+    "teks": "Nah! Akhirnya ada yang ngerti, Bang. Kau pikir aku suka kampung ini kumuh?",
+    "next": "step3"
   },
   {
     "id": "step2_b",
     "speaker": "Bang Jali",
     "emosi": "neutral",
-    "teks": "Ada benarnya. Tapi bukan itu saja.",
+    "teks": "Ya… itu juga.",
     "next": "end"
   },
   {
     "id": "step2_c",
     "speaker": "Bang Jali",
     "emosi": "sad",
-    "teks": "Sudahlah, aku tak mau bicara lagi.",
+    "teks": "Aku empat puluh satu, Bang. Kau yang anak muda.",
+    "next": "end"
+  },
+  {
+    "id": "step3",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Bagaimana solusi terbaik untuk gang ini?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bagaimana kalau kita buat bak sampah roda di mulut gang? Ditarik bergiliran ke jalan besar.",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "step3_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Bawa sajalah ke TPS depan tiap pagi.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step3_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Kalau malas ya sampai kiamat pun banjir terus.",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step3_c"
+      }
+    ]
+  },
+  {
+    "id": "step3_a",
+    "speaker": "Bang Jali",
+    "emosi": "happy",
+    "teks": "Mantap kali ide Abang! Nanti kubilang sama anak-anak muda sini, kita iuran buat bak sampahnya.",
+    "next": "end"
+  },
+  {
+    "id": "step3_b",
+    "speaker": "Bang Jali",
+    "emosi": "neutral",
+    "teks": "Kau yang bawa?",
+    "next": "end"
+  },
+  {
+    "id": "step3_c",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Bah.",
     "next": "end"
   }
 ]

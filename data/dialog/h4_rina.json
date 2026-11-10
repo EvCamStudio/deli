@@ -3,25 +3,25 @@
     "id": "start",
     "speaker": "Kak Rina",
     "emosi": "happy",
-    "teks": "Eh, Dek, mau gorengan? Baru angkat, panas.",
+    "teks": "Eh, Dek! Mau gorengan? Baru angkat, panas-panas.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Kak, minyak bekas itu biasanya dibuang ke mana?",
+        "teks": "Minyak bekasnya Kakak biasa buang ke mana?",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "step1_a"
       },
       {
         "tipe": "B",
-        "teks": "Kak, minyak jangan dibuang ke selokan ya, nanti mencemari.",
+        "teks": "Jangan dibuang ke selokan, Kak, nanti mencemari.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step1_b"
       },
       {
         "tipe": "C",
-        "teks": "Kakak sadar tidak, minyak itu bikin sungai rusak?",
+        "teks": "Kakak sadar tidak, minyak itu merusak sungai?",
         "delta_sikap": -1,
         "delta_meter": 5,
         "next": "step1_c"
@@ -32,22 +32,15 @@
     "id": "step1_a",
     "speaker": "Kak Rina",
     "emosi": "neutral",
-    "teks": "Ke selokan belakang, Dek. Mau ke mana lagi? Sayang botol, sayang tempat.",
-    "next": "datuk_rina"
+    "teks": "Ke selokan belakang, lah. Mau ke mana lagi? Botolnya mahal, tempatnya tak ada.",
+    "next": "step2"
   },
   {
     "id": "step1_b",
     "speaker": "Kak Rina",
     "emosi": "neutral",
-    "teks": "Iya, iya, nanti Kakak lihat.",
-    "next": "bisik_b1"
-  },
-  {
-    "id": "bisik_b1",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Kau memberi tahu sebelum bertanya. Tanyakan dulu keadaannya.",
-    "next": "start"
+    "teks": "Iya, iya. Jadi, Dek, mau beli apa tidak?",
+    "next": "end"
   },
   {
     "id": "step1_c",
@@ -57,35 +50,28 @@
     "next": "end"
   },
   {
-    "id": "datuk_rina",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Bunyi perut orang lebih nyaring daripada ceramah. Cari tahu apa yang dia butuhkan.",
-    "next": "step2"
-  },
-  {
     "id": "step2",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Bagaimana memahami kondisi Kak Rina?",
+    "teks": "Bagaimana memahami keadaan Kak Rina?",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Jadi Kakak tidak punya tempat menampung, dan belum tahu minyak itu menyumbat selokan?",
+        "teks": "Repot ya, Kak, kalau tak ada yang mau menampung minyak bekas.",
         "delta_sikap": 1,
         "delta_meter": 0,
         "next": "step2_a"
       },
       {
         "tipe": "B",
-        "teks": "Mungkin biar hemat ya, Kak?",
+        "teks": "Tapi selokan jadi bau dan mampat, Kak.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step2_b"
       },
       {
         "tipe": "C",
-        "teks": "Pasti sengaja biar gampang.",
+        "teks": "Gorengan laku, selokan jadi korban.",
         "delta_sikap": -1,
         "delta_meter": 5,
         "next": "step2_c"
@@ -96,21 +82,71 @@
     "id": "step2_a",
     "speaker": "Kak Rina",
     "emosi": "neutral",
-    "teks": "Betul, Dek. Kakak kira minyak itu cair, hanyut saja.",
-    "next": "end"
+    "teks": "Nah! Kalau ada yang mau beli, Kakak kumpul, Dek. Sayang, itu minyak, bukan air.",
+    "next": "step3"
   },
   {
     "id": "step2_b",
     "speaker": "Kak Rina",
     "emosi": "neutral",
-    "teks": "Ya, ada juga alasannya begitu.",
+    "teks": "Bau? Kakak yang tiap hari menciumnya.",
     "next": "end"
   },
   {
     "id": "step2_c",
     "speaker": "Kak Rina",
     "emosi": "sad",
-    "teks": "Sudahlah. Aku mau jualan, jangan ganggu!",
+    "teks": "Oh, jadi Kakak penjahatnya.",
+    "next": "end"
+  },
+  {
+    "id": "step3",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Solusi apa yang bisa membantu Kak Rina dan sungai?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kak, kumpulkan di jeriken. Bank sampah beli Rp 3.000 per liter untuk biodiesel.",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "step3_a"
+      },
+      {
+        "tipe": "B",
+        "teks": "Kakak gali lubang saja di tanah.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step3_b"
+      },
+      {
+        "tipe": "C",
+        "teks": "Pokoknya jangan ke selokan lagi!",
+        "delta_sikap": -1,
+        "delta_meter": 5,
+        "next": "step3_c"
+      }
+    ]
+  },
+  {
+    "id": "step3_a",
+    "speaker": "Kak Rina",
+    "emosi": "happy",
+    "teks": "Dibeli?! Tiga ribu seliter? Itu dua bungkus terigu, Dek! Mulai hari ini Kakak simpan jelantahnya.",
+    "next": "end"
+  },
+  {
+    "id": "step3_b",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Nanti rembes ke sumur tetangga. Berantem Kakak.",
+    "next": "end"
+  },
+  {
+    "id": "step3_c",
+    "speaker": "Kak Rina",
+    "emosi": "sad",
+    "teks": "Pokoknya, pokoknya. Kau kira Kakak buang minyak karena senang?",
     "next": "end"
   }
 ]

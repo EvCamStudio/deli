@@ -26,6 +26,7 @@ const PORTRAITS: Dictionary = {
 	"Player": "player",
 	"Kamu": "player",
 	"MC": "player",
+	"Mak": "ibu",
 	"Bu Mira": "ibu",
 	"Pak Hendra": "pakrt",
 	"Bang Jali": "pedagang",
@@ -66,8 +67,8 @@ func show_node(node: Dictionary) -> void:
 	speaker_label.text = str(node.get("speaker", ""))
 	_update_portrait(node)
 
-	var full_text: String = str(node.get("text", ""))
-	var choices: Array = node.get("choices", [])
+	var full_text: String = str(node.get("text", node.get("teks", "")))
+	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_fit_panel(full_text, choices.size())
 	_has_choices = not choices.is_empty()
 	continue_hint.visible = not _has_choices
@@ -96,7 +97,7 @@ func _update_portrait(node: Dictionary) -> void:
 	var key: String = str(node.get("portrait", ""))
 	if key.is_empty():
 		key = PORTRAITS.get(str(node.get("speaker", "")), "player")
-	var emotion: String = str(node.get("emotion", "neutral"))
+	var emotion: String = str(node.get("emotion", node.get("emosi", "neutral")))
 	var path: String = "res://assets/sprites/portraits/%s_%s.png" % [key, emotion]
 	if not ResourceLoader.exists(path):
 		path = "res://assets/sprites/portraits/%s_neutral.png" % key
@@ -140,7 +141,8 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
-		btn.text = "  %s" % str(choice.get("text", ""))
+		var choice_text: String = str(choice.get("text", choice.get("teks", "")))
+		btn.text = "  %s" % choice_text
 		btn.custom_minimum_size = Vector2(0, 24)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
 		btn.add_theme_font_size_override("font_size", 11)
@@ -166,7 +168,8 @@ func _finish_typewriter() -> void:
 	text_label.text = _full_text
 	text_label.visible_characters = -1
 	if _has_choices:
-		_show_choices(_current_node.get("choices", []))
+		var ch: Array = _current_node.get("choices", _current_node.get("pilihan", []))
+		_show_choices(ch)
 
 func _input(event: InputEvent) -> void:
 	if not panel.visible:

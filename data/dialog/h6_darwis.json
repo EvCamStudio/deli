@@ -3,18 +3,18 @@
     "id": "start",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Dulu kami buang kasur rusak ke sungai, hanyut, hilang. Sekarang kalian bilang itu masalah. Zaman memang aneh.",
+    "teks": "Dulu kasur rusak kami lepas ke air, hanyut sendiri sampai ke laut. Tak ada yang marah. Sekarang tiba-tiba itu dosa. Zaman ini memang aneh.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Pak, ceritakan dulu bagaimana sungai waktu Bapak muda.",
+        "teks": "Dulu sungainya seperti apa, Pak? Waktu Bapak muda.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "step1_a"
       },
       {
         "tipe": "B",
-        "teks": "Pak, kebiasaan itu sudah tidak cocok sekarang.",
+        "teks": "Cara itu sudah tidak cocok sekarang, Pak.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step1_b"
@@ -32,46 +32,46 @@
     "id": "step1_a",
     "speaker": "Pak Darwis",
     "emosi": "happy",
-    "teks": "Airnya bening, Nak. Kami mandi, mencuci, ambil air. Penduduk sedikit. Apa yang hanyut ya hanyut ke laut.",
+    "teks": "Bening, Nak. Ikan lewat bisa kau lihat sebelum sampai ke kaki. Kami mandi di situ, cuci piring di situ. Orangnya sedikit. Apa yang kami lepas, sungai terima, dan dia diam saja.",
     "next": "step2"
   },
   {
     "id": "step1_b",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Hmm... anak kemarin sore tahu apa soal zaman dulu.",
+    "teks": "(menyeret kasur lagi) Anak kemarin sore. Hmm.",
     "next": "end"
   },
   {
     "id": "step1_c",
     "speaker": "Pak Darwis",
     "emosi": "sad",
-    "teks": "Kau menuduhku?! Tak sopan kau bicara begitu pada orang tua!",
+    "teks": "Kau menuduh aku? Aku sudah makan garam sebelum kau lahir! Tak sopan kau!",
     "next": "end"
   },
   {
     "id": "step2",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Bagaimana menyampaikan realita sekarang ke Pak Darwis?",
+    "teks": "Bagaimana menjelaskannya tanpa membuat dia merasa dihakimi?",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Jadi bukan Bapak tak peduli. Dulu sungai sanggup menampung, sekarang penduduk padat dan plastik tidak hanyut.",
+        "teks": "Jadi bukan Bapak yang berubah. Sungainya yang tak sanggup lagi: orang makin banyak, dan plastik tak ikut hanyut.",
         "delta_sikap": 1,
         "delta_meter": 0,
         "next": "step2_a"
       },
       {
         "tipe": "B",
-        "teks": "Mungkin Bapak sudah terbiasa.",
+        "teks": "Plastik itu ratusan tahun baru hancur, Pak.",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "step2_b"
       },
       {
         "tipe": "C",
-        "teks": "Bapak ketinggalan zaman.",
+        "teks": "Orang tua memang keras kepala kalau dibilangin.",
         "delta_sikap": -1,
         "delta_meter": 5,
         "next": "step2_c"
@@ -82,78 +82,71 @@
     "id": "step2_a",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Plastik tidak hanyut ya... Benar juga, kasur busa pun sekarang isinya plastik.",
-    "next": "datuk_darwis"
+    "teks": "(lama diam) Kasur zaman dulu kapuk, hancur sendiri di air. Yang sekarang ini busa… Iya juga ya.",
+    "next": "step3"
   },
   {
     "id": "step2_b",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Ya, mungkin. Tapi orang tua susah diubah.",
+    "teks": "Aku tak akan hidup ratusan tahun. Jadi bukan urusanku.",
     "next": "end"
   },
   {
     "id": "step2_c",
     "speaker": "Pak Darwis",
     "emosi": "sad",
-    "teks": "Pergi kau dari sini!",
+    "teks": "Kalau aku keras kepala, kau keras mulut!",
     "next": "end"
-  },
-  {
-    "id": "datuk_darwis",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Orang tua tidak ditegur dengan angka. Ingatkan dengan ingatannya.",
-    "next": "step3"
   },
   {
     "id": "step3",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Solusi kearifan lokal bersama Pak Darwis:",
+    "teks": "Apa solusi yang paling masuk akal untuk Pak Darwis?",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Pak, dulu orang tua Bapak pesan apa soal sungai? Kalau berkenan, ceritakan itu ke warga saat kerja bakti.",
-        "delta_sikap": 2,
-        "delta_meter": -10,
-        "next": "solusi_a"
+        "teks": "Kasur itu kalau dicincang, busanya bisa dijual ke pengepul di hulu, Pak. Lebih baik jadi uang daripada jadi sampah di muara.",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "step3_a"
       },
       {
         "tipe": "B",
-        "teks": "Pak, sebaiknya Bapak ikut kerja bakti ya.",
-        "delta_sikap": 1,
-        "delta_meter": 3,
-        "next": "solusi_b"
+        "teks": "Bapak bawa saja ke TPA sendiri.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "step3_b"
       },
       {
         "tipe": "C",
-        "teks": "Kalau Bapak tak berubah, warga lain ikut-ikutan.",
+        "teks": "Kalau buang lagi, Bapak kulaporkan ke lurah!",
         "delta_sikap": -1,
         "delta_meter": 5,
-        "next": "solusi_c"
+        "next": "step3_c"
       }
     ]
   },
   {
-    "id": "solusi_a",
+    "id": "step3_a",
     "speaker": "Pak Darwis",
     "emosi": "happy",
-    "teks": "Almarhum bapakku dulu selalu cuci tangan dan kaki di sungai sebelum pulang, katanya sebagai terima kasih sudah dikasih air. Aku lupa kebiasaan itu. Baik, besok kusampaikan ke warga.",
+    "teks": "Dijual? Busa? Parangku masih tajam. Mulai sekarang kasur ini tak ke sungai lagi.",
     "next": "end"
   },
   {
-    "id": "solusi_b",
+    "id": "step3_b",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Nanti kupikirkan kalau badanku tidak pegal.",
+    "teks": "TPA itu sepuluh kilo. Kau yang angkat?",
     "next": "end"
   },
   {
-    "id": "solusi_c",
+    "id": "step3_c",
     "speaker": "Pak Darwis",
-    "emosi": "sad",
-    "teks": "Cukup. Jangan kau atur-atur hidupku.",
+    "emosi": "neutral",
+    "teks": "Lapor lah. Lurah itu keponakanku.",
     "next": "end"
   }
 ]

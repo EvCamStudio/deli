@@ -14,19 +14,19 @@ extends Control
 const ENDING_DATA: Dictionary = {
 	"A": {
 		"title": "🌟 Ending A: Harapan Baru Deli (Terbaik)",
-		"message": "Beberapa bulan kemudian, sungai jernih dan warung ramai. Warga rutin kerja bakti dan bank sampah komunitas berdiri.\n\n[b]Datuk Sampan:[/b] \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama kalian ingat, aku ada.\""
+		"message": "Enam bulan kemudian. Pukul lima pagi, sendok kembali beradu gelas di warung kopi keluarga. Tujuh meja berdiri, atap tertambal sebelum hujan, dan utang telah lunas diselipkan di bawah toples gula baru.\n\n[b]Datuk Sampan:[/b] \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama ada yang mengingat, aku ada.\"\n[i]\"Waktu tak bisa diputar kembali. Yang bisa hanya kebiasaan. Dan kebiasaan dimulai dari mendengar.\"[/i]"
 	},
 	"B": {
 		"title": "🌤 Ending B: Keluarga Mandiri (Baik)",
-		"message": "Warung selamat, sungai membaik pelan-pelan. Beberapa warga masih kembali ke kebiasaan lama, namun perubahan sudah berjalan.\n\n[b]Datuk Sampan:[/b] \"Kau tidak sendirian lagi. Teruskan.\""
+		"message": "Hujan deras datang lagi bulan itu. Warung kami basah, tapi tidak tenggelam. Utang pokok hampir tak bersisa di buku Mak.\n\n[b]Bu Mira:[/b] \"Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.\"\n[b]Datuk Sampan:[/b] \"Kau tak sendirian lagi, Nak. Ada yang ikut menjaga. Teruskan.\""
 	},
 	"C": {
 		"title": "🌥 Ending C: Bertahan di Tepian (Netral)",
-		"message": "Hujan berikutnya datang. Warung bertahan, tapi utang masih tersisa dan sungai masih rawan banjir.\n\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, sebagaimana kita belajar darinya. Jalanmu masih panjang.\""
+		"message": "Hujan lebat kembali datang. Warung bertahan, tapi dindingnya basah sampai garis lumpur lama. Utang masih tersisa dan sungai masih rawan.\n\n[b]MC:[/b] \"Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.\"\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.\""
 	},
 	"D": {
 		"title": "🌧 Ending D: Terpaksa Menyerah (Buruk)",
-		"message": "Banjir besar menerjang. Warung digusur dan keluarga pindah.\n\n[b]Datuk Sampan (memudar):[/b] \"Sungai tidak membenci siapa pun. Ia hanya kembali ke jalannya.\"\n[b][color=#ffd166]\"Satu orang membuang, semua menanggung.\"[/color][/b]"
+		"message": "Banjir bandang datang malam hari tanpa aba-aba. Air coklat pekat menelan bantaran dan warung keluarga. Pagi harinya, hanya tiang yang tersisa dan sandal yang masih berpasangan.\n\n[b]Datuk Sampan (memudar):[/b] \"Sungai tak membenci siapa pun, Nak. Ia hanya kembali ke jalannya. Kalau kau diberi kesempatan sekali lagi, dengarkan dulu sebelum bicara.\"\n[b][color=#ffd166]\"Satu orang membuang, semua menanggung.\"[/color][/b]"
 	},
 	"baik": {
 		"title": "Sungai Deli Pulih!",
