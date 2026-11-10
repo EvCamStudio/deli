@@ -88,7 +88,7 @@ func _run() -> void:
 	await get_tree().create_timer(1.4).timeout
 	await _frames(4)
 	var level: Node = get_tree().current_scene
-	_check(level != null and level.name == "Level3Kota", "level 3 pilot loads from menu")
+	_check(level != null and (level.name == "Level3Kota" or level.name == "WorldSungaiDeli"), "level 3 pilot loads from menu")
 	_check(GameState.current_level == 3, "current level is 3")
 	var player: Node = level.get_node_or_null("Player")
 	_check(player != null, "player spawns in pilot")

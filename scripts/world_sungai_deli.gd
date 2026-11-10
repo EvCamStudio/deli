@@ -111,7 +111,12 @@ func _ready() -> void:
 	if GameState.quest_progress == 0:
 		hud.hide_mission()
 	else:
+		QuestManager.start_main_quest()
 		_refresh_mission()
+
+	var has_saved_pos: bool = GameState.saved_player_x >= 0.0 and GameState.saved_player_y >= 0.0
+	if has_saved_pos:
+		player.global_position = Vector2(GameState.saved_player_x, GameState.saved_player_y)
 
 	if hud:
 		hud.show_hint("Joystick kiri / WASD untuk bergerak\nDekati orang/objek lalu tekan tombol aksi (B / E)", 7.5)
@@ -256,7 +261,8 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 	# Saat melanjutkan save, jangan munculkan lagi sampah yang sudah dipilah.
 	var already_sorted: int = GameState.zone_stat(zone, "sorted")
 	for i in range(count):
-		if i < already_sorted:
+		var tid: String = "%s_trash_%d" % [zone, i]
+		if tid in GameState.picked_trash_ids or i < already_sorted:
 			continue
 		var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
 		var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
@@ -267,7 +273,7 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 			continue
 		var trash := trash_scene.instantiate()
 		trash.position = Vector2(tile) * TILE
-		trash.set("trash_id", "%s_trash_%d" % [zone, i])
+		trash.set("trash_id", tid)
 		trash.set("category", categories[i % categories.size()])
 		trash.add_to_group("world_trash")
 		_zone_containers[zone].add_child(trash)
@@ -391,6 +397,7 @@ func _spawn_zone_tree_spots(zone: String, count: int, kind: String) -> void:
 		var spot := tree_scene.instantiate()
 		spot.position = Vector2(chosen) * TILE
 		spot.set("kind", kind)
+		spot.set("spot_id", "%s_tree_%d" % [zone, i])
 		_zone_containers[zone].add_child(spot)
 		if zone == "hulu" and kind == "tree" and i < GameState.zone_stat("hulu", "trees"):
 			spot.call("mark_planted")
@@ -421,6 +428,19 @@ func _spawn_pantun_boards() -> void:
 		var board := board_scene.instantiate()
 		board.position = positions[zone]
 		_zone_containers[zone].add_child(board)
+
+func _spawn_zone_levers(zone: String) -> void:
+	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
+	var positions: Array[Vector2] = [
+		Vector2(42, 13) * TILE,
+		Vector2(48, 13) * TILE,
+		Vector2(45, 21) * TILE,
+	]
+	for i in range(3):
+		var lever := lever_scene.instantiate()
+		lever.position = positions[i]
+		lever.set("lever_id", i + 1)
+		_zone_containers[zone].add_child(lever)
 
 func _setup_camera() -> void:
 	camera.limit_left = 0
@@ -589,10 +609,13 @@ func _on_quest_started(_quest_id: String) -> void:
 
 # ─── Callback gameplay ───────────────────────────────────────────────────────
 
-func on_trash_picked(category: String, _trash_id: String) -> void:
+func on_trash_picked(category: String, trash_id: String) -> void:
+	if not trash_id.is_empty() and trash_id not in GameState.picked_trash_ids:
+		GameState.picked_trash_ids.append(trash_id)
 	GameState.rupiah += 500
 	toast("Sampah %s dipungut. +Rp500" % category, true)
 	_update_guidance()
+	GameState.save_game()
 
 func on_bin_sorted(category: String) -> void:
 	var zone: String = _current_zone
@@ -605,6 +628,7 @@ func on_bin_sorted(category: String) -> void:
 			"desa": GameState.unlock_card("card_pertanian_01")
 			"kota": GameState.unlock_card("card_plastik_01")
 			"hilir": GameState.unlock_card("card_pesisir_01")
+	toast("Sampah %s terpilah. Sungai membaik." % category, true)
 	_refresh_mission()
 	_refresh_gates()
 	GameState.save_game()
@@ -674,13 +698,14 @@ func lever_pressed(lever_id: int) -> void:
 		if _lever_pressed[i] != _lever_sequence[i]:
 			_lever_pressed.clear()
 			_reset_levers()
-			toast("Urutan tuas salah! Mulai dari tuas 1.", false)
+			GameState.ubah_meter(2.0)
+			toast("Urutan tuas salah! Mulai dari tuas 1 (urutan: 1-3-2).", false)
 			_refresh_mission()
 			return
 	if _lever_pressed.size() == _lever_sequence.size():
 		_open_drainase()
 	else:
-		toast("Tuas %d benar. Lanjut tuas berikutnya." % lever_id, true)
+		toast("Tuas %d benar (%d/3). Lanjut tuas berikutnya." % [lever_id, _lever_pressed.size()], true)
 		_refresh_mission()
 
 func _reset_levers() -> void:
@@ -696,7 +721,9 @@ func _open_drainase() -> void:
 	GameState.rupiah += 2500
 	GameState.unlock_card("card_drainase_01")
 	AudioManager.play_sfx("correct")
-	toast("Drainase kota terbuka! +Rp2.500", true)
+	toast("Drainase terbuka! Aliran lancar. +Rp2.500", true)
+	if GameState.hari == 7:
+		GameState.selesaikan_puzzle_pintu_air()
 	_refresh_mission()
 	_refresh_gates()
 	GameState.save_game()
@@ -972,6 +999,7 @@ func _gate_to(target: String) -> Node2D:
 		if gate.has_method("get_target_zone") and str(gate.call("get_target_zone")) == target:
 			return gate
 	return null
+
 
 # ─── Kontrol & pause ─────────────────────────────────────────────────────────
 

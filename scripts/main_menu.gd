@@ -93,9 +93,12 @@ func _on_continue() -> void:
 		if GameState.world_completed:
 			SceneManager.change_scene("res://scenes/levels/level_5_epilog.tscn")
 		else:
-			# Save lama (sebelum world) tetap dibawa ke world, bukan scene level legacy.
-			GameState.in_world = true
-			SceneManager.go_to_world()
+			var target_scene: String = GameState.saved_scene if "saved_scene" in GameState else ""
+			if not target_scene.is_empty() and ResourceLoader.exists(target_scene) and not target_scene.contains("level_"):
+				SceneManager.change_scene(target_scene)
+			else:
+				GameState.in_world = true
+				SceneManager.go_to_world()
 	else:
 		_show_status("Save tidak bisa dimuat. Silakan mulai perjalanan baru.")
 		if continue_btn:

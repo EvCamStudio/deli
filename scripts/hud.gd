@@ -1,13 +1,16 @@
-## HUD Script
-# HUD ringkas untuk gameplay: kejernihan sungai, lokasi, rupiah,
-# misi aktif, sampah yang dibawa, dan notifikasi singkat.
+## HUD Script (Deli Rewind - Integrasi Heiz & Wan)
+## Menampilkan:
+## - Bar Meter Bencana (0-100, setara 100 - river_health)
+## - Sikap 3 NPC (Jali, Rina, Darwis) dengan kotak warna & status
+## - Lokasi Zona & Kompas Tujuan
+## - Uang (Rp), Misi Aktif, Sampah Dibawa, Toast, & Hint Kearifan Lokal
 extends CanvasLayer
 class_name HUD
 
 # ─── Node ─────────────────────────────────────────────────────────────────────
 @onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
 @onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
-@onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
+@onready var location_label: Label = get_node_or_null("SafeMargin/Root/TopBar/LocationCard/Label") as Label
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
 @onready var mission_card: PanelContainer = $SafeMargin/Root/MissionCard
 @onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
@@ -15,20 +18,35 @@ class_name HUD
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast_panel: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
-@onready var hint_card: PanelContainer = $SafeMargin/Root/HintCard
-@onready var hint_label: Label = $SafeMargin/Root/HintCard/Label
-@onready var compass_panel: PanelContainer = $SafeMargin/Root/Compass
-@onready var compass_label: Label = $SafeMargin/Root/Compass/Label
+@onready var hint_card: PanelContainer = get_node_or_null("SafeMargin/Root/HintCard") as PanelContainer
+@onready var hint_label: Label = get_node_or_null("SafeMargin/Root/HintCard/Label") as Label
+@onready var compass_panel: PanelContainer = get_node_or_null("SafeMargin/Root/Compass") as PanelContainer
+@onready var compass_label: Label = get_node_or_null("SafeMargin/Root/Compass/Label") as Label
 @onready var pause_btn: Button = $SafeMargin/Root/TopBar/PauseBtn
 @onready var safe_margin: MarginContainer = $SafeMargin
+@onready var root_control: Control = $SafeMargin/Root
+
+# Optional nodes (jika scene memiliki TimeCard / EnergyCard / DebtCard)
+@onready var day_label: Label = get_node_or_null("SafeMargin/Root/TopBar/TimeCard/Row/DayLabel") as Label
+@onready var energy_label: Label = get_node_or_null("SafeMargin/Root/TopBar/EnergyCard/Row/EnergyLabel") as Label
+@onready var debt_label: Label = get_node_or_null("SafeMargin/Root/TopBar/DebtCard/Row/DebtLabel") as Label
 
 # ─── State ────────────────────────────────────────────────────────────────────
 var _toast_tween: Tween = null
 var _hint_tween: Tween = null
-var _clock_accum: float = 0.0
-var _bar_low: StyleBoxFlat
-var _bar_mid: StyleBoxFlat
-var _bar_ok: StyleBoxFlat
+var _bar_danger: StyleBoxFlat
+var _bar_warn: StyleBoxFlat
+var _bar_safe: StyleBoxFlat
+
+## Referensi UI Sikap 3 NPC: npc_key -> {box: ColorRect, label: Label}
+var _npc_ui: Dictionary = {}
+var _sikap_card: PanelContainer = null
+
+const NPC_DISPLAY_NAMES: Dictionary = {
+	"jali": "Jali",
+	"rina": "Rina",
+	"darwis": "Darwis",
+}
 
 const LOCATION_NAMES: Dictionary = {
 	1: "HULU SUNGAI DELI",
@@ -40,36 +58,50 @@ const LOCATION_NAMES: Dictionary = {
 
 func _ready() -> void:
 	_build_bar_styles()
-	GameState.river_health_changed.connect(_on_river_health_changed)
-	GameState.rupiah_changed.connect(_on_rupiah_changed)
+	_build_sikap_panel()
+
+	# Hubungkan sinyal GameState
+	if GameState.has_signal("meter_changed"):
+		GameState.meter_changed.connect(_on_meter_changed)
+	if GameState.has_signal("river_health_changed"):
+		GameState.river_health_changed.connect(_on_river_health_changed)
+	if GameState.has_signal("sikap_changed"):
+		GameState.sikap_changed.connect(_on_sikap_changed)
+	if GameState.has_signal("hari_changed"):
+		GameState.hari_changed.connect(_on_hari_changed)
+	if GameState.has_signal("waktu_changed"):
+		GameState.waktu_changed.connect(_on_waktu_changed)
+	if GameState.has_signal("energy_changed"):
+		GameState.energy_changed.connect(_on_energy_changed)
+	if GameState.has_signal("rupiah_changed"):
+		GameState.rupiah_changed.connect(_on_rupiah_changed)
+	if GameState.has_signal("utang_changed"):
+		GameState.utang_changed.connect(_on_utang_changed)
 
 	_apply_safe_area()
-	pause_btn.pressed.connect(_on_pause_pressed)
-	toast_panel.hide()
-	hint_card.hide()
+	if pause_btn:
+		pause_btn.pressed.connect(_on_pause_pressed)
+
+	if toast_panel:
+		toast_panel.hide()
+	if hint_card:
+		hint_card.hide()
+	if compass_panel:
+		compass_panel.hide()
 	hide_mission()
 	update_all()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if get_tree().paused:
 		return
-
-	_clock_accum += delta
-	if _clock_accum >= 2.0:
-		_clock_accum = 0.0
-		GameState.minutes += 1
-		if GameState.minutes >= 24 * 60:
-			GameState.minutes = 6 * 60
-			GameState.day += 1
-
 	_update_carry()
 
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
 func _build_bar_styles() -> void:
-	_bar_low = _make_bar_style(Color(0.78, 0.38, 0.31))
-	_bar_mid = _make_bar_style(Color(0.82, 0.66, 0.22))
-	_bar_ok = _make_bar_style(Color(0.24, 0.63, 0.74))
+	_bar_danger = _make_bar_style(Color(0.78, 0.25, 0.22))
+	_bar_warn = _make_bar_style(Color(0.85, 0.64, 0.18))
+	_bar_safe = _make_bar_style(Color(0.24, 0.66, 0.42))
 
 func _make_bar_style(color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
@@ -79,6 +111,56 @@ func _make_bar_style(color: Color) -> StyleBoxFlat:
 	style.corner_radius_bottom_left = 4
 	style.corner_radius_bottom_right = 4
 	return style
+
+## Membuat panel indikator Sikap 3 NPC (Jali, Rina, Darwis) dengan kotak warna & teks
+func _build_sikap_panel() -> void:
+	if _sikap_card != null or root_control == null:
+		return
+	_sikap_card = PanelContainer.new()
+	_sikap_card.name = "SikapCard"
+	_sikap_card.layout_mode = 1
+	_sikap_card.anchors_preset = Control.PRESET_TOP_RIGHT
+	_sikap_card.anchor_left = 1.0
+	_sikap_card.anchor_right = 1.0
+	_sikap_card.offset_left = -268.0
+	_sikap_card.offset_top = 34.0
+	_sikap_card.offset_right = 0.0
+	_sikap_card.offset_bottom = 60.0
+
+	var card_style: StyleBox = null
+	var clarity := get_node_or_null("SafeMargin/Root/TopBar/ClarityCard")
+	if clarity and clarity is PanelContainer:
+		card_style = clarity.get_theme_stylebox("panel")
+	if card_style:
+		_sikap_card.add_theme_stylebox_override("panel", card_style)
+
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_sikap_card.add_child(row)
+
+	for npc_key in ["jali", "rina", "darwis"]:
+		var item_box := HBoxContainer.new()
+		item_box.add_theme_constant_override("separation", 4)
+
+		var color_rect := ColorRect.new()
+		color_rect.custom_minimum_size = Vector2(9, 9)
+		color_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		color_rect.color = Color(0.55, 0.55, 0.55)
+		item_box.add_child(color_rect)
+
+		var lbl := Label.new()
+		lbl.add_theme_font_size_override("font_size", 10)
+		lbl.text = "%s: Acuh" % NPC_DISPLAY_NAMES[npc_key]
+		item_box.add_child(lbl)
+
+		row.add_child(item_box)
+		_npc_ui[npc_key] = {
+			"box": color_rect,
+			"label": lbl,
+		}
+
+	root_control.add_child(_sikap_card)
 
 func _apply_safe_area() -> void:
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
@@ -94,34 +176,107 @@ func _apply_safe_area() -> void:
 # ─── Update tampilan ──────────────────────────────────────────────────────────
 
 func update_all() -> void:
-	_on_river_health_changed(GameState.river_health)
+	var m_val: float = GameState.meter_bencana if "meter_bencana" in GameState else (100.0 - GameState.river_health)
+	_on_meter_changed(m_val)
+	_on_energy_changed(GameState.energi if "energi" in GameState else GameState.energy)
 	_on_rupiah_changed(GameState.rupiah)
+	_on_utang_changed(GameState.utang if "utang" in GameState else GameState.debt_amount)
+	_update_time()
+	_update_all_sikap()
 	_update_carry()
 	_update_location()
 
 func _update_location() -> void:
-	var zone_name: String = LOCATION_NAMES.get(GameState.current_level, "")
-	if not zone_name.is_empty():
-		location_label.text = zone_name
+	if not location_label:
+		return
+	if "in_world" in GameState and GameState.in_world and "world_zone" in GameState:
+		set_location(GameState.world_zone.capitalize() + " Deli")
+	else:
+		var zone_name: String = LOCATION_NAMES.get(GameState.current_level, "")
+		if not zone_name.is_empty():
+			location_label.text = zone_name
 
 ## Dipakai world map saat berpindah zona.
 func set_location(zone_name: String) -> void:
-	location_label.text = zone_name
+	if location_label:
+		location_label.text = zone_name
 
 func _on_river_health_changed(value: float) -> void:
-	river_bar.value = value
-	river_label.text = "%d%%" % int(round(value))
-	if value >= 70.0:
-		river_bar.add_theme_stylebox_override("fill", _bar_ok)
-	elif value >= 40.0:
-		river_bar.add_theme_stylebox_override("fill", _bar_mid)
+	_on_meter_changed(100.0 - value)
+
+func _on_meter_changed(meter_val: float) -> void:
+	if not river_bar:
+		return
+	river_bar.value = meter_val
+	if river_label:
+		river_label.text = "Bencana %d%%" % int(round(meter_val))
+	if meter_val <= 35.0:
+		river_bar.add_theme_stylebox_override("fill", _bar_safe)
+	elif meter_val <= 65.0:
+		river_bar.add_theme_stylebox_override("fill", _bar_warn)
 	else:
-		river_bar.add_theme_stylebox_override("fill", _bar_low)
+		river_bar.add_theme_stylebox_override("fill", _bar_danger)
+
+func _update_all_sikap() -> void:
+	for npc_key in ["jali", "rina", "darwis"]:
+		var val: int = GameState.get_sikap(npc_key) if GameState.has_method("get_sikap") else 0
+		_on_sikap_changed(npc_key, val)
+
+func _on_sikap_changed(npc: String, nilai: int) -> void:
+	var key: String = npc.to_lower()
+	if key not in _npc_ui:
+		return
+	var entry: Dictionary = _npc_ui[key]
+	var box: ColorRect = entry["box"]
+	var lbl: Label = entry["label"]
+	var display_name: String = NPC_DISPLAY_NAMES.get(key, key.capitalize())
+
+	var status_text: String = "Acuh"
+	var status_color := Color(0.55, 0.55, 0.55)  # 0: Acuh (Abu-abu)
+	match nilai:
+		GameState.SIKAP_MENOLAK:
+			status_text = "Menolak"
+			status_color = Color(0.80, 0.22, 0.20)  # -1: Merah
+		GameState.SIKAP_ACUH:
+			status_text = "Acuh"
+			status_color = Color(0.55, 0.55, 0.55)  # 0: Abu-abu
+		GameState.SIKAP_RAGU:
+			status_text = "Ragu"
+			status_color = Color(0.86, 0.62, 0.14)  # 1: Kuning/Oranye
+		GameState.SIKAP_PEDULI:
+			status_text = "Peduli"
+			status_color = Color(0.22, 0.68, 0.36)  # 2: Hijau
+
+	box.color = status_color
+	lbl.text = "%s: %s" % [display_name, status_text]
+
+func _on_energy_changed(value: float) -> void:
+	if energy_label:
+		energy_label.text = "%d/100" % int(round(value))
 
 func _on_rupiah_changed(value: int) -> void:
-	rupiah_label.text = "Rp %s" % _format_short(value)
+	if rupiah_label:
+		rupiah_label.text = "Rp %s" % _format_short(value)
+
+func _on_utang_changed(value: int) -> void:
+	if debt_label:
+		debt_label.text = "Utang %s" % _format_short(value)
+
+func _on_hari_changed(_new_day: int) -> void:
+	_update_time()
+
+func _on_waktu_changed(_new_waktu: String) -> void:
+	_update_time()
+
+func _update_time() -> void:
+	if day_label:
+		var h: int = GameState.hari if "hari" in GameState else GameState.day
+		var w: String = (GameState.waktu if "waktu" in GameState else "pagi").capitalize()
+		day_label.text = "Hari %d/7 · %s" % [h, w]
 
 func _update_carry() -> void:
+	if not carry_label:
+		return
 	var pending: Array = GameState.get_meta("pending_trash", [])
 	if pending.is_empty():
 		carry_label.hide()
@@ -134,6 +289,8 @@ func _update_carry() -> void:
 # ─── Misi ─────────────────────────────────────────────────────────────────────
 
 func update_mission(text: String) -> void:
+	if not mission_card or not mission_label or not mission_title:
+		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
 		mission_title.text = "MISI: " + lines[0]
@@ -144,14 +301,18 @@ func update_mission(text: String) -> void:
 	mission_card.show()
 
 func show_mission() -> void:
-	mission_card.show()
+	if mission_card:
+		mission_card.show()
 
 func hide_mission() -> void:
-	mission_card.hide()
+	if mission_card:
+		mission_card.hide()
 
 # ─── Toast ────────────────────────────────────────────────────────────────────
 
 func show_toast(text: String, good: bool = true) -> void:
+	if not toast_panel or not toast_label:
+		return
 	toast_panel.show()
 	toast_label.text = text
 	toast_label.add_theme_color_override(
@@ -171,12 +332,15 @@ func show_toast(text: String, good: bool = true) -> void:
 func hide_toast() -> void:
 	if _toast_tween:
 		_toast_tween.kill()
-	toast_panel.hide()
+	if toast_panel:
+		toast_panel.hide()
 
 # ─── Hint card (onboarding & kearifan lokal) ──────────────────────────────────
 
 ## Tampilkan kartu petunjuk di atas toast. `seconds` <= 0 berarti tetap tampil.
 func show_hint(text: String, seconds: float = 6.0) -> void:
+	if not hint_card or not hint_label:
+		return
 	if text.strip_edges().is_empty():
 		hide_hint()
 		return
@@ -195,12 +359,15 @@ func show_hint(text: String, seconds: float = 6.0) -> void:
 func hide_hint() -> void:
 	if _hint_tween:
 		_hint_tween.kill()
-	hint_card.hide()
+	if hint_card:
+		hint_card.hide()
 
 # ─── Kompas tujuan (untuk target di luar layar) ───────────────────────────────
 
 ## Arahkan pemain ke target: "←", "→", "↑", "↓" + jarak + nama target.
 func set_objective(direction: String, distance_tiles: int, target_name: String = "") -> void:
+	if not compass_panel or not compass_label:
+		return
 	if direction.is_empty():
 		compass_panel.hide()
 		return
@@ -209,7 +376,8 @@ func set_objective(direction: String, distance_tiles: int, target_name: String =
 	compass_panel.show()
 
 func hide_objective() -> void:
-	compass_panel.hide()
+	if compass_panel:
+		compass_panel.hide()
 
 # ─── Utility ──────────────────────────────────────────────────────────────────
 

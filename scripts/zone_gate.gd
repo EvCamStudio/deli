@@ -77,8 +77,7 @@ func refresh_gate_state() -> void:
 		_open = true
 		sprite.texture = load("res://assets/sprites/props/gate_open.png")
 		label.text = "Ke " + target_zone.capitalize()
-		if is_instance_valid(blocker):
-			blocker.queue_free()
+		_set_blocker_disabled(true)
 		if _player_in_range:
 			_interact_prompt_show()
 	else:
@@ -87,6 +86,7 @@ func refresh_gate_state() -> void:
 			label.text = "Terkunci (%d%%)" % int(river_health_threshold)
 		else:
 			label.text = "Misi belum selesai"
+		_set_blocker_disabled(false)
 		if _player_in_range:
 			_interact_prompt_hide()
 
@@ -95,6 +95,14 @@ func get_target_zone() -> String:
 
 func is_open() -> bool:
 	return _open
+
+func _set_blocker_disabled(disabled_state: bool) -> void:
+	if not is_instance_valid(blocker):
+		return
+	blocker.process_mode = Node.PROCESS_MODE_DISABLED if disabled_state else Node.PROCESS_MODE_INHERIT
+	for child in blocker.get_children():
+		if child is CollisionShape2D:
+			(child as CollisionShape2D).set_deferred("disabled", disabled_state)
 
 func get_action_label() -> String:
 	return "Masuk" if _open else "Periksa"

@@ -1,37 +1,48 @@
-## EndingScreen Script
-# Layer 5 / Epilog: tampilkan ringkasan statistik dan pesan ending.
+## EndingScreen Script (Deli Rewind)
+## Menampilkan layar akhir berdasarkan 4 Ending (A, B, C, D) atau ringkasan perjalanan.
 extends Control
 
-# ─── Node ─────────────────────────────────────────────────────────────────────
 @onready var ending_title: Label = $Panel/VBox/EndingTitle
 @onready var ending_message: RichTextLabel = $Panel/VBox/EndingMessage
 @onready var stats_label: RichTextLabel = $Panel/VBox/StatsLabel
-@onready var play_again_btn: Button = $Panel/VBox/Buttons/PlayAgainBtn
-@onready var cards_btn: Button = $Panel/VBox/Buttons/CardsBtn
-@onready var quit_btn: Button = $Panel/VBox/Buttons/QuitBtn
+@onready var play_again_btn: Button = $Panel/VBox/HBox/PlayAgainBtn
+@onready var quit_btn: Button = $Panel/VBox/HBox/QuitBtn
+@onready var cards_btn: Button = $Panel/VBox/HBox/CardsBtn
 @onready var card_popup: CanvasLayer = $KnowledgeCardPopup
 @onready var river_visual: ColorRect = $Background/RiverVisual
 
 const ENDING_DATA: Dictionary = {
+	"A": {
+		"title": "🌟 Ending A: Harapan Baru Deli (Terbaik)",
+		"message": "Beberapa bulan kemudian, sungai jernih dan warung ramai. Warga rutin kerja bakti dan bank sampah komunitas berdiri.\n\n[b]Datuk Sampan:[/b] \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama kalian ingat, aku ada.\""
+	},
+	"B": {
+		"title": "🌤 Ending B: Keluarga Mandiri (Baik)",
+		"message": "Warung selamat, sungai membaik pelan-pelan. Beberapa warga masih kembali ke kebiasaan lama, namun perubahan sudah berjalan.\n\n[b]Datuk Sampan:[/b] \"Kau tidak sendirian lagi. Teruskan.\""
+	},
+	"C": {
+		"title": "🌥 Ending C: Bertahan di Tepian (Netral)",
+		"message": "Hujan berikutnya datang. Warung bertahan, tapi utang masih tersisa dan sungai masih rawan banjir.\n\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, sebagaimana kita belajar darinya. Jalanmu masih panjang.\""
+	},
+	"D": {
+		"title": "🌧 Ending D: Terpaksa Menyerah (Buruk)",
+		"message": "Banjir besar menerjang. Warung digusur dan keluarga pindah.\n\n[b]Datuk Sampan (memudar):[/b] \"Sungai tidak membenci siapa pun. Ia hanya kembali ke jalannya.\"\n[b][color=#ffd166]\"Satu orang membuang, semua menanggung.\"[/color][/b]"
+	},
 	"baik": {
 		"title": "Sungai Deli Pulih!",
-		"message": "Luar biasa! Berkat usahamu, Sungai Deli kembali jernih. Air mengalir bening, ikan kembali berenang, dan warga bisa kembali menikmati bantaran sungai yang hijau. Setiap tindakan kecilmu membuat perbedaan besar!"
+		"message": "Luar biasa! Berkat usahamu, Sungai Deli kembali jernih. Air mengalir bening, ikan kembali berenang, dan warga bisa kembali menikmati bantaran sungai yang hijau.\n\n[i]Pepatah Melayu Deli: sungai yang dijaga akan menjaga kita. Hulu yang rimbun menurunkan air yang jernih ke hilir.[/i]"
 	},
 	"biasa": {
 		"title": "Sungai Mulai Membaik",
-		"message": "Sungai Deli sudah lebih bersih dari sebelumnya. Masih ada yang perlu diperbaiki, tapi perjalananmu telah memberi harapan. Coba lagi dan buat perbedaan yang lebih besar!"
+		"message": "Sungai Deli sudah lebih bersih dari sebelumnya. Masih ada yang perlu diperbaiki, tapi perjalananmu telah memberi harapan.\n\n[i]Gotong royong adalah kunci: berat sama dipikul, ringan sama dijinjing.[/i]"
 	},
 	"buruk": {
 		"title": "Sungai Masih Sakit",
-		"message": "Sungai Deli masih membutuhkan pertolongan. Jangan menyerah! Setiap orang bisa mulai dari hal kecil. Coba lagi dan buat pilihan yang lebih baik untuk sungai kita."
+		"message": "Sungai Deli masih membutuhkan pertolongan. Jangan menyerah! Setiap orang bisa mulai dari hal kecil.\n\n[i]Satu sampah yang dipungut hari ini adalah satu harapan untuk sungai esok hari.[/i]"
 	}
 }
 
-const LOCAL_WISDOM: Dictionary = {
-	"baik": "Pepatah Melayu Deli: sungai yang dijaga akan menjaga kita. Hulu yang rimbun menurunkan air yang jernih ke hilir.",
-	"biasa": "Gotong royong adalah kunci: berat sama dipikul, ringan sama dijinjing. Sungai tidak bisa dibersihkan seorang diri.",
-	"buruk": "Belum terlambat untuk memulai. Satu sampah yang dipungut hari ini adalah satu harapan untuk sungai esok hari."
-}
+var _current_code: String = "D"
 
 func _ready() -> void:
 	AudioManager.play_bgm(5)
@@ -41,35 +52,52 @@ func _ready() -> void:
 	quit_btn.pressed.connect(_on_quit)
 
 func _show_ending() -> void:
-	var ending_type: String = GameState.calculate_ending()
-	var data: Dictionary = ENDING_DATA.get(ending_type, ENDING_DATA["biasa"])
-	var wisdom: String = str(LOCAL_WISDOM.get(ending_type, ""))
+	if GameState.has_method("tentukan_ending"):
+		_current_code = GameState.ending_terakhir if GameState.ending_terakhir in ["A", "B", "C", "D"] else GameState.tentukan_ending(false)
+	else:
+		_current_code = GameState.calculate_ending()
 
+	var data: Dictionary = ENDING_DATA.get(_current_code, ENDING_DATA.get("B", ENDING_DATA["biasa"]))
 	ending_title.text = data["title"]
-	ending_message.text = "[center]%s[/center]\n\n[center][i]%s[/i][/center]" % [data["message"], wisdom]
+	ending_message.text = "[center]%s[/center]" % data["message"]
 
-	# Statistik
-	var total_cards: int = GameState.total_cards_available()
-	if total_cards <= 0:
-		total_cards = 16
-	var stats: String = "[b]Statistik Perjalanan[/b]\n"
-	stats += "Sampah dikumpulkan: %d\n" % GameState.get_total_trash()
-	stats += "Pohon ditanam: %d\n" % GameState.trees_planted
-	stats += "Mangrove ditanam: %d\n" % GameState.mangroves_planted
-	stats += "Kartu terkumpul: %d / %d\n" % [GameState.collected_cards.size(), total_cards]
-	stats += "Rupiah terkumpul: Rp %s\n" % _format_number(GameState.rupiah)
-	stats += "Kejernihan akhir: %d%%" % int(GameState.river_health)
+	if _current_code == "D":
+		play_again_btn.text = "⏪ Rewind"
+	else:
+		play_again_btn.text = "🔄 Main Lagi"
+
+	var stats: String = "[b]Statistik Akhir Perjalanan[/b]\n"
+	if GameState.has_method("get_jumlah_npc_peduli") and GameState.has_method("get_persen_utang_lunas"):
+		var meter_akhir: int = int(round(GameState.meter_bencana if "meter_bencana" in GameState else (100.0 - GameState.river_health)))
+		var peduli_count: int = GameState.get_jumlah_npc_peduli()
+		var persen_utang: int = int(round(GameState.get_persen_utang_lunas() * 100.0))
+		stats += "• Meter Bencana: %d%% (Kejernihan %d%%)\n" % [meter_akhir, int(round(GameState.river_health))]
+		stats += "• Warga Peduli: %d / 3 | Utang Lunas: %d%%\n" % [peduli_count, persen_utang]
+	stats += "• Sampah Terkumpul: %d | Pohon Ditanam: %d\n" % [GameState.get_total_trash(), GameState.trees_planted]
+	stats += "• Mangrove: %d | Kartu: %d\n" % [GameState.mangroves_planted, GameState.collected_cards.size()]
+	stats += "• Rupiah Terkumpul: Rp %s" % _format_number(GameState.rupiah)
 	stats_label.text = stats
 
-	# Ubah visual sungai sesuai ending
-	match ending_type:
-		"baik":   river_visual.color = Color(0.2, 0.6, 0.9, 0.8)
-		"biasa":  river_visual.color = Color(0.4, 0.55, 0.65, 0.7)
-		"buruk":  river_visual.color = Color(0.35, 0.3, 0.25, 0.8)
+	match _current_code:
+		"A", "baik": river_visual.color = Color(0.18, 0.65, 0.92, 0.85)
+		"B", "biasa": river_visual.color = Color(0.28, 0.58, 0.78, 0.80)
+		"C": river_visual.color = Color(0.42, 0.52, 0.58, 0.78)
+		"D", "buruk": river_visual.color = Color(0.36, 0.28, 0.22, 0.85)
+
+func _nama_sikap(nilai: int) -> String:
+	match nilai:
+		GameState.SIKAP_MENOLAK: return "Menolak"
+		GameState.SIKAP_ACUH: return "Acuh"
+		GameState.SIKAP_RAGU: return "Ragu"
+		GameState.SIKAP_PEDULI: return "Peduli"
+		_: return "Acuh"
 
 func _on_play_again() -> void:
-	GameState.reset()
-	SceneManager.go_to_intro()
+	if _current_code == "D" and GameState.has_method("rewind"):
+		GameState.rewind()
+	else:
+		GameState.reset()
+		SceneManager.go_to_main_menu()
 
 func _format_number(value: int) -> String:
 	var text: String = str(value)
@@ -87,4 +115,4 @@ func _on_cards() -> void:
 		card_popup.open_collection()
 
 func _on_quit() -> void:
-	get_tree().quit()
+	SceneManager.go_to_main_menu()
