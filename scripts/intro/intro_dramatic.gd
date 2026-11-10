@@ -1,6 +1,6 @@
 ## Intro Dramatic Script — Format Komik Naratif & Panel Dialog
-## Menyajikan Bab 1 s/d Bab 3 dengan pemisahan tegas antara Narasi (Caption),
-## Balon Dialog, dan Monolog Pikiran MC.
+## Menyajikan Bab 1 s/d Bab 3 dengan pemisahan tegas antara Narasi Full Layar,
+## Balon Dialog, dan Monolog Pikiran MC dengan Animasi Ketik per Ketik (Typewriter).
 extends Control
 
 const CHAPTER_SCENES: Array = [
@@ -128,8 +128,9 @@ const SCRIPT_DATA: Array = [
 @onready var chapter_root: Control = $ChapterRoot
 @onready var tap_advance_btn: Button = $TapAdvanceBtn
 @onready var header_label: Label = $HeaderBanner/HeaderLabel
-@onready var caption_box: PanelContainer = $CaptionBox
-@onready var caption_text: RichTextLabel = $CaptionBox/VBox/CaptionText
+@onready var narration_screen: Control = $NarrationScreen
+@onready var narration_text: RichTextLabel = $NarrationScreen/CenterBox/NarrationCard/VBox/NarrationText
+@onready var narration_hint: Label = $NarrationScreen/CenterBox/NarrationCard/VBox/HintRow/NarrationHint
 @onready var dialogue_container: Control = $DialogueContainer
 @onready var dialog_panel: PanelContainer = $DialogueContainer/DialogPanel
 @onready var speaker_tag: PanelContainer = $DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag
@@ -140,7 +141,10 @@ const SCRIPT_DATA: Array = [
 @onready var name_input: LineEdit = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/NameInput
 @onready var confirm_btn: Button = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/ConfirmBtn
 @onready var dialog_hint_row: HBoxContainer = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow
+@onready var dialog_hint: Label = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow/DialogHint
 @onready var fade_rect: ColorRect = $FadeRect
+
+const TYPEWRITER_SPEED: float = 0.028  # Kecepatan ketik (detik per karakter)
 
 var _current_chapter: int = 0
 var _current_step: int = 0
@@ -148,6 +152,11 @@ var _current_chapter_node: Control = null
 var _is_waiting_input: bool = false
 var _is_transitioning: bool = false
 var _last_advance_frame: int = -1
+
+var _is_typing: bool = false
+var _typewriter_tween: Tween = null
+var _current_target_label: RichTextLabel = null
+var _current_target_hint: Control = null
 
 func _ready() -> void:
 	fade_rect.color = Color(0, 0, 0, 0)
@@ -173,7 +182,50 @@ func _show_chapter(chapter_idx: int) -> void:
 	_current_chapter_node.modulate.a = 0.0
 
 	var tw := create_tween()
-	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.3)
+	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.35)
+
+# ─── Animasi Ketik per Ketik (Typewriter) ─────────────────────────────────────
+
+func _start_typewriter(label: RichTextLabel, hint: Control, full_bbcode_text: String) -> void:
+	if _typewriter_tween:
+		_typewriter_tween.kill()
+		_typewriter_tween = null
+
+	_current_target_label = label
+	_current_target_hint = hint
+	_is_typing = true
+
+	if hint:
+		hint.modulate.a = 0.0
+
+	label.text = full_bbcode_text
+	label.visible_characters = 0
+
+	# Hitung jumlah karakter teks biasa (tanpa tag bbcode) untuk durasi
+	var plain_len: int = label.get_parsed_text().length()
+	if plain_len <= 0:
+		plain_len = full_bbcode_text.length()
+	var duration: float = float(plain_len) * TYPEWRITER_SPEED
+
+	_typewriter_tween = create_tween()
+	_typewriter_tween.tween_property(label, "visible_characters", plain_len, duration)
+	_typewriter_tween.tween_callback(func():
+		_finish_typewriter()
+	)
+
+func _finish_typewriter() -> void:
+	if _typewriter_tween:
+		_typewriter_tween.kill()
+		_typewriter_tween = null
+
+	if _current_target_label:
+		_current_target_label.visible_characters = -1
+
+	_is_typing = false
+
+	if _current_target_hint and not _is_waiting_input:
+		var tw := create_tween()
+		tw.tween_property(_current_target_hint, "modulate:a", 1.0, 0.2)
 
 # ─── Render Panel Sesuai Tipe (Narasi / Dialog / Pikiran / Telepon) ────────────
 
@@ -212,29 +264,28 @@ func _render_current_step() -> void:
 
 	match tipe:
 		"narasi":
-			# Sembunyikan Balon Dialog, Tampilkan Caption Box
+			# Tampilkan Narasi Full Layar dengan Card Elegan
 			dialogue_container.hide()
-			caption_box.show()
-			caption_text.text = "[i]%s[/i]" % processed_teks
+			narration_screen.show()
+			_start_typewriter(narration_text, narration_hint, "[i]%s[/i]" % processed_teks)
 
 		"dialog":
-			caption_box.hide()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "\"%s\"" % processed_teks
 			_setup_dialog_speaker(speaker, player_name)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
 
 		"pikiran":
-			# Pikiran MC: italic bersih tanpa tanda kurung
-			caption_box.hide()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "[i]%s[/i]" % processed_teks
 			_setup_thought_speaker(speaker, player_name)
+			_start_typewriter(speech_text, dialog_hint, "[i]%s[/i]" % processed_teks)
 
 		"telepon":
-			caption_box.hide()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "\"%s\"" % processed_teks
 			_setup_phone_speaker(speaker)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
 
 func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 	match speaker:
@@ -252,9 +303,8 @@ func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_thought_speaker(speaker: String, player_name: String) -> void:
-	# Cukup nama karakter saja tanpa tulisan "(Dalam Hati)"
 	if speaker == "mc":
-		speaker_label.text = player_name
+		speaker_label.text = "%s (Batin)" % player_name
 		if _current_chapter >= 1:
 			portrait.texture = load(PORTRAITS["player_sad"]) as Texture2D
 		else:
@@ -264,14 +314,24 @@ func _setup_thought_speaker(speaker: String, player_name: String) -> void:
 		portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_phone_speaker(_speaker: String) -> void:
-	speaker_label.text = "Bu Mira"
+	speaker_label.text = "Bu Mira (Telepon)"
 	portrait.texture = load(PORTRAITS["ibu"]) as Texture2D
 
 # ─── Navigasi & Input ─────────────────────────────────────────────────────────
 
 func _on_tap_advanced() -> void:
+	_handle_advance_request()
+
+func _handle_advance_request() -> void:
 	if _is_waiting_input or _is_transitioning:
 		return
+
+	# Jika masih dalam proses mengetik: ketukan pertama langsung selesaikan teks!
+	if _is_typing:
+		_finish_typewriter()
+		return
+
+	# Jika teks sudah selesai: lanjut ke langkah berikutnya
 	_advance_step()
 
 func _advance_step() -> void:
@@ -288,7 +348,6 @@ func _advance_step() -> void:
 	if _current_step >= chapter_entries.size():
 		# Bab saat ini telah selesai
 		if _current_chapter + 1 >= SCRIPT_DATA.size():
-			# Bab 3 selesai -> transisi langsung ke game (Peta A Warung Hari 1)
 			_finish_intro()
 		else:
 			_next_chapter(_current_chapter + 1)
@@ -355,7 +414,8 @@ func _on_confirm_name_pressed() -> void:
 		_save_and_confirm_name(clean)
 
 func _save_and_confirm_name(clean_name: String) -> void:
-	GameState.player_name = clean_name
+	var final_name := clean_name if clean_name.length() > 0 else "Rian"
+	GameState.player_name = final_name
 	_is_waiting_input = false
 	input_row.hide()
 	dialog_hint_row.show()
@@ -365,8 +425,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_waiting_input or _is_transitioning:
 		return
 	if event.is_action_pressed("ui_accept"):
-		_advance_step()
+		_handle_advance_request()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_advance_step()
+		_handle_advance_request()
 		get_viewport().set_input_as_handled()
