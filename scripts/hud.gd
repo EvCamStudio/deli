@@ -15,11 +15,16 @@ class_name HUD
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast_panel: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
+@onready var hint_card: PanelContainer = $SafeMargin/Root/HintCard
+@onready var hint_label: Label = $SafeMargin/Root/HintCard/Label
+@onready var compass_panel: PanelContainer = $SafeMargin/Root/Compass
+@onready var compass_label: Label = $SafeMargin/Root/Compass/Label
 @onready var pause_btn: Button = $SafeMargin/Root/TopBar/PauseBtn
 @onready var safe_margin: MarginContainer = $SafeMargin
 
 # ─── State ────────────────────────────────────────────────────────────────────
 var _toast_tween: Tween = null
+var _hint_tween: Tween = null
 var _clock_accum: float = 0.0
 var _bar_low: StyleBoxFlat
 var _bar_mid: StyleBoxFlat
@@ -41,6 +46,7 @@ func _ready() -> void:
 	_apply_safe_area()
 	pause_btn.pressed.connect(_on_pause_pressed)
 	toast_panel.hide()
+	hint_card.hide()
 	hide_mission()
 	update_all()
 
@@ -157,7 +163,8 @@ func show_toast(text: String, good: bool = true) -> void:
 	toast_panel.modulate.a = 0.0
 	_toast_tween = create_tween()
 	_toast_tween.tween_property(toast_panel, "modulate:a", 1.0, 0.18)
-	_toast_tween.tween_interval(2.2)
+	var hold: float = 2.2 + maxf(0.0, float(text.length() - 34) * 0.035)
+	_toast_tween.tween_interval(hold)
 	_toast_tween.tween_property(toast_panel, "modulate:a", 0.0, 0.35)
 	_toast_tween.tween_callback(func(): toast_panel.hide())
 
@@ -165,6 +172,44 @@ func hide_toast() -> void:
 	if _toast_tween:
 		_toast_tween.kill()
 	toast_panel.hide()
+
+# ─── Hint card (onboarding & kearifan lokal) ──────────────────────────────────
+
+## Tampilkan kartu petunjuk di atas toast. `seconds` <= 0 berarti tetap tampil.
+func show_hint(text: String, seconds: float = 6.0) -> void:
+	if text.strip_edges().is_empty():
+		hide_hint()
+		return
+	hint_label.text = text
+	hint_card.show()
+	if _hint_tween:
+		_hint_tween.kill()
+	hint_card.modulate.a = 0.0
+	_hint_tween = create_tween()
+	_hint_tween.tween_property(hint_card, "modulate:a", 1.0, 0.2)
+	if seconds > 0.0:
+		_hint_tween.tween_interval(seconds)
+		_hint_tween.tween_property(hint_card, "modulate:a", 0.0, 0.35)
+		_hint_tween.tween_callback(func(): hint_card.hide())
+
+func hide_hint() -> void:
+	if _hint_tween:
+		_hint_tween.kill()
+	hint_card.hide()
+
+# ─── Kompas tujuan (untuk target di luar layar) ───────────────────────────────
+
+## Arahkan pemain ke target: "←", "→", "↑", "↓" + jarak + nama target.
+func set_objective(direction: String, distance_tiles: int, target_name: String = "") -> void:
+	if direction.is_empty():
+		compass_panel.hide()
+		return
+	var suffix: String = "" if target_name.is_empty() else " · " + target_name
+	compass_label.text = "%s  %dm%s" % [direction, distance_tiles, suffix]
+	compass_panel.show()
+
+func hide_objective() -> void:
+	compass_panel.hide()
 
 # ─── Utility ──────────────────────────────────────────────────────────────────
 

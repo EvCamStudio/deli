@@ -64,5 +64,38 @@
       "text": "Hati-hati di jalan. Kalau lelah, rumah ini selalu terbuka untukmu.",
       "choices": []
     }
+  ],
+  "npc_datuk": [
+    {
+      "id": "start",
+      "speaker": "Datuk",
+      "text": "Duduk dulu, Cucu. Aku sudah lama menjaga hulu Sungai Deli ini. Orang tua dulu bilang: tebang pokok di hulu, keringlah air di hilir.",
+      "choices": [
+        { "text": "Apa maksud pepatah itu, Datuk?", "next": "makna", "effect": {} },
+        { "text": "Aku ingin ikut menjaga hulu, Datuk.", "next": "restu", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "makna",
+      "speaker": "Datuk",
+      "text": "Pohon di hulu menahan air hujan supaya meresap ke tanah. Bila hutan habis, mata air kering, sungai keruh, dan kampung kebanjiran.",
+      "choices": [
+        { "text": "Jadi menjaga pohon berarti menjaga air?", "next": "restu", "effect": { "choice": { "hormat_adat": true } } }
+      ]
+    },
+    {
+      "id": "restu",
+      "speaker": "Datuk",
+      "text": "Betul. Tanamlah pohon dengan hati. Jangan buang sampah ke sungai. Ingat, sungai ini bukan milik kita seorang, tapi titipan untuk anak cucu.",
+      "choices": [
+        { "text": "Terima kasih, Datuk. Aku akan menjaganya.", "next": "end", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "end",
+      "speaker": "Datuk",
+      "text": "Baguslah. Pergilah dengan tenang. Hutan akan mengingat kebaikanmu.",
+      "choices": []
+    }
   ]
 }

@@ -161,6 +161,15 @@ theme_override_font_sizes/font_size = 8
 text = "Bab 1-5  ·  Bahasa Indonesia"
 horizontal_alignment = 1
 
+[node name="StatusLabel" type="Label" parent="VBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.62, 0.24, 0.2, 1)
+theme_override_font_sizes/font_size = 9
+text = ""
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="SettingsPanel" type="Control" parent="."]
 visible = false
 layout_mode = 1

@@ -52,9 +52,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -250.0
-offset_top = -155.0
+offset_top = -175.0
 offset_right = 250.0
-offset_bottom = 155.0
+offset_bottom = 175.0
 theme_override_styles/panel = SubResource("StyleBox_dialog")
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
@@ -70,13 +70,13 @@ text = "Sungai Deli Pulih!"
 horizontal_alignment = 1
 
 [node name="EndingMessage" type="RichTextLabel" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 62)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
 theme_override_colors/default_color = Color(0.227, 0.165, 0.118, 1)
-theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/normal_font_size = 11
 
 [node name="Sep" type="HSeparator" parent="Panel/VBox"]
 layout_mode = 2

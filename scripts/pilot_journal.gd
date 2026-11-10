@@ -8,12 +8,23 @@ signal closed
 @onready var overlay: ColorRect = $Overlay
 @onready var panel: PanelContainer = $Panel
 @onready var stats: Label = $Panel/VBox/Stats
+@onready var wisdom: Label = $Panel/VBox/Wisdom
 @onready var resume_btn: Button = $Panel/VBox/ResumeBtn
 @onready var save_btn: Button = $Panel/VBox/SaveBtn
 @onready var menu_btn: Button = $Panel/VBox/MenuBtn
 @onready var bgm_slider: HSlider = $Panel/VBox/Settings/BGM/Slider
 @onready var sfx_slider: HSlider = $Panel/VBox/Settings/SFX/Slider
 @onready var save_hint: Label = $Panel/VBox/SaveHint
+
+const WISDOMS: Array[String] = [
+	"Tebang pokok di hulu, keringlah air di hilir.",
+	"Berat sama dipikul, ringan sama dijinjing.",
+	"Sungai adalah urat nadi kehidupan.",
+	"Laut yang dijaga akan menjaga kita.",
+	"Air yang jernih lahir dari kebiasaan kecil yang dijaga.",
+]
+
+var _wisdom_index: int = 0
 
 func _ready() -> void:
 	overlay.hide()
@@ -46,11 +57,18 @@ func is_open() -> bool:
 	return panel.visible
 
 func _refresh() -> void:
-	stats.text = "Kejernihan %d%%   ·   Rp %s   ·   Hari %d" % [
+	var zone_text: String = ""
+	if GameState.in_world:
+		zone_text = "\nZona: %s" % GameState.world_zone.capitalize()
+	stats.text = "Kejernihan %d%%   ·   Rp %s   ·   Hari %d%s" % [
 		int(GameState.river_health),
 		_format_number(GameState.rupiah),
 		GameState.day,
+		zone_text,
 	]
+	if wisdom:
+		wisdom.text = WISDOMS[_wisdom_index % WISDOMS.size()]
+		_wisdom_index += 1
 
 func _on_save() -> void:
 	GameState.save_game()

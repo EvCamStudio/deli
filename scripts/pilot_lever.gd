@@ -17,6 +17,9 @@ func _ready() -> void:
 func get_action_label() -> String:
 	return "" if _pressed else "Tarik"
 
+func is_pressed() -> bool:
+	return _pressed
+
 func interact() -> void:
 	if _pressed:
 		return

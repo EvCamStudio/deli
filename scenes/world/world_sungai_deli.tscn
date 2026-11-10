@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/world_sungai_deli.gd" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player_topdown.tscn" id="2_player"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/portrait_dialogue.tscn" id="5_dialogue"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pilot_journal.tscn" id="6_journal"]
 [ext_resource type="PackedScene" path="res://scenes/ui/knowledge_card_popup.tscn" id="7_cards"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pantun_panel.tscn" id="8_pantun"]
 
 [node name="WorldSungaiDeli" type="Node2D"]
 script = ExtResource("1_world")
@@ -28,3 +29,5 @@ position_smoothing_speed = 7.0
 [node name="PauseMenu" parent="." instance=ExtResource("6_journal")]
 
 [node name="KnowledgeCardPopup" parent="." instance=ExtResource("7_cards")]
+
+[node name="PantunPanel" parent="." instance=ExtResource("8_pantun")]

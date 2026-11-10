@@ -35,6 +35,9 @@ func get_action_label() -> String:
 		return ""
 	return "Bicara"
 
+func has_talked() -> bool:
+	return _has_talked
+
 func interact() -> void:
 	if _dialogue_data.is_empty():
 		return

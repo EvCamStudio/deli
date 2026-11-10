@@ -14,6 +14,13 @@
     "level": 1
   },
   {
+    "id": "card_kearifan_02",
+    "title": "Pantang Menebang di Hulu",
+    "category": "kearifan_lokal",
+    "text": "Datuk di hulu mengingatkan pepatah Melayu: 'Tebang pokok di hulu, keringlah air di hilir.' Pohon adalah penjaga mata air kampung.",
+    "level": 1
+  },
+  {
     "id": "card_pertanian_01",
     "title": "Pertanian Organik",
     "category": "lingkungan",
@@ -25,6 +32,20 @@
     "title": "Gotong Royong",
     "category": "kearifan_lokal",
     "text": "Tradisi gotong royong mendorong masyarakat menjaga lingkungan bersama.",
+    "level": 2
+  },
+  {
+    "id": "card_adat_01",
+    "title": "Musyawarah Adat Melayu",
+    "category": "kearifan_lokal",
+    "text": "Dalam adat Melayu Deli, keputusan tentang kampung diambil lewat musyawarah. Sungai dijaga bukan oleh satu orang, tetapi oleh seluruh warga.",
+    "level": 2
+  },
+  {
+    "id": "card_kompos_01",
+    "title": "Kompos dari Dapur",
+    "category": "lingkungan",
+    "text": "Sisa sayur dan buah dapat diubah menjadi kompos, sehingga mengurangi sampah yang berakhir di sungai.",
     "level": 2
   },
   {
@@ -49,6 +70,20 @@
     "level": 3
   },
   {
+    "id": "card_b3_01",
+    "title": "Sampah B3",
+    "category": "lingkungan",
+    "text": "B3 adalah Bahan Berbahaya dan Beracun. Baterai, lampu bekas, dan obat kedaluwarsa tidak boleh dibuang ke sungai atau tempat sampah biasa.",
+    "level": 3
+  },
+  {
+    "id": "card_hujan_01",
+    "title": "Musim Hujan di Medan",
+    "category": "lingkungan",
+    "text": "Medan memiliki curah hujan tinggi. Bila drainase dan sungai tersumbat, air cepat meluap ke permukiman.",
+    "level": 3
+  },
+  {
     "id": "card_mangrove_01",
     "title": "Hutan Mangrove",
     "category": "lingkungan",
@@ -60,6 +95,13 @@
     "title": "Kearifan Nelayan",
     "category": "kearifan_lokal",
     "text": "Nelayan pesisir memiliki kearifan lokal menjaga laut agar tangkapan tetap lestari.",
+    "level": 4
+  },
+  {
+    "id": "card_pesisir_01",
+    "title": "Pesisir Sungai Deli",
+    "category": "kearifan_lokal",
+    "text": "Muara Sungai Deli di Selat Malaka adalah sumber penghidupan nelayan. Menjaga muara berarti menjaga rezeki bersama.",
     "level": 4
   },
   {

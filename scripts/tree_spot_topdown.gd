@@ -22,6 +22,18 @@ func get_action_label() -> String:
 		return ""
 	return "Tanam Mangrove" if kind == "mangrove" else "Tanam Pohon"
 
+func is_planted() -> bool:
+	return _planted
+
+## Tandai sudah ditanam tanpa memicu hadiah (dipakai saat memuat save).
+func mark_planted() -> void:
+	if _planted:
+		return
+	_planted = true
+	marker.hide()
+	planted_sprite.show()
+	planted_sprite.scale = Vector2.ONE
+
 func _required_quest() -> String:
 	return "tanam_mangrove" if kind == "mangrove" else "tanam_pohon_hulu"
 

@@ -150,6 +150,27 @@ theme_override_font_sizes/font_size = 10
 text = ""
 autowrap_mode = 3
 
+[node name="Compass" type="PanelContainer" parent="SafeMargin/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -92.0
+offset_top = 38.0
+offset_right = 92.0
+offset_bottom = 60.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Label" type="Label" parent="SafeMargin/Root/Compass"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="CarryLabel" type="Label" parent="SafeMargin/Root"]
 visible = false
 layout_mode = 1
@@ -178,15 +199,41 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -150.0
-offset_top = -76.0
-offset_right = 150.0
+offset_left = -160.0
+offset_top = -80.0
+offset_right = 160.0
 offset_bottom = -42.0
 theme_override_styles/panel = SubResource("StyleBox_card")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/Toast"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 10
 text = "Tersimpan!"
 horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="HintCard" type="PanelContainer" parent="SafeMargin/Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -172.0
+offset_top = -156.0
+offset_right = 172.0
+offset_bottom = -90.0
+theme_override_styles/panel = SubResource("StyleBox_card")
+
+[node name="Label" type="Label" parent="SafeMargin/Root/HintCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_fonts/font = ExtResource("9_pixel")
+theme_override_font_sizes/font_size = 10
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

@@ -143,11 +143,13 @@ func _fade_and_go() -> void:
 	next_btn.disabled = true
 	name_input.editable = false
 	QuestManager.start_main_quest()
+	GameState.in_world = true
+	GameState.world_zone = "hulu"
 	GameState.save_game()
 	var tween := create_tween()
 	tween.tween_property(fade_rect, "color:a", 1.0, 0.6)
 	tween.tween_callback(func():
-		SceneManager.change_scene("res://scenes/world/world_sungai_deli.tscn")
+		SceneManager.go_to_world()
 	)
 
 func _unhandled_input(event: InputEvent) -> void:

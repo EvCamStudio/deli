@@ -16,6 +16,7 @@ extends Control
 @onready var level_select_panel: Control = get_node_or_null("LevelSelectPanel") as Control
 @onready var card_popup: CanvasLayer = get_node_or_null("KnowledgeCardPopup") as CanvasLayer
 @onready var river_anim: AnimationPlayer = get_node_or_null("Background/RiverAnimPlayer") as AnimationPlayer
+@onready var status_label: Label = get_node_or_null("VBox/StatusLabel") as Label
 
 func _ready() -> void:
 	AudioManager.play_bgm("main_menu")
@@ -23,6 +24,8 @@ func _ready() -> void:
 		settings_panel.hide()
 	if level_select_panel:
 		level_select_panel.hide()
+	if status_label:
+		status_label.hide()
 
 	# Cek save game
 	if continue_btn:
@@ -56,11 +59,11 @@ func _setup_level_select_buttons() -> void:
 	var l5 := get_node_or_null("LevelSelectPanel/Panel/VBox/L5Btn") as Button
 	var close_btn := get_node_or_null("LevelSelectPanel/Panel/VBox/CloseSelectBtn") as Button
 
-	if l1: l1.pressed.connect(func(): _load_level(1))
-	if l2: l2.pressed.connect(func(): _load_level(2))
-	if l3: l3.pressed.connect(func(): _load_level(3))
-	if l4: l4.pressed.connect(func(): _load_level(4))
-	if l5: l5.pressed.connect(func(): SceneManager.change_scene("res://scenes/levels/level_5_epilog.tscn"))
+	if l1: l1.pressed.connect(func(): _start_world_chapter("hulu"))
+	if l2: l2.pressed.connect(func(): _start_world_chapter("desa"))
+	if l3: l3.pressed.connect(func(): _start_world_chapter("kota"))
+	if l4: l4.pressed.connect(func(): _start_world_chapter("hilir"))
+	if l5: l5.pressed.connect(_start_epilog_preview)
 	if close_btn: close_btn.pressed.connect(func(): level_select_panel.hide())
 
 # ─── Tombol ───────────────────────────────────────────────────────────────────
@@ -71,13 +74,39 @@ func _on_start() -> void:
 	GameState.reset()
 	SceneManager.go_to_intro()
 
-func _load_level(id: int) -> void:
-	GameState.reset()
-	SceneManager.change_level(id)
+## "Pilih Bab" masuk ke world pada zona yang dipilih, dengan progres awal
+## yang masuk akal supaya pemain bisa langsung mencoba gameplay zona itu.
+func _start_world_chapter(zone: String) -> void:
+	GameState.prepare_world_chapter(zone)
+	if level_select_panel:
+		level_select_panel.hide()
+	SceneManager.go_to_world()
+
+func _start_epilog_preview() -> void:
+	GameState.prepare_epilog_preview()
+	if level_select_panel:
+		level_select_panel.hide()
+	SceneManager.change_scene("res://scenes/levels/level_5_epilog.tscn")
 
 func _on_continue() -> void:
 	if GameState.load_game():
-		SceneManager.change_level(GameState.current_level)
+		if GameState.world_completed:
+			SceneManager.change_scene("res://scenes/levels/level_5_epilog.tscn")
+		else:
+			# Save lama (sebelum world) tetap dibawa ke world, bukan scene level legacy.
+			GameState.in_world = true
+			SceneManager.go_to_world()
+	else:
+		_show_status("Save tidak bisa dimuat. Silakan mulai perjalanan baru.")
+		if continue_btn:
+			continue_btn.disabled = true
+
+func _show_status(text: String) -> void:
+	if status_label:
+		status_label.text = text
+		status_label.show()
+	else:
+		title_label.text = text
 
 func _on_level_select() -> void:
 	if level_select_panel:

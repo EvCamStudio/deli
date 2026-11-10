@@ -38,7 +38,13 @@ func change_level(level_id: int) -> void:
 
 ## Pindah ke scene intro dramatis.
 func go_to_intro() -> void:
+	GameState.in_world = false
 	change_scene("res://scenes/intro/intro_dramatic.tscn")
+
+## Masuk ke world utama (satu peta, 4 zona).
+func go_to_world() -> void:
+	GameState.in_world = true
+	change_scene("res://scenes/world/world_sungai_deli.tscn")
 
 ## Pindah ke main menu.
 func go_to_main_menu() -> void:

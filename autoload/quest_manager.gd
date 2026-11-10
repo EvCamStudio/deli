@@ -14,6 +14,12 @@ const MAIN_QUEST_ID: String = "pulihkan_warung_sungai"
 func _ready() -> void:
 	pass
 
+## Bersihkan semua quest saat permainan baru / pilih bab.
+func reset_all() -> void:
+	active_quests.clear()
+	completed_quests.clear()
+	daily_quests.clear()
+
 ## Start main quest (triggered by Ibu's dialogue)
 func start_main_quest() -> void:
 	if MAIN_QUEST_ID in active_quests:

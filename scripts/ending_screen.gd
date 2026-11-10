@@ -27,6 +27,12 @@ const ENDING_DATA: Dictionary = {
 	}
 }
 
+const LOCAL_WISDOM: Dictionary = {
+	"baik": "Pepatah Melayu Deli: sungai yang dijaga akan menjaga kita. Hulu yang rimbun menurunkan air yang jernih ke hilir.",
+	"biasa": "Gotong royong adalah kunci: berat sama dipikul, ringan sama dijinjing. Sungai tidak bisa dibersihkan seorang diri.",
+	"buruk": "Belum terlambat untuk memulai. Satu sampah yang dipungut hari ini adalah satu harapan untuk sungai esok hari."
+}
+
 func _ready() -> void:
 	AudioManager.play_bgm(5)
 	_show_ending()
@@ -37,16 +43,21 @@ func _ready() -> void:
 func _show_ending() -> void:
 	var ending_type: String = GameState.calculate_ending()
 	var data: Dictionary = ENDING_DATA.get(ending_type, ENDING_DATA["biasa"])
+	var wisdom: String = str(LOCAL_WISDOM.get(ending_type, ""))
 
 	ending_title.text = data["title"]
-	ending_message.text = "[center]%s[/center]" % data["message"]
+	ending_message.text = "[center]%s[/center]\n\n[center][i]%s[/i][/center]" % [data["message"], wisdom]
 
 	# Statistik
+	var total_cards: int = GameState.total_cards_available()
+	if total_cards <= 0:
+		total_cards = 16
 	var stats: String = "[b]Statistik Perjalanan[/b]\n"
 	stats += "Sampah dikumpulkan: %d\n" % GameState.get_total_trash()
 	stats += "Pohon ditanam: %d\n" % GameState.trees_planted
 	stats += "Mangrove ditanam: %d\n" % GameState.mangroves_planted
-	stats += "Kartu terkumpul: %d / 10\n" % GameState.collected_cards.size()
+	stats += "Kartu terkumpul: %d / %d\n" % [GameState.collected_cards.size(), total_cards]
+	stats += "Rupiah terkumpul: Rp %s\n" % _format_number(GameState.rupiah)
 	stats += "Kejernihan akhir: %d%%" % int(GameState.river_health)
 	stats_label.text = stats
 
@@ -58,7 +69,18 @@ func _show_ending() -> void:
 
 func _on_play_again() -> void:
 	GameState.reset()
-	SceneManager.change_level(1)
+	SceneManager.go_to_intro()
+
+func _format_number(value: int) -> String:
+	var text: String = str(value)
+	var out: String = ""
+	var count: int = 0
+	for i in range(text.length() - 1, -1, -1):
+		out = text[i] + out
+		count += 1
+		if count % 3 == 0 and i > 0:
+			out = "." + out
+	return out
 
 func _on_cards() -> void:
 	if card_popup and card_popup.has_method("open_collection"):
