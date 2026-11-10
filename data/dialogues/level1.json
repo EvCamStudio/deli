@@ -20,7 +20,7 @@
     {
       "id": "help",
       "speaker": "Penjaga Hutan",
-      "text": "(melirik tanganmu) Tangan orang kantoran. Tak apa, tanah tak pilih-pilih. Tanah bertanda itu: dekati, tekan aksi. Tak usah dalam-dalam, cukup tak terbalik.",
+      "text": "Tangan orang kantoran. Tak apa, tanah tak pilih-pilih. Tanah bertanda itu: dekati, tekan aksi. Tak usah dalam-dalam, cukup tak terbalik.",
       "choices": [
         { "text": "Siap!", "next": "plant_prompt", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 pohon di Hulu", "target": 5 } } }
       ]

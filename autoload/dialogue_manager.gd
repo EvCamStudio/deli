@@ -130,9 +130,20 @@ func _show_node(node_id: String) -> void:
 	if not _current_node.has("choices") and _current_node.has("pilihan"):
 		_current_node["choices"] = _current_node["pilihan"]
 
+	# Bersihkan lakuan panggung dalam kurung pada teks utama jika ada
+	if _current_node.has("text"):
+		_current_node["text"] = _clean_stage_directions(str(_current_node["text"]))
+	if _current_node.has("teks"):
+		_current_node["teks"] = _clean_stage_directions(str(_current_node["teks"]))
+
 	# Kirim data ke DialogueBox untuk ditampilkan
 	if _dialogue_box and _dialogue_box.has_method("show_node"):
 		_dialogue_box.show_node(_current_node)
+
+func _clean_stage_directions(raw: String) -> String:
+	var regex := RegEx.new()
+	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
+	return regex.sub(raw, " ", true).strip_edges()
 
 ## Dipanggil saat pemain mengetuk layar / memilih opsi.
 func advance(choice_index: int = -1) -> void:

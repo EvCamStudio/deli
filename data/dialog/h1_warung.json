@@ -3,7 +3,7 @@
     "id": "start",
     "speaker": "Bu Mira",
     "emosi": "neutral",
-    "teks": "(sapu berhenti) Sudah sampai kau.",
+    "teks": "Sudah sampai kau.",
     "next": "1"
   },
   {
@@ -24,7 +24,7 @@
     "id": "3",
     "speaker": "Pak Hendra",
     "emosi": "sad",
-    "teks": "(menunjuk garis lumpur di dinding) Setinggi situ. Gula, kopi, kursi, hanyut semua. Toples biru Mak pun.",
+    "teks": "Setinggi situ. Gula, kopi, kursi, hanyut semua. Toples biru Mak pun.",
     "next": "4"
   },
   {
@@ -38,7 +38,7 @@
     "id": "5",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "(Di Jakarta, lima ratus ribu cuma dua kali makan malam dan ongkos. Di sini, ia sebuah dinding yang sudah roboh.)",
+    "teks": "Di Jakarta, lima ratus ribu cuma dua kali makan malam dan ongkos. Di sini, ia sebuah dinding yang sudah roboh.",
     "next": "6"
   },
   {

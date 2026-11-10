@@ -39,7 +39,7 @@
     "id": "step1_b",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "(menyeret kasur lagi) Anak kemarin sore. Hmm.",
+    "teks": "Anak kemarin sore. Hmm.",
     "next": "end"
   },
   {
@@ -82,7 +82,7 @@
     "id": "step2_a",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "(lama diam) Kasur zaman dulu kapuk, hancur sendiri di air. Yang sekarang ini busa… Iya juga ya.",
+    "teks": "Kasur zaman dulu kapuk, hancur sendiri di air. Yang sekarang ini busa… Iya juga ya.",
     "next": "step3"
   },
   {

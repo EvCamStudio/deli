@@ -67,7 +67,7 @@ func show_node(node: Dictionary) -> void:
 	speaker_label.text = str(node.get("speaker", ""))
 	_update_portrait(node)
 
-	var full_text: String = str(node.get("text", node.get("teks", "")))
+	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
 	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_fit_panel(full_text, choices.size())
 	_has_choices = not choices.is_empty()
@@ -78,6 +78,12 @@ func show_node(node: Dictionary) -> void:
 		await _wait_typewriter_done()
 		if is_inside_tree():
 			_show_choices(choices)
+
+func _clean_text(raw: String) -> String:
+	# Hilangkan petunjuk lakuan panggung/arah panggung dalam kurung: e.g. "(menunjuk ke dinding)", "(sapu berhenti)"
+	var regex := RegEx.new()
+	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
+	return regex.sub(raw, " ", true).strip_edges()
 
 func _fit_panel(text: String, choice_count: int) -> void:
 	# Perkirakan tinggi kotak dari jumlah baris teks + pilihan, supaya tidak

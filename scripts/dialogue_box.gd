@@ -35,8 +35,8 @@ func show_node(node: Dictionary) -> void:
 	tap_area.show()
 
 	speaker_label.text = node.get("speaker", "")
-	var full_text: String = node.get("text", "")
-	var choices: Array = node.get("choices", [])
+	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
+	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_has_choices = not choices.is_empty()
 
 	# Sembunyikan hint jika ada pilihan
@@ -49,6 +49,11 @@ func show_node(node: Dictionary) -> void:
 	if _has_choices:
 		await _wait_typewriter_done()
 		_show_choices(choices)
+
+func _clean_text(raw: String) -> String:
+	var regex := RegEx.new()
+	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
+	return regex.sub(raw, " ", true).strip_edges()
 
 func _start_typewriter(text: String) -> void:
 	_full_text = text

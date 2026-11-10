@@ -544,34 +544,34 @@ func _refresh_mission() -> void:
 			var trees: int = mini(GameState.zone_stat("hulu", "trees"), 5)
 
 			if not talked_ibu:
-				title = "MISI HULU · LANGKAH 1"
+				title = "HULU SUNGAI DELI"
 				lines = [
-					"Temui Mak & Bapak di depan warung.",
-					"Periksa kondisi setelah diterjang banjir."
+					"Dekati warung Mak & Bapak di depan rumah.",
+					"Periksa kondisi warung setelah diterjang banjir."
 				]
 			elif not talked_datuk:
-				title = "MISI HULU · LANGKAH 2"
+				title = "TEPIAN SUNGAI HULU"
 				lines = [
-					"Temui Datuk Sampan di tepi sungai.",
-					"Dengarkan petuah tentang menjaga sungai."
+					"Periksa bantaran sungai di dekat warung.",
+					"Cari tahu mengapa air sungai meluap begitu deras."
 				]
 			elif not talked_penjaga and trees == 0:
-				title = "MISI HULU · LANGKAH 3"
+				title = "MATA AIR HUTAN HULU"
 				lines = [
-					"Temui Penjaga Hutan di area mata air.",
-					"Minta bibit pohon untuk penghijauan."
+					"Susuri jalan setapak ke arah hutan hulu.",
+					"Periksa sumber mata air yang mengaliri sungai."
 				]
 			elif not cleared or river_pct < 40:
-				title = "MISI HULU · LANGKAH 4"
+				title = "PENGHIJAUAN HULU"
 				lines = [
-					"Tanam pohon di titik bertanda: %d/5" % trees,
+					"Tanam bibit pohon di titik tanah bertanda: %d/5" % trees,
 					"Pilah sampah ke tong (Air: %d%% / 40%%)" % river_pct
 				]
 			else:
-				title = "HULU SUNGAI PULIH!"
+				title = "HULU MULAI PULIH"
 				lines = [
-					"Pohon tertanam dan air mencapai %d%%." % river_pct,
-					"Masuk ke Gerbang Desa di sebelah timur."
+					"Mata air terlindungi dan air mencapai %d%%." % river_pct,
+					"Lanjutkan perjalanan melewati Gerbang Desa di timur."
 				]
 
 		"desa":
@@ -580,28 +580,28 @@ func _refresh_mission() -> void:
 			var talked_rina: bool = "npc_ibu_desa" in talked_keys
 
 			if not talked_darwis:
-				title = "MISI DESA · LANGKAH 1"
+				title = "DESA SUNGAI DELI"
 				lines = [
-					"Temui Pak Darwis di bale kebun sayur.",
-					"Dengarkan alasannya membuang kasur rusak."
+					"Dekati bale bambu di samping kebun sayur.",
+					"Cari tahu apa yang hendak dibuang warga ke tebing sungai."
 				]
 			elif not talked_rina:
-				title = "MISI DESA · LANGKAH 2"
+				title = "WARGA BANTARAN DESA"
 				lines = [
-					"Temui Kak Rina di gerobak gorengan.",
-					"Ajak kelola minyak jelantah untuk biodiesel."
+					"Dekati gerobak gorengan di persimpangan jalan.",
+					"Ajak bicara pedagang tentang pengelolaan minyak jelantah."
 				]
 			elif sorted < 10 or river_pct < 60:
-				title = "MISI DESA · LANGKAH 3"
+				title = "GOTONG ROYONG DESA"
 				lines = [
-					"Pilah 10 sampah desa ke tong: %d/10" % sorted,
-					"Pulihkan kesehatan air (%d%% / 60%%)" % river_pct
+					"Pilah 10 sampah desa ke tong sesuai jenisnya: %d/10" % sorted,
+					"Pulihkan kesehatan air sungai (%d%% / 60%%)" % river_pct
 				]
 			else:
-				title = "DESA TELAH BERSIH!"
+				title = "SUNGAI DESA BERSIH"
 				lines = [
-					"Warga sadar dan sungai desa membaik.",
-					"Masuk ke Gerbang Kota Medan di timur."
+					"Warga sepakat menjaga sungai dan air membaik.",
+					"Masuk ke Gerbang Kota Medan di sebelah timur."
 				]
 
 		"kota":
@@ -610,34 +610,34 @@ func _refresh_mission() -> void:
 			var talked_jali: bool = "npc_pedagang" in talked_keys
 
 			if not talked_jali:
-				title = "MISI KOTA · LANGKAH 1"
+				title = "KOTA MEDAN"
 				lines = [
-					"Temui Bang Jali di mulut gang sempit.",
-					"Cari solusi bersama untuk sampah gang."
+					"Dekati mulut gang sempit di tepi jalan pemukiman.",
+					"Sapa warga yang membuang kantong sampah ke selokan."
 				]
 			elif not _drainase_open:
-				title = "MISI KOTA · LANGKAH 2"
+				title = "DRAINASE BAWAH JEMBATAN"
 				lines = [
-					"Buka pintu air drainase di bawah jembatan.",
-					"Tarik 3 tuas dengan urutan: 1 → 3 → 2."
+					"Periksa pintu air drainase yang tersumbat di bawah jembatan.",
+					"Tarik 3 tuas besi dengan urutan: 1 → 3 → 2."
 				]
 			elif talked_count < 4:
-				title = "MISI KOTA · LANGKAH 3"
+				title = "SUARA WARGA KOTA"
 				lines = [
-					"Ajak bicara warga kota lainnya (%d/4):" % talked_count,
-					"Temui Ibu Rumah Tangga, Budi, atau Pak RT."
+					"Dengarkan keluhan warga di sekitar bantaran (%d/4):" % talked_count,
+					"Cari tahu masalah limbah B3 dan kebiasaan warga kota."
 				]
 			elif sorted < 6 or river_pct < 75:
-				title = "MISI KOTA · LANGKAH 4"
+				title = "PENATAAN BANTARAN KOTA"
 				lines = [
-					"Pilah 6 sampah kota ke tong: %d/6" % sorted,
-					"Pulihkan kesehatan air (%d%% / 75%%)" % river_pct
+					"Pilah 6 sampah kota ke tong yang tersedia: %d/6" % sorted,
+					"Pulihkan aliran air sungai Deli (%d%% / 75%%)" % river_pct
 				]
 			else:
-				title = "KOTA MEDAN TERTATA!"
+				title = "KOTA MEDAN TERTATA"
 				lines = [
-					"Drainase lancar dan sampah terkelola.",
-					"Masuk ke Gerbang Hilir di muara sungai."
+					"Drainase lancar dan bantaran kota mulai tertata.",
+					"Lanjutkan perjalanan ke Gerbang Hilir di muara."
 				]
 
 		"hilir":
@@ -647,34 +647,34 @@ func _refresh_mission() -> void:
 			var talked_penjaga: bool = "npc_penjaga_sungai" in talked_keys
 
 			if not talked_nelayan:
-				title = "MISI HILIR · LANGKAH 1"
+				title = "MUARA & PESISIR DELI"
 				lines = [
-					"Temui Pak Nelayan di dekat perahu.",
-					"Pelajari pentingnya benteng hutan bakau."
+					"Dekati perahu nelayan di pesisir pantai.",
+					"Cari tahu kondisi pantai dan benteng hutan bakau."
 				]
 			elif mangroves < 8:
-				title = "MISI HILIR · LANGKAH 2"
+				title = "BENTENG BAKAU MUARA"
 				lines = [
-					"Tanam 8 bibit mangrove di pantai: %d/8" % mangroves,
-					"Dekati titik tanah bertanda di pesisir."
+					"Tanam 8 bibit mangrove di pesisir pantai: %d/8" % mangroves,
+					"Tancapkan bibit pada titik tanah bertanda di tepian."
 				]
 			elif not talked_penjaga:
-				title = "MISI HILIR · LANGKAH 3"
+				title = "POS PEMANTAU MUARA"
 				lines = [
-					"Temui Penjaga Sungai di pos pemantau.",
-					"Dengarkan wejangan tentang muara Deli."
+					"Temui petugas di pos pemantau muara.",
+					"Lihat gunungan sampah yang tersangkut pasang surut."
 				]
 			elif sorted < 10 or river_pct < 80:
-				title = "MISI HILIR · LANGKAH 4"
+				title = "PEMULIHAN AKHIR SUNGAI"
 				lines = [
-					"Pilah sampah pesisir (%d/10) & lengkapi pantun." % sorted,
-					"Pulihkan kesehatan air (%d%% / 80%%)" % river_pct
+					"Pilah sampah pesisir (%d/10) & lengkapi pantun di papan muara." % sorted,
+					"Pulihkan kesehatan air muara Deli (%d%% / 80%%)" % river_pct
 				]
 			else:
 				title = "SUNGAI DELI TELAH PULIH!"
 				lines = [
-					"Muara bersih dan mangrove tumbuh asri.",
-					"Masuk ke Gerbang Epilog untuk akhir perjalanan."
+					"Muara bersih, mangrove tegak, dan sungai kembali hidup.",
+					"Masuk ke Gerbang Epilog untuk akhir perjalananmu."
 				]
 
 	var text: String = title

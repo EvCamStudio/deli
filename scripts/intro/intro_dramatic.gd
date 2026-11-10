@@ -224,16 +224,16 @@ func _render_current_step() -> void:
 			_setup_dialog_speaker(speaker, player_name)
 
 		"pikiran":
-			# Pikiran MC: cukup tanda kurung tanpa embel-embel "(Dalam Hati)" pada nama
+			# Pikiran MC: italic bersih tanpa tanda kurung
 			caption_box.hide()
 			dialogue_container.show()
-			speech_text.text = "[i](%s)[/i]" % processed_teks
+			speech_text.text = "[i]%s[/i]" % processed_teks
 			_setup_thought_speaker(speaker, player_name)
 
 		"telepon":
 			caption_box.hide()
 			dialogue_container.show()
-			speech_text.text = "(Lewat telepon) \"%s\"" % processed_teks
+			speech_text.text = "\"%s\"" % processed_teks
 			_setup_phone_speaker(speaker)
 
 func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
