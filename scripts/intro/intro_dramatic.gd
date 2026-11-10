@@ -127,10 +127,12 @@ const SCRIPT_DATA: Array = [
 # ─── Referensi Node ──────────────────────────────────────────────────────────
 @onready var chapter_root: Control = $ChapterRoot
 @onready var tap_advance_btn: Button = $TapAdvanceBtn
+@onready var header_banner: PanelContainer = $HeaderBanner
 @onready var header_label: Label = $HeaderBanner/HeaderLabel
 @onready var narration_screen: Control = $NarrationScreen
-@onready var narration_text: RichTextLabel = $NarrationScreen/CenterBox/NarrationCard/VBox/NarrationText
-@onready var narration_hint: Label = $NarrationScreen/CenterBox/NarrationCard/VBox/HintRow/NarrationHint
+@onready var paper_header: Label = $NarrationScreen/CenterBox/PaperCard/VBox/PaperHeader
+@onready var narration_text: RichTextLabel = $NarrationScreen/CenterBox/PaperCard/VBox/NarrationText
+@onready var narration_hint: Label = $NarrationScreen/CenterBox/PaperCard/VBox/HintRow/NarrationHint
 @onready var dialogue_container: Control = $DialogueContainer
 @onready var dialog_panel: PanelContainer = $DialogueContainer/DialogPanel
 @onready var speaker_tag: PanelContainer = $DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag
@@ -264,24 +266,29 @@ func _render_current_step() -> void:
 
 	match tipe:
 		"narasi":
-			# Tampilkan Narasi Full Layar dengan Card Elegan
+			# Tampilkan Narasi dalam format lembaran kertas vertikal
+			header_banner.hide()
+			paper_header.text = "— %s —" % HEADERS[_current_chapter]
 			dialogue_container.hide()
 			narration_screen.show()
 			_start_typewriter(narration_text, narration_hint, "[i]%s[/i]" % processed_teks)
 
 		"dialog":
+			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_dialog_speaker(speaker, player_name)
 			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
 
 		"pikiran":
+			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_thought_speaker(speaker, player_name)
 			_start_typewriter(speech_text, dialog_hint, "[i]%s[/i]" % processed_teks)
 
 		"telepon":
+			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_phone_speaker(speaker)
