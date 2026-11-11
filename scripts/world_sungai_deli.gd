@@ -118,7 +118,7 @@ func _ready() -> void:
 		player.global_position = Vector2(GameState.saved_player_x, GameState.saved_player_y)
 
 	if hud:
-		hud.show_hint("Joystick kiri / WASD untuk bergerak\nDekati orang/objek lalu tekan tombol aksi (B / E)", 7.5)
+		hud.show_hint("Joystick / WASD untuk bergerak · Dekati objek & tekan (B/E)", 4.0)
 
 func _process(delta: float) -> void:
 	if get_tree().paused:
@@ -546,32 +546,28 @@ func _refresh_mission() -> void:
 			if not talked_ibu:
 				title = "HULU SUNGAI DELI"
 				lines = [
-					"Dekati warung Mak & Bapak di depan rumah.",
-					"Periksa kondisi warung setelah diterjang banjir."
+					"Periksa kondisi warung Mak & Bapak."
 				]
 			elif not talked_datuk:
-				title = "TEPIAN SUNGAI HULU"
+				title = "BANTARAN HULU"
 				lines = [
-					"Periksa bantaran sungai di dekat warung.",
-					"Cari tahu mengapa air sungai meluap begitu deras."
+					"Selidiki luapan air di bantaran sungai."
 				]
 			elif not talked_penjaga and trees == 0:
-				title = "MATA AIR HUTAN HULU"
+				title = "MATA AIR HUTAN"
 				lines = [
-					"Susuri jalan setapak ke arah hutan hulu.",
-					"Periksa sumber mata air yang mengaliri sungai."
+					"Susuri jalan setapak ke hutan hulu."
 				]
 			elif not cleared or river_pct < 40:
 				title = "PENGHIJAUAN HULU"
 				lines = [
-					"Tanam bibit pohon di titik tanah bertanda: %d/5" % trees,
+					"Tanam bibit pohon: %d/5" % trees,
 					"Pilah sampah ke tong (Air: %d%% / 40%%)" % river_pct
 				]
 			else:
-				title = "HULU MULAI PULIH"
+				title = "HULU PULIH"
 				lines = [
-					"Mata air terlindungi dan air mencapai %d%%." % river_pct,
-					"Lanjutkan perjalanan melewati Gerbang Desa di timur."
+					"Lanjutkan ke Gerbang Desa di timur."
 				]
 
 		"desa":
@@ -580,28 +576,25 @@ func _refresh_mission() -> void:
 			var talked_rina: bool = "npc_ibu_desa" in talked_keys
 
 			if not talked_darwis:
-				title = "DESA SUNGAI DELI"
+				title = "KEBUN DESA"
 				lines = [
-					"Dekati bale bambu di samping kebun sayur.",
-					"Cari tahu apa yang hendak dibuang warga ke tebing sungai."
+					"Bicara dengan Pak Darwis di kebun sayur."
 				]
 			elif not talked_rina:
-				title = "WARGA BANTARAN DESA"
+				title = "WARGA BANTARAN"
 				lines = [
-					"Dekati gerobak gorengan di persimpangan jalan.",
-					"Ajak bicara pedagang tentang pengelolaan minyak jelantah."
+					"Ajak bicara Bu Rina di persimpangan jalan."
 				]
 			elif sorted < 10 or river_pct < 60:
 				title = "GOTONG ROYONG DESA"
 				lines = [
-					"Pilah 10 sampah desa ke tong sesuai jenisnya: %d/10" % sorted,
-					"Pulihkan kesehatan air sungai (%d%% / 60%%)" % river_pct
+					"Pilah 10 sampah desa: %d/10" % sorted,
+					"Pulihkan air sungai (%d%% / 60%%)" % river_pct
 				]
 			else:
-				title = "SUNGAI DESA BERSIH"
+				title = "DESA BERSIH"
 				lines = [
-					"Warga sepakat menjaga sungai dan air membaik.",
-					"Masuk ke Gerbang Kota Medan di sebelah timur."
+					"Masuk ke Gerbang Kota Medan di timur."
 				]
 
 		"kota":
@@ -610,34 +603,30 @@ func _refresh_mission() -> void:
 			var talked_jali: bool = "npc_pedagang" in talked_keys
 
 			if not talked_jali:
-				title = "KOTA MEDAN"
+				title = "BANTARAN KOTA"
 				lines = [
-					"Dekati mulut gang sempit di tepi jalan pemukiman.",
-					"Sapa warga yang membuang kantong sampah ke selokan."
+					"Sapa Jali di mulut gang pemukiman."
 				]
 			elif not _drainase_open:
-				title = "DRAINASE BAWAH JEMBATAN"
+				title = "DRAINASE KOTA"
 				lines = [
-					"Periksa pintu air drainase yang tersumbat di bawah jembatan.",
-					"Tarik 3 tuas besi dengan urutan: 1 → 3 → 2."
+					"Buka drainase bawah jembatan (1 → 3 → 2)."
 				]
 			elif talked_count < 4:
 				title = "SUARA WARGA KOTA"
 				lines = [
-					"Dengarkan keluhan warga di sekitar bantaran (%d/4):" % talked_count,
-					"Cari tahu masalah limbah B3 dan kebiasaan warga kota."
+					"Dengarkan keluhan warga bantaran (%d/4)." % talked_count
 				]
 			elif sorted < 6 or river_pct < 75:
-				title = "PENATAAN BANTARAN KOTA"
+				title = "PENATAAN KOTA"
 				lines = [
-					"Pilah 6 sampah kota ke tong yang tersedia: %d/6" % sorted,
-					"Pulihkan aliran air sungai Deli (%d%% / 75%%)" % river_pct
+					"Pilah 6 sampah kota: %d/6" % sorted,
+					"Pulihkan air sungai (%d%% / 75%%)" % river_pct
 				]
 			else:
-				title = "KOTA MEDAN TERTATA"
+				title = "KOTA TERTATA"
 				lines = [
-					"Drainase lancar dan bantaran kota mulai tertata.",
-					"Lanjutkan perjalanan ke Gerbang Hilir di muara."
+					"Lanjutkan ke Gerbang Hilir di muara."
 				]
 
 		"hilir":
@@ -647,34 +636,30 @@ func _refresh_mission() -> void:
 			var talked_penjaga: bool = "npc_penjaga_sungai" in talked_keys
 
 			if not talked_nelayan:
-				title = "MUARA & PESISIR DELI"
+				title = "MUARA DELI"
 				lines = [
-					"Dekati perahu nelayan di pesisir pantai.",
-					"Cari tahu kondisi pantai dan benteng hutan bakau."
+					"Dekati perahu nelayan di pesisir pantai."
 				]
 			elif mangroves < 8:
-				title = "BENTENG BAKAU MUARA"
+				title = "BENTENG BAKAU"
 				lines = [
-					"Tanam 8 bibit mangrove di pesisir pantai: %d/8" % mangroves,
-					"Tancapkan bibit pada titik tanah bertanda di tepian."
+					"Tanam bibit mangrove di pesisir: %d/8" % mangroves
 				]
 			elif not talked_penjaga:
-				title = "POS PEMANTAU MUARA"
+				title = "POS MUARA"
 				lines = [
-					"Temui petugas di pos pemantau muara.",
-					"Lihat gunungan sampah yang tersangkut pasang surut."
+					"Temui petugas di pos pemantau muara."
 				]
 			elif sorted < 10 or river_pct < 80:
-				title = "PEMULIHAN AKHIR SUNGAI"
+				title = "PEMULIHAN MUARA"
 				lines = [
-					"Pilah sampah pesisir (%d/10) & lengkapi pantun di papan muara." % sorted,
-					"Pulihkan kesehatan air muara Deli (%d%% / 80%%)" % river_pct
+					"Pilah sampah pesisir (%d/10) & pantun muara." % sorted,
+					"Pulihkan air muara (%d%% / 80%%)" % river_pct
 				]
 			else:
-				title = "SUNGAI DELI TELAH PULIH!"
+				title = "SUNGAI DELI PULIH"
 				lines = [
-					"Muara bersih, mangrove tegak, dan sungai kembali hidup.",
-					"Masuk ke Gerbang Epilog untuk akhir perjalananmu."
+					"Masuk ke Gerbang Epilog."
 				]
 
 	var text: String = title
@@ -927,12 +912,17 @@ func _update_compass(target: Node2D) -> void:
 		hud.hide_objective()
 		return
 	var delta: Vector2 = target.global_position - player.global_position
+	var distance_tiles: int = int(round(delta.length() / TILE))
+	# Hanya tampilkan petunjuk teks kompas jika target jauh (> 10 petak)
+	# Jika dekat, pemain sudah dituntun panah melingkar dan target terlihat di layar.
+	if distance_tiles <= 10:
+		hud.hide_objective()
+		return
 	var direction: String = ""
 	if abs(delta.x) >= abs(delta.y):
 		direction = "→" if delta.x >= 0.0 else "←"
 	else:
 		direction = "↓" if delta.y >= 0.0 else "↑"
-	var distance_tiles: int = int(round(delta.length() / TILE))
 	hud.set_objective(direction, distance_tiles, _target_label(target))
 
 func _target_label(target: Node2D) -> String:
@@ -1137,6 +1127,8 @@ func _on_dialogue_started() -> void:
 		hud.hide_toast()
 		if hud.has_method("hide_hint"):
 			hud.hide_hint()
+		if hud.has_method("hide_mission"):
+			hud.hide_mission()
 	set_touch_controls_visible(false)
 	_update_guidance()
 

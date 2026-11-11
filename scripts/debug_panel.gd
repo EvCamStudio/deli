@@ -88,8 +88,9 @@ func _build_ui() -> void:
 	_overlay.color = Color(0.09, 0.12, 0.10, 0.55)
 	add_child(_overlay)
 
-	# Tombol kecil di pojok kiri bawah
+	# Tombol kecil di pojok kiri bawah (disembunyikan agar tidak bertubrukan dengan joystick virtual)
 	_toggle_hint_btn = Button.new()
+	_toggle_hint_btn.visible = false
 	_toggle_hint_btn.add_theme_font_size_override("font_size", 10)
 	_toggle_hint_btn.text = "Debug [F1]"
 	_toggle_hint_btn.anchors_preset = Control.PRESET_BOTTOM_LEFT

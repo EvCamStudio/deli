@@ -120,10 +120,10 @@ func _on_river_health_changed(value: float) -> void:
 func update_mission(text: String) -> void:
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
-		mission_title.text = "MISI: " + lines[0]
+		mission_title.text = "◆ " + lines[0].to_upper()
 		mission_label.text = "\n".join(lines.slice(1))
 	else:
-		mission_title.text = "MISI"
+		mission_title.text = "◆ MISI"
 		mission_label.text = text
 
 func _update_money() -> void:

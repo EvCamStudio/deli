@@ -1,22 +1,104 @@
-[gd_scene load_steps=8 format=3 uid="uid://hud_scene"]
+[gd_scene load_steps=12 format=3 uid="uid://hud_scene"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/droplet.png" id="2_droplet"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/coin.png" id="4_coin"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/card.png" id="7_card"]
-[ext_resource type="Texture2D" path="res://assets/ui/panel_paper.png" id="8_paper"]
 [ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="9_pixel"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_card"]
-texture = ExtResource("8_paper")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-content_margin_left = 8.0
+[sub_resource type="StyleBoxFlat" id="StyleBox_card"]
+content_margin_left = 7.0
 content_margin_top = 3.0
-content_margin_right = 8.0
+content_margin_right = 7.0
 content_margin_bottom = 3.0
+bg_color = Color(0.08, 0.1, 0.14, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.32, 0.38, 0.46, 0.5)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_location"]
+content_margin_left = 9.0
+content_margin_top = 3.0
+content_margin_right = 9.0
+content_margin_bottom = 3.0
+bg_color = Color(0.08, 0.1, 0.14, 0.88)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.72, 0.45, 0.6)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_mission"]
+content_margin_left = 8.0
+content_margin_top = 5.0
+content_margin_right = 8.0
+content_margin_bottom = 5.0
+bg_color = Color(0.06, 0.08, 0.12, 0.85)
+border_width_left = 3
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.88, 0.74, 0.42, 0.85)
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_compass"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0.08, 0.1, 0.14, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.72, 0.45, 0.55)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_toast"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.08, 0.1, 0.14, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.85, 0.72, 0.45, 0.75)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_hint"]
+content_margin_left = 12.0
+content_margin_top = 3.0
+content_margin_right = 12.0
+content_margin_bottom = 3.0
+bg_color = Color(0.08, 0.1, 0.14, 0.92)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.88, 0.74, 0.42, 0.8)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
@@ -27,18 +109,22 @@ script = ExtResource("1_hud")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 10
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 8
 
 [node name="Root" type="Control" parent="SafeMargin"]
 layout_mode = 2
 
 [node name="TopBar" type="HBoxContainer" parent="SafeMargin/Root"]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 36.0
+offset_bottom = 28.0
+grow_horizontal = 2
 theme_override_constants/separation = 6
 
 [node name="ClarityCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
@@ -48,10 +134,10 @@ theme_override_styles/panel = SubResource("StyleBox_card")
 
 [node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/ClarityCard"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 5
 
 [node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(14, 14)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("2_droplet")
@@ -59,17 +145,18 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(70, 10)
+custom_minimum_size = Vector2(62, 8)
 layout_mode = 2
 size_flags_vertical = 4
 value = 60.0
 show_percentage = false
 
 [node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(64, 0)
+custom_minimum_size = Vector2(60, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "Bencana 60%"
 
 [node name="Spacer" type="Control" parent="SafeMargin/Root/TopBar"]
@@ -79,15 +166,15 @@ size_flags_horizontal = 3
 [node name="LocationCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBox_card")
+theme_override_styles/panel = SubResource("StyleBox_location")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/TopBar/LocationCard"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.88, 0.72, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "HULU SUNGAI DELI"
 horizontal_alignment = 1
-custom_minimum_size = Vector2(96, 0)
 
 [node name="MoneyCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
@@ -99,7 +186,7 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/MoneyCard/Row"]
-custom_minimum_size = Vector2(16, 16)
+custom_minimum_size = Vector2(14, 14)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("4_coin")
@@ -107,28 +194,29 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RupiahLabel" type="Label" parent="SafeMargin/Root/TopBar/MoneyCard/Row"]
-custom_minimum_size = Vector2(58, 0)
+custom_minimum_size = Vector2(50, 0)
 layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.86, 0.45, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Rp 0"
 
 [node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
-custom_minimum_size = Vector2(40, 36)
+custom_minimum_size = Vector2(30, 26)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Jurnal / Menu"
 icon = ExtResource("7_card")
 expand_icon = true
-icon_max_width = 28
+icon_max_width = 20
 
 [node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
 visible = false
 layout_mode = 0
-offset_top = 62.0
-offset_right = 260.0
-offset_bottom = 140.0
-theme_override_styles/panel = SubResource("StyleBox_card")
+offset_top = 34.0
+offset_right = 192.0
+offset_bottom = 76.0
+theme_override_styles/panel = SubResource("StyleBox_mission")
 
 [node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]
 layout_mode = 2
@@ -136,17 +224,17 @@ theme_override_constants/separation = 2
 
 [node name="MissionTitle" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
+theme_override_colors/font_color = Color(0.95, 0.8, 0.4, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 9
-text = "MISI"
+theme_override_font_sizes/font_size = 8
+text = "◆ MISI AKTIF"
 
 [node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
-custom_minimum_size = Vector2(220, 0)
+custom_minimum_size = Vector2(174, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = ""
 autowrap_mode = 3
 
@@ -156,17 +244,18 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -92.0
-offset_top = 38.0
-offset_right = 92.0
-offset_bottom = 60.0
-theme_override_styles/panel = SubResource("StyleBox_card")
+offset_left = -70.0
+offset_top = 34.0
+offset_right = 70.0
+offset_bottom = 54.0
+grow_horizontal = 2
+theme_override_styles/panel = SubResource("StyleBox_compass")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/Compass"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -179,15 +268,17 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -120.0
-offset_top = -36.0
-offset_right = 120.0
-offset_bottom = -18.0
+offset_left = -100.0
+offset_top = -84.0
+offset_right = 100.0
+offset_bottom = -68.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
-theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_colors/font_outline_color = Color(0.08, 0.1, 0.14, 1)
 theme_override_constants/outline_size = 3
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 text = "Dibawa: 0 sampah"
 horizontal_alignment = 1
 
@@ -199,16 +290,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -160.0
-offset_top = -80.0
-offset_right = 160.0
-offset_bottom = -42.0
-theme_override_styles/panel = SubResource("StyleBox_card")
+offset_left = -130.0
+offset_top = -64.0
+offset_right = 130.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBox_toast")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/Toast"]
 layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.94, 0.9, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = "Tersimpan!"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -222,17 +316,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -172.0
-offset_top = -156.0
-offset_right = 172.0
-offset_bottom = -90.0
-theme_override_styles/panel = SubResource("StyleBox_card")
+offset_left = -160.0
+offset_top = -34.0
+offset_right = 160.0
+offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_styles/panel = SubResource("StyleBox_hint")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/HintCard"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.227, 0.165, 0.118, 1)
+theme_override_colors/font_color = Color(0.96, 0.95, 0.9, 1)
 theme_override_fonts/font = ExtResource("9_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_font_sizes/font_size = 9
 text = ""
 horizontal_alignment = 1
 vertical_alignment = 1

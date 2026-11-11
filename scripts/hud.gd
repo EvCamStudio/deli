@@ -90,6 +90,16 @@ func _ready() -> void:
 		compass_panel.hide()
 	hide_mission()
 	update_all()
+	_update_sikap_visibility()
+
+func _unhandled_input(event: InputEvent) -> void:
+	# Hilangkan petunjuk otomatis begitu pemain bergerak atau menyentuh layar
+	if hint_card and hint_card.visible:
+		if event.is_action_pressed("move_up") or event.is_action_pressed("move_down") or \
+		   event.is_action_pressed("move_left") or event.is_action_pressed("move_right") or \
+		   event.is_action_pressed("interact") or (event is InputEventScreenTouch and event.pressed) or \
+		   (event is InputEventScreenDrag):
+			hide_hint()
 
 func _process(_delta: float) -> void:
 	if get_tree().paused:
@@ -99,20 +109,22 @@ func _process(_delta: float) -> void:
 # ─── Setup ────────────────────────────────────────────────────────────────────
 
 func _build_bar_styles() -> void:
-	_bar_danger = _make_bar_style(Color(0.78, 0.25, 0.22))
-	_bar_warn = _make_bar_style(Color(0.85, 0.64, 0.18))
-	_bar_safe = _make_bar_style(Color(0.24, 0.66, 0.42))
+	_bar_danger = _make_bar_style(Color(0.85, 0.28, 0.22))
+	_bar_warn = _make_bar_style(Color(0.92, 0.68, 0.20))
+	_bar_safe = _make_bar_style(Color(0.24, 0.72, 0.42))
+	if river_bar:
+		var bar_bg := StyleBoxFlat.new()
+		bar_bg.bg_color = Color(0.06, 0.08, 0.10, 0.85)
+		bar_bg.set_corner_radius_all(3)
+		river_bar.add_theme_stylebox_override("background", bar_bg)
 
 func _make_bar_style(color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = color
-	style.corner_radius_top_left = 4
-	style.corner_radius_top_right = 4
-	style.corner_radius_bottom_left = 4
-	style.corner_radius_bottom_right = 4
+	style.set_corner_radius_all(3)
 	return style
 
-## Membuat panel indikator Sikap 3 NPC (Jali, Rina, Darwis) dengan kotak warna & teks
+## Membuat panel indikator Sikap NPC (Jali, Rina, Darwis) dengan kotak warna & teks
 func _build_sikap_panel() -> void:
 	if _sikap_card != null or root_control == null:
 		return
@@ -122,20 +134,24 @@ func _build_sikap_panel() -> void:
 	_sikap_card.anchors_preset = Control.PRESET_TOP_RIGHT
 	_sikap_card.anchor_left = 1.0
 	_sikap_card.anchor_right = 1.0
-	_sikap_card.offset_left = -268.0
+	_sikap_card.offset_left = -190.0
 	_sikap_card.offset_top = 34.0
 	_sikap_card.offset_right = 0.0
-	_sikap_card.offset_bottom = 60.0
+	_sikap_card.offset_bottom = 54.0
 
-	var card_style: StyleBox = null
-	var clarity := get_node_or_null("SafeMargin/Root/TopBar/ClarityCard")
-	if clarity and clarity is PanelContainer:
-		card_style = clarity.get_theme_stylebox("panel")
-	if card_style:
-		_sikap_card.add_theme_stylebox_override("panel", card_style)
+	var card_style := StyleBoxFlat.new()
+	card_style.bg_color = Color(0.08, 0.10, 0.14, 0.85)
+	card_style.border_color = Color(0.32, 0.38, 0.46, 0.5)
+	card_style.set_border_width_all(1)
+	card_style.set_corner_radius_all(6)
+	card_style.content_margin_left = 8
+	card_style.content_margin_top = 2
+	card_style.content_margin_right = 8
+	card_style.content_margin_bottom = 2
+	_sikap_card.add_theme_stylebox_override("panel", card_style)
 
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
+	row.add_theme_constant_override("separation", 8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_sikap_card.add_child(row)
 
@@ -144,23 +160,57 @@ func _build_sikap_panel() -> void:
 		item_box.add_theme_constant_override("separation", 4)
 
 		var color_rect := ColorRect.new()
-		color_rect.custom_minimum_size = Vector2(9, 9)
+		color_rect.custom_minimum_size = Vector2(8, 8)
 		color_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		color_rect.color = Color(0.55, 0.55, 0.55)
 		item_box.add_child(color_rect)
 
 		var lbl := Label.new()
-		lbl.add_theme_font_size_override("font_size", 10)
+		lbl.add_theme_font_size_override("font_size", 9)
+		lbl.add_theme_color_override("font_color", Color(0.92, 0.92, 0.95))
 		lbl.text = "%s: Acuh" % NPC_DISPLAY_NAMES[npc_key]
 		item_box.add_child(lbl)
 
 		row.add_child(item_box)
 		_npc_ui[npc_key] = {
+			"container": item_box,
 			"box": color_rect,
 			"label": lbl,
 		}
 
 	root_control.add_child(_sikap_card)
+	_update_sikap_visibility()
+
+## Menyesuaikan tampilan sikap agar hanya muncul untuk NPC yang relevan di zona saat ini
+func _update_sikap_visibility() -> void:
+	if _sikap_card == null:
+		return
+	var zone: String = ""
+	if "in_world" in GameState and GameState.in_world and "world_zone" in GameState:
+		zone = str(GameState.world_zone).to_lower()
+	elif "current_level" in GameState:
+		match GameState.current_level:
+			1: zone = "hulu"
+			2: zone = "desa"
+			3: zone = "kota"
+			4: zone = "hilir"
+			_: zone = ""
+
+	# Di Hulu, Hilir, atau Epilog, warga desa/kota (Jali, Rina, Darwis) tidak ada.
+	# Sembunyikan panel sikap agar UI tetap bersih dan tidak menyemak.
+	if zone == "hulu" or zone == "hilir" or zone == "epilog" or zone.is_empty():
+		_sikap_card.hide()
+		return
+
+	_sikap_card.show()
+	if zone == "desa":
+		if "jali" in _npc_ui: _npc_ui["jali"]["container"].hide()
+		if "rina" in _npc_ui: _npc_ui["rina"]["container"].show()
+		if "darwis" in _npc_ui: _npc_ui["darwis"]["container"].show()
+	elif zone == "kota":
+		if "jali" in _npc_ui: _npc_ui["jali"]["container"].show()
+		if "rina" in _npc_ui: _npc_ui["rina"]["container"].hide()
+		if "darwis" in _npc_ui: _npc_ui["darwis"]["container"].hide()
 
 func _apply_safe_area() -> void:
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
@@ -195,11 +245,13 @@ func _update_location() -> void:
 		var zone_name: String = LOCATION_NAMES.get(GameState.current_level, "")
 		if not zone_name.is_empty():
 			location_label.text = zone_name
+	_update_sikap_visibility()
 
 ## Dipakai world map saat berpindah zona.
 func set_location(zone_name: String) -> void:
 	if location_label:
 		location_label.text = zone_name
+	_update_sikap_visibility()
 
 func _on_river_health_changed(value: float) -> void:
 	_on_meter_changed(100.0 - value)
@@ -293,10 +345,10 @@ func update_mission(text: String) -> void:
 		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
-		mission_title.text = lines[0].to_upper()
+		mission_title.text = "◆ " + lines[0].to_upper()
 		mission_label.text = "\n".join(lines.slice(1))
 	else:
-		mission_title.text = "MISI AKTIF"
+		mission_title.text = "◆ MISI AKTIF"
 		mission_label.text = text
 	mission_card.reset_size()
 	mission_card.show()
@@ -318,16 +370,16 @@ func show_toast(text: String, good: bool = true) -> void:
 	toast_label.text = text
 	toast_label.add_theme_color_override(
 		"font_color",
-		Color(0.18, 0.35, 0.22) if good else Color(0.55, 0.18, 0.14)
+		Color(0.48, 0.94, 0.58) if good else Color(0.96, 0.45, 0.40)
 	)
 	if _toast_tween:
 		_toast_tween.kill()
 	toast_panel.modulate.a = 0.0
 	_toast_tween = create_tween()
 	_toast_tween.tween_property(toast_panel, "modulate:a", 1.0, 0.18)
-	var hold: float = 2.2 + maxf(0.0, float(text.length() - 34) * 0.035)
+	var hold: float = 2.0 + maxf(0.0, float(text.length() - 34) * 0.03)
 	_toast_tween.tween_interval(hold)
-	_toast_tween.tween_property(toast_panel, "modulate:a", 0.0, 0.35)
+	_toast_tween.tween_property(toast_panel, "modulate:a", 0.0, 0.3)
 	_toast_tween.tween_callback(func(): toast_panel.hide())
 
 func hide_toast() -> void:
@@ -339,7 +391,7 @@ func hide_toast() -> void:
 # ─── Hint card (onboarding & kearifan lokal) ──────────────────────────────────
 
 ## Tampilkan kartu petunjuk di atas toast. `seconds` <= 0 berarti tetap tampil.
-func show_hint(text: String, seconds: float = 6.0) -> void:
+func show_hint(text: String, seconds: float = 4.0) -> void:
 	if not hint_card or not hint_label:
 		return
 	if text.strip_edges().is_empty():
@@ -354,7 +406,7 @@ func show_hint(text: String, seconds: float = 6.0) -> void:
 	_hint_tween.tween_property(hint_card, "modulate:a", 1.0, 0.2)
 	if seconds > 0.0:
 		_hint_tween.tween_interval(seconds)
-		_hint_tween.tween_property(hint_card, "modulate:a", 0.0, 0.35)
+		_hint_tween.tween_property(hint_card, "modulate:a", 0.0, 0.3)
 		_hint_tween.tween_callback(func(): hint_card.hide())
 
 func hide_hint() -> void:
