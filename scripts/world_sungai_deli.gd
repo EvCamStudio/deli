@@ -87,11 +87,6 @@ var _spawn_positions: Dictionary = {
 	"hilir": Vector2(8, 15) * TILE,  # depan warung nelayan
 }
 
-# Puzzle drainase kota (bonus, tidak menghalangi gate).
-var _lever_sequence: Array[int] = [1, 3, 2]
-var _lever_pressed: Array[int] = []
-var _drainase_open: bool = false
-
 func _ready() -> void:
 	add_to_group("level")
 	add_to_group("pause_menu")
@@ -341,10 +336,9 @@ func _spawn_gameplay_objects() -> void:
 	_spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("desa", ["organik", "plastik", "b3"])
 
-	# Kota — sampah 3 kategori + puzzle drainase.
+	# Kota — sampah 3 kategori + suara warga bantaran.
 	_spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("kota", ["organik", "plastik", "b3"])
-	_spawn_kota_levers()
 
 	# Hilir — mangrove pesisir + sampah pesisir.
 	_spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
@@ -465,19 +459,6 @@ func _spawn_zone_bins(zone: String, categories: Array) -> void:
 		bin.add_to_group("world_bin")
 		_zone_containers[zone].add_child(bin)
 
-func _spawn_kota_levers() -> void:
-	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
-	var data: Array = [
-		[1, Vector2(50, 10.5)],
-		[2, Vector2(56, 10.5)],
-		[3, Vector2(53, 13)],
-	]
-	for item in data:
-		var lever := lever_scene.instantiate()
-		lever.position = Vector2(item[1]) * TILE
-		lever.set("lever_id", int(item[0]))
-		_zone_containers["kota"].add_child(lever)
-
 func _spawn_pantun_boards() -> void:
 	var board_scene := preload("res://scenes/world/pantun_board.tscn")
 	# Jauhkan papan pantun dari tong sampah agar label tidak bertumpuk.
@@ -491,19 +472,6 @@ func _spawn_pantun_boards() -> void:
 		var board := board_scene.instantiate()
 		board.position = positions[zone]
 		_zone_containers[zone].add_child(board)
-
-func _spawn_zone_levers(zone: String) -> void:
-	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
-	var positions: Array[Vector2] = [
-		Vector2(42, 13) * TILE,
-		Vector2(48, 13) * TILE,
-		Vector2(45, 21) * TILE,
-	]
-	for i in range(3):
-		var lever := lever_scene.instantiate()
-		lever.position = positions[i]
-		lever.set("lever_id", i + 1)
-		_zone_containers[zone].add_child(lever)
 
 func _setup_camera() -> void:
 	camera.limit_left = 0
@@ -676,26 +644,21 @@ func _refresh_mission() -> void:
 				lines = [
 					"Sapa Jali di mulut gang pemukiman."
 				]
-			elif not _drainase_open:
-				title = "DRAINASE KOTA"
-				lines = [
-					"Buka drainase bawah jembatan (1 → 3 → 2)."
-				]
 			elif talked_count < 4:
 				title = "SUARA WARGA KOTA"
 				lines = [
 					"Dengarkan keluhan warga bantaran (%d/4)." % talked_count
 				]
-			elif sorted < 6 or river_pct < 75:
+			elif sorted < 6 or river_pct < 80:
 				title = "PENATAAN KOTA"
 				lines = [
 					"Pilah 6 sampah kota: %d/6" % sorted,
-					"Pulihkan air sungai (%d%% / 75%%)" % river_pct
+					"Pulihkan air sungai (%d%% / 80%%)" % river_pct
 				]
 			else:
 				title = "KOTA TERTATA"
 				lines = [
-					"Lanjutkan ke Gerbang Hilir di muara."
+					"Lanjutkan perjalanan ke Hilir di timur."
 				]
 
 		"hilir":
@@ -870,49 +833,6 @@ func on_npc_talked(npc_key: String) -> void:
 	_update_guidance()
 	GameState.save_game()
 
-# ─── Puzzle drainase kota (bonus) ────────────────────────────────────────────
-
-func lever_pressed(lever_id: int) -> void:
-	if _drainase_open:
-		return
-	_lever_pressed.append(lever_id)
-	for i in range(_lever_pressed.size()):
-		if _lever_pressed[i] != _lever_sequence[i]:
-			_lever_pressed.clear()
-			_reset_levers()
-			GameState.ubah_meter(2.0)
-			toast("Urutan tuas salah! Mulai dari tuas 1 (urutan: 1-3-2).", false)
-			_refresh_mission()
-			return
-	if _lever_pressed.size() == _lever_sequence.size():
-		_open_drainase()
-	else:
-		toast("Tuas %d benar (%d/3). Lanjut tuas berikutnya." % [lever_id, _lever_pressed.size()], true)
-		_refresh_mission()
-
-func _reset_levers() -> void:
-	for lever in get_tree().get_nodes_in_group("pilot_lever"):
-		if lever.has_method("reset_lever"):
-			lever.reset_lever()
-
-func _open_drainase() -> void:
-	if _drainase_open:
-		return
-	_drainase_open = true
-	GameState.add_river_health(10.0)
-	GameState.rupiah += 2500
-	GameState.unlock_card("card_drainase_01")
-	AudioManager.play_sfx("correct")
-	toast("Drainase terbuka! Aliran lancar. +Rp2.500", true)
-	if GameState.hari == 7:
-		GameState.selesaikan_puzzle_pintu_air()
-	_refresh_mission()
-	_refresh_gates()
-	GameState.save_game()
-
-func is_drainase_open() -> bool:
-	return _drainase_open
-
 # ─── Pantun Melayu Deli ──────────────────────────────────────────────────────
 
 func open_pantun() -> void:
@@ -1013,8 +933,6 @@ func _target_label(target: Node2D) -> String:
 		return "Titik tanam"
 	if target is ZoneGate:
 		return "Gerbang"
-	if target is PilotLever:
-		return "Tuas"
 	if target is PilotPantunBoard:
 		return "Papan pantun"
 	return "Tujuan"
@@ -1046,11 +964,9 @@ func get_guidance_target() -> Node2D:
 				return _nearest_trash_or_bin()
 			return _exit_target("kota")
 		"kota":
-			if not _drainase_open:
-				return _nearest_unpressed_lever()
 			if GameState.zone_talked_count("kota") < 4:
 				return _nearest_untalked_npc()
-			if GameState.zone_stat("kota", "sorted") < 6 or GameState.river_health < 75.0:
+			if GameState.zone_stat("kota", "sorted") < 6 or GameState.river_health < 80.0:
 				return _nearest_trash_or_bin()
 			return _exit_target("hilir")
 		"hilir":
@@ -1168,20 +1084,6 @@ func _nearest_untalked_npc() -> Node2D:
 		if str(node.get("npc_key")) in talked_keys:
 			continue
 		if node.has_method("has_talked") and bool(node.call("has_talked")):
-			continue
-		var dist: float = player.global_position.distance_squared_to((node as Node2D).global_position)
-		if dist < best_dist:
-			best_dist = dist
-			best = node
-	return best
-
-func _nearest_unpressed_lever() -> Node2D:
-	var best: Node2D = null
-	var best_dist: float = INF
-	for node in get_tree().get_nodes_in_group("pilot_lever"):
-		if not (node is Node2D) or not node.is_visible_in_tree():
-			continue
-		if node.has_method("is_pressed") and bool(node.call("is_pressed")):
 			continue
 		var dist: float = player.global_position.distance_squared_to((node as Node2D).global_position)
 		if dist < best_dist:
