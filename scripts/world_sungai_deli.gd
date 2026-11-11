@@ -53,6 +53,18 @@ const BUILDING_RECTS: Dictionary = {
 	"hilir": [Rect2(4, 9, 6, 4), Rect2(22, 9, 6, 4), Rect2(49.5, 9, 6, 4)],
 }
 
+# Titik tanam pohon Hulu dikelompokkan di satu kawasan hutan khusus di sisi timur
+# (tepat di belakang Penjaga Hutan), bukan tersebar di pekarangan atau kampung/desa.
+const HULU_FOREST_SPOTS: Array[Vector2i] = [
+	Vector2i(41, 10), Vector2i(45, 9), Vector2i(50, 9),
+	Vector2i(42, 13), Vector2i(48, 12), Vector2i(53, 12),
+]
+
+const HILIR_MANGROVE_SPOTS: Array[Vector2i] = [
+	Vector2i(6, 26), Vector2i(12, 26), Vector2i(18, 26), Vector2i(24, 26),
+	Vector2i(30, 26), Vector2i(36, 26), Vector2i(40, 26), Vector2i(52, 26),
+]
+
 @onready var player: CharacterBody2D = $Player
 @onready var camera: Camera2D = $Player/Camera2D
 @onready var hud: HUD = $HUD
@@ -235,25 +247,24 @@ func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Ve
 		npc.show_exclaim(false)
 
 func _spawn_gameplay_objects() -> void:
-	# Hulu — tutorial alam: pohon + pilah sampah dasar.
+	# Hulu — tutorial alam: reboisasi terpusat di kawasan hutan + pilah sampah dasar.
 	_spawn_zone_trash("hulu", 16, ["organik", "plastik"])
 	_spawn_zone_bins("hulu", ["organik", "plastik"])
-	_spawn_zone_tree_spots("hulu", 6, "tree")
+	_spawn_fixed_spots("hulu", HULU_FOREST_SPOTS, "tree", "trees", "hulu_tree")
 
-	# Desa — pilah sampah + gotong royong.
+	# Desa — pilah sampah + gotong royong (tanpa titik tanam pohon acak di kampung/kebun).
 	_spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("desa", ["organik", "plastik", "b3"])
-	_spawn_zone_tree_spots("desa", 4, "tree")
 
 	# Kota — sampah 3 kategori + puzzle drainase.
 	_spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("kota", ["organik", "plastik", "b3"])
 	_spawn_kota_levers()
 
-	# Hilir — mangrove + sampah pesisir.
+	# Hilir — mangrove pesisir + sampah pesisir.
 	_spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("hilir", ["organik", "plastik", "b3"])
-	_spawn_hilir_mangroves()
+	_spawn_fixed_spots("hilir", HILIR_MANGROVE_SPOTS, "mangrove", "mangroves", "hilir_mangrove")
 
 	_spawn_pantun_boards()
 
@@ -290,9 +301,18 @@ func _find_spawn_tile(zone: String, base: Vector2i) -> Vector2i:
 	]
 	for offset in offsets:
 		var tile: Vector2i = base + offset
-		if _is_valid_spawn_tile(zone, tile):
+		if _is_valid_spawn_tile(zone, tile) and not _near_planting_spot(zone, tile):
 			return tile
 	return Vector2i(-1, -1)
+
+func _near_planting_spot(zone: String, tile: Vector2i) -> bool:
+	if zone != "hulu" and zone != "hilir":
+		return false
+	var list: Array[Vector2i] = HULU_FOREST_SPOTS if zone == "hulu" else HILIR_MANGROVE_SPOTS
+	for spot in list:
+		if abs(tile.x - spot.x) <= 1 and abs(tile.y - spot.y) <= 1:
+			return true
+	return false
 
 func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 	if tile.x < 2 or tile.x >= ZONE_WIDTH - 2 or tile.y < 2 or tile.y >= ZONE_HEIGHT - 2:
@@ -303,23 +323,19 @@ func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 		return false
 	return true
 
-## Mangrove ditanam di garis pantai hilir, bukan di tengah daratan.
-func _spawn_hilir_mangroves() -> void:
+## Memunculkan titik tanam di daftar koordinat tetap (satu kawasan hutan Hulu / tepi pantai Hilir).
+func _spawn_fixed_spots(zone: String, spots: Array[Vector2i], kind: String, stat_key: String, id_prefix: String) -> void:
 	var tree_scene := preload("res://scenes/world/tree_spot_topdown.tscn")
-	var spots: Array[Vector2i] = [
-		Vector2i(6, 26), Vector2i(12, 26), Vector2i(18, 26), Vector2i(24, 26),
-		Vector2i(30, 26), Vector2i(36, 26), Vector2i(40, 26), Vector2i(52, 26),
-	]
-	var already: int = GameState.zone_stat("hilir", "mangroves")
+	var already: int = GameState.zone_stat(zone, stat_key)
 	for idx in range(spots.size()):
 		var tile: Vector2i = spots[idx]
-		if not _is_valid_spawn_tile("hilir", tile):
+		if not _is_valid_spawn_tile(zone, tile):
 			continue
 		var spot := tree_scene.instantiate()
 		spot.position = Vector2(tile) * TILE
-		spot.set("kind", "mangrove")
-		_zone_containers["hilir"].add_child(spot)
-		# Pulihkan visual mangrove yang sudah ditanam dari save.
+		spot.set("kind", kind)
+		spot.set("spot_id", "%s_%d" % [id_prefix, idx])
+		_zone_containers[zone].add_child(spot)
 		if idx < already:
 			spot.call("mark_planted")
 
@@ -363,45 +379,6 @@ func _spawn_zone_bins(zone: String, categories: Array) -> void:
 		bin.set("required_quest", quest_by_zone.get(zone, ""))
 		bin.add_to_group("world_bin")
 		_zone_containers[zone].add_child(bin)
-
-func _spawn_zone_tree_spots(zone: String, count: int, kind: String) -> void:
-	var tree_scene := preload("res://scenes/world/tree_spot_topdown.tscn")
-	for i in range(count):
-		var x: int = 8 + (i * 61 + 23) % (ZONE_WIDTH - 16)
-		var y: int = 6 + (i * 43 + 31) % 8
-		# Jangan sampai pohon tumbuh menembus atap bangunan atau di air.
-		var base := Vector2i(x, y)
-		var candidates: Array[Vector2i] = [
-			base,
-			base + Vector2i(3, 0), base + Vector2i(-3, 0),
-			base + Vector2i(0, 3), base + Vector2i(0, -3),
-			base + Vector2i(3, 3), base + Vector2i(-3, -3),
-			base + Vector2i(5, 0), base + Vector2i(-5, 0),
-			base + Vector2i(0, 5), base + Vector2i(0, -5),
-			base + Vector2i(6, 2), base + Vector2i(-6, -2),
-		]
-		var chosen := Vector2i(-1, -1)
-		for candidate in candidates:
-			if candidate.x < 1 or candidate.x >= ZONE_WIDTH - 1:
-				continue
-			if candidate.y < 1 or candidate.y >= ZONE_HEIGHT - 1:
-				continue
-			var world_pos := Vector2(candidate) * TILE
-			if _zone_in_water(zone, world_pos):
-				continue
-			if _blocked_by_building(zone, Rect2(Vector2(candidate) - Vector2(1, 3), Vector2(2, 3))):
-				continue
-			chosen = candidate
-			break
-		if chosen.x < 0:
-			continue
-		var spot := tree_scene.instantiate()
-		spot.position = Vector2(chosen) * TILE
-		spot.set("kind", kind)
-		spot.set("spot_id", "%s_tree_%d" % [zone, i])
-		_zone_containers[zone].add_child(spot)
-		if zone == "hulu" and kind == "tree" and i < GameState.zone_stat("hulu", "trees"):
-			spot.call("mark_planted")
 
 func _spawn_kota_levers() -> void:
 	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")

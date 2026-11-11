@@ -614,25 +614,52 @@ def build_procedural_complement_tiles(grass_base: Image.Image) -> dict[str, Imag
     return out
 
 
-def build_tree_spot_sprite(s4: Image.Image) -> None:
-    """Create crisp 32x32 loamy planting mound with sprouts & subtle interactive highlight (zero white halo)."""
-    # Trim 3px to cut any light JPEG edge around dark chamfered soil, flood strip remaining white/gray
-    loam_raw = strip_exterior_white(extract_s4_cell(s4, 10, 4, trim=2), threshold=180, dark_defringe=(58, 38, 24))
-    mound = loam_raw.resize((22, 22), Image.Resampling.BOX)
+def build_tree_spot_sprite() -> None:
+    """Create crisp 16x16 transparent tree-sapling marker with subtle ring (zero soil/dirt)."""
+    spot = Image.new("RGBA", (16, 16), (0, 0, 0, 0))
+    px = spot.load()
 
-    spot = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
-    d = ImageDraw.Draw(spot)
-    ring_col = (246, 231, 193, 210)
-    for deg in range(0, 360, 45):
-        d.arc((1, 1, 30, 30), deg, deg + 24, fill=ring_col, width=1)
-    spot.alpha_composite(mound, (5, 5))
+    ring = (246, 232, 192, 145)
+    shadow = (28, 48, 22, 65)
+    for x in range(6, 11):
+        px[x, 12] = shadow
+    for x, y in [
+        (5, 9), (6, 9), (10, 9), (11, 9),
+        (3, 10), (13, 10),
+        (2, 11), (14, 11),
+        (2, 12), (14, 12),
+        (3, 13), (13, 13),
+        (5, 14), (7, 14), (9, 14), (11, 14),
+    ]:
+        px[x, y] = ring
 
-    d = ImageDraw.Draw(spot)
-    d.line((16, 21, 16, 11), fill=(52, 98, 44, 255), width=2)
-    d.ellipse((9, 8, 16, 14), fill=(104, 174, 72, 255), outline=(42, 74, 34, 255))
-    d.ellipse((16, 6, 23, 12), fill=(84, 152, 60, 255), outline=(42, 74, 34, 255))
-    d.point((12, 10), fill=(154, 214, 102, 255))
-    d.point((19, 8), fill=(138, 198, 88, 255))
+    stem_c = (122, 86, 48, 255)
+    stem_hi = (146, 108, 64, 255)
+    leaf_hi = (138, 202, 92, 255)
+    leaf_mid = (92, 158, 74, 255)
+    leaf_dk = (62, 118, 56, 255)
+    out = (36, 54, 28, 255)
+
+    fill_map: dict[tuple[int, int], tuple[int, int, int, int]] = {
+        # Woody green-brown stem anchored cleanly over shadow
+        (8, 12): stem_c, (8, 11): stem_hi, (8, 10): stem_c, (8, 9): stem_hi, (8, 8): leaf_dk,
+        # Top shoot bud
+        (7, 4): leaf_hi, (8, 4): leaf_mid, (7, 5): leaf_mid, (8, 5): leaf_dk,
+        # Left young leaf
+        (3, 6): leaf_hi, (4, 6): leaf_hi, (5, 6): leaf_mid, (6, 6): leaf_dk,
+        (4, 7): leaf_mid, (5, 7): leaf_dk, (6, 7): leaf_dk,
+        # Right young leaf
+        (10, 5): leaf_hi, (11, 5): leaf_hi, (12, 5): leaf_mid,
+        (9, 6): leaf_mid, (10, 6): leaf_mid, (11, 6): leaf_dk,
+        (9, 7): leaf_dk, (10, 7): leaf_dk,
+    }
+    for (fx, fy), col in fill_map.items():
+        px[fx, fy] = col
+    for fx, fy in list(fill_map.keys()):
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            nx, ny = fx + dx, fy + dy
+            if (nx, ny) not in fill_map and 0 <= nx < 16 and 0 <= ny < 16:
+                px[nx, ny] = out
 
     path = os.path.join(ASSETS, "sprites", "props", "tree_spot.png")
     spot.save(path)
@@ -770,7 +797,7 @@ def main() -> None:
     atlas.save(out_path)
     print("Saved", out_path, atlas.size)
 
-    build_tree_spot_sprite(s4)
+    build_tree_spot_sprite()
 
 
 if __name__ == "__main__":

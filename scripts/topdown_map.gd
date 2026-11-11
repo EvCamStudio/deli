@@ -341,6 +341,8 @@ func _paint_decor() -> void:
 			atlas = Vector2i(6, 5)  # semanggi & bunga kecil transparan
 		elif mod == 2:
 			atlas = Vector2i(7, 5)  # pakis rimba hulu/desa
+		elif theme == "hulu" and x >= 40 and x <= 54 and y >= 8 and y <= 14:
+			continue  # jaga kawasan reboisasi hutan hulu tetap lapang dari batu/semak besar
 		elif mod == 3 or mod == 4:
 			atlas = Vector2i(6, 2)  # semak rimbun
 		else:
@@ -427,9 +429,9 @@ func _spawn_props() -> void:
 				Vector2(40, 120), Vector2(48, 360), Vector2(96, 470), Vector2(150, 80),
 				Vector2(210, 120), Vector2(260, 60), Vector2(320, 140), Vector2(360, 100), Vector2(400, 440),
 				Vector2(360, 380), Vector2(250, 460), Vector2(170, 400), Vector2(520, 90), Vector2(560, 140),
-				Vector2(620, 60), Vector2(680, 120), Vector2(740, 80), Vector2(800, 140), Vector2(860, 100),
+				Vector2(620, 60), Vector2(660, 64), Vector2(740, 80), Vector2(890, 118), Vector2(860, 100),
 				Vector2(540, 440), Vector2(600, 380), Vector2(660, 470), Vector2(740, 420), Vector2(820, 460),
-				Vector2(900, 380), Vector2(880, 470), Vector2(300, 220), Vector2(620, 220), Vector2(780, 300),
+				Vector2(900, 380), Vector2(880, 470), Vector2(300, 220), Vector2(576, 208), Vector2(780, 300),
 			])
 		"desa":
 			_spawn_building("res://assets/sprites/props/warung.png", Vector2(136, 208), Vector2(80, 22))
@@ -450,7 +452,7 @@ func _spawn_props() -> void:
 				Vector2(680, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
 				Vector2(908, 200), Vector2(260, 440), Vector2(760, 440),
 			])
-			for pos in [Vector2(120, 432), Vector2(400, 440), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
+			for pos in [Vector2(120, 432), Vector2(448, 436), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
 				_spawn_mangrove(pos)
 
 func _spawn_building(path: String, pos: Vector2, collision_size: Vector2, tint: Color = Color.WHITE) -> void:

@@ -21,8 +21,8 @@ func _spawn_entities() -> void:
 	spawn_npc("npc_ibu_mc", "ibu", Vector2(112, 232))
 
 	for pos in [
-		Vector2(160, 320), Vector2(352, 312), Vector2(400, 192),
-		Vector2(592, 240), Vector2(704, 312),
+		Vector2(41, 10) * 16, Vector2(45, 9) * 16, Vector2(50, 9) * 16,
+		Vector2(43, 13) * 16, Vector2(49, 12) * 16,
 	]:
 		spawn_tree_spot("tree", pos)
 
