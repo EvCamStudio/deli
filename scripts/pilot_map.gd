@@ -24,18 +24,7 @@ func _ready() -> void:
 	_spawn_reed_clusters()
 
 func _build_tileset() -> void:
-	_tileset = TileSet.new()
-	_tileset.tile_size = Vector2i(TILE, TILE)
-	var source := TileSetAtlasSource.new()
-	source.texture = load("res://assets/tilesets/pilot_tileset.png")
-	source.texture_region_size = Vector2i(TILE, TILE)
-	for y in range(4):
-		for x in range(8):
-			source.create_tile(Vector2i(x, y))
-	_tileset.add_source(source, 0)
-	ground.tile_set = _tileset
-	water.tile_set = _tileset
-	bridge.tile_set = _tileset
+	_tileset = TopdownMap.build_curated_tileset([ground, water, bridge])
 
 func _hash(x: int, y: int, seed_value: int = 0) -> int:
 	return abs((x * 73856093) ^ (y * 19349663) ^ (seed_value * 83492791)) % 1000
@@ -87,7 +76,7 @@ func _paint_ground() -> void:
 		ground.set_cell(Vector2i(53, y), 0, Vector2i(5, 0), 0)
 
 	# bunga liar
-	for i in range(110):
+	for i in range(95):
 		var x: int = 2 + _hash(i, 4, 2) % (MAP_W - 4)
 		var y: int = 2 + _hash(i, 8, 3) % (MAP_H - 4)
 		if y >= 15 and y <= 22:
@@ -95,7 +84,9 @@ func _paint_ground() -> void:
 		if ground.get_cell_source_id(Vector2i(x, y)) == 0:
 			var atlas: Vector2i = ground.get_cell_atlas_coords(Vector2i(x, y))
 			if atlas.y == 0 and atlas.x <= 2:
-				ground.set_cell(Vector2i(x, y), 0, Vector2i(2, 0), 0)
+				ground.set_cell(Vector2i(x, y), 0, Vector2i(i % 3, 3), 0)
+
+	TopdownMap.autotile_dirt_paths(ground, MAP_W, MAP_H)
 
 func _river_top(x: int) -> int:
 	return int(round(18.0 + sin(float(x) * 0.18) * 1.2)) - 3

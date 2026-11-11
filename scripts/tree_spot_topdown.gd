@@ -13,6 +13,7 @@ var _planted: bool = false
 func _ready() -> void:
 	add_to_group("tree_spot")
 	marker.texture = load("res://assets/sprites/props/tree_spot.png")
+	marker.scale = Vector2(0.62, 0.62)
 	var path: String = "res://assets/sprites/props/mangrove.png" if kind == "mangrove" else "res://assets/sprites/props/tree.png"
 	planted_sprite.texture = load(path)
 	planted_sprite.position = Vector2(0, -planted_sprite.texture.get_height() * 0.5)

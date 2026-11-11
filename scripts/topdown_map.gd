@@ -35,20 +35,25 @@ func _ready() -> void:
 
 # ─── Tileset ─────────────────────────────────────────────────────────────────
 
-func _build_tileset() -> void:
-	_tileset = TileSet.new()
-	_tileset.tile_size = Vector2i(TILE, TILE)
+## Membangun TileSet 32x32 (8x8 atlas) terpadu pada skala 0.5 agar koordinat grid 16px tetap terjaga.
+static func build_curated_tileset(layers: Array) -> TileSet:
+	var ts := TileSet.new()
+	ts.tile_size = Vector2i(32, 32)
 	var source := TileSetAtlasSource.new()
 	source.texture = load("res://assets/tilesets/pilot_tileset.png")
-	source.texture_region_size = Vector2i(TILE, TILE)
-	for y in range(4):
+	source.texture_region_size = Vector2i(32, 32)
+	for y in range(8):
 		for x in range(8):
 			source.create_tile(Vector2i(x, y))
-	_tileset.add_source(source, 0)
-	ground.tile_set = _tileset
-	water.tile_set = _tileset
-	bridge.tile_set = _tileset
-	_decor.tile_set = _tileset
+	ts.add_source(source, 0)
+	for layer in layers:
+		if layer is TileMapLayer:
+			layer.tile_set = ts
+			layer.scale = Vector2(0.5, 0.5)
+	return ts
+
+func _build_tileset() -> void:
+	_tileset = build_curated_tileset([ground, water, bridge, _decor])
 
 func _build_decor_layer() -> void:
 	_decor = get_node_or_null("Decor") as TileMapLayer
@@ -66,22 +71,91 @@ func _hash(x: int, y: int, seed_value: int = 0) -> int:
 func _paint_ground() -> void:
 	for y in range(MAP_H):
 		for x in range(MAP_W):
-			ground.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 3, 0), 0)
+			var roll: int = _hash(x, y, 13)
+			var atlas := Vector2i(_hash(x, y) % 3, 0)
+			if roll < 95:
+				atlas = Vector2i(roll % 3, 3)  # taburan bunga & semanggi alami di padang rumput
+			elif theme == "hulu" and roll >= 965 and (y < PATH_ROW - 2 or y > PATH_ROW + 3):
+				atlas = Vector2i(4 if roll % 2 == 0 else 3, 3)  # lumut/genangan rimba hulu
+			elif theme == "hilir" and y < 22 and roll >= 960 and (y < PATH_ROW - 2 or y > PATH_ROW + 3):
+				atlas = Vector2i(6 if roll % 2 == 0 else 5, 3)  # tanah lembap rawa hilir
+			ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
 	# Jalan utama kiri–kanan.
 	for x in range(MAP_W):
 		for y in [PATH_ROW, PATH_ROW + 1]:
-			var atlas := Vector2i(3, 0) if theme == "hulu" else Vector2i(4 + _hash(x, y) % 2, 0)
-			ground.set_cell(Vector2i(x, y), 0, atlas, 0)
+			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
 	match theme:
 		"hulu": _paint_hulu_ground()
 		"desa": _paint_desa_ground()
 		"hilir": _paint_hilir_ground()
 
+	autotile_dirt_paths(ground, MAP_W, MAP_H, _seed)
+
+static func _is_road_dirt_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
+	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
+		return false
+	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
+	return (a.y == 0 and a.x in [3, 4, 5]) or (a.y in [4, 5] and (a.y == 4 or a.x <= 5))
+
+static func _is_meadow_grass_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
+	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
+		return true
+	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
+	return (a.y == 0 and a.x <= 2) or (a.y == 3)
+
+## Mengubah tepi dan sudut jalan tanah menjadi ubin transisi rumput-tanah secara otomatis.
+static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: int, seed_value: int = 0) -> void:
+	var targets: Array[Vector2i] = []
+	for y in range(map_h):
+		for x in range(map_w):
+			var c := Vector2i(x, y)
+			if _is_road_dirt_cell(ground_layer, c, map_w, map_h):
+				targets.append(c)
+	for c in targets:
+		var n := _is_meadow_grass_cell(ground_layer, c + Vector2i(0, -1), map_w, map_h)
+		var s := _is_meadow_grass_cell(ground_layer, c + Vector2i(0, 1), map_w, map_h)
+		var w := _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, 0), map_w, map_h)
+		var e := _is_meadow_grass_cell(ground_layer, c + Vector2i(1, 0), map_w, map_h)
+		var road_var: int = abs((c.x * 73856093) ^ (c.y * 19349663) ^ (seed_value * 83492791)) % 2
+		var atlas := Vector2i(4 + road_var, 0)
+		if n and s and not w and not e:
+			atlas = Vector2i(5, 5)
+		elif w and e and not n and not s:
+			atlas = Vector2i(4, 5)
+		elif n and w and not s and not e:
+			atlas = Vector2i(4, 4)
+		elif n and e and not s and not w:
+			atlas = Vector2i(5, 4)
+		elif s and w and not n and not e:
+			atlas = Vector2i(6, 4)
+		elif s and e and not n and not w:
+			atlas = Vector2i(7, 4)
+		elif n and not s and not w and not e:
+			atlas = Vector2i(0, 4)
+		elif s and not n and not w and not e:
+			atlas = Vector2i(1, 4)
+		elif w and not e and not n and not s:
+			atlas = Vector2i(2, 4)
+		elif e and not w and not n and not s:
+			atlas = Vector2i(3, 4)
+		elif not n and not s and not w and not e:
+			if _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, -1), map_w, map_h):
+				atlas = Vector2i(0, 5)
+			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(1, -1), map_w, map_h):
+				atlas = Vector2i(1, 5)
+			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, 1), map_w, map_h):
+				atlas = Vector2i(2, 5)
+			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(1, 1), map_w, map_h):
+				atlas = Vector2i(3, 5)
+		ground_layer.set_cell(c, 0, atlas, 0)
+
 func _paint_hulu_ground() -> void:
 	# Jalur tanah dari pintu rumah Ibu ke jalan utama.
 	_paint_door_path(6, 7, 13)
+	# Sedikit tanah lapang alami di papan pantun.
+	ground.set_cell(Vector2i(17, 18), 0, Vector2i(7, 3), 0)
 
 func _paint_desa_ground() -> void:
 	# Jalur tanah dari pintu tiap bangunan ke jalan utama.
@@ -90,14 +164,22 @@ func _paint_desa_ground() -> void:
 	_paint_door_path(52, 53, 13)
 	# Jalan menuju dermaga di tepi sungai.
 	for y in range(PATH_ROW, 27):
-		ground.set_cell(Vector2i(30, y), 0, Vector2i(3, 0), 0)
-		ground.set_cell(Vector2i(31, y), 0, Vector2i(4, 0), 0)
-	# Petak sawah dengan alur tanah.
+		ground.set_cell(Vector2i(30, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(31, y), 0, Vector2i(5, 0), 0)
+	# Petak kebun sayur dengan bedengan tanah gembur dan tunas bibit.
 	var fields: Array[Rect2i] = [Rect2i(14, 4, 11, 7), Rect2i(34, 4, 11, 7), Rect2i(48, 6, 9, 7)]
-	for field in fields:
+	for f_idx in range(fields.size()):
+		var field: Rect2i = fields[f_idx]
 		for x in range(field.position.x, field.end.x):
 			for y in range(field.position.y, field.end.y):
-				var atlas := Vector2i(3, 0) if y % 2 == 0 else Vector2i(4, 0)
+				var atlas: Vector2i
+				if f_idx == 2:
+					# Petak timur: alur vertikal berbibit
+					atlas = Vector2i(2, 6) if (x + y) % 3 == 0 else Vector2i(3, 6)
+				elif y % 2 == 0:
+					atlas = Vector2i(2, 6) if (x + f_idx) % 2 == 0 else Vector2i(1, 6)
+				else:
+					atlas = Vector2i(0, 6)
 				ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
 func _paint_hilir_ground() -> void:
@@ -105,15 +187,24 @@ func _paint_hilir_ground() -> void:
 	_paint_door_path(6, 7, 13)
 	_paint_door_path(24, 25, 13)
 	_paint_door_path(52, 53, 13)
-	# Pantai berpasir.
+	# Garis tepi rumput-pasir organik di perbatasan pantai.
+	for x in range(MAP_W):
+		ground.set_cell(Vector2i(x, 23), 0, Vector2i(0, 7), 0)
+	# Pantai berpasir + bercak lumpur muara dan tanah retak pesisir.
 	for x in range(MAP_W):
 		for y in range(24, 28):
-			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 1), 0)
+			var roll: int = _hash(x, y, 29)
+			var atlas := Vector2i(4 + _hash(x, y) % 2, 1)
+			if y == 25 and roll < 75:
+				atlas = Vector2i(4, 7)  # lumpur pasang surut
+			elif y == 24 and roll >= 935:
+				atlas = Vector2i(5, 7)  # tanah retak kering
+			ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
 func _paint_door_path(x_left: int, x_right: int, y_top: int) -> void:
 	for y in range(y_top, PATH_ROW + 1):
-		ground.set_cell(Vector2i(x_left, y), 0, Vector2i(3, 0), 0)
-		ground.set_cell(Vector2i(x_right, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(x_left, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(x_right, y), 0, Vector2i(5, 0), 0)
 
 # ─── Water ───────────────────────────────────────────────────────────────────
 
@@ -235,19 +326,35 @@ func _is_open_grass(x: int, y: int) -> bool:
 	if bridge.get_cell_source_id(Vector2i(x, y)) != -1:
 		return false
 	var atlas: Vector2i = ground.get_cell_atlas_coords(Vector2i(x, y))
-	return atlas.y == 0 and atlas.x <= 2
+	return (atlas.y == 0 and atlas.x <= 2) or (atlas.y == 3 and atlas.x <= 3)
 
 func _paint_decor() -> void:
-	var bush_count: int = {"hulu": 95, "desa": 38, "hilir": 48}.get(theme, 40)
+	var bush_count: int = {"hulu": 115, "desa": 52, "hilir": 64}.get(theme, 50)
 	for i in range(bush_count):
 		var x: int = 2 + _hash(i, 7, 3) % (MAP_W - 4)
 		var y: int = 2 + _hash(i, 11, 5) % (MAP_H - 4)
 		if not _is_open_grass(x, y):
 			continue
-		var atlas := Vector2i(6, 2) if i % 4 != 0 else Vector2i(7, 2)
+		var mod: int = i % 6
+		var atlas: Vector2i
+		if mod <= 1:
+			atlas = Vector2i(6, 5)  # semanggi & bunga kecil transparan
+		elif mod == 2:
+			atlas = Vector2i(7, 5)  # pakis rimba hulu/desa
+		elif mod == 3 or mod == 4:
+			atlas = Vector2i(6, 2)  # semak rimbun
+		else:
+			atlas = Vector2i(7, 2)  # batu berlumut
 		_decor.set_cell(Vector2i(x, y), 0, atlas, 0)
 	if theme == "desa":
 		_paint_field_fences()
+	elif theme == "hilir":
+		for i in range(18):
+			var x: int = 2 + _hash(i, 19, 7) % (MAP_W - 4)
+			var y: int = 24 + _hash(i, 23, 11) % 3
+			var c := Vector2i(x, y)
+			if water.get_cell_source_id(c) == -1 and ground.get_cell_atlas_coords(c).y == 1:
+				_decor.set_cell(c, 0, Vector2i(6, 7), 0)  # kerikil & kerang pantai
 
 func _paint_field_fences() -> void:
 	var fields: Array[Rect2i] = [Rect2i(14, 4, 11, 7), Rect2i(34, 4, 11, 7), Rect2i(48, 6, 9, 7)]
