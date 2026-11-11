@@ -299,19 +299,48 @@ func _water_desa() -> void:
 			_paint_bridge_cell(x, y)
 
 func _water_hilir() -> void:
-	# Laut di sisi selatan.
+	var water_cells: Dictionary = {}
+
+	# Laut di sisi selatan (penuh dari tepi barat ke timur).
 	for x in range(MAP_W):
 		for y in range(28, MAP_H):
-			_paint_water_cell(x, y)
-	# Muara sungai yang bermuara ke laut.
-	for y in range(8, 28):
-		for x in range(44, 48):
-			if y in [PATH_ROW, PATH_ROW + 1]:
-				_paint_bridge_cell(x, y)
-			else:
-				_paint_water_cell(x, y)
-		_paint_sand_cell(43, y)
-		_paint_sand_cell(48, y)
+			water_cells[Vector2i(x, y)] = true
+
+	# Sungai muara mengalir utuh dari tepi utara peta (y=0) hingga laut selatan (y=28),
+	# sedikit berkelok di hulu jembatan dan melebar di mulut muara agar tidak terlihat terputus.
+	for y in range(0, 28):
+		var bend: float = 0.0
+		if y <= 10:
+			bend = -sin(PI * 0.5 * float(10 - y) / 10.0)
+		var x_start: int = 44 + int(round(bend))
+		var x_end: int = 48 + int(round(bend))
+		if y >= 25:
+			# Mulut muara melebar alami menuju laut tanpa menyentuh titik mangrove (x=40, x=52).
+			x_start = 43
+			x_end = 49
+		for x in range(x_start, x_end):
+			water_cells[Vector2i(x, y)] = true
+
+	for cell: Vector2i in water_cells.keys():
+		if cell.y in [PATH_ROW, PATH_ROW + 1] and cell.x >= 44 and cell.x < 48:
+			_paint_bridge_cell(cell.x, cell.y)
+		else:
+			_paint_water_cell(cell.x, cell.y)
+
+	# Tepi pasir mengikuti kontur sungai & muara tanpa menimpa jalan utama.
+	for cell: Vector2i in water_cells.keys():
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if dx == 0 and dy == 0:
+					continue
+				var n := Vector2i(cell.x + dx, cell.y + dy)
+				if water_cells.has(n):
+					continue
+				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
+					continue
+				if n.y in [PATH_ROW, PATH_ROW + 1]:
+					continue
+				_paint_sand_cell(n.x, n.y)
 
 # ─── Decorations ─────────────────────────────────────────────────────────────
 
@@ -450,7 +479,7 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 208), Vector2(82, 22), 0.5)
 			_spawn_trees([
 				Vector2(40, 120), Vector2(160, 80), Vector2(320, 120), Vector2(520, 80),
-				Vector2(680, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
+				Vector2(648, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
 				Vector2(908, 200), Vector2(260, 440), Vector2(760, 440),
 			])
 			for pos in [Vector2(120, 432), Vector2(448, 436), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
@@ -537,9 +566,7 @@ func _spawn_reeds() -> void:
 					continue
 				_spawn_reed(Vector2(x, 26 * TILE + 4))
 		"hilir":
-			for i in range(24):
-				var x: int = 16 + _hash(i, 5, 9) % 928
-				_spawn_reed(Vector2(x, 27 * TILE + 2))
+			_spawn_reeds_on_banks(26)
 
 ## Sebaran alang-alang tepat di tepi pasir yang bersebelahan dengan air,
 ## jadi selalu mengikuti kontur sungai/kolam.
