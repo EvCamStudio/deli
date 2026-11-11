@@ -1,0 +1,16 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Byuuur... tok, tok! Tunggu, suara apa barusan?",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Plastik dan ranting menyumbat tepian sampai airnya meluap. Dari arah hulu sungai utara tadi terdengar bunyi kayu berbenturan. Siapa di sana? Kucari dulu asal suaranya!",
+    "next": "end"
+  }
+]

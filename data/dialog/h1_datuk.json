@@ -3,49 +3,64 @@
     "id": "start",
     "speaker": "MC",
     "emosi": "surprised",
-    "teks": "Siapa di situ?",
+    "teks": "Jadi suara ketukan kayu tadi dari sampan Bapak? Siapa di situ?",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Orang yang melamun di tepi air biasanya tak sadar ada yang menemani.",
+    "teks": "Orang yang melamun di tepi air biasanya tak sadar ada yang menemani. Panggil saja Datuk Sampan. Aku kenal bapakmu waktu ia masih kecil di bantaran ini.",
     "next": "2"
   },
   {
     "id": "2",
-    "speaker": "MC",
+    "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Aku terlalu capek. Kalau kau halusinasi, tolong cepat hilang.",
+    "teks": "Lihat sendiri, Nak. Sampah yang menumpuk menyumbat belokan air sampai sampanku saja tersangkut. Setiap hujan turun, luapan sungai itu langsung mencari jalan masuk ke warung Mak dan Bapakmu.",
     "next": "3"
   },
   {
     "id": "3",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Kalau aku halusinasi, aku halusinasi yang tahu nama setiap batu di sungai ini. Panggil saja Datuk Sampan. Aku kenal bapakmu waktu ia setinggi itu.",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Pantasan air naik sampai menghanyutkan barang warung. Tapi menyelesaikan masalah sampah sungai sebesar ini sendirian? Pekerjaanku saja tak bisa kujaga.",
     "next": "4"
   },
   {
     "id": "4",
     "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Sungai tak minta dipuji, Nak. Ia hanya minta dijaga.",
+    "emosi": "happy",
+    "teks": "Tak ada yang bisa sendirian. Sungai tak minta dipuji, Nak, ia hanya minta dijaga. Mulailah dari hal nyata: bersihkan sampah yang menyumbat pinggiran air, tanam kembali hutan hulu, dan dengarkan warga sepanjang kampung.",
     "next": "5"
   },
   {
     "id": "5",
     "speaker": "MC",
-    "emosi": "sad",
-    "teks": "Menjaga sungai sendirian? Aku bahkan tak bisa menjaga pekerjaanku.",
-    "next": "6"
+    "emosi": "happy",
+    "teks": "Kalau alirannya terus tersumbat sampah, warung Mak dan Bapak tak akan pernah aman. Baiklah...",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Aku mau ikut selesaikan masalah sampah sungai ini, Datuk!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "res_motivate"
+      },
+      {
+        "tipe": "B",
+        "teks": "Ajari aku harus mulai dari mana dulu, Datuk.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "res_motivate"
+      }
+    ]
   },
   {
-    "id": "6",
+    "id": "res_motivate",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Tak ada yang bisa sendirian. Makanya, besok jangan mulai dengan tangan. Mulailah dengan telinga. Setiap orang di sini punya alasan untuk sampah yang mereka buang. Dengar alasannya dulu.",
+    "teks": "Begitulah. Pilah sampah yang mengotori pinggiran air ke tong terdekat, lalu seberangi jembatan timur untuk menemui Penjaga Hutan.",
     "next": "end"
   }
 ]

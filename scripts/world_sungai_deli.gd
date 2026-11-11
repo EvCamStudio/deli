@@ -78,6 +78,8 @@ var _guidance: Node2D = null
 var _guidance_accum: float = 0.0
 var _show_zone_wisdom: bool = false
 var _last_mission_title: String = ""
+var _hulu_riverbank_spot: Area2D = null
+var _hulu_sampan: Sprite2D = null
 var _spawn_positions: Dictionary = {
 	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
 	"desa": Vector2(8, 15) * TILE,   # depan warung
@@ -97,6 +99,7 @@ func _ready() -> void:
 	GameState.set_meta("pending_trash", [])
 	DialogueManager.dialogue_started.connect(_on_dialogue_started)
 	DialogueManager.dialogue_finished.connect(_on_dialogue_finished)
+	DialogueManager.dialog_selesai.connect(_on_dialog_selesai)
 	GameState.river_health_changed.connect(func(_value: float): _refresh_mission())
 	GameState.rupiah_changed.connect(func(_value: int): _refresh_mission())
 	GameState.quest_started.connect(_on_quest_started)
@@ -123,7 +126,9 @@ func _ready() -> void:
 	# Pastikan cerita utama dan mission card selalu aktif di world
 	GameState.quest_progress = 1
 	QuestManager.start_main_quest()
+	_sync_hulu_story_state()
 	_refresh_mission()
+	_update_guidance()
 
 	var has_saved_pos: bool = GameState.saved_player_x >= 0.0 and GameState.saved_player_y >= 0.0
 	if has_saved_pos:
@@ -188,10 +193,12 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
-	# Hulu: Bu Mira di depan warung + penjaga hutan + Datuk Sampan di tepi sungai.
+	# Hulu: Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul setelah suara sungai).
 	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 15) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 14) * TILE, 1)
-	_create_npc("hulu", "npc_datuk", "penjaga_hutan", Vector2(22, 15) * TILE, 1, "h1_datuk")
+	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(26.5, 10.5) * TILE, 1, "h1_datuk")
+	_spawn_hulu_sampan()
+	_spawn_hulu_riverbank_spot()
 
 	# Desa: Pak Darwis di bale bambu, Kak Rina penjual gorengan, pemuka desa.
 	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 15) * TILE, 2, "h6_darwis")
@@ -224,6 +231,103 @@ func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Ve
 	var talked_keys: Array = GameState.zone_progress.get(zone, {}).get("talked_keys", [])
 	if dialogue_key in talked_keys and npc.has_method("show_exclaim"):
 		npc.show_exclaim(false)
+
+func _spawn_hulu_riverbank_spot() -> void:
+	var spot_script: Script = preload("res://scripts/riverbank_spot.gd")
+	_hulu_riverbank_spot = spot_script.new() as Area2D
+	_hulu_riverbank_spot.name = "HuluRiverbankTrigger"
+	_hulu_riverbank_spot.position = Vector2(26.5, 14.5) * TILE
+	_hulu_riverbank_spot.investigated.connect(_on_hulu_riverbank_investigated)
+	_zone_containers["hulu"].add_child(_hulu_riverbank_spot)
+
+func _spawn_hulu_sampan() -> void:
+	_hulu_sampan = Sprite2D.new()
+	_hulu_sampan.name = "HuluSampan"
+	_hulu_sampan.texture = _build_sampan_texture()
+	_hulu_sampan.position = Vector2(28.8, 10.5) * TILE
+	_hulu_sampan.z_index = -1
+	_zone_containers["hulu"].add_child(_hulu_sampan)
+	var bob := _hulu_sampan.create_tween().set_loops()
+	bob.tween_property(_hulu_sampan, "position:y", _hulu_sampan.position.y - 1.5, 1.1).set_trans(Tween.TRANS_SINE)
+	bob.tween_property(_hulu_sampan, "position:y", _hulu_sampan.position.y + 1.0, 1.1).set_trans(Tween.TRANS_SINE)
+
+func _build_sampan_texture() -> ImageTexture:
+	var w: int = 26
+	var h: int = 12
+	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
+	var outline := Color(0.23, 0.15, 0.09, 1.0)
+	var hull := Color(0.49, 0.30, 0.17, 1.0)
+	var deck := Color(0.68, 0.45, 0.25, 1.0)
+	var wake := Color(0.84, 0.95, 1.0, 0.72)
+	for y in range(2, 9):
+		var inset: int = absi(y - 5) * 2
+		for x in range(inset, w - inset):
+			var edge: bool = (x == inset or x == w - inset - 1 or y == 2 or y == 8)
+			if edge:
+				img.set_pixel(x, y, outline)
+			elif x in [9, 10, 16, 17]:
+				img.set_pixel(x, y, deck)
+			else:
+				img.set_pixel(x, y, hull)
+	for x in range(4, w - 4, 3):
+		img.set_pixel(x, 10, wake)
+		img.set_pixel(x + 1, 10, wake)
+	return ImageTexture.create_from_image(img)
+
+func _has_hulu_sound_triggered() -> bool:
+	var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
+	return bool(GameState.choices.get("hulu_sound_heard", false)) or ("npc_datuk" in talked_hulu)
+
+func _sync_hulu_story_state() -> void:
+	var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
+	var talked_ibu: bool = "npc_ibu_mc" in talked_hulu
+	var sound_heard: bool = _has_hulu_sound_triggered()
+
+	for npc in get_tree().get_nodes_in_group("world_npc"):
+		if str(npc.get("npc_key")) == "npc_datuk":
+			npc.visible = sound_heard
+			var col := npc.get_node_or_null("CollisionShape2D") as CollisionShape2D
+			if col:
+				col.set_deferred("disabled", not sound_heard)
+			break
+
+	if is_instance_valid(_hulu_sampan):
+		_hulu_sampan.visible = sound_heard
+
+	if is_instance_valid(_hulu_riverbank_spot):
+		if sound_heard:
+			_hulu_riverbank_spot.mark_done()
+		else:
+			_hulu_riverbank_spot.set_active(talked_ibu)
+
+func _on_hulu_riverbank_investigated() -> void:
+	if _has_hulu_sound_triggered():
+		return
+	GameState.record_choice("hulu_sound_heard", true)
+	AudioManager.play_sfx("river_sound")
+	_sync_hulu_story_state()
+	GameState.save_game()
+	_play_river_sound_sequence()
+
+func _play_river_sound_sequence() -> void:
+	if camera:
+		var bump := create_tween()
+		bump.tween_property(camera, "offset", Vector2(3.0, -2.0), 0.08)
+		bump.tween_property(camera, "offset", Vector2(-2.0, 1.5), 0.09)
+		bump.tween_property(camera, "offset", Vector2.ZERO, 0.10)
+	await get_tree().create_timer(0.32).timeout
+	if not is_inside_tree() or _dialogue_active or DialogueManager.is_active():
+		_refresh_mission()
+		_update_guidance()
+		return
+	DialogueManager.mulai("h1_river_sound")
+
+func _on_dialog_selesai(id_dialog: String) -> void:
+	match id_dialog:
+		"h1_river_sound":
+			toast("Suara misterius terdengar! Cari asal suaranya di tepi sungai utara.", true)
+		"h1_datuk":
+			toast("Tekad bulat! Bersihkan sampah sungai & temui Penjaga Hutan.", true)
 
 func _spawn_gameplay_objects() -> void:
 	# Hulu — tutorial alam: reboisasi terpusat di kawasan hutan + pilah sampah dasar.
@@ -448,6 +552,7 @@ func change_zone(zone: String) -> void:
 	if _show_zone_wisdom:
 		_show_zone_wisdom_delayed(zone)
 
+	_sync_hulu_story_state()
 	_refresh_mission()
 	_refresh_gates()
 	_update_guidance()
@@ -495,24 +600,30 @@ func _refresh_mission() -> void:
 	match zone:
 		"hulu":
 			var talked_ibu: bool = "npc_ibu_mc" in talked_keys
+			var sound_heard: bool = _has_hulu_sound_triggered()
 			var talked_datuk: bool = "npc_datuk" in talked_keys
 			var talked_penjaga: bool = "npc_penjaga_hutan" in talked_keys
 			var trees: int = mini(GameState.zone_stat("hulu", "trees"), 5)
 
-			if not talked_ibu:
+			if not talked_ibu and not talked_penjaga and trees == 0:
 				title = "HULU SUNGAI DELI"
 				lines = [
 					"Periksa warung Mak dan Bapak."
 				]
-			elif not talked_datuk:
+			elif not sound_heard and not talked_penjaga and trees == 0:
 				title = "BANTARAN HULU"
 				lines = [
-					"Selidiki luapan air di bantaran sungai."
+					"Selidiki luapan air & sampah di tepi sungai."
+				]
+			elif not talked_datuk and not talked_penjaga and trees == 0:
+				title = "SUMBER SUARA"
+				lines = [
+					"Cari sumber suara misterius di tepi sungai utara."
 				]
 			elif not talked_penjaga and trees == 0:
 				title = "MATA AIR HUTAN"
 				lines = [
-					"Susuri jalan setapak ke hutan hulu."
+					"Temui Penjaga Hutan & bersihkan sampah hulu."
 				]
 			elif not cleared or river_pct < 40:
 				title = "PENGHIJAUAN HULU"
@@ -744,6 +855,7 @@ func on_npc_talked(npc_key: String) -> void:
 		GameState.rupiah += 1500
 		toast("Semua warga zona ini sudah bicara. +Rp1.500", true)
 
+	_sync_hulu_story_state()
 	_refresh_mission()
 	_refresh_gates()
 	_update_guidance()
@@ -956,6 +1068,8 @@ func _zone_intro_npc() -> Node2D:
 			var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
 			if "npc_ibu_mc" not in talked_hulu:
 				return _npc_by_key("npc_ibu_mc")
+			if not _has_hulu_sound_triggered():
+				return _hulu_riverbank_spot
 			if "npc_datuk" not in talked_hulu:
 				return _npc_by_key("npc_datuk")
 			if "npc_penjaga_hutan" not in talked_hulu and GameState.zone_stat("hulu", "trees") < 5:
@@ -1091,6 +1205,7 @@ func _on_dialogue_started() -> void:
 func _on_dialogue_finished() -> void:
 	_dialogue_active = false
 	set_touch_controls_visible(true)
+	_sync_hulu_story_state()
 	_refresh_mission()
 	_refresh_gates()
 	_update_guidance()

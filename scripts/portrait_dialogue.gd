@@ -32,7 +32,7 @@ const PORTRAITS: Dictionary = {
 	"Bang Jali": "pedagang",
 	"Kak Rina": "ibu",
 	"Pak Darwis": "penjaga_hutan",
-	"Datuk Sampan": "penjaga_hutan",
+	"Datuk Sampan": "nelayan",
 	"Bang Ucok": "pakrt",
 	"Warga": "petani",
 	"Warga 1": "petani",
