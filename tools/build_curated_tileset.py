@@ -21,6 +21,8 @@ ASSETS = os.path.join(ROOT, "assets")
 SHEET2_PATH = "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8/.user_uploaded/media_1794426781609_c64aa95e.jpg"
 SHEET3_PATH = "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8/.user_uploaded/media_1794426840128_b42756f3.jpg"
 SHEET4_PATH = "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8/.user_uploaded/media_1794426916574_cc83a842.jpg"
+SHEET6_HOUSES_PATH = "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8/.user_uploaded/media_1794429964444_d05f7bb1.jpg"
+GREEN_HOUSE_PATH = "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8/.user_uploaded/media_1794430107416_65b4b6b7.jpg"
 
 S4_COLS = [(8, 80), (94, 165), (179, 251), (264, 336), (349, 421), (434, 506),
            (518, 590), (603, 675), (688, 760), (774, 846), (858, 930), (944, 1016)]
@@ -666,6 +668,72 @@ def build_tree_spot_sprite() -> None:
     print("Saved", path, spot.size)
 
 
+def _extract_house_crop(img: Image.Image, box: tuple[int, int, int, int], target_w: int) -> Image.Image:
+    """Crop a house from white background, strip border halo/specks, and resize at 2x pixel density."""
+    x0, y0, x1, y1 = box
+    w, h = img.size
+    crop = img.crop((max(0, x0 - 4), max(0, y0 - 4), min(w, x1 + 4), min(h, y1 + 4)))
+    clean = strip_exterior_white(crop, threshold=236, dark_defringe=(38, 30, 26))
+
+    # Drop tiny detached JPEG fringe specks around the roof edge while keeping main house body intact
+    cw, ch = clean.size
+    cpx = clean.load()
+    seen = [[False] * cw for _ in range(ch)]
+    for sy in range(ch):
+        for sx in range(cw):
+            if cpx[sx, sy][3] > 0 and not seen[sy][sx]:
+                comp = []
+                q = deque([(sx, sy)])
+                seen[sy][sx] = True
+                while q:
+                    cx, cy = q.popleft()
+                    comp.append((cx, cy))
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        nx, ny = cx + dx, cy + dy
+                        if 0 <= nx < cw and 0 <= ny < ch and not seen[ny][nx] and cpx[nx, ny][3] > 0:
+                            seen[ny][nx] = True
+                            q.append((nx, ny))
+                if len(comp) < 200:
+                    for cx, cy in comp:
+                        cpx[cx, cy] = (0, 0, 0, 0)
+
+    bbox = clean.getbbox()
+    if bbox:
+        clean = clean.crop(bbox)
+    cw, ch = clean.size
+    target_h = max(32, int(round(ch * (target_w / float(cw)))))
+    resized = clean.resize((target_w, target_h), Image.Resampling.BOX)
+    px = resized.load()
+    for yy in range(target_h):
+        for xx in range(target_w):
+            r, g, b, a = px[xx, yy]
+            if a < 120:
+                px[xx, yy] = (0, 0, 0, 0)
+            else:
+                px[xx, yy] = (r, g, b, 255)
+    return resized
+
+
+def build_house_sprites() -> None:
+    """Build 6 architectural house sprites at 2x pixel-art resolution (rendered at scale 0.5)."""
+    sheet6 = Image.open(SHEET6_HOUSES_PATH).convert("RGB")
+    green = Image.open(GREEN_HOUSE_PATH).convert("RGB")
+
+    specs = [
+        ("house_mc.png", green, (50, 25, 351, 275), 204),
+        ("house_cream.png", sheet6, (72, 27, 292, 261), 176),
+        ("house_modern.png", sheet6, (731, 30, 987, 262), 196),
+        ("house_brick.png", sheet6, (41, 298, 321, 530), 204),
+        ("house_courtyard.png", sheet6, (362, 312, 679, 525), 192),
+        ("house_coastal.png", sheet6, (760, 320, 954, 530), 168),
+    ]
+    for filename, src_img, box, target_w in specs:
+        out = _extract_house_crop(src_img, box, target_w)
+        out_path = os.path.join(ASSETS, "sprites", "props", filename)
+        out.save(out_path)
+        print("Saved", out_path, out.size)
+
+
 def main() -> None:
     s2 = Image.open(SHEET2_PATH).convert("RGB")
     s3 = Image.open(SHEET3_PATH).convert("RGB")
@@ -798,6 +866,7 @@ def main() -> None:
     print("Saved", out_path, atlas.size)
 
     build_tree_spot_sprite()
+    build_house_sprites()
 
 
 if __name__ == "__main__":

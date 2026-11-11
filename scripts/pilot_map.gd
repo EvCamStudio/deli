@@ -161,27 +161,9 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 	get_parent().add_child.call_deferred(body)
 
 func _spawn_buildings() -> void:
-	_spawn_building("res://assets/sprites/props/warung.png", Vector2(136, 132), Vector2(80, 22))
-	_spawn_building("res://assets/sprites/props/house.png", Vector2(480, 132), Vector2(80, 22))
-	_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 148), Vector2(80, 22))
-
-func _spawn_building(path: String, pos: Vector2, collision_size: Vector2) -> void:
-	var texture: Texture2D = load(path)
-	var body := StaticBody2D.new()
-	body.position = pos
-	body.collision_layer = 1
-	body.collision_mask = 0
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	sprite.position = Vector2(0, -texture.get_height() * 0.5)
-	body.add_child(sprite)
-	var shape := RectangleShape2D.new()
-	shape.size = collision_size
-	var col := CollisionShape2D.new()
-	col.shape = shape
-	col.position = Vector2(0, -collision_size.y * 0.5)
-	body.add_child(col)
-	get_parent().add_child.call_deferred(body)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(136, 132), Vector2(92, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(480, 132), Vector2(90, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 148), Vector2(82, 22), 0.5)
 
 func _spawn_trees() -> void:
 	var positions: Array[Vector2] = [

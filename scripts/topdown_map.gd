@@ -424,7 +424,8 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 func _spawn_props() -> void:
 	match theme:
 		"hulu":
-			_spawn_building("res://assets/sprites/props/house.png", Vector2(112, 208), Vector2(80, 22), Color(0.86, 0.98, 0.86))
+			# Rumah MC beratap hijau di Hulu (sesuai aset rumah kayu beranda).
+			spawn_building(get_parent(), "res://assets/sprites/props/house_mc.png", Vector2(112, 208), Vector2(92, 22), 0.5)
 			_spawn_trees([
 				Vector2(40, 120), Vector2(48, 360), Vector2(96, 470), Vector2(150, 80),
 				Vector2(210, 120), Vector2(260, 60), Vector2(320, 140), Vector2(360, 100), Vector2(400, 440),
@@ -434,9 +435,9 @@ func _spawn_props() -> void:
 				Vector2(900, 380), Vector2(880, 470), Vector2(300, 220), Vector2(576, 208), Vector2(780, 300),
 			])
 		"desa":
-			_spawn_building("res://assets/sprites/props/warung.png", Vector2(136, 208), Vector2(80, 22))
-			_spawn_building("res://assets/sprites/props/house.png", Vector2(480, 208), Vector2(80, 22))
-			_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 224), Vector2(80, 22))
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(136, 208), Vector2(82, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(480, 208), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(840, 224), Vector2(78, 22), 0.5)
 			_spawn_trees([
 				Vector2(40, 120), Vector2(48, 420), Vector2(120, 424), Vector2(220, 200),
 				Vector2(300, 424), Vector2(560, 200), Vector2(660, 424),
@@ -444,9 +445,9 @@ func _spawn_props() -> void:
 				Vector2(720, 120),
 			])
 		"hilir":
-			_spawn_building("res://assets/sprites/props/warung.png", Vector2(112, 208), Vector2(80, 22))
-			_spawn_building("res://assets/sprites/props/house.png", Vector2(400, 208), Vector2(80, 22))
-			_spawn_building("res://assets/sprites/props/shop.png", Vector2(840, 208), Vector2(80, 22))
+			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(112, 208), Vector2(78, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(400, 208), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 208), Vector2(82, 22), 0.5)
 			_spawn_trees([
 				Vector2(40, 120), Vector2(160, 80), Vector2(320, 120), Vector2(520, 80),
 				Vector2(680, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
@@ -455,7 +456,8 @@ func _spawn_props() -> void:
 			for pos in [Vector2(120, 432), Vector2(448, 436), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
 				_spawn_mangrove(pos)
 
-func _spawn_building(path: String, pos: Vector2, collision_size: Vector2, tint: Color = Color.WHITE) -> void:
+## Memunculkan sprite bangunan berkolisi dari aset 2x/1x agar sejajar di tepi jalan.
+static func spawn_building(parent: Node, path: String, pos: Vector2, collision_size: Vector2, sprite_scale: float = 0.5, tint: Color = Color.WHITE) -> void:
 	var texture: Texture2D = load(path)
 	var body := StaticBody2D.new()
 	body.position = pos
@@ -464,7 +466,8 @@ func _spawn_building(path: String, pos: Vector2, collision_size: Vector2, tint: 
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
 	sprite.modulate = tint
-	sprite.position = Vector2(0, -texture.get_height() * 0.5)
+	sprite.scale = Vector2(sprite_scale, sprite_scale)
+	sprite.position = Vector2(0, -texture.get_height() * 0.5 * sprite_scale)
 	body.add_child(sprite)
 	var shape := RectangleShape2D.new()
 	shape.size = collision_size
@@ -472,7 +475,7 @@ func _spawn_building(path: String, pos: Vector2, collision_size: Vector2, tint: 
 	col.shape = shape
 	col.position = Vector2(0, -collision_size.y * 0.5)
 	body.add_child(col)
-	get_parent().add_child.call_deferred(body)
+	parent.add_child.call_deferred(body)
 
 func _spawn_trees(positions: Array[Vector2]) -> void:
 	for pos in positions:
