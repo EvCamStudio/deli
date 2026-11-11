@@ -17,11 +17,36 @@ var _player_in_range: bool = false
 
 func _ready() -> void:
 	add_to_group("zone_gate")
+	collision_layer = 0
+	collision_mask = 1
+	_configure_invisible_trigger()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	GameState.river_health_changed.connect(_on_river_health_changed)
 	GameState.quest_started.connect(_on_quest_started)
 	refresh_gate_state()
+
+func _configure_invisible_trigger() -> void:
+	# Gerbang zona tampil menyatu dengan jalan tanpa sprite pintu atau label teks.
+	if is_instance_valid(sprite):
+		sprite.visible = false
+	if is_instance_valid(label):
+		label.text = ""
+		label.visible = false
+	var trigger_shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if trigger_shape:
+		trigger_shape.position = Vector2.ZERO
+		var area_rect := RectangleShape2D.new()
+		area_rect.size = Vector2(28, 64)
+		trigger_shape.shape = area_rect
+	if is_instance_valid(blocker):
+		for child in blocker.get_children():
+			if child is CollisionShape2D:
+				var col := child as CollisionShape2D
+				col.position = Vector2.ZERO
+				var blocker_rect := RectangleShape2D.new()
+				blocker_rect.size = Vector2(20, 64)
+				col.shape = blocker_rect
 
 func _world() -> Node:
 	var node: Node = get_parent()
@@ -55,7 +80,9 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"):
 		_player_in_range = true
 		if _open:
-			_interact_prompt_show()
+			call_deferred("_transition_to_zone")
+		else:
+			_toast_hint()
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
@@ -75,20 +102,11 @@ func refresh_gate_state() -> void:
 		return  # gate yang sudah terbuka tidak menutup lagi
 	if should_open:
 		_open = true
-		sprite.texture = load("res://assets/sprites/props/gate_open.png")
-		label.text = "Ke " + target_zone.capitalize()
 		_set_blocker_disabled(true)
 		if _player_in_range:
-			_interact_prompt_show()
+			call_deferred("_transition_to_zone")
 	else:
-		sprite.texture = load("res://assets/sprites/props/gate_closed.png")
-		if GameState.river_health < river_health_threshold:
-			label.text = "Terkunci (%d%%)" % int(river_health_threshold)
-		else:
-			label.text = "Misi belum selesai"
 		_set_blocker_disabled(false)
-		if _player_in_range:
-			_interact_prompt_hide()
 
 func get_target_zone() -> String:
 	return target_zone
@@ -105,7 +123,7 @@ func _set_blocker_disabled(disabled_state: bool) -> void:
 			(child as CollisionShape2D).set_deferred("disabled", disabled_state)
 
 func get_action_label() -> String:
-	return "Masuk" if _open else "Periksa"
+	return ""
 
 func interact() -> void:
 	if _open:
@@ -114,9 +132,12 @@ func interact() -> void:
 		_toast_hint()
 
 func _transition_to_zone() -> void:
+	if not _open:
+		return
 	var world := _world()
 	if world == null:
 		return
+	_player_in_range = false
 	if target_zone == "epilog":
 		if world.has_method("finish_journey"):
 			world.call("finish_journey")

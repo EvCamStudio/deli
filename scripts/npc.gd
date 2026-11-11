@@ -31,7 +31,7 @@ func _load_dialogue() -> void:
 	var target_id := dialog_id
 	if target_id.is_empty():
 		match npc_key:
-			"npc_ibu_mc": target_id = "h1_warung"
+			"npc_ibu_mc", "npc_pak_hendra": target_id = "h1_warung"
 			"npc_datuk": target_id = "h1_datuk"
 
 	if not target_id.is_empty():

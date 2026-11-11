@@ -168,18 +168,18 @@ func _build_zones() -> void:
 	_zone_containers["hilir"] = _create_zone_container("ZoneHilir", ZONE_WIDTH * TILE * 3, topdown_scene, "hilir")
 
 func _spawn_gates() -> void:
-	# Gate dari Hulu ke Desa (unlock river_health 40% + misi hulu).
-	_create_gate("hulu", Vector2(59, 16) * TILE, "desa", 40.0, "Tanam 5 pohon dan bicara Penjaga Hutan dulu.")
+	# Gate dari Hulu ke Desa (unlock river_health 40% + misi hulu), sejajar tengah jalan timur (y=16-17).
+	_create_gate("hulu", Vector2(59, 17) * TILE, "desa", 40.0, "Tanam 5 pohon dan bicara Penjaga Hutan dulu.")
 
 	# Gate dari Desa ke Kota (unlock river_health 60% + misi desa).
-	_create_gate("desa", Vector2(59, 16) * TILE, "kota", 60.0, "Pilah 10 sampah dan bicara 2 warga desa dulu.")
+	_create_gate("desa", Vector2(59, 17) * TILE, "kota", 60.0, "Pilah 10 sampah dan bicara 2 warga desa dulu.")
 
 	# Gate dari Kota ke Hilir (unlock river_health 80% + misi kota).
 	# Jalan kota ada di y=10–11, jadi gate diletakkan di jalan (bukan di sungai).
 	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 80.0, "Pilah 6 sampah dan bicara 4 warga kota dulu.")
 
 	# Gate akhir Hilir → Epilog.
-	_create_gate("hilir", Vector2(59, 16) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.")
+	_create_gate("hilir", Vector2(59, 17) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.")
 
 func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, hint: String) -> void:
 	var gate_scene := preload("res://scenes/world/gate_topdown.tscn")
@@ -193,7 +193,8 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
-	# Hulu: Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul setelah suara sungai).
+	# Hulu: Pak Hendra & Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul setelah suara sungai).
+	_create_npc("hulu", "npc_pak_hendra", "pakrt", Vector2(5.5, 15) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 15) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 14) * TILE, 1)
 	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(26.5, 10.5) * TILE, 1, "h1_datuk")
@@ -228,8 +229,9 @@ func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Ve
 	npc.talked.connect(on_npc_talked)
 	_zone_containers[zone].add_child(npc)
 	# Jangan tampilkan tanda seru untuk NPC yang sudah diajak bicara di sesi sebelumnya.
+	# Untuk warung hulu, cukup satu tanda seru (Bu Mira) agar tidak bertumpuk di depan rumah.
 	var talked_keys: Array = GameState.zone_progress.get(zone, {}).get("talked_keys", [])
-	if dialogue_key in talked_keys and npc.has_method("show_exclaim"):
+	if (dialogue_key in talked_keys or dialogue_key == "npc_pak_hendra") and npc.has_method("show_exclaim"):
 		npc.show_exclaim(false)
 
 func _spawn_hulu_riverbank_spot() -> void:
@@ -803,11 +805,18 @@ func on_tree_planted(kind: String) -> void:
 
 func on_npc_talked(npc_key: String) -> void:
 	var zone: String = _current_zone
-	var is_new: bool = GameState.mark_zone_talked(zone, npc_key)
+	# Pak Hendra dan Bu Mira memakai dialog warung hulu yang sama.
+	var effective_key: String = "npc_ibu_mc" if (zone == "hulu" and npc_key == "npc_pak_hendra") else npc_key
+	var is_new: bool = GameState.mark_zone_talked(zone, effective_key)
+	if effective_key == "npc_ibu_mc":
+		for npc in get_tree().get_nodes_in_group("world_npc"):
+			var k: String = str(npc.get("npc_key"))
+			if (k == "npc_ibu_mc" or k == "npc_pak_hendra") and npc.has_method("show_exclaim"):
+				npc.show_exclaim(false)
 	if not is_new:
 		return
 
-	match npc_key:
+	match effective_key:
 		"npc_ibu_mc":
 			pass
 		"npc_datuk":
@@ -823,7 +832,7 @@ func on_npc_talked(npc_key: String) -> void:
 			if not GameState.has_quest("pilah_desa"):
 				GameState.start_quest("pilah_desa", 10)
 				QuestManager.trigger_npc_quest("pilah_desa", "Pilah 10 sampah desa", 10)
-			if npc_key == "npc_petani_1":
+			if effective_key == "npc_petani_1":
 				GameState.unlock_card("card_pertanian_01")
 			else:
 				GameState.unlock_card("card_gotong_royong_01")

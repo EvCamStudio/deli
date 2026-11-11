@@ -15,22 +15,44 @@ var _open: bool = false
 
 func _ready() -> void:
 	add_to_group("pilot_gate")
+	collision_layer = 0
+	collision_mask = 1
+	_configure_invisible_trigger()
 	body_entered.connect(_on_body_entered)
 	if starts_open:
 		open()
-	else:
-		sprite.texture = load("res://assets/sprites/props/gate_closed.png")
-		label.text = "Gerbang"
+
+func _configure_invisible_trigger() -> void:
+	# Gerbang level tampil menyatu dengan jalan tanpa sprite pintu atau label teks.
+	if is_instance_valid(sprite):
+		sprite.visible = false
+	if is_instance_valid(label):
+		label.text = ""
+		label.visible = false
+	var trigger_shape := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if trigger_shape:
+		trigger_shape.position = Vector2.ZERO
+		var area_rect := RectangleShape2D.new()
+		area_rect.size = Vector2(28, 64)
+		trigger_shape.shape = area_rect
+	if is_instance_valid(blocker_shape):
+		blocker_shape.position = Vector2.ZERO
+		var blocker_rect := RectangleShape2D.new()
+		blocker_rect.size = Vector2(20, 64)
+		blocker_shape.shape = blocker_rect
 
 func get_action_label() -> String:
-	return "Selesai" if _open else "Periksa"
+	return ""
 
 func interact() -> void:
 	_try_gate()
 
 func _on_body_entered(body: Node2D) -> void:
-	if _open and body.is_in_group("player"):
-		_try_gate()
+	if body.is_in_group("player"):
+		if _open:
+			call_deferred("_try_gate")
+		else:
+			_try_gate()
 
 func _try_gate() -> void:
 	var level := get_tree().get_first_node_in_group("level")
@@ -43,9 +65,5 @@ func _try_gate() -> void:
 
 func open() -> void:
 	_open = true
-	sprite.texture = load("res://assets/sprites/props/gate_open.png")
-	label.text = open_label
-	blocker_shape.set_deferred("disabled", true)
-	var tween := create_tween()
-	tween.tween_property(self, "modulate", Color(1.2, 1.2, 1.0), 0.15)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.25)
+	if is_instance_valid(blocker_shape):
+		blocker_shape.set_deferred("disabled", true)
