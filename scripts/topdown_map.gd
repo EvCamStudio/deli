@@ -7,6 +7,9 @@ const TILE: int = 16
 const MAP_W: int = 60
 const MAP_H: int = 34
 const PATH_ROW: int = 16
+const BUILDING_BAND_SRC_PX: int = 8
+
+static var _building_polygon_cache: Dictionary = {}
 
 @export var theme: String = "hulu"
 
@@ -543,18 +546,101 @@ static func spawn_building(parent: Node, path: String, pos: Vector2, collision_s
 	sprite.scale = Vector2(sprite_scale, sprite_scale)
 	sprite.position = Vector2(0, -texture.get_height() * 0.5 * sprite_scale)
 	body.add_child(sprite)
-	# Pastikan fondasi penuh bangunan memblokir tabrakan agar karakter tidak menembus sudut/tembok bawah.
-	var solid_size := Vector2(
-		maxf(collision_size.x, float(texture.get_width()) * sprite_scale - 4.0),
-		maxf(collision_size.y, 32.0)
-	)
-	var shape := RectangleShape2D.new()
-	shape.size = solid_size
-	var col := CollisionShape2D.new()
-	col.shape = shape
-	col.position = Vector2(0, -solid_size.y * 0.5)
-	body.add_child(col)
+	# Bangunan 3/4 memblokir seluruh badan + atap mengikuti siluet sprite agar pemain tidak menembus dari belakang/samping.
+	var poly := _building_collision_polygon(texture, sprite_scale, collision_size)
+	if poly.size() >= 3:
+		var col := CollisionPolygon2D.new()
+		col.polygon = poly
+		body.add_child(col)
+	else:
+		var solid_size := Vector2(
+			maxf(collision_size.x, float(texture.get_width()) * sprite_scale),
+			maxf(collision_size.y, float(texture.get_height()) * sprite_scale)
+		)
+		var shape := RectangleShape2D.new()
+		shape.size = solid_size
+		var col := CollisionShape2D.new()
+		col.shape = shape
+		col.position = Vector2(0, -solid_size.y * 0.5)
+		body.add_child(col)
 	parent.add_child.call_deferred(body)
+
+## Menghasilkan poligon kolisi 3/4 berdasar siluet opak tekstur bangunan (di-cache per aset & skala).
+static func _building_collision_polygon(texture: Texture2D, sprite_scale: float, fallback_size: Vector2) -> PackedVector2Array:
+	if texture == null:
+		return PackedVector2Array()
+	var cache_key := "%s:%.3f" % [texture.resource_path, sprite_scale]
+	if _building_polygon_cache.has(cache_key):
+		return _building_polygon_cache[cache_key]
+	var img: Image = texture.get_image()
+	if img == null or img.is_empty():
+		return PackedVector2Array()
+	var w: int = img.get_width()
+	var h: int = img.get_height()
+	var bands: Array[Dictionary] = []
+	for y0 in range(0, h, BUILDING_BAND_SRC_PX):
+		var y1: int = mini(h, y0 + BUILDING_BAND_SRC_PX)
+		var lx: int = w
+		var rx: int = -1
+		for y in range(y0, y1):
+			for x in range(w):
+				if img.get_pixel(x, y).a > 0.2:
+					if x < lx:
+						lx = x
+					if x > rx:
+						rx = x
+		if rx < lx:
+			continue
+		var world_w: float = float(rx - lx + 1) * sprite_scale
+		# Abaikan puncak cerobong tipis di baris paling atas agar bagian belakang atap tetap rata dan mulus dilewati.
+		if bands.is_empty() and world_w < 14.0:
+			continue
+		# Beri bantalan 1.5px di tepi kiri/kanan agar rambut & bahu karakter (12px) tetap tampak di luar garis tepi dinding.
+		bands.append({
+			"y0": (float(y0) - float(h)) * sprite_scale,
+			"y1": (float(y1) - float(h)) * sprite_scale,
+			"lx": (float(lx) - float(w) * 0.5) * sprite_scale - 1.5,
+			"rx": (float(rx + 1) - float(w) * 0.5) * sprite_scale + 1.5,
+		})
+	if bands.is_empty():
+		return PackedVector2Array([
+			Vector2(-fallback_size.x * 0.5, -fallback_size.y),
+			Vector2(-fallback_size.x * 0.5, 0.0),
+			Vector2(fallback_size.x * 0.5, 0.0),
+			Vector2(fallback_size.x * 0.5, -fallback_size.y),
+		])
+	# Jaga pangkal depan (-24..0) selebar dinding utama agar pemain tidak masuk celah teras/bay window lalu terpotong Y-sort.
+	for i in range(1, bands.size()):
+		if bands[i]["y1"] > -24.0:
+			bands[i]["lx"] = minf(bands[i]["lx"], bands[i - 1]["lx"])
+			bands[i]["rx"] = maxf(bands[i]["rx"], bands[i - 1]["rx"])
+	bands[bands.size() - 1]["y1"] = 0.0
+	var merged: Array[Dictionary] = []
+	for b in bands:
+		if not merged.is_empty() and absf(merged[merged.size() - 1]["lx"] - b["lx"]) <= 1.5 and absf(merged[merged.size() - 1]["rx"] - b["rx"]) <= 1.5:
+			merged[merged.size() - 1]["lx"] = minf(merged[merged.size() - 1]["lx"], b["lx"])
+			merged[merged.size() - 1]["rx"] = maxf(merged[merged.size() - 1]["rx"], b["rx"])
+			merged[merged.size() - 1]["y1"] = b["y1"]
+		else:
+			merged.append(b)
+	var pts: Array[Vector2] = []
+	var n: int = merged.size()
+	for i in range(n):
+		pts.append(Vector2(merged[i]["lx"], merged[i]["y0"]))
+		if i < n - 1 and absf(merged[i + 1]["lx"] - merged[i]["lx"]) > 4.0:
+			pts.append(Vector2(merged[i]["lx"], merged[i]["y1"]))
+	pts.append(Vector2(merged[n - 1]["lx"], 0.0))
+	pts.append(Vector2(merged[n - 1]["rx"], 0.0))
+	for i in range(n - 1, 0, -1):
+		if absf(merged[i - 1]["rx"] - merged[i]["rx"]) > 4.0:
+			pts.append(Vector2(merged[i]["rx"], merged[i]["y0"]))
+			pts.append(Vector2(merged[i - 1]["rx"], merged[i]["y0"]))
+		else:
+			pts.append(Vector2(merged[i]["rx"], merged[i]["y0"]))
+	pts.append(Vector2(merged[0]["rx"], merged[0]["y0"]))
+	var poly := PackedVector2Array(pts)
+	_building_polygon_cache[cache_key] = poly
+	return poly
 
 func _spawn_trees(positions: Array[Vector2]) -> void:
 	for pos in positions:
