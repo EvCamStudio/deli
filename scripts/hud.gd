@@ -134,24 +134,24 @@ func _build_sikap_panel() -> void:
 	_sikap_card.anchors_preset = Control.PRESET_TOP_RIGHT
 	_sikap_card.anchor_left = 1.0
 	_sikap_card.anchor_right = 1.0
-	_sikap_card.offset_left = -190.0
-	_sikap_card.offset_top = 32.0
+	_sikap_card.offset_left = -160.0
+	_sikap_card.offset_top = 26.0
 	_sikap_card.offset_right = 0.0
-	_sikap_card.offset_bottom = 52.0
+	_sikap_card.offset_bottom = 44.0
 
 	var card_style := StyleBoxFlat.new()
-	card_style.bg_color = Color(0.96, 0.93, 0.84, 0.95)
-	card_style.border_color = Color(0.48, 0.35, 0.22, 0.9)
+	card_style.bg_color = Color(0.96, 0.93, 0.84, 0.94)
+	card_style.border_color = Color(0.48, 0.35, 0.22, 0.85)
 	card_style.set_border_width_all(1)
-	card_style.set_corner_radius_all(5)
-	card_style.content_margin_left = 7
-	card_style.content_margin_top = 2
-	card_style.content_margin_right = 7
-	card_style.content_margin_bottom = 2
+	card_style.set_corner_radius_all(4)
+	card_style.content_margin_left = 5
+	card_style.content_margin_top = 1
+	card_style.content_margin_right = 5
+	card_style.content_margin_bottom = 1
 	_sikap_card.add_theme_stylebox_override("panel", card_style)
 
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 8)
+	row.add_theme_constant_override("separation", 6)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_sikap_card.add_child(row)
 
@@ -159,10 +159,10 @@ func _build_sikap_panel() -> void:
 
 	for npc_key in ["jali", "rina", "darwis"]:
 		var item_box := HBoxContainer.new()
-		item_box.add_theme_constant_override("separation", 4)
+		item_box.add_theme_constant_override("separation", 3)
 
 		var color_rect := ColorRect.new()
-		color_rect.custom_minimum_size = Vector2(8, 8)
+		color_rect.custom_minimum_size = Vector2(7, 7)
 		color_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		color_rect.color = Color(0.55, 0.55, 0.55)
 		item_box.add_child(color_rect)
@@ -170,7 +170,7 @@ func _build_sikap_panel() -> void:
 		var lbl := Label.new()
 		if font:
 			lbl.add_theme_font_override("font", font)
-		lbl.add_theme_font_size_override("font_size", 10)
+		lbl.add_theme_font_size_override("font_size", 9)
 		lbl.add_theme_color_override("font_color", Color(0.2, 0.14, 0.1))
 		lbl.text = "%s: Acuh" % NPC_DISPLAY_NAMES[npc_key]
 		item_box.add_child(lbl)
@@ -422,15 +422,14 @@ func hide_hint() -> void:
 
 # ─── Kompas tujuan (untuk target di luar layar) ───────────────────────────────
 
-## Arahkan pemain ke target: "←", "→", "↑", "↓" + jarak + nama target.
-func set_objective(direction: String, distance_tiles: int, target_name: String = "") -> void:
+## Arahkan pemain ke target: arah panah + jarak (misal "← 15m").
+func set_objective(direction: String, distance_tiles: int, _target_name: String = "") -> void:
 	if not compass_panel or not compass_label:
 		return
 	if direction.is_empty():
 		compass_panel.hide()
 		return
-	var suffix: String = "" if target_name.is_empty() else " · " + target_name
-	compass_label.text = "%s  %dm%s" % [direction, distance_tiles, suffix]
+	compass_label.text = "%s %dm" % [direction, distance_tiles]
 	compass_panel.show()
 
 func hide_objective() -> void:

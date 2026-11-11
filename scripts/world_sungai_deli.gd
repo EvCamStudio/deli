@@ -923,7 +923,7 @@ func _update_compass(target: Node2D) -> void:
 		direction = "→" if delta.x >= 0.0 else "←"
 	else:
 		direction = "↓" if delta.y >= 0.0 else "↑"
-	hud.set_objective(direction, distance_tiles, _target_label(target))
+	hud.set_objective(direction, distance_tiles)
 
 func _target_label(target: Node2D) -> String:
 	if target is NPC:
