@@ -114,7 +114,7 @@ func _build_bar_styles() -> void:
 	_bar_safe = _make_bar_style(Color(0.24, 0.72, 0.42))
 	if river_bar:
 		var bar_bg := StyleBoxFlat.new()
-		bar_bg.bg_color = Color(0.06, 0.08, 0.10, 0.85)
+		bar_bg.bg_color = Color(0.85, 0.80, 0.70, 0.85)
 		bar_bg.set_corner_radius_all(3)
 		river_bar.add_theme_stylebox_override("background", bar_bg)
 
@@ -135,18 +135,18 @@ func _build_sikap_panel() -> void:
 	_sikap_card.anchor_left = 1.0
 	_sikap_card.anchor_right = 1.0
 	_sikap_card.offset_left = -190.0
-	_sikap_card.offset_top = 34.0
+	_sikap_card.offset_top = 32.0
 	_sikap_card.offset_right = 0.0
-	_sikap_card.offset_bottom = 54.0
+	_sikap_card.offset_bottom = 52.0
 
 	var card_style := StyleBoxFlat.new()
-	card_style.bg_color = Color(0.08, 0.10, 0.14, 0.85)
-	card_style.border_color = Color(0.32, 0.38, 0.46, 0.5)
+	card_style.bg_color = Color(0.96, 0.93, 0.84, 0.95)
+	card_style.border_color = Color(0.48, 0.35, 0.22, 0.9)
 	card_style.set_border_width_all(1)
-	card_style.set_corner_radius_all(6)
-	card_style.content_margin_left = 8
+	card_style.set_corner_radius_all(5)
+	card_style.content_margin_left = 7
 	card_style.content_margin_top = 2
-	card_style.content_margin_right = 8
+	card_style.content_margin_right = 7
 	card_style.content_margin_bottom = 2
 	_sikap_card.add_theme_stylebox_override("panel", card_style)
 
@@ -154,6 +154,8 @@ func _build_sikap_panel() -> void:
 	row.add_theme_constant_override("separation", 8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	_sikap_card.add_child(row)
+
+	var font: FontFile = load("res://assets/fonts/Nunito.ttf")
 
 	for npc_key in ["jali", "rina", "darwis"]:
 		var item_box := HBoxContainer.new()
@@ -166,8 +168,10 @@ func _build_sikap_panel() -> void:
 		item_box.add_child(color_rect)
 
 		var lbl := Label.new()
-		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", Color(0.92, 0.92, 0.95))
+		if font:
+			lbl.add_theme_font_override("font", font)
+		lbl.add_theme_font_size_override("font_size", 10)
+		lbl.add_theme_color_override("font_color", Color(0.2, 0.14, 0.1))
 		lbl.text = "%s: Acuh" % NPC_DISPLAY_NAMES[npc_key]
 		item_box.add_child(lbl)
 
@@ -370,7 +374,7 @@ func show_toast(text: String, good: bool = true) -> void:
 	toast_label.text = text
 	toast_label.add_theme_color_override(
 		"font_color",
-		Color(0.48, 0.94, 0.58) if good else Color(0.96, 0.45, 0.40)
+		Color(0.18, 0.45, 0.22) if good else Color(0.70, 0.20, 0.15)
 	)
 	if _toast_tween:
 		_toast_tween.kill()
@@ -398,6 +402,7 @@ func show_hint(text: String, seconds: float = 4.0) -> void:
 		hide_hint()
 		return
 	hint_label.text = text
+	hint_label.add_theme_color_override("font_color", Color(0.2, 0.14, 0.1))
 	hint_card.show()
 	if _hint_tween:
 		_hint_tween.kill()

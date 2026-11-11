@@ -546,7 +546,7 @@ func _refresh_mission() -> void:
 			if not talked_ibu:
 				title = "HULU SUNGAI DELI"
 				lines = [
-					"Periksa kondisi warung Mak & Bapak."
+					"Periksa warung Mak dan Bapak."
 				]
 			elif not talked_datuk:
 				title = "BANTARAN HULU"

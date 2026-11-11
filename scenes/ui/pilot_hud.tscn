@@ -4,69 +4,69 @@
 [ext_resource type="Texture2D" path="res://assets/ui/icons/droplet.png" id="2_droplet"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/coin.png" id="4_coin"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/card.png" id="5_card"]
-[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="6_pixel"]
+[ext_resource type="FontFile" path="res://assets/fonts/Nunito.ttf" id="6_nunito"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_card"]
 content_margin_left = 7.0
-content_margin_top = 3.0
+content_margin_top = 2.0
 content_margin_right = 7.0
-content_margin_bottom = 3.0
-bg_color = Color(0.08, 0.1, 0.14, 0.85)
+content_margin_bottom = 2.0
+bg_color = Color(0.96, 0.93, 0.84, 0.95)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.32, 0.38, 0.46, 0.5)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+border_color = Color(0.48, 0.35, 0.22, 0.9)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_location"]
-content_margin_left = 9.0
-content_margin_top = 3.0
-content_margin_right = 9.0
-content_margin_bottom = 3.0
-bg_color = Color(0.08, 0.1, 0.14, 0.88)
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+bg_color = Color(0.96, 0.93, 0.84, 0.95)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.85, 0.72, 0.45, 0.6)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_bottom_left = 6
+border_color = Color(0.55, 0.32, 0.14, 0.95)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_mission"]
 content_margin_left = 8.0
-content_margin_top = 5.0
+content_margin_top = 4.0
 content_margin_right = 8.0
-content_margin_bottom = 5.0
-bg_color = Color(0.06, 0.08, 0.12, 0.85)
+content_margin_bottom = 4.0
+bg_color = Color(0.965, 0.935, 0.845, 0.96)
 border_width_left = 3
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.88, 0.74, 0.42, 0.85)
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
+border_color = Color(0.48, 0.35, 0.22, 0.9)
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_toast"]
-content_margin_left = 12.0
-content_margin_top = 4.0
-content_margin_right = 12.0
-content_margin_bottom = 4.0
-bg_color = Color(0.08, 0.1, 0.14, 0.92)
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
+bg_color = Color(0.96, 0.93, 0.84, 0.96)
 border_width_left = 1
 border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
-border_color = Color(0.85, 0.72, 0.45, 0.75)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(0.48, 0.35, 0.22, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="HUD" type="CanvasLayer"]
 process_mode = 3
@@ -91,7 +91,7 @@ layout_mode = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 28.0
+offset_bottom = 26.0
 grow_horizontal = 2
 theme_override_constants/separation = 6
 
@@ -113,7 +113,7 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(62, 8)
+custom_minimum_size = Vector2(60, 8)
 layout_mode = 2
 size_flags_vertical = 4
 value = 20.0
@@ -122,9 +122,9 @@ show_percentage = false
 [node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
 custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
 text = "20%"
 
 [node name="Spacer" type="Control" parent="SafeMargin/Root/TopBar"]
@@ -138,9 +138,9 @@ theme_override_styles/panel = SubResource("StyleBox_location")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/TopBar/LocationCard"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.88, 0.72, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.55, 0.32, 0.14, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
 text = "HULU SUNGAI DELI"
 horizontal_alignment = 1
 
@@ -162,46 +162,47 @@ expand_mode = 1
 stretch_mode = 5
 
 [node name="MoneyLabel" type="Label" parent="SafeMargin/Root/TopBar/MoneyCard/Row"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(46, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.96, 0.86, 0.45, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
 text = "Rp 0"
 
 [node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
-custom_minimum_size = Vector2(30, 26)
+custom_minimum_size = Vector2(28, 24)
 layout_mode = 2
 size_flags_vertical = 4
 tooltip_text = "Jurnal / Menu"
 icon = ExtResource("5_card")
 expand_icon = true
-icon_max_width = 20
+icon_max_width = 18
 
 [node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
 layout_mode = 0
-offset_top = 34.0
-offset_right = 175.0
-offset_bottom = 76.0
+offset_top = 32.0
+offset_right = 184.0
+offset_bottom = 72.0
 theme_override_styles/panel = SubResource("StyleBox_mission")
 
 [node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]
 layout_mode = 2
-theme_override_constants/separation = 2
+theme_override_constants/separation = 1
 
 [node name="MissionTitle" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.8, 0.4, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.55, 0.32, 0.14, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 10
 text = "◆ MISI"
 
 [node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
-custom_minimum_size = Vector2(158, 0)
+custom_minimum_size = Vector2(168, 0)
 layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.92, 0.95, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
+theme_override_constants/line_spacing = 1
 text = "Bersihkan bantaran dan perbaiki drainase!"
 autowrap_mode = 3
 
@@ -214,16 +215,16 @@ anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
 offset_left = -100.0
-offset_top = -84.0
+offset_top = -80.0
 offset_right = 100.0
-offset_bottom = -68.0
+offset_bottom = -64.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
-theme_override_colors/font_outline_color = Color(0.08, 0.1, 0.14, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.14, 0.1, 1)
 theme_override_constants/outline_size = 3
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
 text = "Dibawa: 0 sampah"
 horizontal_alignment = 1
 
@@ -235,19 +236,19 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = -130.0
-offset_top = -64.0
-offset_right = 130.0
-offset_bottom = -40.0
+offset_left = -120.0
+offset_top = -60.0
+offset_right = 120.0
+offset_bottom = -38.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_styles/panel = SubResource("StyleBox_toast")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/Toast"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.95, 0.94, 0.9, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
-theme_override_font_sizes/font_size = 9
+theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+theme_override_fonts/font = ExtResource("6_nunito")
+theme_override_font_sizes/font_size = 11
 text = "Tersimpan!"
 horizontal_alignment = 1
 
@@ -290,7 +291,7 @@ theme_override_constants/separation = 8
 [node name="Title" type="Label" parent="Completion/Panel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.247, 0.435, 0.271, 1)
-theme_override_fonts/font = ExtResource("6_pixel")
+theme_override_fonts/font = ExtResource("6_nunito")
 theme_override_font_sizes/font_size = 20
 text = "BAB 3 SELESAI!"
 horizontal_alignment = 1
@@ -301,7 +302,8 @@ layout_mode = 2
 bbcode_enabled = true
 fit_content = true
 text = "[center]Bantaran Kota Medan mulai bersih. Drainase terbuka, sampah terpilah, dan pantun Budi terjaga.[/center]"
-theme_override_font_sizes/normal_font_size = 11
+theme_override_fonts/normal_font = ExtResource("6_nunito")
+theme_override_font_sizes/normal_font_size = 12
 
 [node name="ContinueBtn" type="Button" parent="Completion/Panel/VBox"]
 custom_minimum_size = Vector2(0, 30)
