@@ -43,17 +43,22 @@ func _paint_ground() -> void:
 		for y in [10, 11]:
 			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
-	# jalur vertikal ke jembatan dan bangunan
+	# jalur vertikal ke jembatan dan permukiman bantaran selatan
 	for y in range(8, 16):
 		ground.set_cell(Vector2i(20, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(21, y), 0, Vector2i(5, 0), 0)
 		ground.set_cell(Vector2i(44, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(45, y), 0, Vector2i(5, 0), 0)
-	for y in range(22, 25):
+	for y in range(22, 31):
 		ground.set_cell(Vector2i(20, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(21, y), 0, Vector2i(5, 0), 0)
 		ground.set_cell(Vector2i(44, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(45, y), 0, Vector2i(5, 0), 0)
+
+	# jalan pemukiman bantaran selatan kota
+	for x in range(5, 55):
+		for y in [29, 30]:
+			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
 	# alun-alun batu di timur
 	for x in range(48, 58):
@@ -65,15 +70,19 @@ func _paint_ground() -> void:
 		for y in [10, 11]:
 			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
-	# jalur ke warung, rumah, toko
+	# jalur ke warung, rumah, ruko jalan utama (utara)
 	for y in range(8, 11):
-		ground.set_cell(Vector2i(8, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(9, y), 0, Vector2i(5, 0), 0)
-		ground.set_cell(Vector2i(30, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(31, y), 0, Vector2i(5, 0), 0)
+		for col in [8, 15, 30, 37]:
+			ground.set_cell(Vector2i(col, y), 0, Vector2i(4, 0), 0)
+			ground.set_cell(Vector2i(col + 1, y), 0, Vector2i(5, 0), 0)
 	for y in range(9, 13):
 		ground.set_cell(Vector2i(52, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(53, y), 0, Vector2i(5, 0), 0)
+
+	# jalur pintu rumah bantaran selatan menuju jalan selatan
+	for col in [7, 14, 27, 36, 52]:
+		ground.set_cell(Vector2i(col, 28), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(col + 1, 28), 0, Vector2i(5, 0), 0)
 
 	# bunga liar
 	for i in range(95):
@@ -161,18 +170,24 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 	get_parent().add_child.call_deferred(body)
 
 func _spawn_buildings() -> void:
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(136, 132), Vector2(92, 22), 0.5)
+	# Deret permukiman jalan utara kota
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(128, 132), Vector2(92, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(244, 132), Vector2(88, 22), 0.5)
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(480, 132), Vector2(90, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(604, 132), Vector2(78, 22), 0.5)
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 148), Vector2(82, 22), 0.5)
+	# Deret pemukiman padat bantaran Sungai Deli selatan (menghadap jalan selatan)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(112, 448), Vector2(82, 22), 0.5, Color(0.96, 0.98, 1.0))
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(232, 448), Vector2(78, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(440, 448), Vector2(88, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(584, 448), Vector2(92, 22), 0.5)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(832, 448), Vector2(90, 22), 0.5, Color(0.96, 1.0, 0.96))
 
 func _spawn_trees() -> void:
+	# Pohon dirapikan di bingkai tepi peta & sudut celah rumah (tidak acak di tengah jalan/taman).
 	var positions: Array[Vector2] = [
-		Vector2(40, 90), Vector2(70, 120), Vector2(230, 84), Vector2(280, 116),
-		Vector2(360, 70), Vector2(410, 96), Vector2(560, 92), Vector2(610, 120),
-		Vector2(700, 80), Vector2(760, 104), Vector2(916, 84),
-		Vector2(48, 470), Vector2(120, 500), Vector2(250, 480), Vector2(330, 512),
-		Vector2(460, 486), Vector2(590, 508), Vector2(680, 474), Vector2(820, 505),
-		Vector2(920, 480), Vector2(150, 360), Vector2(690, 360), Vector2(790, 370),
+		Vector2(44, 112), Vector2(372, 116), Vector2(676, 116), Vector2(920, 112),
+		Vector2(48, 436), Vector2(172, 436), Vector2(360, 436), Vector2(512, 436), Vector2(652, 436), Vector2(760, 436), Vector2(912, 436),
 	]
 	for pos in positions:
 		_spawn_tree(pos)

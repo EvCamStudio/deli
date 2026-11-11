@@ -45,12 +45,47 @@ const ZONE_WISDOM: Dictionary = {
 	"hilir": "Nelayan Deli: laut yang dijaga akan menjaga kita.",
 }
 
-# Footprint bangunan (dalam satuan tile) supaya sampah/pohon tidak menimpa atap.
+# Footprint bangunan (dalam satuan tile) supaya sampah/pohon tidak menimpa atap atau halaman depan pintu.
 const BUILDING_RECTS: Dictionary = {
-	"hulu": [Rect2(4, 9, 6, 4)],
-	"desa": [Rect2(5.5, 9, 6, 4), Rect2(27, 9, 6, 4), Rect2(49.5, 10, 6, 4)],
-	"kota": [Rect2(5.5, 4.25, 6, 4), Rect2(27, 4.25, 6, 4), Rect2(49.5, 5.25, 6, 4)],
-	"hilir": [Rect2(4, 9, 6, 4), Rect2(22, 9, 6, 4), Rect2(49.5, 9, 6, 4)],
+	"hulu": [
+		Rect2(3.8, 7.7, 6.4, 5.3),
+		Rect2(14.0, 8.9, 6.0, 4.1),
+		Rect2(4.2, 22.1, 5.6, 5.9),
+	],
+	"desa": [
+		Rect2(4.7, 7.1, 5.6, 5.9),
+		Rect2(27.0, 8.9, 6.0, 4.1),
+		Rect2(49.8, 8.3, 5.4, 5.7),
+		Rect2(3.5, 20.4, 6.0, 4.1),
+		Rect2(11.3, 19.2, 6.4, 5.3),
+		Rect2(20.7, 18.6, 5.6, 5.9),
+		Rect2(34.3, 18.8, 5.4, 5.7),
+		Rect2(42.5, 20.4, 6.0, 4.1),
+		Rect2(50.9, 18.9, 6.2, 5.6),
+	],
+	"kota": [
+		Rect2(4.8, 3.0, 6.4, 5.3),
+		Rect2(12.2, 4.1, 6.1, 4.2),
+		Rect2(26.9, 2.7, 6.2, 5.6),
+		Rect2(35.0, 2.5, 5.5, 5.8),
+		Rect2(49.7, 3.4, 5.6, 5.9),
+		Rect2(4.2, 22.1, 5.6, 5.9),
+		Rect2(11.8, 22.3, 5.4, 5.7),
+		Rect2(24.5, 23.9, 6.0, 4.1),
+		Rect2(33.3, 22.7, 6.4, 5.3),
+		Rect2(48.9, 22.4, 6.2, 5.6),
+	],
+	"hilir": [
+		Rect2(4.5, 1.4, 6.0, 4.1),
+		Rect2(12.3, 0.2, 6.4, 5.3),
+		Rect2(29.0, 1.4, 6.0, 4.1),
+		Rect2(49.8, 0.0, 5.4, 5.5),
+		Rect2(4.3, 7.3, 5.4, 5.7),
+		Rect2(12.7, 7.1, 5.6, 5.9),
+		Rect2(22.0, 8.9, 6.0, 4.1),
+		Rect2(32.4, 7.4, 6.2, 5.6),
+		Rect2(49.7, 7.1, 5.6, 5.9),
+	],
 }
 
 # Titik tanam pohon Hulu dikelompokkan di satu kawasan hutan khusus di sisi timur
@@ -204,7 +239,7 @@ func _spawn_npcs() -> void:
 	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat.
 	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 10) * TILE, 3, "h2_jali")
 	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 10) * TILE, 3)
-	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(50, 13) * TILE, 3)
+	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 13) * TILE, 3)
 	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 9.8) * TILE, 3)
 
 	# Hilir: Nelayan, penjaga sungai.
@@ -443,8 +478,11 @@ func _zone_in_water(zone: String, pos: Vector2) -> bool:
 
 func _spawn_zone_bins(zone: String, categories: Array) -> void:
 	var bin_scene := preload("res://scenes/world/bin_topdown.tscn")
-	# Di kota sungai lebih lebar, jadi tong diletakkan di trotoar (bukan di air).
-	var y_tiles: int = 13 if zone == "kota" else 20
+	# Di kota sungai lebih lebar, jadi tong diletakkan di trotoar; di desa diletakkan di bahu jalan utara agar terpisah dari deret rumah selatan.
+	var y_tiles: float = 13.0 if zone == "kota" else (14.5 if zone == "desa" else 20.0)
+	var x_by_zone: Dictionary = {
+		"desa": [18, 41, 57],
+	}
 	var quest_by_zone: Dictionary = {
 		"desa": "pilah_desa",
 		"kota": "pilah_sampah_kota",
@@ -452,7 +490,8 @@ func _spawn_zone_bins(zone: String, categories: Array) -> void:
 	}
 	for i in range(categories.size()):
 		var bin := bin_scene.instantiate()
-		var x: int = 10 + i * 15
+		var custom_xs: Array = x_by_zone.get(zone, [])
+		var x: int = int(custom_xs[i]) if i < custom_xs.size() else (10 + i * 15)
 		bin.position = Vector2(x, y_tiles) * TILE
 		bin.set("bin_category", categories[i])
 		bin.set("required_quest", quest_by_zone.get(zone, ""))

@@ -152,22 +152,36 @@ static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: i
 		ground_layer.set_cell(c, 0, atlas, 0)
 
 func _paint_hulu_ground() -> void:
-	# Jalur tanah dari pintu rumah Ibu ke jalan utama.
+	# Jalur tanah dari pintu rumah Ibu & rumah tetangga ke jalan utama.
 	_paint_door_path(6, 7, 13)
+	_paint_door_path(16, 17, 13)
+	# Gang kecil kampung ke rumah warga di sisi barat daya.
+	for y in range(PATH_ROW, 29):
+		ground.set_cell(Vector2i(13, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(14, y), 0, Vector2i(5, 0), 0)
+	for x in range(6, 15):
+		ground.set_cell(Vector2i(x, 28), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(x, 29), 0, Vector2i(5, 0), 0)
 	# Sedikit tanah lapang alami di papan pantun.
 	ground.set_cell(Vector2i(17, 18), 0, Vector2i(7, 3), 0)
 
 func _paint_desa_ground() -> void:
-	# Jalur tanah dari pintu tiap bangunan ke jalan utama.
-	_paint_door_path(8, 9, 13)
+	# Jalur tanah dari pintu deret utara ke jalan utama.
+	_paint_door_path(7, 8, 13)
 	_paint_door_path(30, 31, 13)
-	_paint_door_path(52, 53, 13)
-	# Jalan menuju dermaga di tepi sungai.
+	_paint_door_path(52, 53, 14)
+	# Jalan menuju dermaga di tepi sungai + gang vertikal ke deret rumah bantaran selatan.
 	for y in range(PATH_ROW, 27):
 		ground.set_cell(Vector2i(30, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(31, y), 0, Vector2i(5, 0), 0)
-	# Petak kebun sayur dengan bedengan tanah gembur dan tunas bibit.
-	var fields: Array[Rect2i] = [Rect2i(14, 4, 11, 7), Rect2i(34, 4, 11, 7), Rect2i(48, 6, 9, 7)]
+	for y in range(PATH_ROW, 26):
+		ground.set_cell(Vector2i(19, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(49, y), 0, Vector2i(5, 0), 0)
+	# Jalan kampung bantaran sungai menyusuri deretan rumah selatan (y=25).
+	for x in range(5, 56):
+		ground.set_cell(Vector2i(x, 25), 0, Vector2i(4 + _hash(x, 25) % 2, 0), 0)
+	# Petak kebun sayur tertata sejajar di utara dengan bedengan tanah gembur.
+	var fields: Array[Rect2i] = [Rect2i(14, 4, 10, 6), Rect2i(35, 4, 10, 6), Rect2i(48, 4, 9, 6)]
 	for f_idx in range(fields.size()):
 		var field: Rect2i = fields[f_idx]
 		for x in range(field.position.x, field.end.x):
@@ -183,10 +197,21 @@ func _paint_desa_ground() -> void:
 				ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
 func _paint_hilir_ground() -> void:
-	# Jalur tanah dari pintu tiap bangunan ke jalan utama.
+	# Jalur tanah dari pintu deret rumah sepanjang jalan utama.
 	_paint_door_path(6, 7, 13)
+	_paint_door_path(15, 16, 13)
 	_paint_door_path(24, 25, 13)
+	_paint_door_path(35, 36, 13)
 	_paint_door_path(52, 53, 13)
+	# Gang pemukiman baris belakang utara + akses penghubung ke jalan utama.
+	for x in range(6, 35):
+		ground.set_cell(Vector2i(x, 6), 0, Vector2i(4 + _hash(x, 6) % 2, 0), 0)
+	for y in range(6, PATH_ROW + 1):
+		ground.set_cell(Vector2i(20, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(21, y), 0, Vector2i(5, 0), 0)
+	for y in range(6, 14):
+		ground.set_cell(Vector2i(52, y), 0, Vector2i(4, 0), 0)
+		ground.set_cell(Vector2i(53, y), 0, Vector2i(5, 0), 0)
 	# Garis tepi rumput-pasir organik di perbatasan pantai.
 	for x in range(MAP_W):
 		ground.set_cell(Vector2i(x, 23), 0, Vector2i(0, 7), 0)
@@ -388,7 +413,7 @@ func _paint_decor() -> void:
 				_decor.set_cell(c, 0, Vector2i(6, 7), 0)  # kerikil & kerang pantai
 
 func _paint_field_fences() -> void:
-	var fields: Array[Rect2i] = [Rect2i(14, 4, 11, 7), Rect2i(34, 4, 11, 7), Rect2i(48, 6, 9, 7)]
+	var fields: Array[Rect2i] = [Rect2i(14, 4, 10, 6), Rect2i(35, 4, 10, 6), Rect2i(48, 4, 9, 6)]
 	for field in fields:
 		for x in range(field.position.x - 1, field.end.x + 1):
 			_decor.set_cell(Vector2i(x, field.position.y - 1), 0, Vector2i(4 + x % 2, 2), 0)
@@ -453,34 +478,54 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 func _spawn_props() -> void:
 	match theme:
 		"hulu":
-			# Rumah MC beratap hijau di Hulu (sesuai aset rumah kayu beranda).
+			# Rumah MC beratap hijau + dua rumah tetangga di sisi kampung hulu.
 			spawn_building(get_parent(), "res://assets/sprites/props/house_mc.png", Vector2(112, 208), Vector2(92, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(272, 208), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(112, 448), Vector2(82, 22), 0.5)
+			# Pohon dirapikan mengelompok: bingkai tepi kampung barat & rumpun hutan timur (bukan acak di pekarangan).
 			_spawn_trees([
-				Vector2(40, 120), Vector2(48, 360), Vector2(96, 470), Vector2(150, 80),
-				Vector2(210, 120), Vector2(260, 60), Vector2(320, 140), Vector2(360, 100), Vector2(400, 440),
-				Vector2(360, 380), Vector2(250, 460), Vector2(170, 400), Vector2(520, 90), Vector2(560, 140),
-				Vector2(620, 60), Vector2(660, 64), Vector2(740, 80), Vector2(890, 118), Vector2(860, 100),
-				Vector2(540, 440), Vector2(600, 380), Vector2(660, 470), Vector2(740, 420), Vector2(820, 460),
-				Vector2(900, 380), Vector2(880, 470), Vector2(300, 220), Vector2(576, 208), Vector2(780, 300),
+				# Bingkai barat & peneduh halaman
+				Vector2(36, 128), Vector2(192, 196), Vector2(36, 356), Vector2(40, 488), Vector2(280, 488),
+				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai)
+				Vector2(616, 72), Vector2(688, 68), Vector2(768, 72), Vector2(848, 72), Vector2(912, 84),
+				Vector2(916, 156), Vector2(916, 212),
+				Vector2(604, 424), Vector2(604, 488), Vector2(692, 488), Vector2(780, 448), Vector2(860, 488), Vector2(916, 424),
 			])
 		"desa":
-			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(136, 208), Vector2(82, 22), 0.5)
+			# Pemukiman padat di sepanjang jalan utama & bantaran Sungai Deli selatan.
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(120, 208), Vector2(82, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(480, 208), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(840, 224), Vector2(78, 22), 0.5)
+			# Deret rumah bantaran selatan menghadap gang tepi sungai.
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(104, 392), Vector2(88, 22), 0.5, Color(0.95, 0.98, 1.0))
+			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(232, 392), Vector2(92, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(376, 392), Vector2(82, 22), 0.5, Color(0.96, 1.0, 0.96))
+			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(592, 392), Vector2(78, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(728, 392), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(864, 392), Vector2(88, 22), 0.5)
+			# Pohon tertata di sudut pekarangan & bingkai tepi peta (tidak menghalangi jalan/kebun).
 			_spawn_trees([
-				Vector2(40, 120), Vector2(48, 420), Vector2(120, 424), Vector2(220, 200),
-				Vector2(300, 424), Vector2(560, 200), Vector2(660, 424),
-				Vector2(772, 200), Vector2(900, 420), Vector2(920, 120), Vector2(200, 120),
-				Vector2(720, 120),
+				Vector2(40, 128), Vector2(40, 204), Vector2(204, 212), Vector2(396, 212), Vector2(724, 212), Vector2(920, 128),
+				Vector2(36, 392), Vector2(168, 392), Vector2(440, 392), Vector2(660, 392), Vector2(924, 392),
+				Vector2(48, 520), Vector2(256, 520), Vector2(704, 520), Vector2(912, 520),
 			])
 		"hilir":
+			# Kampung pesisir muara: dua baris rumah utara + rumah sisi timur sungai.
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(120, 88), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(248, 88), Vector2(92, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(512, 88), Vector2(88, 22), 0.5, Color(0.96, 0.98, 1.0))
+			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(840, 88), Vector2(78, 22), 0.5, Color(0.96, 1.0, 0.96))
+			# Deretan rumah utama di tepi jalan raya pesisir.
 			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(112, 208), Vector2(78, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(248, 208), Vector2(82, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(400, 208), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(568, 208), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 208), Vector2(82, 22), 0.5)
+			# Pohon pesisir ditata di celah antar-rumah & batas tepi kampung.
 			_spawn_trees([
-				Vector2(40, 120), Vector2(160, 80), Vector2(320, 120), Vector2(520, 80),
-				Vector2(648, 120), Vector2(880, 80), Vector2(200, 176), Vector2(600, 200),
-				Vector2(908, 200), Vector2(260, 440), Vector2(760, 440),
+				Vector2(40, 88), Vector2(392, 88), Vector2(624, 88), Vector2(920, 88),
+				Vector2(180, 208), Vector2(308, 208), Vector2(484, 208), Vector2(644, 208), Vector2(920, 208),
+				Vector2(48, 352), Vector2(560, 352), Vector2(912, 352),
 			])
 			for pos in [Vector2(120, 432), Vector2(448, 436), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
 				_spawn_mangrove(pos)
