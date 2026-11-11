@@ -140,48 +140,27 @@ func _process(delta: float) -> void:
 		_guidance_accum = 0.0
 		_update_guidance()
 
+func _create_zone_container(container_name: String, zone_x: float, map_scene: PackedScene, theme_name: String = "", visible_by_default: bool = false) -> Node2D:
+	var container := Node2D.new()
+	container.name = container_name
+	container.y_sort_enabled = true
+	container.position = Vector2(zone_x, 0)
+	container.visible = visible_by_default
+	var map_node := map_scene.instantiate() as Node2D
+	if not theme_name.is_empty():
+		map_node.set("theme", theme_name)
+	container.add_child(map_node)
+	add_child(container)
+	return container
+
+
 func _build_zones() -> void:
-	# Zona Hulu: Warung + mata air hutan
-	var hulu_container := Node2D.new()
-	hulu_container.name = "ZoneHulu"
-	hulu_container.position = Vector2.ZERO
-	var hulu_map := preload("res://scenes/world/topdown_map.tscn").instantiate() as Node2D
-	hulu_map.set("theme", "hulu")
-	hulu_container.add_child(hulu_map)
-	add_child(hulu_container)
-	_zone_containers["hulu"] = hulu_container
-
-	# Zona Desa: Kampung sawah
-	var desa_container := Node2D.new()
-	desa_container.name = "ZoneDesa"
-	desa_container.position = Vector2(ZONE_WIDTH * TILE, 0)
-	var desa_map := preload("res://scenes/world/topdown_map.tscn").instantiate() as Node2D
-	desa_map.set("theme", "desa")
-	desa_container.add_child(desa_map)
-	desa_container.visible = false
-	add_child(desa_container)
-	_zone_containers["desa"] = desa_container
-
-	# Zona Kota: Medan urban
-	var kota_container := Node2D.new()
-	kota_container.name = "ZoneKota"
-	kota_container.position = Vector2(ZONE_WIDTH * TILE * 2, 0)
-	var kota_map := preload("res://scenes/world/pilot_map.tscn").instantiate() as Node2D
-	kota_container.add_child(kota_map)
-	kota_container.visible = false
-	add_child(kota_container)
-	_zone_containers["kota"] = kota_container
-
-	# Zona Hilir: Pesisir mangrove
-	var hilir_container := Node2D.new()
-	hilir_container.name = "ZoneHilir"
-	hilir_container.position = Vector2(ZONE_WIDTH * TILE * 3, 0)
-	var hilir_map := preload("res://scenes/world/topdown_map.tscn").instantiate() as Node2D
-	hilir_map.set("theme", "hilir")
-	hilir_container.add_child(hilir_map)
-	hilir_container.visible = false
-	add_child(hilir_container)
-	_zone_containers["hilir"] = hilir_container
+	var topdown_scene: PackedScene = preload("res://scenes/world/topdown_map.tscn")
+	var pilot_scene: PackedScene = preload("res://scenes/world/pilot_map.tscn")
+	_zone_containers["hulu"] = _create_zone_container("ZoneHulu", 0.0, topdown_scene, "hulu", true)
+	_zone_containers["desa"] = _create_zone_container("ZoneDesa", ZONE_WIDTH * TILE, topdown_scene, "desa")
+	_zone_containers["kota"] = _create_zone_container("ZoneKota", ZONE_WIDTH * TILE * 2, pilot_scene)
+	_zone_containers["hilir"] = _create_zone_container("ZoneHilir", ZONE_WIDTH * TILE * 3, topdown_scene, "hilir")
 
 func _spawn_gates() -> void:
 	# Gate dari Hulu ke Desa (unlock river_health 40% + misi hulu).
@@ -223,7 +202,7 @@ func _spawn_npcs() -> void:
 	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 10) * TILE, 3, "h2_jali")
 	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 10) * TILE, 3)
 	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(50, 13) * TILE, 3)
-	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 9) * TILE, 3)
+	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 9.8) * TILE, 3)
 
 	# Hilir: Nelayan, penjaga sungai.
 	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(13, 15) * TILE, 4)

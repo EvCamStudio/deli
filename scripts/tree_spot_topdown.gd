@@ -7,6 +7,7 @@ class_name TreeSpotTopDown
 
 @onready var marker: Sprite2D = $Marker
 @onready var planted_sprite: Sprite2D = $Planted
+@onready var blocker_col: CollisionShape2D = $Blocker/CollisionShape2D
 
 var _planted: bool = false
 
@@ -23,6 +24,11 @@ func _ready() -> void:
 		planted_sprite.show()
 	else:
 		planted_sprite.hide()
+	_update_blocker()
+
+func _update_blocker() -> void:
+	if is_instance_valid(blocker_col):
+		blocker_col.set_deferred("disabled", not _planted)
 
 func get_action_label() -> String:
 	if _planted:
@@ -40,6 +46,7 @@ func mark_planted() -> void:
 	marker.hide()
 	planted_sprite.show()
 	planted_sprite.scale = Vector2.ONE
+	_update_blocker()
 
 func _required_quest() -> String:
 	return "tanam_mangrove" if kind == "mangrove" else "tanam_pohon_hulu"
@@ -59,6 +66,7 @@ func interact() -> void:
 	_planted = true
 	marker.hide()
 	planted_sprite.show()
+	_update_blocker()
 
 	if kind == "mangrove":
 		GameState.plant_mangrove()

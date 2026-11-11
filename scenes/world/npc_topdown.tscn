@@ -24,6 +24,7 @@ position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_body")
 
 [node name="ExclaimLabel" type="Label" parent="."]
+z_index = 5
 offset_left = -12.0
 offset_top = -46.0
 offset_right = 12.0

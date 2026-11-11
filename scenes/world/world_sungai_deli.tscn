@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/pantun_panel.tscn" id="8_pantun"]
 
 [node name="WorldSungaiDeli" type="Node2D"]
+y_sort_enabled = true
 script = ExtResource("1_world")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]

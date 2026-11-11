@@ -469,11 +469,16 @@ static func spawn_building(parent: Node, path: String, pos: Vector2, collision_s
 	sprite.scale = Vector2(sprite_scale, sprite_scale)
 	sprite.position = Vector2(0, -texture.get_height() * 0.5 * sprite_scale)
 	body.add_child(sprite)
+	# Pastikan fondasi penuh bangunan memblokir tabrakan agar karakter tidak menembus sudut/tembok bawah.
+	var solid_size := Vector2(
+		maxf(collision_size.x, float(texture.get_width()) * sprite_scale - 4.0),
+		maxf(collision_size.y, 32.0)
+	)
 	var shape := RectangleShape2D.new()
-	shape.size = collision_size
+	shape.size = solid_size
 	var col := CollisionShape2D.new()
 	col.shape = shape
-	col.position = Vector2(0, -collision_size.y * 0.5)
+	col.position = Vector2(0, -solid_size.y * 0.5)
 	body.add_child(col)
 	parent.add_child.call_deferred(body)
 
