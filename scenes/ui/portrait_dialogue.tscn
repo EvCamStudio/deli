@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/portrait_dialogue.gd" id="1_dialogue"]
 [ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="2_pixel"]
@@ -27,6 +27,17 @@ content_margin_top = 3.0
 content_margin_right = 12.0
 content_margin_bottom = 3.0
 
+[sub_resource type="StyleBoxTexture" id="StyleBox_photo"]
+texture = ExtResource("4_paper")
+texture_margin_left = 10.0
+texture_margin_top = 10.0
+texture_margin_right = 10.0
+texture_margin_bottom = 10.0
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+
 [node name="DialogueBox" type="CanvasLayer"]
 layer = 20
 script = ExtResource("1_dialogue")
@@ -45,15 +56,27 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
+[node name="Backdrop" type="Panel" parent="Root"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -190.0
+offset_right = 136.0
+offset_bottom = -4.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_photo")
+
 [node name="Portrait" type="TextureRect" parent="Root"]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 8.0
-offset_top = -210.0
-offset_right = 168.0
-offset_bottom = -10.0
+offset_left = 10.0
+offset_top = -182.0
+offset_right = 130.0
+offset_bottom = -12.0
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
@@ -63,10 +86,10 @@ layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_left = 184.0
-offset_top = -198.0
-offset_right = 394.0
-offset_bottom = -168.0
+offset_left = 138.0
+offset_top = -182.0
+offset_right = 356.0
+offset_bottom = -154.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBox_name")
 
@@ -74,7 +97,7 @@ theme_override_styles/panel = SubResource("StyleBox_name")
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
 theme_override_fonts/font = ExtResource("2_pixel")
-theme_override_font_sizes/font_size = 15
+theme_override_font_sizes/font_size = 14
 text = "Pak Pedagang"
 
 [node name="Panel" type="PanelContainer" parent="Root"]
@@ -84,8 +107,8 @@ anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 176.0
-offset_top = -170.0
+offset_left = 138.0
+offset_top = -150.0
 offset_right = -8.0
 offset_bottom = -8.0
 theme_override_styles/panel = SubResource("StyleBox_dialog")
@@ -95,14 +118,14 @@ layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="TextLabel" type="RichTextLabel" parent="Root/Panel/VBox"]
-custom_minimum_size = Vector2(0, 52)
+custom_minimum_size = Vector2(0, 18)
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true
 fit_content = false
 scroll_active = false
 theme_override_colors/default_color = Color(0.227, 0.165, 0.118, 1)
-theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/normal_font_size = 13
 text = "Dulu sungai ini jernih, Nak. Aku bisa cuci tangan langsung di sini. Sekarang? Bau dan kotor."
 visible_characters = 0
 
@@ -113,6 +136,7 @@ theme_override_constants/separation = 3
 [node name="ContinueHint" type="Label" parent="Root/Panel/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 0.75)
-theme_override_font_sizes/font_size = 10
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 9
 text = "Ketuk / Space untuk lanjut"
 horizontal_alignment = 2

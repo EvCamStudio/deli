@@ -34,9 +34,9 @@ func show_node(node: Dictionary) -> void:
 	panel.show()
 	tap_area.show()
 
-	speaker_label.text = str(node.get("speaker", ""))
-	var full_text: String = str(node.get("teks", node.get("text", "")))
-	var choices: Array = node.get("pilihan", node.get("choices", []))
+	speaker_label.text = node.get("speaker", "")
+	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
+	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_has_choices = not choices.is_empty()
 
 	# Sembunyikan hint jika ada pilihan
@@ -49,6 +49,11 @@ func show_node(node: Dictionary) -> void:
 	if _has_choices:
 		await _wait_typewriter_done()
 		_show_choices(choices)
+
+func _clean_text(raw: String) -> String:
+	var regex := RegEx.new()
+	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
+	return regex.sub(raw, " ", true).strip_edges()
 
 func _start_typewriter(text: String) -> void:
 	_full_text = text
@@ -75,11 +80,7 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
-		var label_str: String = str(choice.get("teks", choice.get("text", "")))
-		if choice.has("tipe"):
-			btn.text = " [%s] %s" % [choice.get("tipe"), label_str]
-		else:
-			btn.text = label_str
+		btn.text = choice.get("text", "")
 		btn.custom_minimum_size = Vector2(0, 28)
 		# Sambungkan dengan index yang di-capture
 		var idx: int = i
@@ -102,7 +103,7 @@ func _on_tap() -> void:
 		text_label.visible_characters = -1
 		if _has_choices:
 			var current_node: Dictionary = DialogueManager._current_node
-			_show_choices(current_node.get("pilihan", current_node.get("choices", [])))
+			_show_choices(current_node.get("choices", []))
 	else:
 		# Lanjut ke node berikutnya (tanpa pilihan)
 		if not _has_choices:

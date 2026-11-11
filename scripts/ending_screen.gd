@@ -1,119 +1,118 @@
-## EndingScreen Script (Deli Rewind — Master Game System)
-## Menampilkan 4 varian ending berdasarkan Dokumen Utama Bagian 7
-## dan Layar Kredit / Penjelasan Edukasi untuk Dewan Juri (Bagian 9).
+## EndingScreen Script (Deli Rewind)
+## Menampilkan layar akhir berdasarkan 4 Ending (A, B, C, D) atau ringkasan perjalanan.
 extends Control
 
-@onready var ending_title: Label = $VBox/EndingTitle
-@onready var ending_message: RichTextLabel = $VBox/EndingMessage
-@onready var stats_label: RichTextLabel = $VBox/StatsLabel
-@onready var play_again_btn: Button = $VBox/Buttons/PlayAgainBtn
-@onready var cards_btn: Button = $VBox/Buttons/CardsBtn
-@onready var quit_btn: Button = $VBox/Buttons/QuitBtn
+@onready var ending_title: Label = $Panel/VBox/EndingTitle
+@onready var ending_message: RichTextLabel = $Panel/VBox/EndingMessage
+@onready var stats_label: RichTextLabel = $Panel/VBox/StatsLabel
+@onready var play_again_btn: Button = $Panel/VBox/HBox/PlayAgainBtn
+@onready var quit_btn: Button = $Panel/VBox/HBox/QuitBtn
+@onready var cards_btn: Button = $Panel/VBox/HBox/CardsBtn
+@onready var card_popup: CanvasLayer = $KnowledgeCardPopup
 @onready var river_visual: ColorRect = $Background/RiverVisual
 
 const ENDING_DATA: Dictionary = {
 	"A": {
-		"title": "🏆 ENDING A: HARAPAN BARU DELI (TERBAIK)",
-		"message": "[b]Sungai Deli jernih, warung kopi ramai, dan utang keluarga lunas 100%![/b]\n\nWarga bantaran kini sadar dan rutin kerja bakti. MC mendirikan bank sampah komunitas.\n[i]Datuk Sampan (tersenyum terang): \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama kalian ingat dan peduli, aku ada.\"[/i]",
-		"color": Color(0.2, 0.65, 0.95, 0.85)
+		"title": "🌟 Ending A: Harapan Baru Deli (Terbaik)",
+		"message": "Enam bulan kemudian. Pukul lima pagi, sendok kembali beradu gelas di warung kopi keluarga. Tujuh meja berdiri, atap tertambal sebelum hujan, dan utang telah lunas diselipkan di bawah toples gula baru.\n\n[b]Datuk Sampan:[/b] \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama ada yang mengingat, aku ada.\"\n[i]\"Waktu tak bisa diputar kembali. Yang bisa hanya kebiasaan. Dan kebiasaan dimulai dari mendengar.\"[/i]"
 	},
 	"B": {
-		"title": "🌤 ENDING B: KELUARGA MANDIRI (BAIK)",
-		"message": "[b]Warung selamat dan kondisi sungai membaik bertahap.[/b]\n\nSebagian besar utang lunas dan warga mulai terbiasa membuang sampah pada tempatnya.\n[i]Datuk Sampan: \"Kau tidak sendirian lagi, Nak. Perjalananmu membuahkan hasil. Teruskan.\"[/i]",
-		"color": Color(0.3, 0.6, 0.75, 0.8)
+		"title": "🌤 Ending B: Keluarga Mandiri (Baik)",
+		"message": "Hujan deras datang lagi bulan itu. Warung kami basah, tapi tidak tenggelam. Utang pokok hampir tak bersisa di buku Mak.\n\n[b]Bu Mira:[/b] \"Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.\"\n[b]Datuk Sampan:[/b] \"Kau tak sendirian lagi, Nak. Ada yang ikut menjaga. Teruskan.\""
 	},
 	"C": {
-		"title": "🌧 ENDING C: BERTAHAN DI TEPIAN (NETRAL)",
-		"message": "[b]Warung bertahan dari banjir, tetapi utang masih tersisa dan sungai masih rawan.[/b]\n\nSebagian warga masih kembali ke kebiasaan lama jika tidak diawasi.\n[i]Datuk Sampan: \"Sungai belajar dari kita, sebagaimana kita belajar darinya. Jalanmu masih panjang.\"[/i]",
-		"color": Color(0.45, 0.45, 0.4, 0.8)
+		"title": "🌥 Ending C: Bertahan di Tepian (Netral)",
+		"message": "Hujan lebat kembali datang. Warung bertahan, tapi dindingnya basah sampai garis lumpur lama. Utang masih tersisa dan sungai masih rawan.\n\n[b]MC:[/b] \"Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.\"\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.\""
 	},
 	"D": {
-		"title": "💔 ENDING D: TERPAKSA MENYERAH (BURUK)",
-		"message": "[b]Banjir bandang besar menerjang kembali bantaran Sungai Deli.[/b]\n\nWarung orang tua digusur lumpur dan keluarga terpaksa pindah.\n[i]Datuk Sampan (memudar): \"Sungai tidak membenci siapa pun. Ia hanya kembali ke jalannya...\"[/i]\n\n[color=#e06050][b]PESAN EDUKASI: Satu orang membuang sampah, semua yang menanggung bencana.[/b][/color]",
-		"color": Color(0.35, 0.25, 0.2, 0.85)
+		"title": "🌧 Ending D: Terpaksa Menyerah (Buruk)",
+		"message": "Banjir bandang datang malam hari tanpa aba-aba. Air coklat pekat menelan bantaran dan warung keluarga. Pagi harinya, hanya tiang yang tersisa dan sandal yang masih berpasangan.\n\n[b]Datuk Sampan (memudar):[/b] \"Sungai tak membenci siapa pun, Nak. Ia hanya kembali ke jalannya. Kalau kau diberi kesempatan sekali lagi, dengarkan dulu sebelum bicara.\"\n[b][color=#ffd166]\"Satu orang membuang, semua menanggung.\"[/color][/b]"
+	},
+	"baik": {
+		"title": "Sungai Deli Pulih!",
+		"message": "Luar biasa! Berkat usahamu, Sungai Deli kembali jernih. Air mengalir bening, ikan kembali berenang, dan warga bisa kembali menikmati bantaran sungai yang hijau.\n\n[i]Pepatah Melayu Deli: sungai yang dijaga akan menjaga kita. Hulu yang rimbun menurunkan air yang jernih ke hilir.[/i]"
+	},
+	"biasa": {
+		"title": "Sungai Mulai Membaik",
+		"message": "Sungai Deli sudah lebih bersih dari sebelumnya. Masih ada yang perlu diperbaiki, tapi perjalananmu telah memberi harapan.\n\n[i]Gotong royong adalah kunci: berat sama dipikul, ringan sama dijinjing.[/i]"
+	},
+	"buruk": {
+		"title": "Sungai Masih Sakit",
+		"message": "Sungai Deli masih membutuhkan pertolongan. Jangan menyerah! Setiap orang bisa mulai dari hal kecil.\n\n[i]Satu sampah yang dipungut hari ini adalah satu harapan untuk sungai esok hari.[/i]"
 	}
 }
 
+var _current_code: String = "D"
+
 func _ready() -> void:
-	if AudioManager:
-		AudioManager.play_bgm(5)
+	AudioManager.play_bgm(5)
 	_show_ending()
-	play_again_btn.pressed.connect(_on_rewind)
-	if cards_btn:
-		cards_btn.pressed.connect(_on_credits_or_cards)
+	play_again_btn.pressed.connect(_on_play_again)
+	cards_btn.pressed.connect(_on_cards)
 	quit_btn.pressed.connect(_on_quit)
 
 func _show_ending() -> void:
-	var kode: String = GameState.evaluasi_ending()
-	var data: Dictionary = ENDING_DATA.get(kode, ENDING_DATA["B"])
+	if GameState.has_method("tentukan_ending"):
+		_current_code = GameState.ending_terakhir if GameState.ending_terakhir in ["A", "B", "C", "D"] else GameState.tentukan_ending(false)
+	else:
+		_current_code = GameState.calculate_ending()
 
+	var data: Dictionary = ENDING_DATA.get(_current_code, ENDING_DATA.get("B", ENDING_DATA["biasa"]))
 	ending_title.text = data["title"]
-	ending_message.text = data["message"]
+	ending_message.text = "[center]%s[/center]" % data["message"]
 
-	# Hitung persentase utang lunas
-	var utang_lunas := GameState.utang_awal - GameState.utang
-	var pct: float = (float(utang_lunas) / float(GameState.utang_awal)) * 100.0
+	if _current_code == "D":
+		play_again_btn.text = "⏪ Rewind"
+	else:
+		play_again_btn.text = "🔄 Main Lagi"
 
-	var stats: String = "[b]Statistik Akhir Perjalanan 7 Hari:[/b]\n"
-	stats += "💧 Meter Bencana: %d / 100 (Kejernihan: %d%%)\n" % [int(GameState.meter_bencana), int(GameState.river_health)]
-	stats += "👥 Sikap Warga: Jali (%s), Rina (%s), Darwis (%s)\n" % [
-		_format_sikap(GameState.npc_sikap.get("jali", 0)),
-		_format_sikap(GameState.npc_sikap.get("rina", 0)),
-		_format_sikap(GameState.npc_sikap.get("darwis", 0))
-	]
-	stats += "💰 Utang Terbayar: Rp %s / Rp %s (%.0f%%)\n" % [
-		_format_number(utang_lunas), _format_number(GameState.utang_awal), pct
-	]
-	stats += "🏪 Kondisi Warung: %s\n" % ("Bersih & Buka" if GameState.warung_bersih else "Rusak")
+	var stats: String = "[b]Statistik Akhir Perjalanan[/b]\n"
+	if GameState.has_method("get_jumlah_npc_peduli") and GameState.has_method("get_persen_utang_lunas"):
+		var meter_akhir: int = int(round(GameState.meter_bencana if "meter_bencana" in GameState else (100.0 - GameState.river_health)))
+		var peduli_count: int = GameState.get_jumlah_npc_peduli()
+		var persen_utang: int = int(round(GameState.get_persen_utang_lunas() * 100.0))
+		stats += "• Meter Bencana: %d%% (Kejernihan %d%%)\n" % [meter_akhir, int(round(GameState.river_health))]
+		stats += "• Warga Peduli: %d / 3 | Utang Lunas: %d%%\n" % [peduli_count, persen_utang]
+	stats += "• Sampah Terkumpul: %d | Pohon Ditanam: %d\n" % [GameState.get_total_trash(), GameState.trees_planted]
+	stats += "• Mangrove: %d | Kartu: %d\n" % [GameState.mangroves_planted, GameState.collected_cards.size()]
+	stats += "• Rupiah Terkumpul: Rp %s" % _format_number(GameState.rupiah)
 	stats_label.text = stats
 
-	if river_visual:
-		river_visual.color = data["color"]
+	match _current_code:
+		"A", "baik": river_visual.color = Color(0.18, 0.65, 0.92, 0.85)
+		"B", "biasa": river_visual.color = Color(0.28, 0.58, 0.78, 0.80)
+		"C": river_visual.color = Color(0.42, 0.52, 0.58, 0.78)
+		"D", "buruk": river_visual.color = Color(0.36, 0.28, 0.22, 0.85)
 
-	if kode == "D":
-		play_again_btn.text = "⏪ REWIND (Ulang dari Hari 1)"
+func _nama_sikap(nilai: int) -> String:
+	match nilai:
+		GameState.SIKAP_MENOLAK: return "Menolak"
+		GameState.SIKAP_ACUH: return "Acuh"
+		GameState.SIKAP_RAGU: return "Ragu"
+		GameState.SIKAP_PEDULI: return "Peduli"
+		_: return "Acuh"
+
+func _on_play_again() -> void:
+	if _current_code == "D" and GameState.has_method("rewind"):
+		GameState.rewind()
 	else:
-		play_again_btn.text = "▶ Mainkan Lagi"
+		GameState.reset()
+		SceneManager.go_to_main_menu()
 
-	if cards_btn:
-		cards_btn.text = "📜 Daftar Pustaka & Edukasi"
+func _format_number(value: int) -> String:
+	var text: String = str(value)
+	var out: String = ""
+	var count: int = 0
+	for i in range(text.length() - 1, -1, -1):
+		out = text[i] + out
+		count += 1
+		if count % 3 == 0 and i > 0:
+			out = "." + out
+	return out
 
-func _format_sikap(val: int) -> String:
-	match val:
-		2: return "Peduli 💚"
-		1: return "Ragu ❓"
-		-1: return "Menolak ❌"
-		_: return "Acuh ⚪"
-
-func _format_number(val: int) -> String:
-	var s := str(val)
-	var res := ""
-	var cnt := 0
-	for i in range(s.length() - 1, -1, -1):
-		res = s[i] + res
-		cnt += 1
-		if cnt % 3 == 0 and i > 0:
-			res = "." + res
-	return res
-
-func _on_rewind() -> void:
-	GameState.reset_ke_hari_1()
-	SceneManager.change_scene("res://scenes/maps/map_a_warung.tscn")
-
-func _on_credits_or_cards() -> void:
-	# Tampilkan popup daftar pustaka dan edukasi juri
-	var popup := get_node_or_null("CreditsPopup") as Control
-	if popup:
-		popup.show()
-	else:
-		_tampilkan_kredit_fallback()
-
-func _tampilkan_kredit_fallback() -> void:
-	var text := "[b]DAFTAR PUSTAKA & KEARIFAN LOKAL (UNTUK DEWAN JURI):[/b]\n\n"
-	text += "1. Syaifuddin, W. & Loebis, R. A. A. The River Planning Based on Local Wisdom (Case Study: Upper Reaches of Sungai Deli Medan, North Sumatera).\n"
-	text += "2. Hajar, I., Indriyanto, K. & Syahfitri, D. (2024). Representasi Nilai Kearifan Lokal pada Pantun Melayu Deli dan Pelestariannya Melalui Telangkai. GERAM, 12(2), 115-125.\n\n"
-	text += "[i]Cerita dan tokoh dalam game ini adalah karya fiksi orisinal yang terinspirasi penelitian kearifan lokal sastra lisan Melayu di DAS Sungai Deli.[/i]"
-	ending_message.text = text
+func _on_cards() -> void:
+	if card_popup and card_popup.has_method("open_collection"):
+		card_popup.open_collection()
 
 func _on_quit() -> void:
-	get_tree().quit()
+	SceneManager.go_to_main_menu()

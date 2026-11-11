@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/player_topdown.gd" id="1_player"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/shadow.png" id="2_shadow"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_pixel"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 8)
@@ -36,14 +37,15 @@ shape = SubResource("CircleShape2D_interact")
 
 [node name="ActionLabel" type="Label" parent="."]
 offset_left = -60.0
-offset_top = -44.0
+offset_top = -42.0
 offset_right = 60.0
-offset_bottom = -28.0
+offset_bottom = -26.0
 theme_override_colors/font_color = Color(1, 0.965, 0.878, 1)
 theme_override_colors/font_outline_color = Color(0.227, 0.165, 0.118, 1)
-theme_override_constants/outline_size = 4
-theme_override_font_sizes/font_size = 10
-text = "[E] Bicara"
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_pixel")
+theme_override_font_sizes/font_size = 8
+text = "Bicara"
 horizontal_alignment = 1
 vertical_alignment = 1
 visible = false

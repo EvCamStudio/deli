@@ -91,7 +91,7 @@ func _run() -> void:
 	_check(GameState.get_total_trash() == 1, "correct trash counted")
 	_check(abs(GameState.river_health - 26.0) < 0.01, "sorting raises river health to 26")
 
-	# Wrong bin keeps the item and penalizes health.
+	# Tong bersifat forgiving: kategori apa pun diterima tanpa penalti.
 	var plastic_trash: TrashItem = null
 	for item in trash:
 		if is_instance_valid(item) and item.category == "plastik":
@@ -101,11 +101,9 @@ func _run() -> void:
 	await _frames(2)
 	organik_bin.interact()
 	await _frames(2)
-	_check(GameState.get_meta("pending_trash").size() == 1, "wrong bin keeps trash")
-	_check(abs(GameState.river_health - 24.0) < 0.01, "wrong bin lowers river health to 24")
-	plastik_bin.interact()
-	await _frames(2)
-	_check(GameState.get_meta("pending_trash").is_empty(), "right bin accepts plastic trash")
+	_check(GameState.get_meta("pending_trash").is_empty(), "forgiving bin accepts plastic trash")
+	_check(GameState.get_total_trash() == 2, "second trash counted")
+	_check(abs(GameState.river_health - 29.0) < 0.01, "forgiving bin raises river health to 29")
 
 	# Pantun minigame: two correct answers.
 	var pantun: Node = level.get_node("PantunPanel")
@@ -118,7 +116,7 @@ func _run() -> void:
 	await get_tree().create_timer(1.0).timeout
 	await _frames(2)
 	_check(not pantun.panel.visible, "pantun panel closes after completion")
-	_check(abs(GameState.river_health - 35.0) < 0.01, "pantun reward raises river health to 35")
+	_check(abs(GameState.river_health - 37.0) < 0.01, "pantun reward raises river health to 37")
 
 	# Wrong lever sequence then correct 1-3-2.
 	levers.sort_custom(func(a, b): return a.lever_id < b.lever_id)
@@ -126,7 +124,7 @@ func _run() -> void:
 	await _frames(1)
 	levers[1].interact()
 	await _frames(1)
-	_check(abs(GameState.river_health - 33.0) < 0.01, "wrong lever sequence penalizes health")
+	_check(abs(GameState.river_health - 35.0) < 0.01, "wrong lever sequence penalizes health")
 	levers[0].interact()
 	await _frames(1)
 	levers[2].interact()
@@ -135,7 +133,7 @@ func _run() -> void:
 	await _frames(3)
 	_check(level._gate_open, "correct lever sequence opens gate")
 	_check(gate._open, "gate visual opens")
-	_check(abs(GameState.river_health - 43.0) < 0.01, "gate reward raises river health to 43")
+	_check(abs(GameState.river_health - 45.0) < 0.01, "gate reward raises river health to 45")
 
 	# Reward the remaining conversations.
 	for npc in npcs:

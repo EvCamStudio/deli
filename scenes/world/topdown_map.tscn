@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/topdown_map.gd" id="1_map"]
+
+[node name="TopdownMap" type="Node2D"]
+script = ExtResource("1_map")
+theme = "hulu"
+
+[node name="Ground" type="TileMapLayer" parent="."]
+z_index = -20
+
+[node name="Water" type="TileMapLayer" parent="."]
+z_index = -19
+
+[node name="Bridge" type="TileMapLayer" parent="."]
+z_index = -18

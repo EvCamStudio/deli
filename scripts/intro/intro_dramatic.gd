@@ -1,6 +1,6 @@
 ## Intro Dramatic Script — Format Komik Naratif & Panel Dialog
-## Menyajikan Bab 1 s/d Bab 3 dengan pemisahan tegas antara Narasi (Caption),
-## Balon Dialog, dan Monolog Pikiran MC.
+## Menyajikan Bab 1 s/d Bab 3 dengan pemisahan tegas antara Narasi Full Layar,
+## Balon Dialog, dan Monolog Pikiran MC dengan Animasi Ketik per Ketik (Typewriter).
 extends Control
 
 const CHAPTER_SCENES: Array = [
@@ -24,93 +24,102 @@ const PORTRAITS: Dictionary = {
 
 # ─── Naskah Perbaikan Bab 1, 2, 3 Sesuai Kontrak Dokumen Utama ───────────────
 const SCRIPT_DATA: Array = [
-	# Bab 1: Jakarta, hari pertama kerja
+	# Bab 1 · Jakarta, Hari Pertama Kerja
 	[
 		{
 			"tipe": "narasi",
-			"teks": "Pagi di Jakarta. Gedung PT Cahaya Nusantara menjulang di antara kemacetan. Kemeja baru, kopi masih hangat."
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Akhirnya kerja tetap. Gaji pertama kukirim ke rumah."
+			"teks": "Lantai dua puluh dua. Pagi itu kaca gedung memantulkan langit sebersih kertas baru, dan kopi di mejaku masih mengepul."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "manajer",
-			"teks": "Halo, anak baru. Siapa namamu? Kita perlu nama lengkap untuk catatan perusahaan.",
+			"teks": "Selamat datang. Isi formulir ini dulu untuk data HRD. Nama lengkap, jangan disingkat.",
 			"input_nama": true
 		},
 		{
 			"tipe": "dialog",
+			"speaker": "manajer",
+			"teks": "{nama}. Oke. Kontrak satu tahun. Jangan buat saya menyesal."
+		},
+		{
+			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "{nama}, Pak. Mohon bimbingannya."
+			"teks": "Gaji pertama sudah kuhitung di kepala. Separuhnya untuk Medan, untuk atap warung yang bocor tiap hujan."
+		},
+		{
+			"tipe": "pikiran",
+			"speaker": "mc",
+			"teks": "Bapak selalu bilang atap itu urusan sebelum hujan, bukan sesudahnya. Aku tersenyum. Sebelum hujan, ada waktu."
+		}
+	],
+	# Bab 2 · Jakarta, PHK
+	[
+		{
+			"tipe": "narasi",
+			"teks": "Sebelas bulan kemudian, hujan mengetuk kaca seperti orang yang tak sabar. Separuh meja di lantai ini sudah kosong. Yang tersisa hanya bekas debu berbentuk kotak."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "manajer",
-			"teks": "Selamat bergabung, {nama}. Di sini kita seperti keluarga."
-		},
-		{
-			"tipe": "telepon",
-			"speaker": "ibu",
-			"teks": "Selamat ya, Nak, kerja barumu. Warung sehat, sungai tenang. Jangan lupa makan."
-		}
-	],
-	# Bab 2: Jakarta, beberapa bulan kemudian
-	[
-		{
-			"tipe": "narasi",
-			"teks": "Beberapa bulan kemudian. Hujan deras mengguyur Jakarta, dan separuh meja kantor sudah kosong."
-		},
-		{
-			"tipe": "dialog",
-			"speaker": "manajer",
-			"teks": "{nama}, perusahaan sedang efisiensi. Kontrakmu tidak bisa dilanjutkan. Maaf."
+			"teks": "Duduk dulu, {nama}. Perusahaan sedang efisiensi. Kontrakmu tidak diperpanjang. Saya minta maaf."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Surat PHK tergeletak di meja."
+			"teks": "Selembar surat, dua paragraf. Sebelas bulanku muat di sana, dan masih menyisakan ruang kosong."
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "mc",
-			"teks": "Saya mengerti, Pak. Terima kasih sudah memberi kesempatan."
+			"teks": "Baik, Pak. Terima kasih."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Jakarta tidak lagi punya tempat untukku. Aku pulang, bukan karena kalah, tapi demi keluarga."
+			"teks": "Terima kasih. Kata yang paling sopan untuk sesuatu yang sebenarnya tak ingin kuucapkan."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Saat kardus itu penuh, ponselku bergetar di atas meja. Di layar: Mak."
 		},
 		{
 			"tipe": "telepon",
 			"speaker": "ibu",
-			"teks": "Nak, hujan di sini deras sekali dan sungai naik. Pulanglah, ibu dan bapak butuh kau."
+			"teks": "Nak… sungai naik. Bapakmu lagi angkat kursi ke atas meja. Kau tak usah pulang, kerja sajalah di sana... Eh. Pulang lah, kalau sempat."
+		},
+		{
+			"tipe": "dialog",
+			"speaker": "mc",
+			"teks": "Mak? Mak…"
+		},
+		{
+			"tipe": "pikiran",
+			"speaker": "mc",
+			"teks": "Sambungan putus. Hujan di Jakarta dan hujan di Medan. Aku tak tahu itu hujan yang sama atau bukan, tapi malam itu aku membeli tiket."
 		}
 	],
-	# Bab 3: Medan
+	# Bab 3 · Medan, Kembali ke Warung
 	[
 		{
 			"tipe": "narasi",
-			"teks": "Medan, dua hari kemudian. Sungai Deli sudah surut, tapi meninggalkan lumpur dan sampah di sepanjang tebing."
+			"teks": "Medan, dua hari kemudian. Deli sudah surut, tetapi surut bukan berarti pergi. Ia meninggalkan jejaknya setinggi dada di dinding setiap rumah."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Warung keluarga di bantaran sungai: dinding berlumpur, kursi terbalik, kopi hanyut entah ke mana."
+			"teks": "Warung kami berdiri miring di bantaran, seperti orang yang menahan tangis. Garis lumpur melintang di dindingnya, lurus dan tak bisa dibantah. Kursi-kursi telentang. Toples gula entah di mana."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Warung yang dulu penuh tawa. Sekarang..."
+			"teks": "Dulu pukul lima pagi di sini ada bunyi sendok beradu gelas. Sekarang hanya air yang menetes dari atap."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Di tepi sungai, gunungan sampah menyumbat aliran: kasur bekas, plastik, botol."
+			"teks": "Di tepi sungai, sampah menumpuk setinggi pinggang: kasur, kantong plastik, botol, dan sepasang sandal yang masih berpasangan. Air telah mencari jalannya, dan jalan itu sudah diambil."
 		},
 		{
 			"tipe": "pikiran",
 			"speaker": "mc",
-			"teks": "Jadi ini yang membuat air tak punya jalan."
+			"teks": "Sebanyak ini. Sejak kapan ia menumpuk? Dan kenapa aku tak pernah melihatnya?"
 		}
 	]
 ]
@@ -118,9 +127,12 @@ const SCRIPT_DATA: Array = [
 # ─── Referensi Node ──────────────────────────────────────────────────────────
 @onready var chapter_root: Control = $ChapterRoot
 @onready var tap_advance_btn: Button = $TapAdvanceBtn
+@onready var header_banner: PanelContainer = $HeaderBanner
 @onready var header_label: Label = $HeaderBanner/HeaderLabel
-@onready var caption_box: PanelContainer = $CaptionBox
-@onready var caption_text: RichTextLabel = $CaptionBox/VBox/CaptionText
+@onready var narration_screen: Control = $NarrationScreen
+@onready var paper_header: Label = $NarrationScreen/CenterBox/PaperCard/VBox/PaperHeader
+@onready var narration_text: RichTextLabel = $NarrationScreen/CenterBox/PaperCard/VBox/NarrationText
+@onready var narration_hint: Label = $NarrationScreen/CenterBox/PaperCard/VBox/HintRow/NarrationHint
 @onready var dialogue_container: Control = $DialogueContainer
 @onready var dialog_panel: PanelContainer = $DialogueContainer/DialogPanel
 @onready var speaker_tag: PanelContainer = $DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag
@@ -131,7 +143,10 @@ const SCRIPT_DATA: Array = [
 @onready var name_input: LineEdit = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/NameInput
 @onready var confirm_btn: Button = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/ConfirmBtn
 @onready var dialog_hint_row: HBoxContainer = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow
+@onready var dialog_hint: Label = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow/DialogHint
 @onready var fade_rect: ColorRect = $FadeRect
+
+const TYPEWRITER_SPEED: float = 0.028  # Kecepatan ketik (detik per karakter)
 
 var _current_chapter: int = 0
 var _current_step: int = 0
@@ -139,6 +154,11 @@ var _current_chapter_node: Control = null
 var _is_waiting_input: bool = false
 var _is_transitioning: bool = false
 var _last_advance_frame: int = -1
+
+var _is_typing: bool = false
+var _typewriter_tween: Tween = null
+var _current_target_label: RichTextLabel = null
+var _current_target_hint: Control = null
 
 func _ready() -> void:
 	fade_rect.color = Color(0, 0, 0, 0)
@@ -164,7 +184,50 @@ func _show_chapter(chapter_idx: int) -> void:
 	_current_chapter_node.modulate.a = 0.0
 
 	var tw := create_tween()
-	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.3)
+	tw.tween_property(_current_chapter_node, "modulate:a", 1.0, 0.35)
+
+# ─── Animasi Ketik per Ketik (Typewriter) ─────────────────────────────────────
+
+func _start_typewriter(label: RichTextLabel, hint: Control, full_bbcode_text: String) -> void:
+	if _typewriter_tween:
+		_typewriter_tween.kill()
+		_typewriter_tween = null
+
+	_current_target_label = label
+	_current_target_hint = hint
+	_is_typing = true
+
+	if hint:
+		hint.modulate.a = 0.0
+
+	label.text = full_bbcode_text
+	label.visible_characters = 0
+
+	# Hitung jumlah karakter teks biasa (tanpa tag bbcode) untuk durasi
+	var plain_len: int = label.get_parsed_text().length()
+	if plain_len <= 0:
+		plain_len = full_bbcode_text.length()
+	var duration: float = float(plain_len) * TYPEWRITER_SPEED
+
+	_typewriter_tween = create_tween()
+	_typewriter_tween.tween_property(label, "visible_characters", plain_len, duration)
+	_typewriter_tween.tween_callback(func():
+		_finish_typewriter()
+	)
+
+func _finish_typewriter() -> void:
+	if _typewriter_tween:
+		_typewriter_tween.kill()
+		_typewriter_tween = null
+
+	if _current_target_label:
+		_current_target_label.visible_characters = -1
+
+	_is_typing = false
+
+	if _current_target_hint and not _is_waiting_input:
+		var tw := create_tween()
+		tw.tween_property(_current_target_hint, "modulate:a", 1.0, 0.2)
 
 # ─── Render Panel Sesuai Tipe (Narasi / Dialog / Pikiran / Telepon) ────────────
 
@@ -203,29 +266,33 @@ func _render_current_step() -> void:
 
 	match tipe:
 		"narasi":
-			# Sembunyikan Balon Dialog, Tampilkan Caption Box
+			# Tampilkan Narasi dalam format lembaran kertas vertikal
+			header_banner.hide()
+			paper_header.text = "— %s —" % HEADERS[_current_chapter]
 			dialogue_container.hide()
-			caption_box.show()
-			caption_text.text = "[i]%s[/i]" % processed_teks
+			narration_screen.show()
+			_start_typewriter(narration_text, narration_hint, "[i]%s[/i]" % processed_teks)
 
 		"dialog":
-			caption_box.hide()
+			header_banner.show()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "\"%s\"" % processed_teks
 			_setup_dialog_speaker(speaker, player_name)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
 
 		"pikiran":
-			# Pikiran MC: cukup tanda kurung tanpa embel-embel "(Dalam Hati)" pada nama
-			caption_box.hide()
+			header_banner.show()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "[i](%s)[/i]" % processed_teks
 			_setup_thought_speaker(speaker, player_name)
+			_start_typewriter(speech_text, dialog_hint, "[i]%s[/i]" % processed_teks)
 
 		"telepon":
-			caption_box.hide()
+			header_banner.show()
+			narration_screen.hide()
 			dialogue_container.show()
-			speech_text.text = "(Lewat telepon) \"%s\"" % processed_teks
 			_setup_phone_speaker(speaker)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
 
 func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 	match speaker:
@@ -243,9 +310,8 @@ func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_thought_speaker(speaker: String, player_name: String) -> void:
-	# Cukup nama karakter saja tanpa tulisan "(Dalam Hati)"
 	if speaker == "mc":
-		speaker_label.text = player_name
+		speaker_label.text = "%s (Batin)" % player_name
 		if _current_chapter >= 1:
 			portrait.texture = load(PORTRAITS["player_sad"]) as Texture2D
 		else:
@@ -255,14 +321,24 @@ func _setup_thought_speaker(speaker: String, player_name: String) -> void:
 		portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_phone_speaker(_speaker: String) -> void:
-	speaker_label.text = "Bu Mira"
+	speaker_label.text = "Bu Mira (Telepon)"
 	portrait.texture = load(PORTRAITS["ibu"]) as Texture2D
 
 # ─── Navigasi & Input ─────────────────────────────────────────────────────────
 
 func _on_tap_advanced() -> void:
+	_handle_advance_request()
+
+func _handle_advance_request() -> void:
 	if _is_waiting_input or _is_transitioning:
 		return
+
+	# Jika masih dalam proses mengetik: ketukan pertama langsung selesaikan teks!
+	if _is_typing:
+		_finish_typewriter()
+		return
+
+	# Jika teks sudah selesai: lanjut ke langkah berikutnya
 	_advance_step()
 
 func _advance_step() -> void:
@@ -279,7 +355,6 @@ func _advance_step() -> void:
 	if _current_step >= chapter_entries.size():
 		# Bab saat ini telah selesai
 		if _current_chapter + 1 >= SCRIPT_DATA.size():
-			# Bab 3 selesai -> transisi langsung ke game (Peta A Warung Hari 1)
 			_finish_intro()
 		else:
 			_next_chapter(_current_chapter + 1)
@@ -312,13 +387,18 @@ func _finish_intro() -> void:
 	tap_advance_btn.disabled = true
 
 	# Simpan nama pemain dan status awal
+	GameState.in_world = true
+	GameState.world_zone = "hulu"
+	var qm = get_node_or_null("/root/QuestManager")
+	if qm and qm.has_method("start_main_quest"):
+		qm.start_main_quest()
 	GameState.save_game()
 
-	# Fade to black lalu pindah ke Peta A Warung
+	# Fade to black lalu pindah ke world
 	var tw := create_tween()
 	tw.tween_property(fade_rect, "color:a", 1.0, 0.5)
 	tw.tween_callback(func():
-		SceneManager.change_scene("res://scenes/maps/map_a_warung.tscn")
+		SceneManager.go_to_world()
 	)
 
 # ─── Input Nama MC ────────────────────────────────────────────────────────────
@@ -341,7 +421,8 @@ func _on_confirm_name_pressed() -> void:
 		_save_and_confirm_name(clean)
 
 func _save_and_confirm_name(clean_name: String) -> void:
-	GameState.player_name = clean_name
+	var final_name := clean_name if clean_name.length() > 0 else "Rian"
+	GameState.player_name = final_name
 	_is_waiting_input = false
 	input_row.hide()
 	dialog_hint_row.show()
@@ -351,8 +432,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	if _is_waiting_input or _is_transitioning:
 		return
 	if event.is_action_pressed("ui_accept"):
-		_advance_step()
+		_handle_advance_request()
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_advance_step()
+		_handle_advance_request()
 		get_viewport().set_input_as_handled()

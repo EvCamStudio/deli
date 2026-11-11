@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://level4_hilir"]
+[gd_scene load_steps=18 format=3 uid="uid://level4_hilir"]
 
 [ext_resource type="Script" path="res://scripts/level_4_hilir.gd" id="1_l4"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]

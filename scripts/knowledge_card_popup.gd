@@ -3,6 +3,9 @@
 extends CanvasLayer
 class_name KnowledgeCardPopup
 
+signal opened
+signal closed
+
 @onready var dim: ColorRect = $Dim
 @onready var panel: PanelContainer = $Panel
 @onready var category_label: Label = $Panel/VBox/CategoryLabel

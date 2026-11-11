@@ -72,7 +72,7 @@ func _build_frames() -> void:
 			atlas.atlas = texture
 			atlas.region = Rect2(col * 16.0, row * 24.0, 16.0, 24.0)
 			frames.add_frame(walk_name, atlas)
-			if col == 0:
+			if col == 0 or col == 2:
 				frames.add_frame(idle_name, atlas)
 	sprite.sprite_frames = frames
 	sprite.play("idle_down")
@@ -152,7 +152,7 @@ func _refresh_interactable() -> void:
 	if text.is_empty():
 		action_label.visible = false
 		return
-	action_label.text = "[E] %s" % text
+	action_label.text = text
 	action_label.visible = true
 
 # ─── Dialog ───────────────────────────────────────────────────────────────────

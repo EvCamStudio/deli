@@ -18,6 +18,7 @@ const PANTUN: Array = [
 			"Naik perahu ke tengah danau,\nHati senang tiada terbilang.",
 		],
 		"correct": 0,
+		"wisdom": "Sungai bersih adalah warisan untuk anak cucu.",
 	},
 	{
 		"line1": "Bunga raya di tepi sungai,\nHarum semerbak ke udara.",
@@ -27,6 +28,27 @@ const PANTUN: Array = [
 			"Burung terbang melintas sawah,\nPetani gembira kerja.",
 		],
 		"correct": 0,
+		"wisdom": "Sampah yang dijaga tidak akan kembali ke sungai.",
+	},
+	{
+		"line1": "Anak ikan di dalam kolam,\nBerenang tenang di air jernih.",
+		"options": [
+			"Mari kita jaga sungai dalam,\nAgar airnya tetap bersih.",
+			"Pergi ke pasar membeli jambu,\nJambu manis dari taman.",
+			"Burung terbang ke atas awan,\nAwan putih di langit cerah.",
+		],
+		"correct": 0,
+		"wisdom": "Air yang jernih lahir dari kebiasaan kecil yang dijaga.",
+	},
+	{
+		"line1": "Pohon rimbun di tepi hutan,\nTempat burung bernyanyi riang.",
+		"options": [
+			"Jangan tebang pohon sembarangan,\nAgar sungai tetap tenang.",
+			"Pergi ke kota naik kereta,\nKereta cepat tiada henti.",
+			"Beli kain di pasar malam,\nKain batik warna cerah.",
+		],
+		"correct": 0,
+		"wisdom": "Hutan yang lestari menjaga mata air dan kehidupan.",
 	},
 ]
 
@@ -74,11 +96,12 @@ func _on_choice(selected: int, correct: int) -> void:
 		return
 	if selected == correct:
 		_locked = true
-		feedback.text = "Tepat! Sajak yang indah."
+		var wisdom: String = str(PANTUN[_index].get("wisdom", ""))
+		feedback.text = "Tepat!" if wisdom.is_empty() else "Tepat! " + wisdom
 		feedback.add_theme_color_override("font_color", Color(0.2, 0.45, 0.25))
 		AudioManager.play_sfx("correct")
 		SettingsManager.vibrate(20)
-		await get_tree().create_timer(0.85).timeout
+		await get_tree().create_timer(1.5).timeout
 		_index += 1
 		_show_pantun()
 	else:

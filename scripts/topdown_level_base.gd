@@ -36,13 +36,20 @@ func spawn_trash(trash_id: String, category: String, pos: Vector2) -> void:
 	trash.category = category
 	add_child(trash)
 
-func spawn_bin(category: String, pos: Vector2) -> void:
+func spawn_bin(category: String, pos: Vector2, required_quest: String = "", quest_hint: String = "") -> void:
 	var bin := BIN_SCENE.instantiate()
 	bin.position = pos
 	bin.bin_category = category
+	bin.required_quest = required_quest
+	if not quest_hint.is_empty():
+		bin.quest_hint = quest_hint
 	add_child(bin)
 
 func spawn_tree_spot(kind: String, pos: Vector2) -> void:
+	var map := get_node_or_null("TopdownMap")
+	if map and map.has_method("is_in_water") and map.is_in_water(pos):
+		push_warning("Tree spot dilewati karena berada di air: %s" % str(pos))
+		return
 	var spot := TREE_SPOT_SCENE.instantiate()
 	spot.position = pos
 	spot.kind = kind
@@ -65,7 +72,7 @@ func on_trash_picked(category: String, _trash_id: String) -> void:
 	toast("Sampah %s dipungut. +Rp500" % category, true)
 
 func on_bin_sorted(_category: String) -> void:
-	toast("Sampah terpilah! Sungai membaik.", true)
+	pass
 
 func on_tree_planted(_kind: String) -> void:
 	pass
@@ -86,6 +93,13 @@ func has_talked(npc_key: String) -> bool:
 func update_mission(text: String) -> void:
 	if hud and hud.has_method("update_mission"):
 		hud.update_mission(text)
+
+## Mission card ringkas: judul + maksimal 3 baris progress.
+func update_mission_lines(title: String, lines: Array) -> void:
+	var text: String = title
+	for line in lines:
+		text += "\n" + str(line)
+	update_mission(text)
 
 # ─── Penyelesaian level ──────────────────────────────────────────────────────
 

@@ -2,54 +2,61 @@
   {
     "id": "start",
     "speaker": "Bu Mira",
-    "emosi": "sad",
-    "teks": "Nak, kau sudah sampai. Maaf ya, warung kita jadi begini.",
+    "emosi": "neutral",
+    "teks": "Sudah sampai kau.",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Ibu jangan minta maaf. Harusnya aku pulang lebih cepat.",
+    "teks": "Maaf, Mak. Harusnya aku pulang lebih cepat.",
     "next": "2"
   },
   {
     "id": "2",
-    "speaker": "Pak Hendra",
+    "speaker": "Bu Mira",
     "emosi": "sad",
-    "teks": "Banjirnya tinggi sekali, Nak. Kopi, gula, kursi, semua hanyut. Dinding pun berlumpur.",
+    "teks": "Banjir tak menunggu siapa-siapa, Nak. Jangan kau pikul yang bukan bagianmu.",
     "next": "3"
   },
   {
     "id": "3",
-    "speaker": "Bu Mira",
+    "speaker": "Pak Hendra",
     "emosi": "sad",
-    "teks": "Ini catatan utang kita. Lima ratus ribu, untuk beli bahan dan memperbaiki dinding. Tapi dindingnya rusak lagi.",
+    "teks": "Setinggi situ. Gula, kopi, kursi, hanyut semua. Toples biru Mak pun.",
     "next": "4"
   },
   {
     "id": "4",
-    "speaker": "MC",
+    "speaker": "Bu Mira",
     "emosi": "sad",
-    "teks": "(Baru di-PHK di Jakarta, sekarang ini...)",
+    "teks": "Sudahlah, Pak... Dua bulan lalu air naik sedikit. Kami pinjam lima ratus ribu untuk menambal dinding. Minggu ini air naik lagi, dan tambalannya ikut hanyut.",
     "next": "5"
   },
   {
     "id": "5",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Di Jakarta, lima ratus ribu cuma dua kali makan malam dan ongkos. Di sini, ia sebuah dinding yang sudah roboh.",
+    "next": "6"
+  },
+  {
+    "id": "6",
     "speaker": "Pak Hendra",
     "emosi": "neutral",
-    "teks": "Sungai itu tidak jahat, Nak. Tapi sampah di mana-mana, alirannya buntu. Air tidak punya jalan, jadi masuk ke rumah kita.",
+    "teks": "Jangan kau benci sungai itu, Nak. Air itu mencari jalan, sama seperti orang. Kalau jalannya kita tutup, dia lewat rumah kita.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Aku bantu bersihkan sungai dulu.",
+        "teks": "Aku mulai dari sungainya dulu, Pak.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "res_a"
       },
       {
         "tipe": "B",
-        "teks": "Aku cari kerja lagi saja.",
+        "teks": "Aku cari kerja dulu, Mak. Utang itu harus dibayar.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "res_b"
@@ -60,14 +67,14 @@
     "id": "res_a",
     "speaker": "Bu Mira",
     "emosi": "happy",
-    "teks": "Terima kasih, Nak. Jagalah sungai kita.",
+    "teks": "Bawa topi. Matahari hulu tak kenal anak Jakarta.",
     "next": "end"
   },
   {
     "id": "res_b",
     "speaker": "Bu Mira",
     "emosi": "neutral",
-    "teks": "Boleh, tapi bantu kami dulu sebentar ya.",
+    "teks": "Boleh. Cari kerja bisa besok, lumpur ini tak bisa menunggu. Sehari saja, ya.",
     "next": "end"
   }
 ]

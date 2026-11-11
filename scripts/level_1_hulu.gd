@@ -20,6 +20,6 @@ func _process(delta: float) -> void:
 	if hud:
 		var trees: int = GameState.trees_planted
 		if trees >= _trees_target:
-			hud.update_mission("Pohon selesai! Menuju gerbang →")
+			hud.update_mission("Pohon selesai! Menuju gerbang.")
 		else:
 			hud.update_mission("Tanam pohon: %d/%d" % [trees, _trees_target])

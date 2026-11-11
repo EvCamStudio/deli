@@ -4,22 +4,30 @@
     "tokoh": "Datuk Sampan",
     "tema": "Pelestarian Sungai Deli",
     "sampiran": [
-      "Sampan kecil menyusur tebing,",
+      "Sampan tua menyusur tebing,",
       "Pagi berkabut di hulu Deli."
     ],
     "pilihan": [
       {
         "isi": [
-          "Sungai dijaga hati tak runsing,",
-          "Sampah dibuang kita sendiri rugi."
+          "Sungai dirawat airnya bening,",
+          "Apa dibuang pasti kembali."
         ],
         "benar": true,
         "delta_meter": -2
       },
       {
         "isi": [
-          "Sungai kotor biarkan saja,",
-          "Nanti hanyut sendiri nanti."
+          "Biar sungai mengalir deras,",
+          "Sampah hanyut ke mana-mana."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      },
+      {
+        "isi": [
+          "Sungai itu urusan pemerintah,",
+          "Kita cukup menonton saja."
         ],
         "benar": false,
         "delta_meter": 0
@@ -29,24 +37,32 @@
   {
     "id": "pantun_jelantah",
     "tokoh": "Kak Rina",
-    "tema": "Pengelolaan Jelantah & Selokan",
+    "tema": "Pengelolaan Jelantah",
     "sampiran": [
       "Pagi hari menggoreng pisang,",
-      "Minyak bekas dikumpul rapi."
+      "Wajan hitam di atas tungku."
     ],
     "pilihan": [
       {
         "isi": [
-          "Jelantah tak dibuang sembarang,",
-          "Selokan lancar sungai pun asri."
+          "Minyak sisa jangan dibuang,",
+          "Ditampung dulu, jadi rezeki baru."
         ],
         "benar": true,
         "delta_meter": -2
       },
       {
         "isi": [
-          "Buang saja ke selokan lapang,",
-          "Biar hilang tak perlu dicari."
+          "Minyak sisa buang ke got,",
+          "Biar hanyut entah ke mana."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      },
+      {
+        "isi": [
+          "Minyak sisa dibakar saja,",
+          "Asapnya hilang di udara."
         ],
         "benar": false,
         "delta_meter": 0
@@ -56,7 +72,7 @@
   {
     "id": "pantun_tps",
     "tokoh": "Bang Jali",
-    "tema": "TPS Gang & Gotong Royong",
+    "tema": "Gotong Royong TPS",
     "sampiran": [
       "Lewat gang membawa karung,",
       "Menuju TPS di ujung jalan."
@@ -64,16 +80,24 @@
     "pilihan": [
       {
         "isi": [
-          "Sampah terkumpul hati tak murung,",
-          "Sungai bersih semua senang."
+          "Kerja bersama hati tak murung,",
+          "Sampah terangkut, ringan pikiran."
         ],
         "benar": true,
         "delta_meter": -2
       },
       {
         "isi": [
-          "Buang ke sungai tak usah susah,",
-          "Biar saja air membawa."
+          "Biarkan saja urusan orang,",
+          "Sampah menumpuk di mana-mana."
+        ],
+        "benar": false,
+        "delta_meter": 0
+      },
+      {
+        "isi": [
+          "Buang saja ke tepi kali,",
+          "Besok pagi hilang sendiri."
         ],
         "benar": false,
         "delta_meter": 0

@@ -4,6 +4,7 @@ class_name PortraitDialogue
 
 @onready var tap_area: Button = $TapArea
 @onready var panel: PanelContainer = $Root/Panel
+@onready var backdrop: Panel = $Root/Backdrop
 @onready var portrait: TextureRect = $Root/Portrait
 @onready var name_plate: PanelContainer = $Root/NamePlate
 @onready var speaker_label: Label = $Root/NamePlate/Speaker
@@ -25,6 +26,7 @@ const PORTRAITS: Dictionary = {
 	"Player": "player",
 	"Kamu": "player",
 	"MC": "player",
+	"Mak": "ibu",
 	"Bu Mira": "ibu",
 	"Pak Hendra": "pakrt",
 	"Bang Jali": "pedagang",
@@ -46,6 +48,7 @@ var _current_node: Dictionary = {}
 
 func _ready() -> void:
 	panel.hide()
+	backdrop.hide()
 	portrait.hide()
 	name_plate.hide()
 	tap_area.hide()
@@ -57,14 +60,16 @@ func show_node(node: Dictionary) -> void:
 	_clear_choices()
 	panel.show()
 	portrait.show()
+	backdrop.show()
 	name_plate.show()
 	tap_area.show()
 
 	speaker_label.text = str(node.get("speaker", ""))
 	_update_portrait(node)
 
-	var full_text: String = str(node.get("teks", node.get("text", "")))
-	var choices: Array = node.get("pilihan", node.get("choices", []))
+	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
+	var choices: Array = node.get("choices", node.get("pilihan", []))
+	_fit_panel(full_text, choices.size())
 	_has_choices = not choices.is_empty()
 	continue_hint.visible = not _has_choices
 	_start_typewriter(full_text)
@@ -74,19 +79,41 @@ func show_node(node: Dictionary) -> void:
 		if is_inside_tree():
 			_show_choices(choices)
 
+func _clean_text(raw: String) -> String:
+	# Hilangkan petunjuk lakuan panggung/arah panggung dalam kurung: e.g. "(menunjuk ke dinding)", "(sapu berhenti)"
+	var regex := RegEx.new()
+	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
+	return regex.sub(raw, " ", true).strip_edges()
+
+func _fit_panel(text: String, choice_count: int) -> void:
+	# Perkirakan tinggi kotak dari jumlah baris teks + pilihan, supaya tidak
+	# menyisakan ruang kosong besar saat dialog pendek.
+	var est_lines: int = maxi(1, int(ceil(text.length() / 64.0)))
+	var content_h: int = 18 + est_lines * 22 + 4
+	if choice_count > 0:
+		content_h += choice_count * 24
+	else:
+		content_h += 14
+	var panel_top: float = -float(clampi(content_h, 80, 130))
+	panel.offset_top = panel_top
+	name_plate.offset_top = panel_top - 32.0
+	name_plate.offset_bottom = panel_top - 4.0
+
 func _update_portrait(node: Dictionary) -> void:
 	var key: String = str(node.get("portrait", ""))
 	if key.is_empty():
 		key = PORTRAITS.get(str(node.get("speaker", "")), "player")
-	var emotion: String = str(node.get("emosi", node.get("emotion", "neutral")))
+	var emotion: String = str(node.get("emotion", node.get("emosi", "neutral")))
 	var path: String = "res://assets/sprites/portraits/%s_%s.png" % [key, emotion]
 	if not ResourceLoader.exists(path):
 		path = "res://assets/sprites/portraits/%s_neutral.png" % key
 	if ResourceLoader.exists(path):
 		portrait.texture = load(path)
 		portrait.show()
+		backdrop.show()
 	else:
 		portrait.hide()
+		backdrop.hide()
 
 	var tween := create_tween()
 	portrait.modulate.a = 0.0
@@ -120,14 +147,11 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
-		var label_str: String = str(choice.get("teks", choice.get("text", "")))
-		if choice.has("tipe"):
-			btn.text = " [%s] %s" % [choice.get("tipe"), label_str]
-		else:
-			btn.text = "  %s" % label_str
-		btn.custom_minimum_size = Vector2(0, 28)
+		var choice_text: String = str(choice.get("text", choice.get("teks", "")))
+		btn.text = "  %s" % choice_text
+		btn.custom_minimum_size = Vector2(0, 24)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
-		btn.add_theme_font_size_override("font_size", 12)
+		btn.add_theme_font_size_override("font_size", 11)
 		var idx: int = i
 		btn.pressed.connect(func(): _on_choice_selected(idx))
 		choices_container.add_child(btn)
@@ -150,8 +174,8 @@ func _finish_typewriter() -> void:
 	text_label.text = _full_text
 	text_label.visible_characters = -1
 	if _has_choices:
-		var choices: Array = _current_node.get("pilihan", _current_node.get("choices", []))
-		_show_choices(choices)
+		var ch: Array = _current_node.get("choices", _current_node.get("pilihan", []))
+		_show_choices(ch)
 
 func _input(event: InputEvent) -> void:
 	if not panel.visible:
@@ -170,6 +194,7 @@ func _on_choice_selected(index: int) -> void:
 
 func hide_box() -> void:
 	panel.hide()
+	backdrop.hide()
 	portrait.hide()
 	name_plate.hide()
 	tap_area.hide()

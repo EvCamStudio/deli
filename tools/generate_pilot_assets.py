@@ -226,6 +226,13 @@ def draw_character(direction: str, frame: int, shirt, pants, hair_color, skin=SK
         rect(d, (3, hy - 1, 3, hy + 9), hair_color)
         rect(d, (12, hy - 1, 12, hy + 9), hair_color)
         rect(d, (5, hy + 5, 10, hy + 8), skin)
+    elif style == "caping":
+        # Caping jerami khas nelayan: lebar di bawah, mengerucut di atas.
+        rect(d, (2, hy - 1, 13, hy + 1), (214, 186, 110, 255))
+        rect(d, (2, hy + 1, 13, hy + 1), OUT)
+        rect(d, (5, hy - 3, 10, hy - 1), (196, 168, 96, 255))
+        rect(d, (5, hy - 3, 10, hy - 3), OUT)
+        rect(d, (4, hy + 2, 11, hy + 2), hair_color)
     elif style == "peci":
         rect(d, (3, hy - 1, 12, hy + 2), hair_color)
         rect(d, (3, hy - 1, 12, hy), OUT)
@@ -276,7 +283,7 @@ def build_characters() -> None:
     build_character_sheet("pakrt", (108, 136, 92, 255), (64, 58, 50, 255), (48, 38, 32, 255), "short")
     build_character_sheet("penjaga_hutan", (74, 108, 72, 255), (72, 60, 46, 255), (58, 42, 32, 255), "short")
     build_character_sheet("petani", (176, 158, 92, 255), (92, 74, 52, 255), (108, 84, 50, 255), "peci")
-    build_character_sheet("nelayan", (70, 132, 156, 255), (62, 72, 80, 255), (52, 40, 34, 255), "short")
+    build_character_sheet("nelayan", (64, 92, 112, 255), (86, 74, 58, 255), (52, 40, 34, 255), "caping")
 
 
 # ---------------------------------------------------------------- portraits ---
@@ -304,6 +311,14 @@ def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=No
     if style == "hijab":
         d.rounded_rectangle((17, 14, 63, 62), radius=16, fill=hair, outline=OUT, width=2)
         d.ellipse((25, 21, 55, 59), fill=skin)
+    elif style == "caping":
+        d.ellipse((20, 12, 60, 50), fill=hair)
+        d.ellipse((24, 22, 56, 62), fill=skin)
+        d.rectangle((21, 24, 25, 36), fill=hair)
+        d.rectangle((55, 24, 59, 36), fill=hair)
+        d.ellipse((12, 24, 68, 38), fill=(214, 186, 110, 255), outline=OUT, width=2)
+        d.rounded_rectangle((26, 4, 54, 28), radius=9, fill=(196, 168, 96, 255), outline=OUT, width=2)
+        d.line((30, 18, 50, 18), fill=(160, 130, 68, 255), width=2)
     elif style == "peci":
         d.ellipse((20, 14, 60, 52), fill=hair)
         d.rectangle((20, 15, 60, 23), fill=(42, 34, 30, 255), outline=OUT, width=1)
@@ -396,7 +411,7 @@ def build_portraits() -> None:
         "pakrt": dict(skin=(220, 170, 128, 255), hair=(48, 38, 32, 255), shirt=(108, 136, 92, 255), style="short", accent=(96, 124, 82, 255)),
         "penjaga_hutan": dict(skin=(224, 176, 134, 255), hair=(58, 42, 32, 255), shirt=(74, 108, 72, 255), style="short", accent=(70, 100, 68, 255)),
         "petani": dict(skin=(228, 178, 132, 255), hair=(108, 84, 50, 255), shirt=(176, 158, 92, 255), style="peci", accent=(150, 132, 74, 255)),
-        "nelayan": dict(skin=(214, 160, 118, 255), hair=(52, 40, 34, 255), shirt=(70, 132, 156, 255), style="short", accent=(60, 112, 136, 255)),
+        "nelayan": dict(skin=(214, 160, 118, 255), hair=(52, 40, 34, 255), shirt=(64, 92, 112, 255), style="caping", accent=(60, 112, 136, 255)),
     }
     for key, cfg in people.items():
         for expression in ("neutral", "happy", "sad", "surprised"):

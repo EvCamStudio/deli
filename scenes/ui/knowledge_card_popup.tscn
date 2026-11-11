@@ -33,9 +33,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -210.0
-offset_top = -112.0
+offset_top = -85.0
 offset_right = 210.0
-offset_bottom = 112.0
+offset_bottom = 85.0
 theme_override_styles/panel = SubResource("StyleBox_dialog")
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
@@ -63,7 +63,7 @@ autowrap_mode = 3
 layout_mode = 2
 
 [node name="TextLabel" type="RichTextLabel" parent="Panel/VBox"]
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 44)
 layout_mode = 2
 size_flags_vertical = 3
 bbcode_enabled = true

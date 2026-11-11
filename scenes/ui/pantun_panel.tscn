@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/pilot_pantun.gd" id="1_pantun"]
 [ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="2_pixel"]
@@ -75,10 +75,11 @@ layout_mode = 2
 theme_override_constants/separation = 3
 
 [node name="Feedback" type="Label" parent="Panel/VBox/Body/Content"]
-custom_minimum_size = Vector2(0, 18)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
-theme_override_font_sizes/font_size = 11
+theme_override_font_sizes/font_size = 10
 horizontal_alignment = 1
+autowrap_mode = 3
 
 [node name="CloseBtn" type="Button" parent="Panel/VBox"]
 custom_minimum_size = Vector2(0, 28)

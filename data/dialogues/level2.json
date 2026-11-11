@@ -2,64 +2,95 @@
   "npc_petani_1": [
     {
       "id": "start",
-      "speaker": "Pak Tani",
-      "text": "Sudah bertahun-tahun kami pakai pupuk kimia. Hasilnya memang banyak, tapi sungainya jadi keruh...",
+      "speaker": "Pak Darwis",
+      "text": "Dulu kasur rusak kami lepas ke air, hanyut sendiri sampai ke laut. Sekarang tiba-tiba itu dosa. Zaman ini memang aneh.",
       "choices": [
-        { "text": "Ada cara lain yang lebih baik?", "next": "organic", "effect": {} },
-        { "text": "Yang penting hasil panen banyak.", "next": "ignore", "effect": { "choice": { "peduli_alam": false } } }
+        { "text": "Dulu sungainya seperti apa, Pak? Waktu Bapak muda.", "next": "dulu", "effect": { "choice": { "dengar": true } } },
+        { "text": "Cara itu sudah tidak cocok sekarang, Pak.", "next": "end", "effect": { "river_health": -3 } }
       ]
     },
     {
-      "id": "organic",
-      "speaker": "Pak Tani",
-      "text": "Ada! Pupuk kompos dari sisa tanaman. Lebih lambat hasilnya, tapi sungai tetap bersih dan tanah tetap subur.",
+      "id": "dulu",
+      "speaker": "Pak Darwis",
+      "text": "Bening, Nak. Ikan lewat bisa kau lihat sebelum sampai ke kaki. Kami mandi di situ, cuci piring di situ. Apa yang kami lepas, sungai terima, dan dia diam saja.",
       "choices": [
-        { "text": "Ayo kita coba cara itu!", "next": "end_good", "effect": { "river_health": 5, "choice": { "peduli_alam": true } } }
-      ]
-    },
-    {
-      "id": "ignore",
-      "speaker": "Pak Tani",
-      "text": "Hmm... Kau ada benarnya juga. Tapi anak cucuku juga harus hidup di sini nanti...",
-      "choices": [
-        { "text": "Maaf, kau benar.", "next": "end_good", "effect": { "river_health": 2, "choice": { "peduli_alam": true } } },
-        { "text": "Terserah kau saja.", "next": "end_bad", "effect": {} }
+        { "text": "Kasur itu kalau dicincang, busanya bisa dijual ke pengepul, Pak.", "next": "end_good", "effect": { "river_health": 5, "choice": { "darwis_peduli": true }, "quest": { "id": "pilah_desa", "description": "Pilah 10 sampah desa", "target": 10 } } }
       ]
     },
     {
       "id": "end_good",
-      "speaker": "Pak Tani",
-      "text": "Gotong royong kita jaga kebun dan sungai ini. Pilah dulu limbah pertanian di wadah yang tersedia ya!",
+      "speaker": "Pak Darwis",
+      "text": "Dijual? Busa? Parangku masih tajam. Mulai sekarang kasur ini tak ke sungai lagi.",
       "choices": []
     },
     {
-      "id": "end_bad",
-      "speaker": "Pak Tani",
-      "text": "Ya sudah... Mungkin nanti saja kami pikirkan.",
+      "id": "end",
+      "speaker": "Pak Darwis",
+      "text": "Anak kemarin sore. Hmm.",
       "choices": []
     }
   ],
   "npc_ibu_desa": [
     {
       "id": "start",
-      "speaker": "Ibu Sari",
-      "text": "Kau mau bantu bersihkan sungai? Wah, kalau dulu warga sini selalu gotong royong setiap minggu bersihkan sungai.",
+      "speaker": "Kak Rina",
+      "text": "Eh, Dek! Mau gorengan? Baru angkat, panas-panas.",
       "choices": [
-        { "text": "Sekarang sudah tidak lagi?", "next": "now", "effect": {} }
+        { "text": "Minyak bekasnya Kakak biasa buang ke mana?", "next": "jelantah", "effect": {} },
+        { "text": "Jangan dibuang ke selokan ya, Kak.", "next": "end", "effect": { "river_health": -3 } }
       ]
     },
     {
-      "id": "now",
-      "speaker": "Ibu Sari",
-      "text": "Orang sibuk sendiri-sendiri sekarang. Padahal kalau bareng-bareng, kerja jadi ringan dan sungai bisa bersih.",
+      "id": "jelantah",
+      "speaker": "Kak Rina",
+      "text": "Ke selokan belakang, lah. Mau ke mana lagi? Botolnya mahal, tempatnya tak ada.",
       "choices": [
-        { "text": "Aku akan mulai dari diri sendiri dulu.", "next": "end", "effect": { "river_health": 3 } }
+        { "text": "Kumpulkan di jeriken, Kak. Bank sampah beli Rp 3.000/L untuk biodiesel.", "next": "end_good", "effect": { "river_health": 5, "choice": { "rina_peduli": true }, "quest": { "id": "gotong_royong", "description": "Bicara dengan 2 warga desa", "target": 2 } } }
+      ]
+    },
+    {
+      "id": "end_good",
+      "speaker": "Kak Rina",
+      "text": "Dibeli?! Tiga ribu seliter? Itu dua bungkus terigu, Dek! Mulai hari ini Kakak simpan jelantahnya.",
+      "choices": []
+    },
+    {
+      "id": "end",
+      "speaker": "Kak Rina",
+      "text": "Iya, iya. Jadi mau beli gorengan apa tidak?",
+      "choices": []
+    }
+  ],
+  "npc_pemuka_desa": [
+    {
+      "id": "start",
+      "speaker": "Pemuka Desa",
+      "text": "Selamat datang. Di sini, urusan sungai selalu kami bicarakan bersama-sama. Tak ada yang bekerja sendirian.",
+      "choices": [
+        { "text": "Kenapa harus dibicarakan bersama?", "next": "musyawarah", "effect": {} },
+        { "text": "Aku siap membantu warga.", "next": "bantu", "effect": { "river_health": 2 } }
+      ]
+    },
+    {
+      "id": "musyawarah",
+      "speaker": "Pemuka Desa",
+      "text": "Karena sungai melewati rumah semua orang, Nak. Kalau keputusan diambil bersama, semua ikut menjaga. Orang Melayu bilang: berat sama dipikul, ringan sama dijinjing.",
+      "choices": [
+        { "text": "Berat sama dipikul, ringan sama dijinjing.", "next": "bantu", "effect": { "choice": { "gotong_royong": true } } }
+      ]
+    },
+    {
+      "id": "bantu",
+      "speaker": "Pemuka Desa",
+      "text": "Bagus. Mulailah dari yang kecil: pilah sampahmu, sapa warga. Kalau hati sudah terbuka, pekerjaan besar jadi ringan.",
+      "choices": [
+        { "text": "Baik, aku mulai sekarang.", "next": "end", "effect": { "river_health": 2 } }
       ]
     },
     {
       "id": "end",
-      "speaker": "Ibu Sari",
-      "text": "Bagus! Mulai dari yang kecil, lama-lama jadi besar. Semangat ya!",
+      "speaker": "Pemuka Desa",
+      "text": "Semoga langkahmu diberkahi. Desa ini bangga punya pemuda yang peduli.",
       "choices": []
     }
   ]

@@ -3,14 +3,21 @@
     "id": "start",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "Hujan lebat berikutnya datang kembali. Warung bertahan, tetapi utang masih tersisa dan sungai masih rawan.",
+    "teks": "Hujan lebat datang lagi. Warung bertahan, dindingnya basah sampai ke garis lumpur yang lama. Utang masih tersisa, dan sungai masih rawan.",
     "next": "1"
   },
   {
     "id": "1",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.",
+    "next": "2"
+  },
+  {
+    "id": "2",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Sungai belajar dari kita, sebagaimana kita belajar darinya. Jalanmu masih panjang, jangan menyerah.",
+    "teks": "Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.",
     "next": "end"
   }
 ]

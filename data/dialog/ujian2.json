@@ -42,7 +42,7 @@
       },
       {
         "tipe": "B",
-        "teks": "(Diam saja dan membiarkan mereka ribut)",
+        "teks": "Diam saja dan membiarkan mereka ribut",
         "delta_sikap": 0,
         "delta_meter": 3,
         "next": "genangan_ribut"
@@ -60,7 +60,7 @@
     "id": "genangan_ribut",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "(Warga terus bertengkar dan selokan tetap meluap ke jalan).",
+    "teks": "Warga terus bertengkar dan selokan tetap meluap ke jalan.",
     "next": "end"
   },
   {
