@@ -8,6 +8,8 @@ const MAP_W: int = 60
 const MAP_H: int = 34
 const PATH_ROW: int = 16
 const BUILDING_BAND_SRC_PX: int = 8
+const BUILDING_ROOF_TUCK_PX: float = 12.0
+const BUILDING_SIDE_INSET_PX: float = 2.0
 
 static var _building_polygon_cache: Dictionary = {}
 
@@ -802,6 +804,19 @@ static func _building_collision_polygon(texture: Texture2D, sprite_scale: float,
 		return PackedVector2Array()
 	var w: int = img.get_width()
 	var h: int = img.get_height()
+	var tuck_src: int = int(round(BUILDING_ROOF_TUCK_PX / sprite_scale))
+	var min_wall_src: int = maxi(0, h - int(round(24.0 / sprite_scale)))
+	# Beri ruang 3/4 di bagian atas atap agar kaki/bawah baju bisa masuk tipis di balik atap secara natural.
+	var col_solid_top: Array[int] = []
+	col_solid_top.resize(w)
+	for x in range(w):
+		var top_y: int = -1
+		for y in range(h):
+			if img.get_pixel(x, y).a > 0.2:
+				top_y = y
+				break
+		col_solid_top[x] = mini(top_y + tuck_src, min_wall_src) if top_y >= 0 else h
+
 	var bands: Array[Dictionary] = []
 	for y0 in range(0, h, BUILDING_BAND_SRC_PX):
 		var y1: int = mini(h, y0 + BUILDING_BAND_SRC_PX)
@@ -809,7 +824,7 @@ static func _building_collision_polygon(texture: Texture2D, sprite_scale: float,
 		var rx: int = -1
 		for y in range(y0, y1):
 			for x in range(w):
-				if img.get_pixel(x, y).a > 0.2:
+				if y >= col_solid_top[x] and img.get_pixel(x, y).a > 0.2:
 					if x < lx:
 						lx = x
 					if x > rx:
@@ -818,14 +833,17 @@ static func _building_collision_polygon(texture: Texture2D, sprite_scale: float,
 			continue
 		var world_w: float = float(rx - lx + 1) * sprite_scale
 		# Abaikan puncak cerobong tipis di baris paling atas agar bagian belakang atap tetap rata dan mulus dilewati.
-		if bands.is_empty() and world_w < 14.0:
+		if bands.is_empty() and world_w < 18.0:
 			continue
-		# Beri bantalan 1.5px di tepi kiri/kanan agar rambut & bahu karakter (12px) tetap tampak di luar garis tepi dinding.
+		var side_lx: float = (float(lx) - float(w) * 0.5) * sprite_scale + BUILDING_SIDE_INSET_PX
+		var side_rx: float = (float(rx + 1) - float(w) * 0.5) * sprite_scale - BUILDING_SIDE_INSET_PX
+		if side_rx - side_lx < 8.0:
+			continue
 		bands.append({
 			"y0": (float(y0) - float(h)) * sprite_scale,
 			"y1": (float(y1) - float(h)) * sprite_scale,
-			"lx": (float(lx) - float(w) * 0.5) * sprite_scale - 1.5,
-			"rx": (float(rx + 1) - float(w) * 0.5) * sprite_scale + 1.5,
+			"lx": side_lx,
+			"rx": side_rx,
 		})
 	if bands.is_empty():
 		return PackedVector2Array([
