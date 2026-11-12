@@ -30,6 +30,9 @@ func _ready() -> void:
 	_build_tileset()
 	_paint_ground()
 	_paint_water()
+	var shore := ensure_shore_overlay(self, water, bridge)
+	autotile_sand_and_shores(ground, water, bridge, shore, MAP_W, MAP_H)
+	autotile_dirt_paths(ground, MAP_W, MAP_H, _seed, bridge, water)
 	_paint_decor()
 	_build_boundaries()
 	_build_water_areas()
@@ -38,7 +41,8 @@ func _ready() -> void:
 
 # ─── Tileset ─────────────────────────────────────────────────────────────────
 
-## Membangun TileSet 32x32 (8x8 atlas) terpadu pada skala 0.5 agar koordinat grid 16px tetap terjaga.
+## Membangun TileSet 32x32 (Source 0: atlas utama 8x8, Source 1: 47-blob pasir & tepian air 8x12)
+## pada skala 0.5 agar koordinat grid 16px tetap terjaga.
 static func build_curated_tileset(layers: Array) -> TileSet:
 	var ts := TileSet.new()
 	ts.tile_size = Vector2i(32, 32)
@@ -49,6 +53,15 @@ static func build_curated_tileset(layers: Array) -> TileSet:
 		for x in range(8):
 			source.create_tile(Vector2i(x, y))
 	ts.add_source(source, 0)
+	var shore_tex: Texture2D = load("res://assets/tilesets/sand_shore_tileset.png")
+	if shore_tex != null:
+		var shore_source := TileSetAtlasSource.new()
+		shore_source.texture = shore_tex
+		shore_source.texture_region_size = Vector2i(32, 32)
+		for y in range(12):
+			for x in range(8):
+				shore_source.create_tile(Vector2i(x, y))
+		ts.add_source(shore_source, 1)
 	for layer in layers:
 		if layer is TileMapLayer:
 			layer.tile_set = ts
@@ -114,17 +127,149 @@ func _paint_ground() -> void:
 static func _is_road_dirt_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
 	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
 		return false
+	if ground_layer.get_cell_source_id(cell) != 0:
+		return false
 	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
 	return (a.y == 0 and a.x in [3, 4, 5]) or (a.y in [4, 5] and (a.y == 4 or a.x <= 5))
 
 static func _is_meadow_grass_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
 	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
 		return true
+	if ground_layer.get_cell_source_id(cell) != 0:
+		return false
 	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
 	return (a.y == 0 and a.x <= 2) or (a.y == 3)
 
+static func _is_grass_for_sand(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int, water_layer: TileMapLayer = null, bridge_layer: TileMapLayer = null) -> bool:
+	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
+		return false
+	if water_layer != null and water_layer.get_cell_source_id(cell) != -1:
+		return false
+	if bridge_layer != null and bridge_layer.get_cell_source_id(cell) != -1:
+		return false
+	if ground_layer.get_cell_source_id(cell) != 0:
+		return false
+	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
+	return (a.y == 0 and a.x <= 2) or (a.y == 3)
+
+static func is_sand_cell(ground_layer: TileMapLayer, cell: Vector2i) -> bool:
+	var sid: int = ground_layer.get_cell_source_id(cell)
+	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)
+	return (sid == 0 and a.y == 1 and a.x in [4, 5]) or (sid == 1 and a.y < 6)
+
+static func ensure_shore_overlay(map_node: Node, water_layer: TileMapLayer, bridge_layer: TileMapLayer) -> TileMapLayer:
+	var shore := map_node.get_node_or_null("ShoreOverlay") as TileMapLayer
+	if shore == null:
+		shore = TileMapLayer.new()
+		shore.name = "ShoreOverlay"
+		map_node.add_child(shore)
+	shore.z_index = -18
+	if bridge_layer != null and bridge_layer.z_index <= shore.z_index:
+		bridge_layer.z_index = -17
+	if water_layer != null:
+		shore.tile_set = water_layer.tile_set
+		shore.scale = water_layer.scale
+	return shore
+
+static var _blob_lookup_cache: Dictionary = {}
+
+static func _get_blob_lookup() -> Dictionary:
+	if not _blob_lookup_cache.is_empty():
+		return _blob_lookup_cache
+	var masks: Array[int] = []
+	var seen: Dictionary = {}
+	for raw in range(256):
+		var c: int = raw & 15
+		if (c & 1) == 0 and (c & 8) == 0 and (raw & 16) != 0:
+			c |= 16
+		if (c & 1) == 0 and (c & 2) == 0 and (raw & 32) != 0:
+			c |= 32
+		if (c & 4) == 0 and (c & 2) == 0 and (raw & 64) != 0:
+			c |= 64
+		if (c & 4) == 0 and (c & 8) == 0 and (raw & 128) != 0:
+			c |= 128
+		if not seen.has(c):
+			seen[c] = true
+			masks.append(c)
+	masks.sort()
+	for i in range(masks.size()):
+		_blob_lookup_cache[masks[i]] = Vector2i(i % 8, int(i / 8))
+	return _blob_lookup_cache
+
+static func _is_channel_cell(water_layer: TileMapLayer, bridge_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
+	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
+		return true
+	if water_layer.get_cell_source_id(cell) != -1:
+		return true
+	return bridge_layer != null and bridge_layer.get_cell_source_id(cell) != -1
+
+static func _neighbor_blob_mask(c: Vector2i, is_outer: Callable) -> int:
+	var n: bool = is_outer.call(c + Vector2i(0, -1))
+	var e: bool = is_outer.call(c + Vector2i(1, 0))
+	var s: bool = is_outer.call(c + Vector2i(0, 1))
+	var w: bool = is_outer.call(c + Vector2i(-1, 0))
+	var mask: int = (1 if n else 0) | (2 if e else 0) | (4 if s else 0) | (8 if w else 0)
+	if not n and not w and is_outer.call(c + Vector2i(-1, -1)):
+		mask |= 16
+	if not n and not e and is_outer.call(c + Vector2i(1, -1)):
+		mask |= 32
+	if not s and not e and is_outer.call(c + Vector2i(1, 1)):
+		mask |= 64
+	if not s and not w and is_outer.call(c + Vector2i(-1, 1)):
+		mask |= 128
+	return mask
+
+## Menerapkan autotile 47-blob halus untuk transisi Rumput↔Pasir serta lengkung tepian Air↔Pasir basah.
+static func autotile_sand_and_shores(ground_layer: TileMapLayer, water_layer: TileMapLayer, bridge_layer: TileMapLayer, shore_layer: TileMapLayer, map_w: int, map_h: int) -> void:
+	if ground_layer == null or ground_layer.tile_set == null or not ground_layer.tile_set.has_source(1):
+		return
+	var lookup: Dictionary = _get_blob_lookup()
+	var grass_pred := func(cell: Vector2i) -> bool:
+		return _is_grass_for_sand(ground_layer, cell, map_w, map_h, water_layer, bridge_layer)
+
+	# 1) Pass Pasir → Rumput (snapshot dulu agar ubahan tidak memengaruhi tetangga).
+	var sand_cells: Array[Vector2i] = []
+	var sand_masks: Array[int] = []
+	for y in range(map_h):
+		for x in range(map_w):
+			var c := Vector2i(x, y)
+			if not is_sand_cell(ground_layer, c):
+				continue
+			var mask: int = _neighbor_blob_mask(c, grass_pred)
+			if mask != 0:
+				sand_cells.append(c)
+				sand_masks.append(mask)
+	for i in range(sand_cells.size()):
+		var coord: Vector2i = lookup.get(sand_masks[i], Vector2i.ZERO)
+		ground_layer.set_cell(sand_cells[i], 1, coord, 0)
+
+	# 2) Pass Tepian Air ↔ Pasir Basah di atas layer Water (tanpa menimpa jembatan/dermaga).
+	if shore_layer == null or water_layer == null:
+		return
+	var land_pred := func(cell: Vector2i) -> bool:
+		return not _is_channel_cell(water_layer, bridge_layer, cell, map_w, map_h)
+	for y in range(map_h):
+		for x in range(map_w):
+			var c := Vector2i(x, y)
+			var has_open_water: bool = water_layer.get_cell_source_id(c) != -1 and (bridge_layer == null or bridge_layer.get_cell_source_id(c) == -1)
+			if not has_open_water:
+				shore_layer.erase_cell(c)
+				continue
+			var mask: int = _neighbor_blob_mask(c, land_pred)
+			if mask == 0:
+				shore_layer.erase_cell(c)
+			else:
+				var coord: Vector2i = lookup.get(mask, Vector2i.ZERO)
+				shore_layer.set_cell(c, 1, Vector2i(coord.x, coord.y + 6), 0)
+
 ## Mengubah tepi dan sudut jalan tanah menjadi ubin transisi rumput-tanah secara otomatis.
-static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: int, seed_value: int = 0) -> void:
+static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: int, seed_value: int = 0, bridge_layer: TileMapLayer = null, water_layer: TileMapLayer = null) -> void:
+	var grass_or_edge := func(cell: Vector2i) -> bool:
+		if bridge_layer != null and bridge_layer.get_cell_source_id(cell) != -1:
+			return false
+		if water_layer != null and water_layer.get_cell_source_id(cell) != -1:
+			return false
+		return _is_meadow_grass_cell(ground_layer, cell, map_w, map_h)
 	var targets: Array[Vector2i] = []
 	for y in range(map_h):
 		for x in range(map_w):
@@ -132,10 +277,10 @@ static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: i
 			if _is_road_dirt_cell(ground_layer, c, map_w, map_h):
 				targets.append(c)
 	for c in targets:
-		var n := _is_meadow_grass_cell(ground_layer, c + Vector2i(0, -1), map_w, map_h)
-		var s := _is_meadow_grass_cell(ground_layer, c + Vector2i(0, 1), map_w, map_h)
-		var w := _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, 0), map_w, map_h)
-		var e := _is_meadow_grass_cell(ground_layer, c + Vector2i(1, 0), map_w, map_h)
+		var n: bool = grass_or_edge.call(c + Vector2i(0, -1))
+		var s: bool = grass_or_edge.call(c + Vector2i(0, 1))
+		var w: bool = grass_or_edge.call(c + Vector2i(-1, 0))
+		var e: bool = grass_or_edge.call(c + Vector2i(1, 0))
 		var road_var: int = abs((c.x * 73856093) ^ (c.y * 19349663) ^ (seed_value * 83492791)) % 2
 		var atlas := Vector2i(4 + road_var, 0)
 		if n and s and not w and not e:
@@ -159,13 +304,13 @@ static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: i
 		elif e and not w and not n and not s:
 			atlas = Vector2i(3, 4)
 		elif not n and not s and not w and not e:
-			if _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, -1), map_w, map_h):
+			if grass_or_edge.call(c + Vector2i(-1, -1)):
 				atlas = Vector2i(0, 5)
-			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(1, -1), map_w, map_h):
+			elif grass_or_edge.call(c + Vector2i(1, -1)):
 				atlas = Vector2i(1, 5)
-			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(-1, 1), map_w, map_h):
+			elif grass_or_edge.call(c + Vector2i(-1, 1)):
 				atlas = Vector2i(2, 5)
-			elif _is_meadow_grass_cell(ground_layer, c + Vector2i(1, 1), map_w, map_h):
+			elif grass_or_edge.call(c + Vector2i(1, 1)):
 				atlas = Vector2i(3, 5)
 		ground_layer.set_cell(c, 0, atlas, 0)
 
@@ -230,9 +375,9 @@ func _paint_hilir_ground() -> void:
 	for y in range(6, 14):
 		ground.set_cell(Vector2i(52, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(53, y), 0, Vector2i(5, 0), 0)
-	# Garis tepi rumput-pasir organik di perbatasan pantai.
+	# Garis tepi rumput-pasir organik di perbatasan pantai (ditangani 47-blob autotile pasir).
 	for x in range(MAP_W):
-		ground.set_cell(Vector2i(x, 23), 0, Vector2i(0, 7), 0)
+		_paint_sand_cell(x, 23)
 	# Pantai berpasir + bercak lumpur muara dan tanah retak pesisir.
 	for x in range(MAP_W):
 		for y in range(24, 28):
@@ -397,6 +542,8 @@ func _is_open_grass(x: int, y: int) -> bool:
 		return false
 	if bridge.get_cell_source_id(Vector2i(x, y)) != -1:
 		return false
+	if ground.get_cell_source_id(Vector2i(x, y)) != 0:
+		return false
 	var atlas: Vector2i = ground.get_cell_atlas_coords(Vector2i(x, y))
 	return (atlas.y == 0 and atlas.x <= 2) or (atlas.y == 3 and atlas.x <= 3)
 
@@ -427,7 +574,7 @@ func _paint_decor() -> void:
 			var x: int = 2 + _hash(i, 19, 7) % (MAP_W - 4)
 			var y: int = 24 + _hash(i, 23, 11) % 3
 			var c := Vector2i(x, y)
-			if water.get_cell_source_id(c) == -1 and ground.get_cell_atlas_coords(c).y == 1:
+			if water.get_cell_source_id(c) == -1 and is_sand_cell(ground, c):
 				_decor.set_cell(c, 0, Vector2i(6, 7), 0)  # kerikil & kerang pantai
 
 func _paint_field_fences() -> void:
@@ -774,8 +921,7 @@ func _spawn_reeds_on_banks(count: int) -> void:
 			var cell := Vector2i(x, y)
 			if water.get_cell_source_id(cell) != -1:
 				continue
-			var atlas: Vector2i = ground.get_cell_atlas_coords(cell)
-			if atlas.y != 1 or atlas.x < 4 or atlas.x > 5:
+			if not is_sand_cell(ground, cell):
 				continue
 			if not _touches_water(cell):
 				continue

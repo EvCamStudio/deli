@@ -102,18 +102,37 @@ func _river_top(x: int) -> int:
 	return int(round(18.0 + sin(float(x) * 0.18) * 1.2)) - 3
 
 func _paint_water() -> void:
+	var water_cells: Dictionary = {}
 	for x in range(MAP_W):
 		var top: int = _river_top(x)
 		var bottom: int = top + 3
-		# tepi pasir
-		ground.set_cell(Vector2i(x, top - 1), 0, Vector2i(4 + _hash(x, top) % 2, 1), 0)
-		ground.set_cell(Vector2i(x, bottom + 1), 0, Vector2i(4 + _hash(x, bottom) % 2, 1), 0)
 		var is_bridge: bool = x in [20, 21, 44, 45]
 		for y in range(top, bottom + 1):
+			var c := Vector2i(x, y)
+			water_cells[c] = true
 			if is_bridge:
-				bridge.set_cell(Vector2i(x, y), 0, Vector2i(6 + _hash(x, y) % 2, 1), 0)
+				bridge.set_cell(c, 0, Vector2i(6 + _hash(x, y) % 2, 1), 0)
 			else:
-				water.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 2, 1), 0)
+				water.set_cell(c, 0, Vector2i(_hash(x, y) % 2, 1), 0)
+
+	# Tepi pasir mengikuti 8-tetangga aliran sungai agar tikungan lengkung bebas silang air-rumput diagonal.
+	for cell: Vector2i in water_cells.keys():
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				if dx == 0 and dy == 0:
+					continue
+				var n := Vector2i(cell.x + dx, cell.y + dy)
+				if water_cells.has(n):
+					continue
+				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
+					continue
+				if TopdownMap._is_road_dirt_cell(ground, n, MAP_W, MAP_H):
+					continue
+				ground.set_cell(n, 0, Vector2i(4 + _hash(n.x, n.y) % 2, 1), 0)
+
+	var shore := TopdownMap.ensure_shore_overlay(self, water, bridge)
+	TopdownMap.autotile_sand_and_shores(ground, water, bridge, shore, MAP_W, MAP_H)
+	TopdownMap.autotile_dirt_paths(ground, MAP_W, MAP_H, 0, bridge, water)
 
 func is_in_water(pos: Vector2) -> bool:
 	var cell := Vector2i(int(floor(pos.x / TILE)), int(floor(pos.y / TILE)))

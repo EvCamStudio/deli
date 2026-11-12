@@ -440,6 +440,194 @@ def extract_s4_on_bg(s4: Image.Image, col: int, row: int, bg_tile: Image.Image, 
     return out
 
 
+def _hash01(x: int, y: int, seed: int = 0) -> float:
+    """Deterministic [0, 1) hash on a 32x32 periodic grid."""
+    x = x % 32
+    y = y % 32
+    n = (x * 374761393 + y * 668265263 + seed * 1442695041) & 0xFFFFFFFF
+    n = ((n ^ (n >> 13)) * 1274126177) & 0xFFFFFFFF
+    n = (n ^ (n >> 16)) & 0xFFFFFFFF
+    return n / 4294967296.0
+
+
+def _sample_sand_rgb(x: int, y: int, variant: int = 0) -> tuple[int, int, int]:
+    """Seamless 32x32 fine-grain river-sand texture with continuous phase-locked ripples."""
+    px = x % 32
+    py = y % 32
+    phase = 2.0 * math.pi * ((py + 0.5 * px) / 16.0)
+    ripple = 0.55 * math.sin(phase) + 0.45 * math.cos(2.0 * math.pi * (px / 32.0 - py / 16.0))
+    # Subtle micro-grain varies inside tiles while border edges blend cleanly.
+    edge_dist = min(px, 31 - px, py, 31 - py)
+    v_seed = variant if edge_dist >= 2 else 0
+    grain = (_hash01(px, py, 101 + v_seed * 17) - 0.5) * 12.0
+    micro = (_hash01(px // 2, py, 211 + v_seed * 19) - 0.5) * 5.0
+    delta = ripple * 6.0 + grain + micro
+    fleck = _hash01(px, py, 307 + v_seed * 29)
+    if fleck < 0.045:
+        delta -= 12.0
+    elif fleck > 0.965:
+        delta += 9.0
+    r = max(0, min(255, int(round(211 + delta))))
+    g = max(0, min(255, int(round(186 + delta * 0.92))))
+    b = max(0, min(255, int(round(135 + delta * 0.78))))
+    return (r, g, b)
+
+
+def _canonical_blob_masks() -> list[int]:
+    """Return sorted 47 canonical 8-bit neighbor masks matching GDScript autotiler."""
+    seen: list[int] = []
+    seen_set: set[int] = set()
+    for raw in range(256):
+        c = raw & 15
+        if (c & 1) == 0 and (c & 8) == 0 and (raw & 16):
+            c |= 16
+        if (c & 1) == 0 and (c & 2) == 0 and (raw & 32):
+            c |= 32
+        if (c & 4) == 0 and (c & 2) == 0 and (raw & 64):
+            c |= 64
+        if (c & 4) == 0 and (c & 8) == 0 and (raw & 128):
+            c |= 128
+        if c not in seen_set:
+            seen_set.add(c)
+            seen.append(c)
+    seen.sort()
+    return seen
+
+
+def _blob_sdf(x: int, y: int, mask: int, inset: float, fillet: float) -> float:
+    """Exact C1-continuous Euclidean SDF into tile interior (negative = outer band, positive = inner)."""
+    n_on = bool(mask & 1)
+    e_on = bool(mask & 2)
+    s_on = bool(mask & 4)
+    w_on = bool(mask & 8)
+    nw_on = bool(mask & 16) or (n_on and w_on)
+    ne_on = bool(mask & 32) or (n_on and e_on)
+    se_on = bool(mask & 64) or (s_on and e_on)
+    sw_on = bool(mask & 128) or (s_on and w_on)
+
+    rects: list[tuple[float, float, float, float]] = []
+    if n_on:
+        rects.append((32.0, 0.0, 64.0, 32.0))
+    if e_on:
+        rects.append((64.0, 32.0, 96.0, 64.0))
+    if s_on:
+        rects.append((32.0, 64.0, 64.0, 96.0))
+    if w_on:
+        rects.append((0.0, 32.0, 32.0, 64.0))
+    if nw_on:
+        rects.append((0.0, 0.0, 32.0, 32.0))
+    if ne_on:
+        rects.append((64.0, 0.0, 96.0, 32.0))
+    if se_on:
+        rects.append((64.0, 64.0, 96.0, 96.0))
+    if sw_on:
+        rects.append((0.0, 64.0, 32.0, 96.0))
+
+    lx = x + 0.5
+    ly = y + 0.5
+    gx = 32.0 + lx
+    gy = 32.0 + ly
+
+    min_d = 999.0
+    for rx0, ry0, rx1, ry1 in rects:
+        dx = 0.0 if rx0 <= gx <= rx1 else (rx0 - gx if gx < rx0 else gx - rx1)
+        dy = 0.0 if ry0 <= gy <= ry1 else (ry0 - gy if gy < ry0 else gy - ry1)
+        d = math.hypot(dx, dy)
+        if d < min_d:
+            min_d = d
+
+    sd = min_d - inset
+
+    # Round inner L-corners where two adjacent cardinals are both outer.
+    if n_on and w_on and inset <= lx <= inset + fillet and inset <= ly <= inset + fillet:
+        sd = min(sd, fillet - math.hypot(lx - (inset + fillet), ly - (inset + fillet)))
+    if n_on and e_on and 32.0 - inset - fillet <= lx <= 32.0 - inset and inset <= ly <= inset + fillet:
+        sd = min(sd, fillet - math.hypot(lx - (32.0 - inset - fillet), ly - (inset + fillet)))
+    if s_on and e_on and 32.0 - inset - fillet <= lx <= 32.0 - inset and 32.0 - inset - fillet <= ly <= 32.0 - inset:
+        sd = min(sd, fillet - math.hypot(lx - (32.0 - inset - fillet), ly - (32.0 - inset - fillet)))
+    if s_on and w_on and inset <= lx <= inset + fillet and 32.0 - inset - fillet <= ly <= 32.0 - inset:
+        sd = min(sd, fillet - math.hypot(lx - (inset + fillet), ly - (32.0 - inset - fillet)))
+
+    return sd
+
+
+def _periodic_wobble(x: int, y: int, amp: float = 0.85) -> float:
+    """Period-32 edge wobble so adjacent tile borders meet cleanly with zero seams."""
+    tx = 2.0 * math.pi * (x + 0.5) / 32.0
+    ty = 2.0 * math.pi * (y + 0.5) / 32.0
+    return amp * (
+        0.55 * math.sin(2.0 * tx + 0.3) * math.cos(ty)
+        + 0.45 * math.cos(2.0 * ty + 0.7) * math.sin(tx)
+        + 0.30 * math.sin(3.0 * tx - ty)
+    )
+
+
+def build_sand_shore_tileset(grass_base: Image.Image) -> Image.Image:
+    """Build 256x384 (8x12 at 32x32) 47-blob tileset for Grass-Sand (rows 0..5) & Wet-Shore Overlay (rows 6..11)."""
+    masks = _canonical_blob_masks()
+    assert len(masks) == 47, f"Expected 47 canonical blob masks, got {len(masks)}"
+    sheet = Image.new("RGBA", (8 * 32, 12 * 32), (0, 0, 0, 0))
+    gpx = grass_base.convert("RGBA").load()
+    leaf_dark = harmonize_green_pixel(44, 104, 26) + (255,)
+    leaf_mid = harmonize_green_pixel(64, 138, 36) + (255,)
+
+    for idx, mask in enumerate(masks):
+        cx = idx % 8
+        cy_gs = idx // 8
+        cy_sh = cy_gs + 6
+
+        gs_tile = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+        gspx = gs_tile.load()
+        for y in range(32):
+            for x in range(32):
+                sd = _blob_sdf(x, y, mask, inset=8.5, fillet=7.0)
+                wob = _periodic_wobble(x, y, amp=0.95)
+                d = sd + wob if mask != 0 else 99.0
+                sr, sg, sb = _sample_sand_rgb(x, y, variant=idx % 2)
+                if d < -1.4:
+                    gspx[x, y] = gpx[x, y]
+                elif d < -0.5:
+                    gspx[x, y] = leaf_mid if ((x + y) % 2 == 0 or _hash01(x, y, 41) < 0.35) else gpx[x, y]
+                elif d < 0.75:
+                    gspx[x, y] = leaf_dark
+                elif d < 2.2:
+                    gspx[x, y] = (max(0, sr - 22), max(0, sg - 20), max(0, sb - 16), 255)
+                elif d < 3.1 and _hash01(x, y, 59) < 0.4:
+                    gspx[x, y] = (max(0, sr - 10), max(0, sg - 9), max(0, sb - 7), 255)
+                else:
+                    gspx[x, y] = (sr, sg, sb, 255)
+        sheet.paste(gs_tile, (cx * 32, cy_gs * 32))
+
+        sh_tile = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+        if mask != 0:
+            shpx = sh_tile.load()
+            for y in range(32):
+                for x in range(32):
+                    sd = _blob_sdf(x, y, mask, inset=7.5, fillet=6.5)
+                    d = sd + _periodic_wobble(x, y, amp=0.80)
+                    sr, sg, sb = _sample_sand_rgb(x, y, variant=idx % 2)
+                    if d < -3.0:
+                        # Keep outer border pixel-identical to dry Ground sand, moistening smoothly near shoreline.
+                        t = max(0.0, min(1.0, (d + 5.2) / 2.2))
+                        mr = int(round(sr * (1.0 - 0.14 * t) + 148 * (0.14 * t)))
+                        mg = int(round(sg * (1.0 - 0.15 * t) + 126 * (0.15 * t)))
+                        mb = int(round(sb * (1.0 - 0.18 * t) + 86 * (0.18 * t)))
+                        shpx[x, y] = (mr, mg, mb, 255)
+                    elif d < -1.1:
+                        wr = max(0, int(round(sr * 0.78)))
+                        wg = max(0, int(round(sg * 0.76)))
+                        wb = max(0, int(round(sb * 0.68)))
+                        shpx[x, y] = (wr, wg, wb, 255)
+                    elif d < 0.25:
+                        shpx[x, y] = (106, 89, 57, 255)
+                    elif d < 1.65:
+                        alpha = int(round(135.0 * (1.65 - d) / 1.4))
+                        shpx[x, y] = (72, 63, 40, max(28, min(145, alpha)))
+        sheet.paste(sh_tile, (cx * 32, cy_sh * 32))
+
+    return sheet
+
+
 def build_procedural_complement_tiles(grass_base: Image.Image) -> dict[str, Image.Image]:
     out: dict[str, Image.Image] = {}
     rng = random.Random(42)
@@ -457,19 +645,13 @@ def build_procedural_complement_tiles(grass_base: Image.Image) -> dict[str, Imag
             wd.line((x0 + 2, ry + 2, x0 + 9, ry + 2), fill=RIVER_DARK, width=1)
         out[f"water_{idx}"] = wimg
 
-    SAND_BASE = (224, 200, 144, 255)
-    SAND_SPECK_A = (206, 180, 126, 255)
-    SAND_SPECK_B = (238, 218, 166, 255)
     for idx in range(2):
-        simg = Image.new("RGBA", (32, 32), SAND_BASE)
+        simg = Image.new("RGBA", (32, 32), (211, 186, 135, 255))
         spx = simg.load()
-        for _ in range(42):
-            spx[rng.randrange(32), rng.randrange(32)] = SAND_SPECK_A if rng.random() < 0.55 else SAND_SPECK_B
-        for _ in range(3):
-            px_x = rng.randrange(3, 29)
-            px_y = rng.randrange(3, 29)
-            spx[px_x, px_y] = (188, 160, 112, 255)
-            spx[px_x + 1, px_y] = (244, 228, 188, 255)
+        for y in range(32):
+            for x in range(32):
+                r, g, b = _sample_sand_rgb(x, y, variant=idx)
+                spx[x, y] = (r, g, b, 255)
         out[f"sand_{idx}"] = simg
 
     for idx, is_top in enumerate((True, False)):
@@ -865,6 +1047,11 @@ def main() -> None:
     out_path = os.path.join(ASSETS, "tilesets", "pilot_tileset.png")
     atlas.save(out_path)
     print("Saved", out_path, atlas.size)
+
+    sand_shore_sheet = build_sand_shore_tileset(g0)
+    sand_shore_path = os.path.join(ASSETS, "tilesets", "sand_shore_tileset.png")
+    sand_shore_sheet.save(sand_shore_path)
+    print("Saved", sand_shore_path, sand_shore_sheet.size)
 
     build_tree_spot_sprite()
     build_house_sprites()
