@@ -11,13 +11,18 @@ class_name TreeSpotTopDown
 
 var _planted: bool = false
 
+var _target_scale := Vector2.ONE
+
 func _ready() -> void:
 	add_to_group("tree_spot")
 	marker.texture = load("res://assets/sprites/props/tree_spot.png")
 	marker.scale = Vector2.ONE
-	var path: String = "res://assets/sprites/props/mangrove.png" if kind == "mangrove" else "res://assets/sprites/props/tree.png"
+	var is_mangrove := kind == "mangrove"
+	var path: String = "res://assets/sprites/props/mangrove.png" if is_mangrove else "res://assets/sprites/props/tree_mangga.png"
+	_target_scale = Vector2.ONE if is_mangrove else Vector2(0.5, 0.5)
 	planted_sprite.texture = load(path)
-	planted_sprite.position = Vector2(0, -planted_sprite.texture.get_height() * 0.5)
+	planted_sprite.scale = _target_scale
+	planted_sprite.position = Vector2(0, -planted_sprite.texture.get_height() * 0.5 * _target_scale.y)
 	if not spot_id.is_empty() and spot_id in GameState.planted_spots:
 		_planted = true
 		marker.hide()
@@ -45,7 +50,7 @@ func mark_planted() -> void:
 	_planted = true
 	marker.hide()
 	planted_sprite.show()
-	planted_sprite.scale = Vector2.ONE
+	planted_sprite.scale = _target_scale
 	_update_blocker()
 
 func _required_quest() -> String:
@@ -81,8 +86,8 @@ func interact() -> void:
 	SettingsManager.vibrate(30)
 
 	var tween := create_tween()
-	planted_sprite.scale = Vector2(0.15, 0.15)
-	tween.tween_property(planted_sprite, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	planted_sprite.scale = _target_scale * 0.15
+	tween.tween_property(planted_sprite, "scale", _target_scale, 0.45).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 	if not spot_id.is_empty() and spot_id not in GameState.planted_spots:
 		GameState.planted_spots.append(spot_id)

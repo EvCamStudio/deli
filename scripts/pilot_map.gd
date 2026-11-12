@@ -180,32 +180,25 @@ func _spawn_buildings() -> void:
 
 func _spawn_trees() -> void:
 	# Pohon dirapikan di bingkai tepi peta & sudut celah rumah (tidak acak di tengah jalan/taman).
-	var positions: Array[Vector2] = [
-		Vector2(44, 112), Vector2(372, 116), Vector2(676, 116), Vector2(920, 112),
-		Vector2(48, 436), Vector2(172, 436), Vector2(360, 436), Vector2(512, 436), Vector2(652, 436), Vector2(760, 436), Vector2(912, 436),
+	var entries: Array[Dictionary] = [
+		{"pos": Vector2(44, 112), "kind": "mangga"},
+		{"pos": Vector2(372, 116), "kind": "beringin"},
+		{"pos": Vector2(676, 116), "kind": "kamboja"},
+		{"pos": Vector2(920, 112), "kind": "kelapa"},
+		{"pos": Vector2(48, 436), "kind": "kelapa"},
+		{"pos": Vector2(172, 436), "kind": "pisang"},
+		{"pos": Vector2(364, 436), "kind": "mangga"},
+		{"pos": Vector2(512, 436), "kind": "pepaya"},
+		{"pos": Vector2(652, 436), "kind": "kamboja"},
+		{"pos": Vector2(760, 436), "kind": "mangga"},
+		{"pos": Vector2(912, 436), "kind": "pisang"},
 	]
-	for pos in positions:
-		_spawn_tree(pos)
-
-func _spawn_tree(pos: Vector2) -> void:
-	if is_in_water(pos):
-		return
-	var texture: Texture2D = load("res://assets/sprites/props/tree.png")
-	var body := StaticBody2D.new()
-	body.position = pos
-	body.collision_layer = 1
-	body.collision_mask = 0
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	sprite.position = Vector2(0, -texture.get_height() * 0.5)
-	body.add_child(sprite)
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(10, 8)
-	var col := CollisionShape2D.new()
-	col.shape = shape
-	col.position = Vector2(0, -4)
-	body.add_child(col)
-	get_parent().add_child.call_deferred(body)
+	for entry in entries:
+		var pos: Vector2 = entry.get("pos", Vector2.ZERO)
+		if is_in_water(pos):
+			continue
+		var kind: String = str(entry.get("kind", "mangga"))
+		TopdownMap.spawn_tree(get_parent(), pos, kind)
 
 func _spawn_reed_clusters() -> void:
 	for i in range(26):

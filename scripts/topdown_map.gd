@@ -11,6 +11,15 @@ const BUILDING_BAND_SRC_PX: int = 8
 const BUILDING_ROOF_TUCK_PX: float = 12.0
 const BUILDING_SIDE_INSET_PX: float = 2.0
 
+const TREE_SPECS: Dictionary = {
+	"kelapa": {"path": "res://assets/sprites/props/tree_kelapa.png", "scale": 0.5, "col": Vector2(12, 8)},
+	"mangga": {"path": "res://assets/sprites/props/tree_mangga.png", "scale": 0.5, "col": Vector2(14, 8)},
+	"pisang": {"path": "res://assets/sprites/props/tree_pisang.png", "scale": 0.5, "col": Vector2(14, 8)},
+	"beringin": {"path": "res://assets/sprites/props/tree_beringin.png", "scale": 0.5, "col": Vector2(28, 10)},
+	"pepaya": {"path": "res://assets/sprites/props/tree_pepaya.png", "scale": 0.5, "col": Vector2(10, 8)},
+	"kamboja": {"path": "res://assets/sprites/props/tree_kamboja.png", "scale": 0.5, "col": Vector2(14, 8)},
+}
+
 static var _building_polygon_cache: Dictionary = {}
 
 @export var theme: String = "hulu"
@@ -712,14 +721,17 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(272, 208), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(112, 448), Vector2(82, 22), 0.5)
 			# Pohon dirapikan mengelompok: bingkai tepi kampung barat & rumpun hutan timur (bukan acak di pekarangan).
-			_spawn_trees([
+			_spawn_typed_trees([
 				# Bingkai barat & peneduh halaman
-				Vector2(36, 128), Vector2(192, 196), Vector2(36, 356), Vector2(40, 488), Vector2(280, 488),
+				[Vector2(36, 128), "mangga"], [Vector2(192, 196), "pisang"], [Vector2(36, 356), "beringin"],
+				[Vector2(40, 488), "pepaya"], [Vector2(280, 488), "kamboja"],
 				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai)
-				Vector2(616, 72), Vector2(688, 68), Vector2(768, 72), Vector2(848, 72), Vector2(912, 84),
-				Vector2(916, 156), Vector2(916, 212),
-				Vector2(620, 392), Vector2(724, 392), Vector2(828, 392), Vector2(916, 392),
-				Vector2(440, 484), Vector2(576, 520), Vector2(696, 520), Vector2(820, 520), Vector2(916, 520),
+				[Vector2(616, 72), "mangga"], [Vector2(688, 68), "beringin"], [Vector2(768, 72), "kamboja"],
+				[Vector2(848, 72), "mangga"], [Vector2(912, 84), "kelapa"],
+				[Vector2(916, 156), "pisang"], [Vector2(916, 212), "kamboja"],
+				[Vector2(620, 392), "kelapa"], [Vector2(724, 392), "mangga"], [Vector2(828, 392), "pisang"], [Vector2(916, 392), "kamboja"],
+				[Vector2(440, 484), "beringin"], [Vector2(576, 520), "kelapa"], [Vector2(696, 520), "mangga"],
+				[Vector2(820, 520), "kamboja"], [Vector2(916, 520), "kelapa"],
 			])
 		"desa":
 			# Pemukiman padat di sepanjang jalan utama & bantaran Sungai Deli selatan.
@@ -734,10 +746,12 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(728, 392), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(864, 392), Vector2(88, 22), 0.5)
 			# Pohon tertata di sudut pekarangan & bingkai tepi peta (tidak menghalangi jalan/kebun).
-			_spawn_trees([
-				Vector2(40, 128), Vector2(40, 204), Vector2(204, 212), Vector2(396, 212), Vector2(724, 212), Vector2(920, 128),
-				Vector2(36, 392), Vector2(168, 392), Vector2(440, 392), Vector2(660, 392), Vector2(924, 392),
-				Vector2(48, 520), Vector2(256, 520), Vector2(704, 520), Vector2(912, 520),
+			_spawn_typed_trees([
+				[Vector2(40, 128), "kelapa"], [Vector2(40, 204), "pisang"], [Vector2(204, 212), "pepaya"],
+				[Vector2(396, 212), "mangga"], [Vector2(560, 212), "beringin"], [Vector2(724, 212), "kamboja"], [Vector2(920, 128), "kelapa"],
+				[Vector2(36, 392), "pisang"], [Vector2(168, 392), "pepaya"], [Vector2(442, 392), "pepaya"],
+				[Vector2(660, 392), "kamboja"], [Vector2(924, 392), "mangga"],
+				[Vector2(48, 520), "kelapa"], [Vector2(256, 520), "mangga"], [Vector2(704, 520), "beringin"], [Vector2(912, 520), "kelapa"],
 			])
 		"hilir":
 			# Kampung pesisir muara: dua baris rumah utara + rumah sisi timur sungai.
@@ -752,10 +766,11 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(568, 208), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(840, 208), Vector2(82, 22), 0.5)
 			# Pohon pesisir ditata di celah antar-rumah & batas tepi kampung.
-			_spawn_trees([
-				Vector2(40, 88), Vector2(392, 88), Vector2(624, 88), Vector2(920, 88),
-				Vector2(180, 208), Vector2(308, 208), Vector2(484, 208), Vector2(644, 208), Vector2(920, 208),
-				Vector2(48, 352), Vector2(560, 352), Vector2(912, 352),
+			_spawn_typed_trees([
+				[Vector2(40, 88), "kelapa"], [Vector2(392, 88), "kamboja"], [Vector2(624, 88), "kelapa"], [Vector2(920, 88), "mangga"],
+				[Vector2(180, 208), "pepaya"], [Vector2(308, 208), "pisang"], [Vector2(484, 208), "kelapa"],
+				[Vector2(644, 208), "pepaya"], [Vector2(920, 208), "kelapa"],
+				[Vector2(48, 352), "kelapa"], [Vector2(560, 352), "beringin"], [Vector2(912, 352), "kelapa"],
 			])
 			for pos in [Vector2(120, 432), Vector2(448, 436), Vector2(520, 432), Vector2(720, 440), Vector2(60, 424)]:
 				_spawn_mangrove(pos)
@@ -885,29 +900,38 @@ static func _building_collision_polygon(texture: Texture2D, sprite_scale: float,
 	_building_polygon_cache[cache_key] = poly
 	return poly
 
-func _spawn_trees(positions: Array[Vector2]) -> void:
-	for pos in positions:
-		_spawn_tree(pos)
+func _spawn_typed_trees(entries: Array) -> void:
+	for entry in entries:
+		var pos: Vector2 = entry[0]
+		var kind: String = str(entry[1])
+		if is_in_water(pos):
+			continue
+		spawn_tree(get_parent(), pos, kind)
 
-func _spawn_tree(pos: Vector2) -> void:
-	if is_in_water(pos):
+## Memunculkan sprite pohon bervariasi (kelapa, mangga, pisang, beringin, pepaya, kamboja) dengan kolisi batang di pangkal.
+static func spawn_tree(parent: Node, pos: Vector2, kind: String = "mangga") -> void:
+	if parent == null:
 		return
-	var texture: Texture2D = load("res://assets/sprites/props/tree.png")
+	var spec: Dictionary = TREE_SPECS.get(kind, TREE_SPECS["mangga"])
+	var texture: Texture2D = load(str(spec["path"]))
+	var sprite_scale: float = float(spec["scale"])
+	var col_size: Vector2 = spec["col"]
 	var body := StaticBody2D.new()
 	body.position = pos
 	body.collision_layer = 1
 	body.collision_mask = 0
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
-	sprite.position = Vector2(0, -texture.get_height() * 0.5)
+	sprite.scale = Vector2(sprite_scale, sprite_scale)
+	sprite.position = Vector2(0, -texture.get_height() * 0.5 * sprite_scale)
 	body.add_child(sprite)
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(10, 8)
+	shape.size = col_size
 	var col := CollisionShape2D.new()
 	col.shape = shape
-	col.position = Vector2(0, -4)
+	col.position = Vector2(0, -col_size.y * 0.5)
 	body.add_child(col)
-	get_parent().add_child.call_deferred(body)
+	parent.add_child.call_deferred(body)
 
 func _spawn_mangrove(pos: Vector2) -> void:
 	if is_in_water(pos):
