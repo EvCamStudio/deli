@@ -399,7 +399,7 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 		if tile.x < 0:
 			continue
 		var trash := trash_scene.instantiate()
-		trash.position = Vector2(tile) * TILE
+		trash.position = (Vector2(tile) + Vector2(0.5, 0.6)) * TILE
 		trash.set("trash_id", tid)
 		trash.set("category", categories[i % categories.size()])
 		trash.add_to_group("world_trash")
@@ -432,7 +432,7 @@ func _near_planting_spot(zone: String, tile: Vector2i) -> bool:
 func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 	if tile.x < 2 or tile.x >= ZONE_WIDTH - 2 or tile.y < 2 or tile.y >= ZONE_HEIGHT - 2:
 		return false
-	if _zone_in_water(zone, Vector2(tile) * TILE):
+	if _zone_in_water(zone, (Vector2(tile) + Vector2(0.5, 0.5)) * TILE):
 		return false
 	if _blocked_by_building(zone, Rect2(Vector2(tile) - Vector2(1, 1), Vector2(2, 2))):
 		return false

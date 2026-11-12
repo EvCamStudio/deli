@@ -70,10 +70,10 @@ static func build_curated_tileset(layers: Array) -> TileSet:
 
 func _build_tileset() -> void:
 	_tileset = build_curated_tileset([ground, water, bridge, _decor])
-	apply_water_visuals(water, theme == "hulu" or theme == "hilir")
+	apply_water_visuals(water, theme == "hulu" or theme == "hilir", theme == "hulu")
 
 ## Menerapkan shader air sungai keruh & animasi arus mengalir pada layer Water.
-static func apply_water_visuals(water_layer: TileMapLayer, vertical_flow: bool = false) -> void:
+static func apply_water_visuals(water_layer: TileMapLayer, vertical_flow: bool = false, bend_to_east: bool = false) -> void:
 	if water_layer == null:
 		return
 	var shader: Shader = load("res://shaders/murky_water.gdshader")
@@ -84,6 +84,7 @@ static func apply_water_visuals(water_layer: TileMapLayer, vertical_flow: bool =
 	mat.shader = shader
 	mat.set_shader_parameter("water_strip", strip)
 	mat.set_shader_parameter("vertical_flow", vertical_flow)
+	mat.set_shader_parameter("bend_to_east", bend_to_east)
 	water_layer.material = mat
 
 func _build_decor_layer() -> void:
@@ -425,16 +426,26 @@ func _water_hulu() -> void:
 	# (tidak terpotong garis pasir seperti versi sebelumnya).
 	var water_cells: Dictionary = {}
 
-	# Sungai utama: lebar 4 tile, mengalir utara → selatan dengan
-	# lengkung halus agar tidak terlihat seperti balok.
-	for y in range(MAP_H):
-		var bend: float = 0.0
-		# Lengkung hanya di hilir jembatan supaya sambungan kolam–sungai
-		# tetap lurus dan tidak terlihat patah.
-		if y >= PATH_ROW:
-			bend = sin(PI * float(y - PATH_ROW) / 16.0)
-		var center: int = 30 + int(round(bend))
-		for x in range(center - 2, center + 2):
+	# Aliran sungai hulu: turun dari kolam mata air melewati jembatan (y=16..17),
+	# lalu berbelok mulus ke timur (y=27..30) agar menyambung utuh dengan Sungai Desa di tepi timur peta.
+	for y in range(0, 22):
+		for x in range(28, 32):
+			water_cells[Vector2i(x, y)] = true
+
+	var bend_rows: Dictionary = {
+		22: Vector2i(28, 33),
+		23: Vector2i(28, 33),
+		24: Vector2i(29, 34),
+		25: Vector2i(29, 35),
+		26: Vector2i(30, 37),
+		27: Vector2i(31, MAP_W),
+		28: Vector2i(32, MAP_W),
+		29: Vector2i(33, MAP_W),
+		30: Vector2i(35, MAP_W),
+	}
+	for y in bend_rows.keys():
+		var span: Vector2i = bend_rows[y]
+		for x in range(span.x, span.y):
 			water_cells[Vector2i(x, y)] = true
 
 	# Mata air: kolam lonjong di hulu, menyatu dengan aliran sungai.
@@ -705,7 +716,8 @@ func _spawn_props() -> void:
 				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai)
 				Vector2(616, 72), Vector2(688, 68), Vector2(768, 72), Vector2(848, 72), Vector2(912, 84),
 				Vector2(916, 156), Vector2(916, 212),
-				Vector2(604, 424), Vector2(604, 488), Vector2(692, 488), Vector2(780, 448), Vector2(860, 488), Vector2(916, 424),
+				Vector2(620, 392), Vector2(724, 392), Vector2(828, 392), Vector2(916, 392),
+				Vector2(440, 484), Vector2(576, 520), Vector2(696, 520), Vector2(820, 520), Vector2(916, 520),
 			])
 		"desa":
 			# Pemukiman padat di sepanjang jalan utama & bantaran Sungai Deli selatan.
