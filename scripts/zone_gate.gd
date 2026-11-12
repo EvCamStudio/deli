@@ -1,12 +1,14 @@
-## Zone Gate — menghubungkan zona dalam world_sungai_deli.
-## Zona terbuka jika river_health mencapai threshold DAN misi zona sumber selesai.
+## Zone Gate — menghubungkan zona dalam world_sungai_deli secara dua arah.
+## Akses antar-map terbuka bebas; hanya gate epilog yang menunggu misi hilir bila require_mission_to_open aktif.
 extends Area2D
 class_name ZoneGate
 
-@export var target_zone: String = ""  # "desa", "kota", "hilir", "epilog"
+@export var target_zone: String = ""  # "hulu", "desa", "kota", "hilir", "epilog"
 @export var source_zone: String = ""  # zona tempat gate ini berada
-@export var river_health_threshold: float = 40.0
-@export var closed_hint: String = "Sungai masih kotor. Bersihkan sampah di zona ini dulu."
+@export var river_health_threshold: float = 0.0
+@export var closed_hint: String = "Selesaikan dulu misi di zona ini."
+@export var require_mission_to_open: bool = false
+@export var entry_position: Vector2 = Vector2(-1, -1)  # posisi masuk lokal di target_zone (-1 = spawn default)
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var label: Label = $Label
@@ -74,15 +76,25 @@ func _mission_done() -> bool:
 	return bool(world.call("is_zone_cleared", zone))
 
 func _can_open() -> bool:
+	if not require_mission_to_open:
+		return true
 	return GameState.river_health >= river_health_threshold and _mission_done()
 
+func _is_in_active_zone() -> bool:
+	var world := _world()
+	if world == null:
+		return false
+	var zone: String = _zone_key()
+	return zone.is_empty() or str(world.call("get_current_zone")) == zone
+
 func _on_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player"):
-		_player_in_range = true
-		if _open:
-			call_deferred("_transition_to_zone")
-		else:
-			_toast_hint()
+	if not body.is_in_group("player") or not _is_in_active_zone():
+		return
+	_player_in_range = true
+	if _open:
+		call_deferred("_transition_to_zone")
+	else:
+		_toast_hint()
 
 func _on_body_exited(body: Node2D) -> void:
 	if body.is_in_group("player"):
@@ -132,10 +144,12 @@ func interact() -> void:
 		_toast_hint()
 
 func _transition_to_zone() -> void:
-	if not _open:
+	if not _open or not _is_in_active_zone():
 		return
 	var world := _world()
 	if world == null:
+		return
+	if world.has_method("can_use_zone_gate") and not bool(world.call("can_use_zone_gate")):
 		return
 	_player_in_range = false
 	if target_zone == "epilog":
@@ -143,7 +157,10 @@ func _transition_to_zone() -> void:
 			world.call("finish_journey")
 		return
 	if world.has_method("change_zone"):
-		world.call("change_zone", target_zone)
+		if entry_position.x >= 0.0 and entry_position.y >= 0.0:
+			world.call("change_zone", target_zone, entry_position)
+		else:
+			world.call("change_zone", target_zone)
 
 func _toast_hint() -> void:
 	var level := get_tree().get_first_node_in_group("level")

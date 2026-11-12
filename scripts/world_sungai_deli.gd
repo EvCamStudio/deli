@@ -115,6 +115,7 @@ var _show_zone_wisdom: bool = false
 var _last_mission_title: String = ""
 var _hulu_riverbank_spot: Area2D = null
 var _hulu_sampan: Sprite2D = null
+var _last_zone_switch_ms: int = -1000
 var _spawn_positions: Dictionary = {
 	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
 	"desa": Vector2(8, 15) * TILE,   # depan warung
@@ -198,20 +199,18 @@ func _build_zones() -> void:
 	_zone_containers["hilir"] = _create_zone_container("ZoneHilir", ZONE_WIDTH * TILE * 3, topdown_scene, "hilir")
 
 func _spawn_gates() -> void:
-	# Gate dari Hulu ke Desa (unlock river_health 40% + misi hulu), sejajar tengah jalan timur (y=16-17).
-	_create_gate("hulu", Vector2(59, 17) * TILE, "desa", 40.0, "Tanam 5 pohon dan bicara Penjaga Hutan dulu.")
+	# Akses antar-map (Hulu ↔ Desa ↔ Kota ↔ Hilir) terbuka bebas dua arah tanpa kunci misi.
+	_create_gate("hulu", Vector2(59, 17) * TILE, "desa", 0.0, "", false, Vector2(4, 17) * TILE)
+	_create_gate("desa", Vector2(1, 17) * TILE, "hulu", 0.0, "", false, Vector2(56, 17) * TILE)
+	_create_gate("desa", Vector2(59, 17) * TILE, "kota", 0.0, "", false, Vector2(4, 11) * TILE)
+	_create_gate("kota", Vector2(1, 11) * TILE, "desa", 0.0, "", false, Vector2(56, 17) * TILE)
+	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 0.0, "", false, Vector2(4, 17) * TILE)
+	_create_gate("hilir", Vector2(1, 17) * TILE, "kota", 0.0, "", false, Vector2(56, 11) * TILE)
 
-	# Gate dari Desa ke Kota (unlock river_health 60% + misi desa).
-	_create_gate("desa", Vector2(59, 17) * TILE, "kota", 60.0, "Pilah 10 sampah dan bicara 2 warga desa dulu.")
+	# Gate akhir Hilir → Epilog (tamat perjalanan).
+	_create_gate("hilir", Vector2(59, 17) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.", true)
 
-	# Gate dari Kota ke Hilir (unlock river_health 80% + misi kota).
-	# Jalan kota ada di y=10–11, jadi gate diletakkan di jalan (bukan di sungai).
-	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 80.0, "Pilah 6 sampah dan bicara 4 warga kota dulu.")
-
-	# Gate akhir Hilir → Epilog.
-	_create_gate("hilir", Vector2(59, 17) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.")
-
-func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, hint: String) -> void:
+func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, hint: String, require_mission: bool = false, entry_pos: Vector2 = Vector2(-1, -1)) -> void:
 	var gate_scene := preload("res://scenes/world/gate_topdown.tscn")
 	var gate := gate_scene.instantiate() as Area2D
 	gate.position = pos
@@ -220,6 +219,8 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	gate.set("source_zone", zone)
 	gate.set("river_health_threshold", threshold)
 	gate.set("closed_hint", hint)
+	gate.set("require_mission_to_open", require_mission)
+	gate.set("entry_position", entry_pos)
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
@@ -527,7 +528,10 @@ func _setup_hud() -> void:
 func get_current_zone() -> String:
 	return _current_zone
 
-func change_zone(zone: String) -> void:
+func can_use_zone_gate() -> bool:
+	return Time.get_ticks_msec() - _last_zone_switch_ms >= 350
+
+func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1)) -> void:
 	if zone == "epilog":
 		finish_journey()
 		return
@@ -541,17 +545,22 @@ func change_zone(zone: String) -> void:
 	# Show target zone
 	_zone_containers[zone].visible = true
 	_current_zone = zone
+	_last_zone_switch_ms = Time.get_ticks_msec()
 	GameState.world_zone = zone
 	GameState.unlock_zone(zone)
 
-	# Move player to spawn position
-	if zone in _spawn_positions:
+	# Move player to requested entry point (east/west gate) or default zone spawn
+	if custom_local_pos.x >= 0.0 and custom_local_pos.y >= 0.0:
+		player.global_position = _zone_containers[zone].global_position + custom_local_pos
+	elif zone in _spawn_positions:
 		player.global_position = _zone_containers[zone].global_position + _spawn_positions[zone]
 
 	# Update kamera & label lokasi
 	var zone_offset: int = ZONE_ORDER.find(zone)
 	camera.limit_left = zone_offset * ZONE_WIDTH * TILE
 	camera.limit_right = (zone_offset + 1) * ZONE_WIDTH * TILE
+	if camera.has_method("reset_smoothing"):
+		camera.reset_smoothing()
 	if hud and hud.has_method("set_location"):
 		hud.set_location(ZONE_LABELS.get(zone, zone.capitalize()))
 

@@ -201,7 +201,7 @@ var energy: float = 100.0 :
 			energi = energy
 
 var relationships: Dictionary = {}
-var zone_unlocked: Dictionary = {"hulu": true, "desa": false, "kota": false, "hilir": false}
+var zone_unlocked: Dictionary = {"hulu": true, "desa": true, "kota": true, "hilir": true}
 var debt_paid: int = 0
 
 # ─── World & progres per zona (dipakai world_sungai_deli) ────────────────────
@@ -828,7 +828,9 @@ func load_game() -> bool:
 	player_name = str(data.get("player_name", ""))
 	parent_shop_status = str(data.get("parent_shop_status", "pulih" if warung_bersih else "rusak"))
 	quest_progress = int(data.get("quest_progress", 0))
-	zone_unlocked = data.get("zone_unlocked", {"hulu": true, "desa": false, "kota": false, "hilir": false})
+	zone_unlocked = data.get("zone_unlocked", {"hulu": true, "desa": true, "kota": true, "hilir": true})
+	for z in ["hulu", "desa", "kota", "hilir"]:
+		zone_unlocked[z] = true
 	debt_paid = int(data.get("debt_paid", UTANG_AWAL - utang))
 
 	in_world = bool(data.get("in_world", false))
@@ -948,7 +950,7 @@ func reset() -> void:
 	player_name = ""
 	parent_shop_status = "rusak"
 	quest_progress = 0
-	zone_unlocked = {"hulu": true, "desa": false, "kota": false, "hilir": false}
+	zone_unlocked = {"hulu": true, "desa": true, "kota": true, "hilir": true}
 	debt_paid = 0
 	in_world = false
 	world_zone = "hulu"

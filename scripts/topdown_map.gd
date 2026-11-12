@@ -134,7 +134,7 @@ static func _is_road_dirt_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w
 
 static func _is_meadow_grass_cell(ground_layer: TileMapLayer, cell: Vector2i, map_w: int, map_h: int) -> bool:
 	if cell.x < 0 or cell.x >= map_w or cell.y < 0 or cell.y >= map_h:
-		return true
+		return false
 	if ground_layer.get_cell_source_id(cell) != 0:
 		return false
 	var a: Vector2i = ground_layer.get_cell_atlas_coords(cell)

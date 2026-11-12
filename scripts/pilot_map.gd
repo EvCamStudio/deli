@@ -39,8 +39,8 @@ func _paint_ground() -> void:
 				atlas = Vector2i(_hash(x, y, 9) % 3, 0)
 			ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
-	# jalan utama
-	for x in range(2, 58):
+	# jalan utama menembus batas barat ke timur agar keluar-masuk desa ↔ kota ↔ hilir lancar
+	for x in range(0, MAP_W):
 		for y in [10, 11]:
 			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
