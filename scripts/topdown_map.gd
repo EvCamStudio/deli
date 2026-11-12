@@ -57,6 +57,21 @@ static func build_curated_tileset(layers: Array) -> TileSet:
 
 func _build_tileset() -> void:
 	_tileset = build_curated_tileset([ground, water, bridge, _decor])
+	apply_water_visuals(water, theme == "hulu" or theme == "hilir")
+
+## Menerapkan shader air sungai keruh & animasi arus mengalir pada layer Water.
+static func apply_water_visuals(water_layer: TileMapLayer, vertical_flow: bool = false) -> void:
+	if water_layer == null:
+		return
+	var shader: Shader = load("res://shaders/murky_water.gdshader")
+	var strip: Texture2D = load("res://assets/tilesets/water_keruh_strip.png")
+	if shader == null or strip == null:
+		return
+	var mat := ShaderMaterial.new()
+	mat.shader = shader
+	mat.set_shader_parameter("water_strip", strip)
+	mat.set_shader_parameter("vertical_flow", vertical_flow)
+	water_layer.material = mat
 
 func _build_decor_layer() -> void:
 	_decor = get_node_or_null("Decor") as TileMapLayer
@@ -439,30 +454,81 @@ func _is_water_cell(cell: Vector2i) -> bool:
 	return water.get_cell_source_id(cell) != -1 and bridge.get_cell_source_id(cell) == -1
 
 func _build_water_areas() -> void:
-	# Area air dibangun dari tile air yang sudah digambar supaya bentuk
-	# kolam/sungai yang tidak kotak tetap terdeteksi dengan tepat.
+	build_water_collisions_and_areas(get_parent(), water, bridge, MAP_W, MAP_H, TILE)
+
+## Membangun dinding kolisi solid & area air mengikuti tile air (kecuali jembatan/dermaga) agar pemain tidak masuk ke sungai.
+static func build_water_collisions_and_areas(parent: Node, water_layer: TileMapLayer, bridge_layer: TileMapLayer, map_w: int, map_h: int, tile_size: int) -> void:
+	if parent == null or water_layer == null:
+		return
 	var area := Area2D.new()
 	area.set_script(load("res://scripts/water_area.gd"))
+	var body := StaticBody2D.new()
+	body.name = "WaterCollision"
+	body.collision_layer = 1
+	body.collision_mask = 0
 	var shape_total: int = 0
-	for y in range(MAP_H):
+	for y in range(map_h):
 		var x: int = 0
-		while x < MAP_W:
-			if not _is_water_cell(Vector2i(x, y)):
+		while x < map_w:
+			var cell := Vector2i(x, y)
+			var has_water: bool = water_layer.get_cell_source_id(cell) != -1 and (bridge_layer == null or bridge_layer.get_cell_source_id(cell) == -1)
+			if not has_water:
 				x += 1
 				continue
 			var start: int = x
-			while x < MAP_W and _is_water_cell(Vector2i(x, y)):
+			while x < map_w:
+				var next_cell := Vector2i(x, y)
+				if water_layer.get_cell_source_id(next_cell) == -1 or (bridge_layer != null and bridge_layer.get_cell_source_id(next_cell) != -1):
+					break
 				x += 1
 			var width: int = x - start
-			var shape := RectangleShape2D.new()
-			shape.size = Vector2(width * TILE, TILE)
-			var col := CollisionShape2D.new()
-			col.shape = shape
-			col.position = Vector2((start + width * 0.5) * TILE, (y + 0.5) * TILE)
-			area.add_child(col)
+			var x0: float = float(start * tile_size)
+			var x1: float = float((start + width) * tile_size)
+			var y0: float = float(y * tile_size)
+			var y1: float = float((y + 1) * tile_size)
+			var solid_size := Vector2(x1 - x0, y1 - y0)
+			var solid_center := Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5)
+
+			# Beri kelonggaran 2px di sisi yang menempel jembatan agar karakter mulus masuk dari tepi jalan tanpa tersangkut margin fisika.
+			if bridge_layer != null:
+				if start > 0 and bridge_layer.get_cell_source_id(Vector2i(start - 1, y)) != -1:
+					x0 += 2.0
+				if x < map_w and bridge_layer.get_cell_source_id(Vector2i(x, y)) != -1:
+					x1 -= 2.0
+				var touches_bridge_above := false
+				var touches_bridge_below := false
+				for bx in range(start, start + width):
+					if y > 0 and bridge_layer.get_cell_source_id(Vector2i(bx, y - 1)) != -1:
+						if (bx > 0 and water_layer.get_cell_source_id(Vector2i(bx - 1, y - 1)) == -1) or (bx + 1 < map_w and water_layer.get_cell_source_id(Vector2i(bx + 1, y - 1)) == -1):
+							touches_bridge_above = true
+					if y + 1 < map_h and bridge_layer.get_cell_source_id(Vector2i(bx, y + 1)) != -1:
+						if (bx > 0 and water_layer.get_cell_source_id(Vector2i(bx - 1, y + 1)) == -1) or (bx + 1 < map_w and water_layer.get_cell_source_id(Vector2i(bx + 1, y + 1)) == -1):
+							touches_bridge_below = true
+				# Hanya tarik batas y pada jembatan yang menempel tepi darat (bukan ujung dermaga buntu seperti Desa).
+				if touches_bridge_above:
+					y0 += 2.0
+				if touches_bridge_below:
+					y1 -= 2.0
+				solid_size = Vector2(maxf(2.0, x1 - x0), maxf(2.0, y1 - y0))
+				solid_center = Vector2((x0 + x1) * 0.5, (y0 + y1) * 0.5)
+
+			var solid_shape := RectangleShape2D.new()
+			solid_shape.size = solid_size
+			var solid_col := CollisionShape2D.new()
+			solid_col.shape = solid_shape
+			solid_col.position = solid_center
+			body.add_child(solid_col)
+
+			var area_shape := RectangleShape2D.new()
+			area_shape.size = Vector2(maxf(2.0, width * tile_size - 4.0), maxf(2.0, tile_size - 4.0))
+			var area_col := CollisionShape2D.new()
+			area_col.shape = area_shape
+			area_col.position = Vector2((start + width * 0.5) * tile_size, (y + 0.5) * tile_size)
+			area.add_child(area_col)
 			shape_total += 1
 	if shape_total > 0:
-		get_parent().add_child.call_deferred(area)
+		parent.add_child.call_deferred(body)
+		parent.add_child.call_deferred(area)
 
 func _add_collision(pos: Vector2, size: Vector2) -> void:
 	var body := StaticBody2D.new()

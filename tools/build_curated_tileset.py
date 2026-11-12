@@ -444,9 +444,10 @@ def build_procedural_complement_tiles(grass_base: Image.Image) -> dict[str, Imag
     out: dict[str, Image.Image] = {}
     rng = random.Random(42)
 
-    RIVER = (62, 143, 176, 255)
-    RIVER_LIGHT = (96, 181, 204, 255)
-    RIVER_DARK = (48, 122, 156, 255)
+    # Sungai Deli keruh kecokelatan/zaitun (selaras strip animasi air sungai)
+    RIVER = (83, 76, 49, 255)
+    RIVER_LIGHT = (132, 114, 82, 255)
+    RIVER_DARK = (62, 55, 34, 255)
     for idx, shift in enumerate((0, 8)):
         wimg = Image.new("RGBA", (32, 32), RIVER)
         wd = ImageDraw.Draw(wimg)
@@ -475,7 +476,7 @@ def build_procedural_complement_tiles(grass_base: Image.Image) -> dict[str, Imag
         bimg = out["sand_0"].copy()
         bd = ImageDraw.Draw(bimg)
         y_edge = 0 if is_top else 30
-        bd.line((0, y_edge, 31, y_edge), fill=(168, 204, 198, 255), width=2)
+        bd.line((0, y_edge, 31, y_edge), fill=(154, 136, 98, 255), width=2)
         out[f"bank_{idx}"] = bimg
 
     # Organic leafy grass-to-sand transitions (matching Sheet 3's lush rim look!)

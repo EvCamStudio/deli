@@ -25,6 +25,7 @@ func _ready() -> void:
 
 func _build_tileset() -> void:
 	_tileset = TopdownMap.build_curated_tileset([ground, water, bridge])
+	TopdownMap.apply_water_visuals(water, false)
 
 func _hash(x: int, y: int, seed_value: int = 0) -> int:
 	return abs((x * 73856093) ^ (y * 19349663) ^ (seed_value * 83492791)) % 1000
@@ -115,12 +116,10 @@ func _paint_water() -> void:
 				water.set_cell(Vector2i(x, y), 0, Vector2i(_hash(x, y) % 2, 1), 0)
 
 func is_in_water(pos: Vector2) -> bool:
-	var tile_x: int = int(floor(pos.x / TILE))
-	if tile_x < 0 or tile_x >= MAP_W:
+	var cell := Vector2i(int(floor(pos.x / TILE)), int(floor(pos.y / TILE)))
+	if cell.x < 0 or cell.x >= MAP_W or cell.y < 0 or cell.y >= MAP_H:
 		return false
-	var top: int = _river_top(tile_x)
-	var bottom: int = top + 3
-	return pos.y >= top * TILE and pos.y < (bottom + 1) * TILE
+	return water.get_cell_source_id(cell) != -1 and bridge.get_cell_source_id(cell) == -1
 
 func _build_boundaries() -> void:
 	var w: float = MAP_W * TILE
@@ -131,31 +130,8 @@ func _build_boundaries() -> void:
 	_add_collision(Vector2(w + 8, h * 0.5), Vector2(16, h))
 
 func _build_water_areas() -> void:
-	# Pecah per segmen agar kolom jembatan tetap bisa dilewati tanpa efek air.
-	_add_river_segment(0, 20)
-	_add_river_segment(22, 44)
-	_add_river_segment(46, MAP_W)
-
-func _add_river_segment(x_start: int, x_end: int) -> void:
-	if x_end <= x_start:
-		return
-	var top_min: int = 999
-	var bottom_max: int = -1
-	for x in range(x_start, x_end):
-		var top: int = _river_top(x)
-		top_min = mini(top_min, top)
-		bottom_max = maxi(bottom_max, top + 3)
-	var y0: float = float(top_min * TILE)
-	var y1: float = float((bottom_max + 1) * TILE)
-	var area := Area2D.new()
-	area.set_script(load("res://scripts/water_area.gd"))
-	area.position = Vector2((x_start + x_end) * 0.5 * TILE, (y0 + y1) * 0.5)
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2((x_end - x_start) * TILE, y1 - y0)
-	var col := CollisionShape2D.new()
-	col.shape = shape
-	area.add_child(col)
-	get_parent().add_child.call_deferred(area)
+	# Menggunakan pembangun kolisi & area per tile air supaya kelokan sungai kota akurat dan jembatan tetap bisa dilalui.
+	TopdownMap.build_water_collisions_and_areas(get_parent(), water, bridge, MAP_W, MAP_H, TILE)
 
 func _add_collision(pos: Vector2, size: Vector2) -> void:
 	var body := StaticBody2D.new()

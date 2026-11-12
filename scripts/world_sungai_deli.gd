@@ -290,7 +290,7 @@ func _build_sampan_texture() -> ImageTexture:
 	var outline := Color(0.23, 0.15, 0.09, 1.0)
 	var hull := Color(0.49, 0.30, 0.17, 1.0)
 	var deck := Color(0.68, 0.45, 0.25, 1.0)
-	var wake := Color(0.84, 0.95, 1.0, 0.72)
+	var wake := Color(0.76, 0.68, 0.52, 0.78)
 	for y in range(2, 9):
 		var inset: int = absi(y - 5) * 2
 		for x in range(inset, w - inset):
