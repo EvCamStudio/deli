@@ -2,6 +2,8 @@
 extends Area2D
 class_name TreeSpotTopDown
 
+const TREE_WIND_MATERIAL := preload("res://assets/shaders/tree_wind_material.tres")
+
 @export var kind: String = "tree"  # "tree" atau "mangrove"
 @export var spot_id: String = ""
 
@@ -15,7 +17,9 @@ func _ready() -> void:
 	marker.texture = load("res://assets/sprites/props/tree_spot.png")
 	var path: String = "res://assets/sprites/props/mangrove.png" if kind == "mangrove" else "res://assets/sprites/props/tree.png"
 	planted_sprite.texture = load(path)
-	planted_sprite.position = Vector2(0, -planted_sprite.texture.get_height() * 0.5)
+	planted_sprite.material = TREE_WIND_MATERIAL
+	# Pakai offset (bukan position) supaya animasi tumbuh berakar di tanah.
+	planted_sprite.offset = Vector2(0, -planted_sprite.texture.get_height() * 0.5)
 	if not spot_id.is_empty() and spot_id in GameState.planted_spots:
 		_planted = true
 		marker.hide()

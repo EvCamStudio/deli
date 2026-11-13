@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://level1_hulu"]
+[gd_scene load_steps=22 format=3 uid="uid://level1_hulu"]
 
 [ext_resource type="Script" path="res://scripts/level_1_hulu.gd" id="1_l1"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -10,6 +10,8 @@
 [ext_resource type="Script" path="res://scripts/tree_spot.gd" id="8_tree"]
 [ext_resource type="Script" path="res://scripts/npc.gd" id="9_npc"]
 [ext_resource type="Script" path="res://scripts/level_gate.gd" id="10_gate"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/tree.png" id="11_tree_tex"]
+[ext_resource type="ShaderMaterial" path="res://assets/shaders/tree_wind_material.tres" id="12_tree_wind"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bank_left"]
 size = Vector2(320, 50)
@@ -193,12 +195,10 @@ offset_right = 8.0
 offset_bottom = 4.0
 color = Color(0.4, 0.25, 0.1, 1)
 
-[node name="TreeVis" type="ColorRect" parent="TreeSpots/TreeSpot1"]
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = 0.0
-color = Color(0.1, 0.7, 0.2, 1)
+[node name="TreeVis" type="Sprite2D" parent="TreeSpots/TreeSpot1"]
+offset = Vector2(0, -25.5)
+texture = ExtResource("11_tree_tex")
+material = ExtResource("12_tree_wind")
 
 [node name="TreeSpot2" type="Area2D" parent="TreeSpots"]
 position = Vector2(420, 245)
@@ -216,12 +216,10 @@ offset_right = 8.0
 offset_bottom = 4.0
 color = Color(0.4, 0.25, 0.1, 1)
 
-[node name="TreeVis" type="ColorRect" parent="TreeSpots/TreeSpot2"]
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = 0.0
-color = Color(0.1, 0.7, 0.2, 1)
+[node name="TreeVis" type="Sprite2D" parent="TreeSpots/TreeSpot2"]
+offset = Vector2(0, -25.5)
+texture = ExtResource("11_tree_tex")
+material = ExtResource("12_tree_wind")
 
 [node name="TreeSpot3" type="Area2D" parent="TreeSpots"]
 position = Vector2(700, 245)
@@ -239,12 +237,10 @@ offset_right = 8.0
 offset_bottom = 4.0
 color = Color(0.4, 0.25, 0.1, 1)
 
-[node name="TreeVis" type="ColorRect" parent="TreeSpots/TreeSpot3"]
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = 0.0
-color = Color(0.1, 0.7, 0.2, 1)
+[node name="TreeVis" type="Sprite2D" parent="TreeSpots/TreeSpot3"]
+offset = Vector2(0, -25.5)
+texture = ExtResource("11_tree_tex")
+material = ExtResource("12_tree_wind")
 
 [node name="TreeSpot4" type="Area2D" parent="TreeSpots"]
 position = Vector2(1050, 245)
@@ -262,12 +258,10 @@ offset_right = 8.0
 offset_bottom = 4.0
 color = Color(0.4, 0.25, 0.1, 1)
 
-[node name="TreeVis" type="ColorRect" parent="TreeSpots/TreeSpot4"]
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = 0.0
-color = Color(0.1, 0.7, 0.2, 1)
+[node name="TreeVis" type="Sprite2D" parent="TreeSpots/TreeSpot4"]
+offset = Vector2(0, -25.5)
+texture = ExtResource("11_tree_tex")
+material = ExtResource("12_tree_wind")
 
 [node name="TreeSpot5" type="Area2D" parent="TreeSpots"]
 position = Vector2(1450, 245)
@@ -285,12 +279,10 @@ offset_right = 8.0
 offset_bottom = 4.0
 color = Color(0.4, 0.25, 0.1, 1)
 
-[node name="TreeVis" type="ColorRect" parent="TreeSpots/TreeSpot5"]
-offset_left = -6.0
-offset_top = -24.0
-offset_right = 6.0
-offset_bottom = 0.0
-color = Color(0.1, 0.7, 0.2, 1)
+[node name="TreeVis" type="Sprite2D" parent="TreeSpots/TreeSpot5"]
+offset = Vector2(0, -25.5)
+texture = ExtResource("11_tree_tex")
+material = ExtResource("12_tree_wind")
 
 [node name="NPCs" type="Node2D" parent="."]
 

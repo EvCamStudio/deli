@@ -7,6 +7,7 @@ const TILE: int = 16
 const MAP_W: int = 60
 const MAP_H: int = 34
 const PATH_ROW: int = 16
+const TREE_WIND_MATERIAL := preload("res://assets/shaders/tree_wind_material.tres")
 
 @export var theme: String = "hulu"
 
@@ -379,6 +380,7 @@ func _spawn_tree(pos: Vector2) -> void:
 	body.collision_mask = 0
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
+	sprite.material = TREE_WIND_MATERIAL
 	sprite.position = Vector2(0, -texture.get_height() * 0.5)
 	body.add_child(sprite)
 	var shape := RectangleShape2D.new()
@@ -399,6 +401,7 @@ func _spawn_mangrove(pos: Vector2) -> void:
 	body.collision_mask = 0
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
+	sprite.material = TREE_WIND_MATERIAL
 	sprite.position = Vector2(0, -texture.get_height() * 0.5)
 	body.add_child(sprite)
 	var shape := RectangleShape2D.new()
