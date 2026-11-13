@@ -309,7 +309,7 @@ def build_tileset() -> None:
 
 
 # ---------------------------------------------------------------- portraits ---
-def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=None, moustache: bool = False, beard: bool = False):
+def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=None, moustache: bool = False, beard: bool = False, glasses: bool = False):
     base = Image.new("RGBA", (80, 100), (0, 0, 0, 0))
     d = ImageDraw.Draw(base)
     accent = accent or (53, 92, 74, 255)
@@ -346,6 +346,20 @@ def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=No
         d.rectangle((20, 15, 60, 23), fill=(42, 34, 30, 255), outline=OUT, width=1)
         d.ellipse((24, 22, 56, 62), fill=skin)
         d.rectangle((21, 27, 24, 45), fill=hair)
+    elif style == "band":
+        d.ellipse((20, 14, 60, 52), fill=hair)
+        d.ellipse((24, 22, 56, 62), fill=skin)
+        d.rectangle((21, 27, 25, 44), fill=hair)
+        d.rectangle((55, 27, 59, 44), fill=hair)
+        d.rectangle((19, 26, 61, 32), fill=(226, 106, 58, 255))
+    elif style == "cap":
+        d.ellipse((20, 14, 60, 52), fill=hair)
+        d.ellipse((24, 22, 56, 62), fill=skin)
+        d.rectangle((21, 28, 24, 42), fill=hair)
+        d.rectangle((56, 28, 59, 42), fill=hair)
+        d.ellipse((18, 12, 62, 40), fill=(78, 88, 132, 255), outline=OUT, width=2)
+        d.rectangle((14, 26, 66, 32), fill=(62, 70, 108, 255), outline=OUT, width=1)
+        d.line((26, 18, 40, 16), fill=(126, 138, 180, 255), width=2)
     elif style == "long":
         d.ellipse((18, 13, 62, 60), fill=hair)
         d.rectangle((17, 30, 23, 74), fill=hair)
@@ -392,6 +406,13 @@ def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=No
         d.point((33, eye_y + 1), fill=WHITE)
         d.point((47, eye_y + 1), fill=WHITE)
 
+    if glasses:
+        d.rectangle((27, eye_y - 4, 38, eye_y + 6), outline=OUT, width=1)
+        d.rectangle((42, eye_y - 4, 53, eye_y + 6), outline=OUT, width=1)
+        d.line((38, eye_y, 42, eye_y), fill=OUT, width=1)
+        d.line((27, eye_y - 1, 22, eye_y - 3), fill=OUT, width=1)
+        d.line((53, eye_y - 1, 58, eye_y - 3), fill=OUT, width=1)
+
     if beard:
         d.arc((25, 40, 55, 68), 10, 170, fill=hair, width=7)
         d.arc((29, 43, 51, 64), 15, 165, fill=tuple(max(0, c - 24) for c in hair[:3]) + (255,), width=3)
@@ -434,16 +455,16 @@ def portrait(key: str, expression: str, skin, hair, shirt, style: str, accent=No
 
 
 def build_portraits() -> None:
-    # Warna disamakan dengan sprite top-down terbaru (tools/generate_characters.py).
+    # Warna disamakan dengan sprite top-down CC0 (tools/import_opensource_characters.py).
     people = {
-        "player": dict(skin=(235, 186, 146, 255), hair=(48, 36, 32, 255), shirt=(58, 100, 168, 255), style="short", accent=(206, 88, 68, 255)),
-        "pedagang": dict(skin=(212, 156, 114, 255), hair=(40, 32, 28, 255), shirt=(240, 228, 202, 255), style="peci", accent=(150, 100, 62, 255), moustache=True),
-        "ibu": dict(skin=(228, 176, 140, 255), hair=(170, 96, 120, 255), shirt=(70, 112, 100, 255), style="hijab", accent=(232, 206, 172, 255)),
-        "budi": dict(skin=(240, 196, 156, 255), hair=(44, 34, 30, 255), shirt=(242, 242, 236, 255), style="kid", accent=(64, 122, 190, 255)),
-        "pakrt": dict(skin=(220, 166, 124, 255), hair=(38, 32, 28, 255), shirt=(92, 132, 86, 255), style="peci", accent=(228, 222, 198, 255), moustache=True),
-        "penjaga_hutan": dict(skin=(206, 152, 112, 255), hair=(58, 44, 34, 255), shirt=(86, 110, 62, 255), style="caping", accent=(198, 172, 112, 255), beard=True),
-        "petani": dict(skin=(198, 142, 100, 255), hair=(60, 46, 34, 255), shirt=(196, 172, 100, 255), style="caping", accent=(112, 146, 88, 255), moustache=True),
-        "nelayan": dict(skin=(176, 122, 88, 255), hair=(76, 62, 52, 255), shirt=(70, 110, 138, 255), style="caping", accent=(196, 172, 126, 255), beard=True),
+        "player": dict(skin=(255, 201, 153, 255), hair=(214, 128, 84, 255), shirt=(72, 69, 70, 255), style="cap", accent=(206, 88, 68, 255)),
+        "pedagang": dict(skin=(241, 176, 137, 255), hair=(108, 75, 66, 255), shirt=(72, 69, 70, 255), style="short", accent=(150, 100, 62, 255), moustache=True, glasses=True),
+        "ibu": dict(skin=(184, 130, 95, 255), hair=(113, 53, 138, 255), shirt=(133, 62, 192, 255), style="hijab", accent=(232, 206, 172, 255)),
+        "budi": dict(skin=(255, 182, 141, 255), hair=(52, 52, 52, 255), shirt=(126, 133, 138, 255), style="kid", accent=(211, 60, 61, 255)),
+        "pakrt": dict(skin=(255, 201, 153, 255), hair=(92, 98, 120, 255), shirt=(126, 133, 138, 255), style="short", accent=(228, 222, 198, 255), moustache=True, glasses=True),
+        "penjaga_hutan": dict(skin=(141, 82, 67, 255), hair=(220, 134, 82, 255), shirt=(26, 172, 109, 255), style="short", accent=(198, 172, 112, 255), moustache=True),
+        "petani": dict(skin=(180, 115, 74, 255), hair=(135, 77, 39, 255), shirt=(111, 137, 184, 255), style="caping", accent=(112, 146, 88, 255), moustache=True),
+        "nelayan": dict(skin=(180, 115, 74, 255), hair=(55, 55, 51, 255), shirt=(54, 127, 185, 255), style="band", accent=(196, 172, 126, 255), beard=True),
     }
     for key, cfg in people.items():
         for expression in ("neutral", "happy", "sad", "surprised"):
@@ -808,7 +829,7 @@ def main() -> None:
     build_city_props()
     build_ui()
     build_menu_bg()
-    print("  (karakter dibuat oleh tools/generate_characters.py)")
+    print("  (karakter CC0 diimpor oleh tools/import_opensource_characters.py)")
 
     print("assets generated")
 

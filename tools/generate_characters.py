@@ -1,5 +1,10 @@
 """Generate premium 16x24 top-down character sprites (4 arah x 4 frame).
 
+CATATAN: skrip ini sudah tidak dipakai. Sprite karakter sekarang diimpor dari
+paket CC0 lewat tools/import_opensource_characters.py (lihat
+tools/opensource/CREDITS.md). Jalankan skrip ini hanya kalau ingin kembali ke
+versi prosedural.
+
 Digambar prosedural dengan palet bertingkat (shadow/base/light), outline
 otomatis, dan detail khas per karakter supaya tidak ada yang kembar.
 Output: sprite sheet 64x96 yang dibaca player_topdown.gd / npc_topdown.gd.
