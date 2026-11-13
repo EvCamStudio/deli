@@ -42,7 +42,7 @@ func _build_tileset() -> void:
 	var source := TileSetAtlasSource.new()
 	source.texture = load("res://assets/tilesets/pilot_tileset.png")
 	source.texture_region_size = Vector2i(TILE, TILE)
-	for y in range(4):
+	for y in range(6):
 		for x in range(8):
 			source.create_tile(Vector2i(x, y))
 	_tileset.add_source(source, 0)
