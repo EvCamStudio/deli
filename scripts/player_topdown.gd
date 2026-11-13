@@ -62,7 +62,8 @@ func _build_frames() -> void:
 		var idle_name := "idle_%s" % dir
 		var walk_name := "walk_%s" % dir
 		frames.add_animation(idle_name)
-		frames.set_animation_loop(idle_name, true)
+		# Satu frame tanpa loop: karakter diam total saat berhenti.
+		frames.set_animation_loop(idle_name, false)
 		frames.set_animation_speed(idle_name, 4.0)
 		frames.add_animation(walk_name)
 		frames.set_animation_loop(walk_name, true)
@@ -72,7 +73,10 @@ func _build_frames() -> void:
 			atlas.atlas = texture
 			atlas.region = Rect2(col * 16.0, row * 24.0, 16.0, 24.0)
 			frames.add_frame(walk_name, atlas)
-			if col == 0 or col == 2:
+			# Diam = satu frame kolom 0 saja (kaki rapat). Kolom 2 adalah frame
+			# langkah dengan kaki terbuka, jadi jangan dipakai untuk idle —
+			# kalau dipakai, sprite terlihat berjalan di tempat.
+			if col == 0:
 				frames.add_frame(idle_name, atlas)
 	sprite.sprite_frames = frames
 	sprite.play("idle_down")
