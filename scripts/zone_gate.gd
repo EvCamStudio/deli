@@ -152,6 +152,7 @@ func _transition_to_zone() -> void:
 	if world.has_method("can_use_zone_gate") and not bool(world.call("can_use_zone_gate")):
 		return
 	_player_in_range = false
+	AudioManager.play_sfx("gate_open")
 	if target_zone == "epilog":
 		if world.has_method("finish_journey"):
 			world.call("finish_journey")

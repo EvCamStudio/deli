@@ -67,6 +67,7 @@ func close_all() -> void:
 	dim.hide()
 
 func open_collection() -> void:
+	AudioManager.play_sfx("switch_a", -2.0)
 	_populate_collection()
 	dim.show()
 	collection_panel.show()

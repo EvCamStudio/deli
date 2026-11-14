@@ -20,34 +20,34 @@ func _set_initial_mission() -> void:
 	_refresh_mission()
 
 func _spawn_entities() -> void:
-	spawn_npc("npc_nelayan", "nelayan", Vector2(200, 236))
-	spawn_npc("npc_penjaga_sungai", "pakrt", Vector2(680, 236))
+	spawn_npc("npc_nelayan", "nelayan", Vector2(224, 176))
+	spawn_npc("npc_penjaga_sungai", "pakrt", Vector2(576, 176))
 
 	for pos in [
-		Vector2(200, 424), Vector2(320, 440), Vector2(480, 424), Vector2(600, 440),
-		Vector2(680, 424), Vector2(800, 440), Vector2(880, 416), Vector2(940, 440),
+		Vector2(120, 424), Vector2(240, 440), Vector2(360, 424), Vector2(480, 440),
+		Vector2(580, 424), Vector2(820, 440), Vector2(880, 416), Vector2(930, 440),
 	]:
 		spawn_tree_spot("mangrove", pos)
 
 	var items: Array = [
-		["kulit_pisang", "organik", Vector2(240, 320)],
-		["daun_kering", "organik", Vector2(320, 340)],
-		["sisa_sayur", "organik", Vector2(400, 380)],
-		["sampah_organik", "organik", Vector2(300, 360)],
-		["botol_plastik", "plastik", Vector2(440, 320)],
-		["kantong_kresek", "plastik", Vector2(560, 340)],
-		["kaleng_bekas", "plastik", Vector2(620, 300)],
-		["sedotan_plastik", "plastik", Vector2(480, 380)],
-		["sampah_plastik", "plastik", Vector2(560, 380)],
-		["baterai_bekas", "b3", Vector2(700, 320)],
+		["kulit_pisang", "organik", Vector2(160, 330)],
+		["daun_kering", "organik", Vector2(240, 350)],
+		["sisa_sayur", "organik", Vector2(340, 370)],
+		["sampah_organik", "organik", Vector2(280, 330)],
+		["botol_plastik", "plastik", Vector2(420, 330)],
+		["kantong_kresek", "plastik", Vector2(520, 350)],
+		["kaleng_bekas", "plastik", Vector2(560, 320)],
+		["sedotan_plastik", "plastik", Vector2(460, 370)],
+		["sampah_plastik", "plastik", Vector2(530, 370)],
+		["baterai_bekas", "b3", Vector2(380, 350)],
 	]
 	for item in items:
 		spawn_trash(str(item[0]), str(item[1]), item[2])
 
-	spawn_bin("organik", Vector2(360, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
-	spawn_bin("plastik", Vector2(500, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
-	spawn_bin("b3", Vector2(640, 240), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
-	spawn_gate(Vector2(912, 264), true, "Jalan ke Epilog")
+	spawn_bin("organik", Vector2(160, 196), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
+	spawn_bin("plastik", Vector2(400, 196), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
+	spawn_bin("b3", Vector2(600, 196), "pilah_hilir", "Bicara dulu dengan Penjaga Sungai.")
+	spawn_gate(Vector2(928, 176), true, "Jalan ke Epilog")
 
 func on_tree_planted(kind: String) -> void:
 	if kind != "mangrove":

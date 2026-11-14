@@ -156,11 +156,13 @@ var _is_transitioning: bool = false
 var _last_advance_frame: int = -1
 
 var _is_typing: bool = false
+var _last_typed_char: int = 0
 var _typewriter_tween: Tween = null
 var _current_target_label: RichTextLabel = null
 var _current_target_hint: Control = null
 
 func _ready() -> void:
+	AudioManager.play_bgm("intro")
 	fade_rect.color = Color(0, 0, 0, 0)
 	tap_advance_btn.pressed.connect(_on_tap_advanced)
 	confirm_btn.pressed.connect(_on_confirm_name_pressed)
@@ -169,6 +171,13 @@ func _ready() -> void:
 
 	_show_chapter(0)
 	_render_current_step()
+
+func _process(_delta: float) -> void:
+	if _is_typing and _current_target_label:
+		var cur: int = _current_target_label.visible_characters
+		if cur > _last_typed_char:
+			_last_typed_char = cur
+			AudioManager.play_typewriter_blip()
 
 # ─── Visual Bab ───────────────────────────────────────────────────────────────
 
@@ -196,6 +205,7 @@ func _start_typewriter(label: RichTextLabel, hint: Control, full_bbcode_text: St
 	_current_target_label = label
 	_current_target_hint = hint
 	_is_typing = true
+	_last_typed_char = 0
 
 	if hint:
 		hint.modulate.a = 0.0
@@ -335,10 +345,12 @@ func _handle_advance_request() -> void:
 
 	# Jika masih dalam proses mengetik: ketukan pertama langsung selesaikan teks!
 	if _is_typing:
+		AudioManager.play_sfx("tap_b")
 		_finish_typewriter()
 		return
 
 	# Jika teks sudah selesai: lanjut ke langkah berikutnya
+	AudioManager.play_sfx("tap_b")
 	_advance_step()
 
 func _advance_step() -> void:
@@ -365,6 +377,7 @@ func _next_chapter(next_ch: int) -> void:
 	if _is_transitioning:
 		return
 	_is_transitioning = true
+	AudioManager.play_sfx("switch_a", -2.0)
 
 	# Fade transisi antar bab
 	var tw := create_tween()

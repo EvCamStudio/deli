@@ -35,13 +35,13 @@ func _spawn_entities() -> void:
 	_spawn_npc("npc_anak_sekolah", "budi", Vector2(320, 184))
 	_spawn_npc("npc_tokoh_masyarakat", "pakrt", Vector2(700, 184))
 
-	# Sampah tersebar di bantaran utara, dekat tong masing-masing (bukan di air).
-	_spawn_trash("kulit_pisang", "organik", Vector2(176, 208))
-	_spawn_trash("daun_kering", "organik", Vector2(256, 216))
-	_spawn_trash("botol_plastik", "plastik", Vector2(496, 208))
-	_spawn_trash("kaleng_bekas", "plastik", Vector2(592, 200))
-	_spawn_trash("baterai_bekas", "b3", Vector2(704, 208))
-	_spawn_trash("kantong_kresek", "plastik", Vector2(800, 216))
+	# Sampah di jalanan dinonaktifkan / dibersihkan sementara menunggu dibuat ulang.
+	# _spawn_trash("kulit_pisang", "organik", Vector2(176, 208))
+	# _spawn_trash("daun_kering", "organik", Vector2(256, 216))
+	# _spawn_trash("botol_plastik", "plastik", Vector2(496, 208))
+	# _spawn_trash("kaleng_bekas", "plastik", Vector2(592, 200))
+	# _spawn_trash("baterai_bekas", "b3", Vector2(704, 208))
+	# _spawn_trash("kantong_kresek", "plastik", Vector2(800, 216))
 
 	# Tiga tong pilah di jalur utama (terkunci sampai bicara Pedagang).
 	_spawn_bin("organik", Vector2(216, 208))

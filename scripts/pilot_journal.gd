@@ -41,6 +41,7 @@ func _ready() -> void:
 func open() -> void:
 	if is_open():
 		return
+	AudioManager.play_sfx("switch_a", -2.0)
 	_refresh()
 	overlay.show()
 	panel.show()
@@ -48,6 +49,7 @@ func open() -> void:
 	opened.emit()
 
 func close() -> void:
+	AudioManager.play_sfx("switch_b", -2.0)
 	overlay.hide()
 	panel.hide()
 	get_tree().paused = false

@@ -26,10 +26,12 @@ func _ready() -> void:
 # ─── Buka / Tutup ─────────────────────────────────────────────────────────────
 
 func open() -> void:
+	AudioManager.play_sfx("switch_a", -2.0)
 	panel.show()
 	get_tree().paused = true
 
 func close() -> void:
+	AudioManager.play_sfx("switch_b", -2.0)
 	panel.hide()
 	settings_panel.hide()
 	get_tree().paused = false

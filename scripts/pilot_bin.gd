@@ -85,7 +85,7 @@ func interact() -> void:
 	else:
 		GameState.add_river_health(3.0)
 		GameState.rupiah += 1500
-		AudioManager.play_sfx("click")
+		AudioManager.play_sfx("wrong")
 		SettingsManager.vibrate(12)
 		_toast("Hampir! %s seharusnya ke tong %s. +Rp1.500" % [
 			_display_category(item_cat), _category_name_for(item_cat)

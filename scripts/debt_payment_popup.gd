@@ -104,6 +104,7 @@ func _build_ui() -> void:
 	vbox.add_child(btn_wait)
 
 func _on_slider_changed(val: float) -> void:
+	AudioManager.play_typewriter_blip()
 	_update_partial_button_text(int(val))
 
 func _update_partial_button_text(amount: int) -> void:

@@ -48,43 +48,40 @@ const ZONE_WISDOM: Dictionary = {
 # Footprint bangunan (dalam satuan tile) supaya sampah/pohon tidak menimpa atap atau halaman depan pintu.
 const BUILDING_RECTS: Dictionary = {
 	"hulu": [
-		Rect2(3.8, 7.7, 6.4, 5.3),
-		Rect2(14.0, 8.9, 6.0, 4.1),
-		Rect2(4.2, 22.1, 5.6, 5.9),
+		Rect2(3.5, 6.4, 7.0, 6.6),
+		Rect2(13.6, 7.5, 6.8, 5.5),
+		Rect2(3.8, 22.6, 6.5, 5.4),
 	],
 	"desa": [
-		Rect2(4.7, 7.1, 5.6, 5.9),
-		Rect2(27.0, 8.9, 6.0, 4.1),
-		Rect2(49.8, 8.3, 5.4, 5.7),
-		Rect2(3.5, 20.4, 6.0, 4.1),
-		Rect2(11.3, 19.2, 6.4, 5.3),
-		Rect2(20.7, 18.6, 5.6, 5.9),
-		Rect2(34.3, 18.8, 5.4, 5.7),
-		Rect2(42.5, 20.4, 6.0, 4.1),
-		Rect2(50.9, 18.9, 6.2, 5.6),
+		Rect2(4.1, 7.1, 5.5, 5.9),  # house_cream.png
+		Rect2(40.5, 7.5, 6.5, 5.5),  # house_suburban_canopy.png
+		Rect2(49.1, 7.5, 6.8, 5.5),  # house_suburban_terrace.png
+		Rect2(3.3, 18.5, 6.3, 6.0),  # warung_madura.png
+		Rect2(11.3, 19.2, 6.4, 5.2),  # house_brick.png
+		Rect2(20.0, 18.6, 7.1, 5.9),  # warung_barokah.png
+		Rect2(33.6, 18.6, 6.8, 5.9),  # warung_toko_jaya.png
+		Rect2(42.0, 19.1, 7.0, 5.4),  # warung_bu_sri.png
+		Rect2(50.9, 19.0, 6.1, 5.5),  # house_modern.png
 	],
 	"kota": [
-		Rect2(4.8, 3.0, 6.4, 5.3),
-		Rect2(12.2, 4.1, 6.1, 4.2),
-		Rect2(26.9, 2.7, 6.2, 5.6),
-		Rect2(35.0, 2.5, 5.5, 5.8),
-		Rect2(49.7, 3.4, 5.6, 5.9),
-		Rect2(4.2, 22.1, 5.6, 5.9),
-		Rect2(11.8, 22.3, 5.4, 5.7),
-		Rect2(24.5, 23.9, 6.0, 4.1),
-		Rect2(33.3, 22.7, 6.4, 5.3),
-		Rect2(48.9, 22.4, 6.2, 5.6),
+		Rect2(2.2, 0.7, 6.2, 5.2),  # building_apartment.png (y=94)
+		Rect2(10.6, 1.4, 5.7, 4.6),  # building_office_glass.png (y=94)
+		Rect2(23.9, 0.7, 6.0, 5.2),  # building_corporate_tower.png (y=94)
+		Rect2(35.3, 1.4, 5.7, 4.6),  # building_helipad_tower.png (y=94)
+		Rect2(47.3, 1.5, 5.8, 4.4),  # building_condo_terrace.png (y=94)
+		Rect2(53.6, 1.1, 5.9, 4.8),  # building_brick_complex.png (y=94)
+		Rect2(5.0, 24.7, 7.5, 6.1),  # market_sayur.png (y=490)
+		Rect2(24.4, 25.4, 5.7, 5.4),  # warung_madura.png (y=490)
+		Rect2(35.4, 25.4, 6.1, 5.3),  # warung_toko_jaya.png (y=490)
+		Rect2(50.0, 25.4, 6.3, 5.4),  # warung_bu_sri.png (y=490)
 	],
 	"hilir": [
-		Rect2(4.5, 1.4, 6.0, 4.1),
-		Rect2(12.3, 0.2, 6.4, 5.3),
-		Rect2(29.0, 1.4, 6.0, 4.1),
-		Rect2(49.8, 0.0, 5.4, 5.5),
-		Rect2(4.3, 7.3, 5.4, 5.7),
-		Rect2(12.7, 7.1, 5.6, 5.9),
-		Rect2(22.0, 8.9, 6.0, 4.1),
-		Rect2(32.4, 7.4, 6.2, 5.6),
-		Rect2(49.7, 7.1, 5.6, 5.9),
+		Rect2(4.5, 1.6, 5.0, 4.4),  # house_coastal.png (y=96)
+		Rect2(12.6, 1.2, 6.8, 4.8),  # house_suburban_blue.png (y=96)
+		Rect2(23.2, 2.5, 5.5, 3.5),  # house_courtyard.png (y=96)
+		Rect2(32.6, 1.2, 6.8, 4.8),  # house_suburban_lshape.png (y=96)
+		Rect2(42.3, 0.6, 7.4, 5.7),  # market_ikan.png (y=100)
+		Rect2(51.8, 1.7, 6.3, 4.3),  # warung_bu_sri.png (y=96)
 	],
 }
 
@@ -120,7 +117,7 @@ var _spawn_positions: Dictionary = {
 	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
 	"desa": Vector2(8, 15) * TILE,   # depan warung
 	"kota": Vector2(8, 12) * TILE,   # trotoar kota, tidak menimpa NPC pedagang
-	"hilir": Vector2(8, 15) * TILE,  # depan warung nelayan
+	"hilir": Vector2(8, 11) * TILE,  # trotoar jalan utama nelayan
 }
 
 func _ready() -> void:
@@ -204,11 +201,11 @@ func _spawn_gates() -> void:
 	_create_gate("desa", Vector2(1, 17) * TILE, "hulu", 0.0, "", false, Vector2(56, 17) * TILE)
 	_create_gate("desa", Vector2(59, 17) * TILE, "kota", 0.0, "", false, Vector2(4, 11) * TILE)
 	_create_gate("kota", Vector2(1, 11) * TILE, "desa", 0.0, "", false, Vector2(56, 17) * TILE)
-	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 0.0, "", false, Vector2(4, 17) * TILE)
-	_create_gate("hilir", Vector2(1, 17) * TILE, "kota", 0.0, "", false, Vector2(56, 11) * TILE)
+	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 0.0, "", false, Vector2(4, 11) * TILE)
+	_create_gate("hilir", Vector2(1, 11) * TILE, "kota", 0.0, "", false, Vector2(56, 11) * TILE)
 
 	# Gate akhir Hilir → Epilog (tamat perjalanan).
-	_create_gate("hilir", Vector2(59, 17) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.", true)
+	_create_gate("hilir", Vector2(59, 11) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.", true)
 
 func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, hint: String, require_mission: bool = false, entry_pos: Vector2 = Vector2(-1, -1)) -> void:
 	var gate_scene := preload("res://scenes/world/gate_topdown.tscn")
@@ -237,15 +234,15 @@ func _spawn_npcs() -> void:
 	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 16) * TILE, 2, "h4_rina")
 	_create_npc("desa", "npc_pemuka_desa", "pakrt", Vector2(35, 15) * TILE, 2)
 
-	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat.
-	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 10) * TILE, 3, "h2_jali")
-	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 10) * TILE, 3)
+	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat (di trotoar luas, berjarak dari aspal jalan).
+	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 8.5) * TILE, 3, "h2_jali")
+	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 8.5) * TILE, 3)
 	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 13) * TILE, 3)
-	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 9.8) * TILE, 3)
+	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 8.5) * TILE, 3)
 
-	# Hilir: Nelayan, penjaga sungai.
-	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(13, 15) * TILE, 4)
-	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(50, 15) * TILE, 4)
+	# Hilir: Nelayan, penjaga sungai (di trotoar pesisir luas, bukan di aspal jalan).
+	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(14, 8.5) * TILE, 4)
+	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(36, 8.5) * TILE, 4)
 
 func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int, custom_dialog_id: String = "") -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
@@ -363,21 +360,22 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			toast("Tekad bulat! Bersihkan sampah sungai & temui Penjaga Hutan.", true)
 
 func _spawn_gameplay_objects() -> void:
-	# Hulu — tutorial alam: reboisasi terpusat di kawasan hutan + pilah sampah dasar.
-	_spawn_zone_trash("hulu", 16, ["organik", "plastik"])
+	# Hulu — tutorial alam: reboisasi terpusat di kawasan hutan (titik pohon).
+	# Sampah dinonaktifkan / dibersihkan sementara sesuai permintaan pengguna untuk ditata ulang nanti.
+	# _spawn_zone_trash("hulu", 16, ["organik", "plastik"])
 	_spawn_zone_bins("hulu", ["organik", "plastik"])
 	_spawn_fixed_spots("hulu", HULU_FOREST_SPOTS, "tree", "trees", "hulu_tree")
 
-	# Desa — pilah sampah + gotong royong (tanpa titik tanam pohon acak di kampung/kebun).
-	_spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
+	# Desa — gotong royong warga.
+	# _spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("desa", ["organik", "plastik", "b3"])
 
-	# Kota — sampah 3 kategori + suara warga bantaran.
-	_spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
+	# Kota — aspirasi warga perkotaan.
+	# _spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("kota", ["organik", "plastik", "b3"])
 
-	# Hilir — mangrove pesisir + sampah pesisir.
-	_spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
+	# Hilir — mangrove pesisir muara.
+	# _spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
 	_spawn_zone_bins("hilir", ["organik", "plastik", "b3"])
 	_spawn_fixed_spots("hilir", HILIR_MANGROVE_SPOTS, "mangrove", "mangroves", "hilir_mangrove")
 
@@ -479,10 +477,11 @@ func _zone_in_water(zone: String, pos: Vector2) -> bool:
 
 func _spawn_zone_bins(zone: String, categories: Array) -> void:
 	var bin_scene := preload("res://scenes/world/bin_topdown.tscn")
-	# Di kota sungai lebih lebar, jadi tong diletakkan di trotoar; di desa diletakkan di bahu jalan utara agar terpisah dari deret rumah selatan.
-	var y_tiles: float = 13.0 if zone == "kota" else (14.5 if zone == "desa" else 20.0)
+	# Di kota dan hilir sungai ada di selatan jalan, jadi tong diletakkan di bahu jalan (y=13); di desa di bahu jalan utara.
+	var y_tiles: float = 12.8 if (zone == "kota" or zone == "hilir") else (14.5 if zone == "desa" else 20.0)
 	var x_by_zone: Dictionary = {
 		"desa": [18, 41, 57],
+		"hilir": [8, 25, 38],
 	}
 	var quest_by_zone: Dictionary = {
 		"desa": "pilah_desa",
@@ -506,7 +505,7 @@ func _spawn_pantun_boards() -> void:
 		"hulu": Vector2(17, 18) * TILE,
 		"desa": Vector2(17, 18) * TILE,
 		"kota": Vector2(50, 14) * TILE,
-		"hilir": Vector2(17, 18) * TILE,
+		"hilir": Vector2(18, 12) * TILE,
 	}
 	for zone in positions:
 		var board := board_scene.instantiate()
@@ -548,6 +547,7 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1)) -> v
 	_last_zone_switch_ms = Time.get_ticks_msec()
 	GameState.world_zone = zone
 	GameState.unlock_zone(zone)
+	AudioManager.play_bgm(zone)
 
 	# Move player to requested entry point (east/west gate) or default zone spawn
 	if custom_local_pos.x >= 0.0 and custom_local_pos.y >= 0.0:
@@ -595,6 +595,9 @@ func zone_target(zone: String, key: String) -> int:
 func is_zone_cleared(zone: String) -> bool:
 	var targets: Dictionary = ZONE_TARGETS.get(zone, {})
 	for key in targets:
+		# Jika sampah sedang dibersihkan sementara (belum dibuat ulang), jangan gembok misi karena ketiadaan sampah di map
+		if key == "sorted" and get_tree().get_nodes_in_group("world_trash").is_empty():
+			continue
 		if GameState.zone_stat(zone, key) < int(targets[key]):
 			return false
 	return true
@@ -670,7 +673,7 @@ func _refresh_mission() -> void:
 				lines = [
 					"Ajak bicara Bu Rina di persimpangan jalan."
 				]
-			elif sorted < 10 or river_pct < 60:
+			elif not get_tree().get_nodes_in_group("world_trash").is_empty() and (sorted < 10 or river_pct < 60):
 				title = "GOTONG ROYONG DESA"
 				lines = [
 					"Pilah 10 sampah desa: %d/10" % sorted,
@@ -697,7 +700,7 @@ func _refresh_mission() -> void:
 				lines = [
 					"Dengarkan keluhan warga bantaran (%d/4)." % talked_count
 				]
-			elif sorted < 6 or river_pct < 80:
+			elif not get_tree().get_nodes_in_group("world_trash").is_empty() and (sorted < 6 or river_pct < 80):
 				title = "PENATAAN KOTA"
 				lines = [
 					"Pilah 6 sampah kota: %d/6" % sorted,
@@ -730,7 +733,7 @@ func _refresh_mission() -> void:
 				lines = [
 					"Temui petugas di pos pemantau muara."
 				]
-			elif sorted < 10 or river_pct < 80:
+			elif not get_tree().get_nodes_in_group("world_trash").is_empty() and (sorted < 10 or river_pct < 80):
 				title = "PEMULIHAN MUARA"
 				lines = [
 					"Pilah sampah pesisir (%d/10) & pantun muara." % sorted,
@@ -898,6 +901,7 @@ func on_pantun_completed() -> void:
 	GameState.add_river_health(8.0)
 	GameState.rupiah += 2000
 	GameState.unlock_card("card_pantun_01")
+	AudioManager.play_sfx("level_done")
 	toast("Pantun Melayu Deli lengkap! +Rp2.000", true)
 	_refresh_mission()
 	GameState.save_game()
