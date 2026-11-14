@@ -24,6 +24,7 @@ func interact() -> void:
 	if _pressed:
 		return
 	_pressed = true
+	AudioManager.play_sfx("lever")
 	sprite.texture = load("res://assets/sprites/props/lever_on.png")
 	var tween := create_tween()
 	tween.tween_property(self, "rotation", 0.12, 0.08)

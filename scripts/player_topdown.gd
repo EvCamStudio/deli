@@ -19,6 +19,7 @@ const ROWS: Dictionary = {"down": 0, "left": 1, "right": 2, "up": 3}
 var _facing: String = "down"
 var _is_dialog_active: bool = false
 var _in_water: bool = false
+var _step_timer: float = 0.0
 var _candidates: Array[Node] = []
 var _interactable: Node = null
 
@@ -44,8 +45,19 @@ func _physics_process(delta: float) -> void:
 	velocity = direction * current_speed
 	move_and_slide()
 
-	if Input.is_action_just_pressed("action") and _interactable != null:
-		if _interactable.has_method("interact"):
+	if direction.length() > 0.05 and velocity.length() > 5.0:
+		_step_timer += delta
+		var step_interval: float = 0.38 if _in_water else 0.32
+		if _step_timer >= step_interval:
+			_step_timer = 0.0
+			var step_sfx: String = "footstep_water" if _in_water else "footstep_land"
+			AudioManager.play_sfx(step_sfx, -4.0, randf_range(0.92, 1.08))
+	else:
+		_step_timer = 0.24
+
+	if Input.is_action_just_pressed("action"):
+		AudioManager.play_sfx("tap_b")
+		if _interactable != null and _interactable.has_method("interact"):
 			_interactable.interact()
 
 	_update_animation(direction)
@@ -88,6 +100,8 @@ func _update_animation(direction: Vector2) -> void:
 		sprite.play("idle_%s" % _facing)
 
 func set_in_water(state: bool) -> void:
+	if state and not _in_water:
+		AudioManager.play_sfx("footstep_water", -2.5, 0.94)
 	_in_water = state
 	if sprite:
 		sprite.modulate = Color(0.82, 0.94, 1.0, 1.0) if state else Color.WHITE

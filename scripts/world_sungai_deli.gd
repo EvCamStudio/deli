@@ -474,6 +474,7 @@ func change_zone(zone: String) -> void:
 	_current_zone = zone
 	GameState.world_zone = zone
 	GameState.unlock_zone(zone)
+	AudioManager.play_bgm(zone)
 
 	# Move player to spawn position
 	if zone in _spawn_positions:
@@ -804,6 +805,7 @@ func lever_pressed(lever_id: int) -> void:
 			_lever_pressed.clear()
 			_reset_levers()
 			GameState.ubah_meter(2.0)
+			AudioManager.play_sfx("wrong")
 			toast("Urutan tuas salah! Mulai dari tuas 1 (urutan: 1-3-2).", false)
 			_refresh_mission()
 			return
@@ -825,7 +827,7 @@ func _open_drainase() -> void:
 	GameState.add_river_health(10.0)
 	GameState.rupiah += 2500
 	GameState.unlock_card("card_drainase_01")
-	AudioManager.play_sfx("correct")
+	AudioManager.play_sfx("level_done")
 	toast("Drainase terbuka! Aliran lancar. +Rp2.500", true)
 	if GameState.hari == 7:
 		GameState.selesaikan_puzzle_pintu_air()
@@ -853,6 +855,7 @@ func on_pantun_completed() -> void:
 	GameState.add_river_health(8.0)
 	GameState.rupiah += 2000
 	GameState.unlock_card("card_pantun_01")
+	AudioManager.play_sfx("level_done")
 	toast("Pantun Melayu Deli lengkap! +Rp2.000", true)
 	_refresh_mission()
 	GameState.save_game()

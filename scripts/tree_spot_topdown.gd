@@ -68,7 +68,7 @@ func interact() -> void:
 		GameState.add_river_health(4.0)
 		GameState.rupiah += 500
 
-	AudioManager.play_sfx("correct")
+	AudioManager.play_sfx("plant")
 	SettingsManager.vibrate(30)
 
 	var tween := create_tween()

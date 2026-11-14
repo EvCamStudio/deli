@@ -365,6 +365,7 @@ func bayar_utang(n: int) -> bool:
 	if not kurangi_uang(bayar):
 		return false
 	utang -= bayar
+	AudioManager.play_sfx("coin")
 	return true
 
 ## Mengubah energi pemain (positif = tambah, negatif = kurang).
@@ -440,6 +441,7 @@ func _cek_otomatis_ujian_hujan() -> void:
 func jalankan_ujian_hujan(nomor: int) -> String:
 	var m: int = int(round(meter_bencana))
 	var hasil: String = "aman"
+	AudioManager.play_sfx("rain_thunder")
 
 	match nomor:
 		1:
@@ -905,6 +907,11 @@ func prepare_epilog_preview() -> void:
 	world_completed = true
 	current_level = 5
 	in_world = false
+	utang = 0
+	set_sikap("jali", SIKAP_PEDULI)
+	set_sikap("rina", SIKAP_PEDULI)
+	set_sikap("darwis", SIKAP_PEDULI)
+	ending_terakhir = "A"
 
 func reset() -> void:
 	river_health = 40.0

@@ -41,6 +41,7 @@ const PORTRAITS: Dictionary = {
 
 var _full_text: String = ""
 var _is_typing: bool = false
+var _last_typed_char: int = 0
 var _tween: Tween = null
 var _has_choices: bool = false
 var _choices_shown: bool = false
@@ -54,6 +55,13 @@ func _ready() -> void:
 	tap_area.hide()
 	tap_area.pressed.connect(_on_tap)
 	DialogueManager.register_dialogue_box(self)
+
+func _process(_delta: float) -> void:
+	if _is_typing and text_label and panel.visible:
+		var cur: int = text_label.visible_characters
+		if cur > _last_typed_char:
+			_last_typed_char = cur
+			AudioManager.play_typewriter_blip()
 
 func show_node(node: Dictionary) -> void:
 	_current_node = node
@@ -122,6 +130,7 @@ func _update_portrait(node: Dictionary) -> void:
 func _start_typewriter(text: String) -> void:
 	_full_text = text
 	_is_typing = true
+	_last_typed_char = 0
 	text_label.text = text
 	text_label.visible_characters = 0
 
@@ -163,8 +172,10 @@ func _clear_choices() -> void:
 
 func _on_tap() -> void:
 	if _is_typing:
+		AudioManager.play_sfx("tap_b")
 		_finish_typewriter()
 	elif not _has_choices:
+		AudioManager.play_sfx("tap_b")
 		DialogueManager.advance()
 
 func _finish_typewriter() -> void:
@@ -182,8 +193,10 @@ func _input(event: InputEvent) -> void:
 		return
 	if event.is_action_pressed("ui_accept") or event.is_action_pressed("action"):
 		if _is_typing:
+			AudioManager.play_sfx("tap_b")
 			_finish_typewriter()
 		elif not _has_choices:
+			AudioManager.play_sfx("tap_b")
 			DialogueManager.advance()
 		get_viewport().set_input_as_handled()
 

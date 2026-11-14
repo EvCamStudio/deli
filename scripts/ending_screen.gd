@@ -5,11 +5,11 @@ extends Control
 @onready var ending_title: Label = $Panel/VBox/EndingTitle
 @onready var ending_message: RichTextLabel = $Panel/VBox/EndingMessage
 @onready var stats_label: RichTextLabel = $Panel/VBox/StatsLabel
-@onready var play_again_btn: Button = $Panel/VBox/HBox/PlayAgainBtn
-@onready var quit_btn: Button = $Panel/VBox/HBox/QuitBtn
-@onready var cards_btn: Button = $Panel/VBox/HBox/CardsBtn
-@onready var card_popup: CanvasLayer = $KnowledgeCardPopup
-@onready var river_visual: ColorRect = $Background/RiverVisual
+@onready var play_again_btn: Button = get_node_or_null("Panel/VBox/Buttons/PlayAgainBtn") as Button
+@onready var quit_btn: Button = get_node_or_null("Panel/VBox/Buttons/QuitBtn") as Button
+@onready var cards_btn: Button = get_node_or_null("Panel/VBox/Buttons/CardsBtn") as Button
+@onready var card_popup: CanvasLayer = get_node_or_null("KnowledgeCardPopup") as CanvasLayer
+@onready var river_visual: ColorRect = get_node_or_null("Background/RiverVisual") as ColorRect
 
 const ENDING_DATA: Dictionary = {
 	"A": {
@@ -45,11 +45,23 @@ const ENDING_DATA: Dictionary = {
 var _current_code: String = "D"
 
 func _ready() -> void:
-	AudioManager.play_bgm(5)
+	if play_again_btn == null:
+		play_again_btn = get_node_or_null("Panel/VBox/HBox/PlayAgainBtn") as Button
+	if quit_btn == null:
+		quit_btn = get_node_or_null("Panel/VBox/HBox/QuitBtn") as Button
+	if cards_btn == null:
+		cards_btn = get_node_or_null("Panel/VBox/HBox/CardsBtn") as Button
 	_show_ending()
-	play_again_btn.pressed.connect(_on_play_again)
-	cards_btn.pressed.connect(_on_cards)
-	quit_btn.pressed.connect(_on_quit)
+	if _current_code in ["D", "buruk"]:
+		AudioManager.play_bgm("epilog_bad")
+	else:
+		AudioManager.play_bgm(5)
+	if play_again_btn:
+		play_again_btn.pressed.connect(_on_play_again)
+	if cards_btn:
+		cards_btn.pressed.connect(_on_cards)
+	if quit_btn:
+		quit_btn.pressed.connect(_on_quit)
 
 func _show_ending() -> void:
 	if GameState.has_method("tentukan_ending"):
@@ -61,10 +73,11 @@ func _show_ending() -> void:
 	ending_title.text = data["title"]
 	ending_message.text = "[center]%s[/center]" % data["message"]
 
-	if _current_code == "D":
-		play_again_btn.text = "⏪ Rewind"
-	else:
-		play_again_btn.text = "🔄 Main Lagi"
+	if play_again_btn:
+		if _current_code == "D":
+			play_again_btn.text = "⏪ Rewind"
+		else:
+			play_again_btn.text = "🔄 Main Lagi"
 
 	var stats: String = "[b]Statistik Akhir Perjalanan[/b]\n"
 	if GameState.has_method("get_jumlah_npc_peduli") and GameState.has_method("get_persen_utang_lunas"):
@@ -78,11 +91,12 @@ func _show_ending() -> void:
 	stats += "• Rupiah Terkumpul: Rp %s" % _format_number(GameState.rupiah)
 	stats_label.text = stats
 
-	match _current_code:
-		"A", "baik": river_visual.color = Color(0.18, 0.65, 0.92, 0.85)
-		"B", "biasa": river_visual.color = Color(0.28, 0.58, 0.78, 0.80)
-		"C": river_visual.color = Color(0.42, 0.52, 0.58, 0.78)
-		"D", "buruk": river_visual.color = Color(0.36, 0.28, 0.22, 0.85)
+	if river_visual:
+		match _current_code:
+			"A", "baik": river_visual.color = Color(0.18, 0.65, 0.92, 0.85)
+			"B", "biasa": river_visual.color = Color(0.28, 0.58, 0.78, 0.80)
+			"C": river_visual.color = Color(0.42, 0.52, 0.58, 0.78)
+			"D", "buruk": river_visual.color = Color(0.36, 0.28, 0.22, 0.85)
 
 func _nama_sikap(nilai: int) -> String:
 	match nilai:

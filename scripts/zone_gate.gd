@@ -14,6 +14,7 @@ class_name ZoneGate
 
 var _open: bool = false
 var _player_in_range: bool = false
+var _initialized: bool = false
 
 func _ready() -> void:
 	add_to_group("zone_gate")
@@ -22,6 +23,7 @@ func _ready() -> void:
 	GameState.river_health_changed.connect(_on_river_health_changed)
 	GameState.quest_started.connect(_on_quest_started)
 	refresh_gate_state()
+	_initialized = true
 
 func _world() -> Node:
 	var node: Node = get_parent()
@@ -75,6 +77,8 @@ func refresh_gate_state() -> void:
 		return  # gate yang sudah terbuka tidak menutup lagi
 	if should_open:
 		_open = true
+		if _initialized:
+			AudioManager.play_sfx("gate_open")
 		sprite.texture = load("res://assets/sprites/props/gate_open.png")
 		label.text = "Ke " + target_zone.capitalize()
 		_set_blocker_disabled(true)
@@ -117,6 +121,7 @@ func _transition_to_zone() -> void:
 	var world := _world()
 	if world == null:
 		return
+	AudioManager.play_sfx("gate_open")
 	if target_zone == "epilog":
 		if world.has_method("finish_journey"):
 			world.call("finish_journey")
