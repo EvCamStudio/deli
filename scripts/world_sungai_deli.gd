@@ -147,8 +147,15 @@ func _ready() -> void:
 	# Lanjutkan di zona terakhir yang disimpan, atau mulai dari hulu.
 	var start_zone: String = GameState.world_zone
 	if start_zone not in ZONE_ORDER:
+		start_zone = GameState.saved_zone
+	if start_zone not in ZONE_ORDER:
 		start_zone = "hulu"
-	change_zone(start_zone)
+	var saved_pos := Vector2(GameState.saved_player_x, GameState.saved_player_y)
+	var has_saved_pos: bool = saved_pos.x >= 0.0 and saved_pos.y >= 0.0 \
+		and GameState.saved_zone == start_zone
+	# Jangan simpan dulu: change_zone() memindahkan pemain ke spawn zona dan bisa
+	# menimpa posisi terakhir yang baru dimuat dari save.
+	change_zone(start_zone, Vector2(-1, -1), false)
 	_show_zone_wisdom = true
 
 	# Pastikan cerita utama dan mission card selalu aktif di world
@@ -158,9 +165,14 @@ func _ready() -> void:
 	_refresh_mission()
 	_update_guidance()
 
-	var has_saved_pos: bool = GameState.saved_player_x >= 0.0 and GameState.saved_player_y >= 0.0
 	if has_saved_pos:
-		player.global_position = Vector2(GameState.saved_player_x, GameState.saved_player_y)
+		player.global_position = saved_pos
+		if camera.has_method("reset_smoothing"):
+			camera.reset_smoothing()
+
+	# Simpan lagi setelah posisi dipulihkan supaya sesi berikutnya melanjutkan
+	# tepat di tempat pemain berhenti.
+	GameState.save_game()
 
 	if hud:
 		hud.show_hint("Joystick / WASD untuk bergerak · Dekati objek & tekan (B/E)", 4.0)
@@ -439,7 +451,9 @@ func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 ## Memunculkan titik tanam di daftar koordinat tetap (satu kawasan hutan Hulu / tepi pantai Hilir).
 func _spawn_fixed_spots(zone: String, spots: Array[Vector2i], kind: String, stat_key: String, id_prefix: String) -> void:
 	var tree_scene := preload("res://scenes/world/tree_spot_topdown.tscn")
-	var already: int = GameState.zone_stat(zone, stat_key)
+	# Save lama tidak punya daftar planted_spots, jadi pakai jumlah statistik
+	# zona sebagai perkiraan. Save baru memakai spot_id supaya urutan tanam bebas.
+	var legacy_already: int = 0 if not GameState.planted_spots.is_empty() else GameState.zone_stat(zone, stat_key)
 	for idx in range(spots.size()):
 		var tile: Vector2i = spots[idx]
 		if not _is_valid_spawn_tile(zone, tile):
@@ -449,7 +463,7 @@ func _spawn_fixed_spots(zone: String, spots: Array[Vector2i], kind: String, stat
 		spot.set("kind", kind)
 		spot.set("spot_id", "%s_%d" % [id_prefix, idx])
 		_zone_containers[zone].add_child(spot)
-		if idx < already:
+		if idx < legacy_already:
 			spot.call("mark_planted")
 
 func _blocked_by_building(zone: String, rect: Rect2) -> bool:
@@ -530,7 +544,7 @@ func get_current_zone() -> String:
 func can_use_zone_gate() -> bool:
 	return Time.get_ticks_msec() - _last_zone_switch_ms >= 350
 
-func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1)) -> void:
+func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1), save_state: bool = true) -> void:
 	if zone == "epilog":
 		finish_journey()
 		return
@@ -574,7 +588,8 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1)) -> v
 	_refresh_mission()
 	_refresh_gates()
 	_update_guidance()
-	GameState.save_game()
+	if save_state:
+		GameState.save_game()
 
 func _show_zone_wisdom_delayed(zone: String) -> void:
 	await get_tree().create_timer(1.8).timeout
@@ -791,7 +806,7 @@ func on_bin_sorted(category: String) -> void:
 	GameState.save_game()
 
 func on_tree_planted(kind: String) -> void:
-	var label: String = "Mangrove" if kind == "mangrove" else "Pohon"
+	var label: String = "Bibit mangrove" if kind == "mangrove" else "Bibit pohon"
 	if kind == "mangrove" and _current_zone == "hilir":
 		GameState.add_zone_stat("hilir", "mangroves")
 		var count: int = GameState.zone_stat("hilir", "mangroves")
@@ -800,7 +815,7 @@ func on_tree_planted(kind: String) -> void:
 			GameState.unlock_card("card_mangrove_01")
 			toast("Mangrove lengkap! Pesisir terlindungi. +Rp2.000", true)
 		else:
-			toast("Mangrove ditanam! (%d/8) +Rp2.000" % mini(count, 8), true)
+			toast("Bibit mangrove ditanam! (%d/8) +Rp2.000 · tumbuh dalam 1–2 hari" % mini(count, 8), true)
 	elif kind == "tree" and _current_zone == "hulu":
 		GameState.add_zone_stat("hulu", "trees")
 		var count: int = GameState.zone_stat("hulu", "trees")
@@ -810,7 +825,7 @@ func on_tree_planted(kind: String) -> void:
 			GameState.unlock_card("card_sungai_deli_01")
 			toast("Hutan kembali rimbun! +Rp1.000", true)
 		else:
-			toast("Pohon ditanam! (%d/5) +Rp500" % mini(count, 5), true)
+			toast("Bibit pohon ditanam! (%d/5) +Rp500 · tumbuh dalam 1–2 hari" % mini(count, 5), true)
 	else:
 		toast("%s ditanam. Sungai membaik." % label, true)
 	_refresh_mission()

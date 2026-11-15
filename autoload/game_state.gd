@@ -316,6 +316,8 @@ var saved_zone: String = "hulu"
 var saved_player_x: float = -1.0
 var saved_player_y: float = -1.0
 var planted_spots: Array[String] = []
+## Hari tanam tiap titik (spot_id -> hari) supaya pohon tumbuh per hari, bukan per detik.
+var planted_days: Dictionary = {}
 var picked_trash_ids: Array[String] = []
 
 # ─── Fungsi Kontrak Bersama (Tahap 1: GameState & Siklus Hari) ────────────────
@@ -679,15 +681,24 @@ func show_toast(text: String, good: bool = true) -> void:
 
 # ─── Save / Load ──────────────────────────────────────────────────────────────
 
-func save_game() -> void:
+## Simpan seluruh progres. Mengembalikan true bila file berhasil ditulis.
+func save_game() -> bool:
 	# Ambil posisi player & zona dari world jika sedang berada di dalam level
 	var level := get_tree().get_first_node_in_group("level") if is_inside_tree() else null
 	if level:
 		if level.scene_file_path != "":
 			saved_scene = level.scene_file_path
-		if "_current_zone" in level:
-			saved_zone = str(level.get("_current_zone"))
-		var p := level.get_node_or_null("Player") as Node2D
+		var zone_now: String = ""
+		if level.has_method("get_current_zone"):
+			zone_now = str(level.call("get_current_zone"))
+		elif "_current_zone" in level:
+			zone_now = str(level.get("_current_zone"))
+		if not zone_now.is_empty() and zone_now != "<null>":
+			saved_zone = zone_now
+			# Jaga world_zone tetap sinkron dengan zona yang benar-benar aktif.
+			if in_world:
+				world_zone = zone_now
+		var p := _find_player(level)
 		if p:
 			saved_player_x = p.global_position.x
 			saved_player_y = p.global_position.y
@@ -738,12 +749,26 @@ func save_game() -> void:
 		"saved_player_x": saved_player_x,
 		"saved_player_y": saved_player_y,
 		"planted_spots": planted_spots,
+		"planted_days": planted_days,
 		"picked_trash_ids": picked_trash_ids,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(data))
-		file.close()
+	if file == null:
+		push_error("GameState: gagal membuka file save: " + SAVE_PATH)
+		return false
+	file.store_string(JSON.stringify(data))
+	file.close()
+	return true
+
+## Cari node pemain di dalam level (fallback ke grup "player").
+func _find_player(level: Node) -> Node2D:
+	var p := level.get_node_or_null("Player") as Node2D
+	if p:
+		return p
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is Node2D and level.is_ancestor_of(node):
+			return node
+	return null
 
 func load_game() -> bool:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -849,12 +874,20 @@ func load_game() -> bool:
 
 	saved_scene = str(data.get("saved_scene", "res://scenes/world/world_sungai_deli.tscn"))
 	saved_zone = str(data.get("saved_zone", "hulu"))
+	if saved_zone.is_empty() or saved_zone == "<null>":
+		saved_zone = world_zone
 	saved_player_x = float(data.get("saved_player_x", -1.0))
 	saved_player_y = float(data.get("saved_player_y", -1.0))
 
 	planted_spots.clear()
 	for spot in data.get("planted_spots", []):
 		planted_spots.append(str(spot))
+
+	planted_days.clear()
+	var saved_days = data.get("planted_days", {})
+	if saved_days is Dictionary:
+		for spot in saved_days.keys():
+			planted_days[str(spot)] = int(saved_days[spot])
 
 	picked_trash_ids.clear()
 	for tid in data.get("picked_trash_ids", []):
@@ -969,6 +1002,7 @@ func reset() -> void:
 	saved_player_x = -1.0
 	saved_player_y = -1.0
 	planted_spots.clear()
+	planted_days.clear()
 	picked_trash_ids.clear()
 	var qm := get_node_or_null("/root/QuestManager")
 	if qm != null:
@@ -983,5 +1017,8 @@ func reset() -> void:
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_PAUSED:
-		save_game()
+	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# Hanya simpan saat benar-benar ada level yang berjalan. Tanpa penjagaan
+		# ini, membuka/menutup menu utama bisa menimpa save lama dengan state awal.
+		if is_inside_tree() and get_tree().get_first_node_in_group("level") != null:
+			save_game()

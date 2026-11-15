@@ -9,7 +9,7 @@ from __future__ import annotations
 import math
 import os
 import random
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ASSETS = os.path.join(ROOT, "assets")
@@ -560,6 +560,141 @@ def build_props() -> None:
     building("shop", 96, 64, (190, 198, 204, 255), (106, 92, 86, 255), (84, 136, 156, 255))
 
 
+# ---------------------------------------------------------------- action UI --
+# The touch action button is drawn at 8x then downsampled so the circle, rim and
+# hand icon stay clean at the 60 px UI size used by pilot_touch.tscn.
+ACTION_SS = 8
+
+
+def _action_canvas(size: int) -> Image.Image:
+    return Image.new("RGBA", (size * ACTION_SS, size * ACTION_SS), (0, 0, 0, 0))
+
+
+def _as(v: float) -> int:
+    return int(round(v * ACTION_SS))
+
+
+def build_action_icon(size: int = 36) -> Image.Image:
+    """Open-palm icon: a friendly, readable 'interact' glyph on a small button."""
+    img = _action_canvas(size)
+    fill = Image.new("L", img.size, 0)
+    fd = ImageDraw.Draw(fill)
+    unit = size / 32.0
+
+    def u(v: float) -> int:
+        return _as(v * unit)
+
+    def rr(box, radius):
+        fd.rounded_rectangle([u(v) for v in box], radius=u(radius), fill=255)
+
+    # Four fingers behind the palm, pinky -> index.
+    rr((8.8, 9.8, 12.2, 16.5), 1.5)
+    rr((12.6, 7.4, 16.2, 16.5), 1.7)
+    rr((16.6, 6.0, 20.2, 16.5), 1.7)
+    rr((20.6, 8.2, 24.2, 16.5), 1.7)
+    # Palm, thumb and wrist cuff.
+    rr((8.5, 13.8, 24.4, 26.8), 4.2)
+    rr((4.6, 15.2, 10.6, 23.6), 2.9)
+    rr((9.2, 25.4, 23.8, 29.4), 2.0)
+
+    # One continuous silhouette outline.
+    outline = fill.filter(ImageFilter.MaxFilter(u(2.1) // 2 * 2 + 1))
+    img.paste(Image.new("RGBA", img.size, OUT), (0, 0), outline)
+    img.paste(Image.new("RGBA", img.size, CREAM), (0, 0), fill)
+
+    # Soft shading toward the bottom of the palm.
+    shade = Image.new("L", img.size, 0)
+    ImageDraw.Draw(shade).rectangle((0, u(21.5), img.width, img.height), fill=150)
+    shade = Image.composite(shade, Image.new("L", img.size, 0), fill)
+    img.paste(Image.new("RGBA", img.size, CREAM_DARK), (0, 0), shade)
+
+    # Brown cuff at the wrist.
+    cuff = Image.new("L", img.size, 0)
+    ImageDraw.Draw(cuff).rounded_rectangle(
+        [u(9.9), u(26.2), u(23.1), u(28.7)], radius=u(1.3), fill=255
+    )
+    cuff = Image.composite(cuff, Image.new("L", img.size, 0), fill)
+    img.paste(Image.new("RGBA", img.size, BROWN_LIGHT), (0, 0), cuff)
+
+    # Finger separations and thumb crease.
+    detail = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    dd = ImageDraw.Draw(detail)
+    for x, y0 in ((12.4, 10.4), (16.4, 8.2), (20.4, 9.2)):
+        dd.line((u(x), u(y0), u(x), u(16.0)), fill=OUT, width=u(0.8))
+    dd.line((u(9.0), u(17.4), u(9.7), u(21.8)), fill=OUT, width=u(0.8))
+    detail.putalpha(Image.composite(detail.getchannel("A"), Image.new("L", img.size, 0), fill))
+    img.alpha_composite(detail)
+
+    # Gentle highlights on the middle finger and thumb.
+    highlight = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    hd = ImageDraw.Draw(highlight)
+    hd.ellipse((u(17.2), u(6.8), u(19.6), u(13.0)), fill=(255, 252, 238, 150))
+    hd.ellipse((u(9.2), u(9.2), u(11.6), u(13.4)), fill=(255, 252, 238, 110))
+    hd.ellipse((u(5.8), u(16.4), u(8.4), u(20.8)), fill=(255, 252, 238, 100))
+    highlight.putalpha(Image.composite(highlight.getchannel("A"), Image.new("L", img.size, 0), fill))
+    img.alpha_composite(highlight.filter(ImageFilter.GaussianBlur(u(0.35))))
+
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def build_action_button(pressed: bool = False, size: int = 60) -> Image.Image:
+    """Glossy gold circle with a cream rim, sized for the touch action button."""
+    img = _action_canvas(size)
+    d = ImageDraw.Draw(img)
+
+    # Drop shadow so the button reads over light and dark tiles.
+    shadow = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).ellipse(
+        (_as(2.0), _as(3.4), _as(size - 2.0), _as(size - 2.0)), fill=(30, 22, 16, 120)
+    )
+    img.alpha_composite(shadow.filter(ImageFilter.GaussianBlur(_as(1.2))))
+
+    # Outer dark rim, cream ring and recessed brown groove.
+    d.ellipse((_as(1.4), _as(1.4), _as(size - 1.4), _as(size - 1.4)), fill=OUT)
+    d.ellipse((_as(2.6), _as(2.6), _as(size - 2.6), _as(size - 2.6)), fill=(250, 238, 205, 255))
+    d.ellipse((_as(4.2), _as(4.2), _as(size - 4.2), _as(size - 4.2)), fill=(126, 86, 48, 255))
+
+    face_color = (190, 128, 48, 255) if pressed else (224, 163, 62, 255)
+    d.ellipse((_as(5.4), _as(5.4), _as(size - 5.4), _as(size - 5.4)), fill=face_color)
+
+    face = Image.new("L", img.size, 0)
+    ImageDraw.Draw(face).ellipse(
+        (_as(5.4), _as(5.4), _as(size - 5.4), _as(size - 5.4)), fill=255
+    )
+
+    # Warm inner shadow along the bottom edge.
+    inner = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(inner).ellipse(
+        (_as(5.4), _as(9.0), _as(size - 5.4), _as(size - 3.0)), fill=(146, 92, 38, 90)
+    )
+    inner.putalpha(Image.composite(inner.getchannel("A"), Image.new("L", img.size, 0), face))
+    img.alpha_composite(inner)
+
+    # Glass-like gloss on the upper-left side.
+    gloss = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    gd = ImageDraw.Draw(gloss)
+    gd.ellipse(
+        (_as(8.0), _as(7.4), _as(30.0), _as(20.0)),
+        fill=(255, 247, 214, 46 if pressed else 92),
+    )
+    gd.ellipse(
+        (_as(10.5), _as(9.2), _as(20.5), _as(14.2)),
+        fill=(255, 252, 235, 36 if pressed else 90),
+    )
+    gloss.putalpha(Image.composite(gloss.getchannel("A"), Image.new("L", img.size, 0), face))
+    img.alpha_composite(gloss.filter(ImageFilter.GaussianBlur(_as(0.45))))
+
+    # Thin bright arc on the top rim.
+    rim = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    ImageDraw.Draw(rim).arc(
+        (_as(3.0), _as(3.0), _as(size - 3.0), _as(size - 3.0)),
+        195, 325, fill=(255, 250, 230, 190), width=_as(1.0),
+    )
+    img.alpha_composite(rim)
+
+    return img.resize((size, size), Image.LANCZOS)
+
+
 # ---------------------------------------------------------------- UI ----------
 def build_ui() -> None:
     def panel(path, size, border, fill, edge, inner=None):
@@ -609,12 +744,8 @@ def build_ui() -> None:
     d.ellipse((10, 8, 22, 16), fill=(255, 238, 190, 120))
     save(img, "ui", "joystick_knob.png")
 
-    for state, fill in (("", (224, 163, 62, 225)), ("_pressed", (190, 128, 48, 235))):
-        img = Image.new("RGBA", (56, 56), (0, 0, 0, 0))
-        d = ImageDraw.Draw(img)
-        d.ellipse((2, 2, 53, 53), fill=fill, outline=BROWN, width=3)
-        d.ellipse((10, 8, 30, 20), fill=(255, 238, 190, 80))
-        save(img, "ui", f"action_button{state}.png")
+    save(build_action_button(False), "ui", "action_button.png")
+    save(build_action_button(True), "ui", "action_button_pressed.png")
 
     # icons
     def icon(name, painter):
@@ -628,11 +759,13 @@ def build_ui() -> None:
     icon("clock", lambda d: (d.ellipse((1, 1, 14, 14), fill=CREAM, outline=BROWN, width=1), d.line((8, 8, 8, 4), fill=BROWN, width=1), d.line((8, 8, 11, 10), fill=BROWN, width=1)))
     icon("home", lambda d: (d.polygon([(1, 8), (8, 1), (15, 8)], fill=(198, 91, 78, 255), outline=BROWN), d.rectangle((3, 8, 12, 15), fill=CREAM, outline=BROWN)))
     icon("chat", lambda d: (d.rounded_rectangle((1, 2, 14, 11), radius=3, fill=CREAM, outline=BROWN), d.polygon([(5, 11), (5, 15), (9, 11)], fill=CREAM, outline=BROWN)))
-    icon("hand", lambda d: (d.rectangle((5, 4, 10, 14), fill=SKIN, outline=OUT), d.rectangle((3, 7, 5, 11), fill=SKIN, outline=OUT), d.rectangle((10, 7, 12, 11), fill=SKIN, outline=OUT)))
     icon("leaf", lambda d: (d.polygon([(2, 13), (7, 2), (14, 4), (10, 12)], fill=GREEN_LIGHT, outline=OUT), d.line((3, 13, 11, 5), fill=GREEN, width=1)))
     icon("card", lambda d: (d.rectangle((2, 3, 13, 13), fill=CREAM, outline=BROWN), d.rectangle((4, 5, 11, 8), fill=(204, 160, 62, 255)), d.line((4, 10, 11, 10), fill=BROWN)))
     icon("check", lambda d: d.line((2, 8, 6, 12, 13, 3), fill=(92, 170, 92, 255), width=2))
     icon("cross", lambda d: (d.line((3, 3, 12, 12), fill=RED, width=2), d.line((12, 3, 3, 12), fill=RED, width=2)))
+    # The interact hand is larger than the HUD glyphs so it stays readable on
+    # the 60 px action button.
+    save(build_action_icon(), "ui", "icons", "hand.png")
 
 
 # ---------------------------------------------------------------- menu bg -----
