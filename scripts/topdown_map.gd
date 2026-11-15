@@ -373,8 +373,8 @@ func _paint_desa_ground() -> void:
 	_paint_door_path(7, 8, 13)
 	_paint_door_path(30, 31, 13)
 	_paint_door_path(52, 53, 14)
-	# Jalan menuju dermaga di tepi sungai + gang vertikal ke deret rumah bantaran selatan.
-	for y in range(PATH_ROW, 27):
+	# Gang vertikal penghubung jalan utama utara ke jalan bantaran sungai selatan (y=25).
+	for y in range(PATH_ROW, 26):
 		ground.set_cell(Vector2i(30, y), 0, Vector2i(4, 0), 0)
 		ground.set_cell(Vector2i(31, y), 0, Vector2i(5, 0), 0)
 	for y in range(PATH_ROW, 26):
@@ -560,16 +560,12 @@ func _water_hulu() -> void:
 				_paint_sand_cell(n.x, n.y)
 
 func _water_desa() -> void:
-	# Sungai lebar di sisi selatan desa.
+	# Sungai lebar di sisi selatan desa (tanpa jembatan/dermaga kayu).
 	for x in range(MAP_W):
 		for y in range(27, 31):
 			_paint_water_cell(x, y)
 		_paint_sand_cell(x, 26)
 		_paint_sand_cell(x, 31)
-	# Dermaga kayu kecil di tepi sungai.
-	for x in range(30, 33):
-		for y in range(25, 30):
-			_paint_bridge_cell(x, y)
 
 func _water_hilir() -> void:
 	var water_cells: Dictionary = {}
@@ -1027,8 +1023,6 @@ func _spawn_reeds() -> void:
 		"desa":
 			for i in range(22):
 				var x: int = 20 + _hash(i, 4, 9) % 920
-				if x > 30 * TILE - 12 and x < 35 * TILE + 12:
-					continue
 				_spawn_reed(Vector2(x, 26 * TILE + 4))
 		"hilir":
 			_spawn_reeds_on_banks(26)

@@ -194,9 +194,8 @@ func _spawn_buildings() -> void:
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(850, 490), Vector2(100, 22), 0.36)
 
 func _spawn_trees() -> void:
-	# Pohon kamboja rapi di sudut pekarangan kota (tidak menghalangi jalan / bangunan, bebas tumpang tindih)
+	# Pohon kamboja rapi di sudut pekarangan selatan kota (pohon yang nyempil di samping gedung apartemen kiri atas dihapus)
 	var entries: Array[Dictionary] = [
-		{"pos": Vector2(28, 70), "kind": "kamboja"},
 		{"pos": Vector2(40, 410), "kind": "kamboja"},
 		{"pos": Vector2(920, 410), "kind": "kamboja"},
 	]
@@ -233,12 +232,6 @@ func _spawn_city_props() -> void:
 	# Pagar di tepi jembatan kanal.
 	for bx in [320, 352, 704, 736]:
 		_spawn_prop("rail.png", Vector2(bx, 304))
-
-	# Mobil terparkir / melintas.
-	_spawn_car(Vector2(240, 176), true, Color(0.82, 0.24, 0.22))
-	_spawn_car(Vector2(600, 176), true, Color(0.28, 0.5, 0.78))
-	_spawn_car(Vector2(336, 400), false, Color(0.94, 0.86, 0.52))
-	_spawn_car(Vector2(720, 432), false, Color(0.52, 0.7, 0.54))
 
 func _spawn_prop(prop: String, pos: Vector2) -> void:
 	var texture: Texture2D = load("res://assets/sprites/props/" + prop)

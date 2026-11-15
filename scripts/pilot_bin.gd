@@ -1,9 +1,8 @@
-## Tong sampah top-down dengan validasi kategori, fakta singkat, dan hadiah.
-## Salah tong tetap diterima (forgiving), tapi hadiahnya lebih kecil.
+## Tong sampah top-down umum (1 jenis tong untuk semua kategori sampah, tanpa label teks di atasnya).
 extends Area2D
 class_name PilotBin
 
-@export var bin_category: String = "plastik"
+@export var bin_category: String = "umum"
 @export var required_quest: String = ""
 @export var quest_hint: String = "Bicara dulu dengan warga yang memberi misi."
 
@@ -13,16 +12,10 @@ class_name PilotBin
 var _facts: Dictionary = {}
 
 func _ready() -> void:
-	sprite.texture = load("res://assets/sprites/props/bin_%s.png" % bin_category)
-	label.text = _category_name()
-	label.show()
-	match bin_category:
-		"organik":
-			label.add_theme_color_override("font_color", Color(0.2, 0.42, 0.18))
-		"plastik":
-			label.add_theme_color_override("font_color", Color(0.48, 0.33, 0.08))
-		"b3":
-			label.add_theme_color_override("font_color", Color(0.55, 0.16, 0.12))
+	# Gunakan 1 tampilan tong sampah standar dan sembunyikan label teks di atasnya
+	sprite.texture = load("res://assets/sprites/props/bin_organik.png")
+	if label:
+		label.hide()
 	_load_facts()
 
 func _category_name() -> String:
@@ -53,7 +46,7 @@ func _fact_for(category: String) -> String:
 	return str(list[randi() % list.size()])
 
 func get_action_label() -> String:
-	return "" if _pending().is_empty() else "Pilah"
+	return "Buang Sampah"
 
 func _pending() -> Array:
 	if GameState.has_meta("pending_trash"):
@@ -61,35 +54,23 @@ func _pending() -> Array:
 	return []
 
 func interact() -> void:
-	if not required_quest.is_empty() and not GameState.has_quest(required_quest):
-		_toast(quest_hint, false)
-		return
 	var pending: Array = _pending()
 	if pending.is_empty():
-		_toast("Bawa sampah dulu ke tong ini.", false)
+		_toast("Bawa sampah dulu ke tempat sampah ini.", false)
 		return
 
 	var item: Dictionary = pending[0]
-	var item_cat: String = str(item.get("category", bin_category))
-	var correct: bool = item_cat == bin_category
+	var item_cat: String = str(item.get("category", "plastik"))
 	pending.remove_at(0)
 	GameState.set_meta("pending_trash", pending)
 	GameState.collect_trash(item_cat)
 
-	if correct:
-		GameState.add_river_health(5.0)
-		GameState.rupiah += 2000
-		AudioManager.play_sfx("correct")
-		SettingsManager.vibrate(20)
-		_toast("Tepat! Sampah %s masuk tong %s. +Rp2.000" % [_display_category(item_cat), _category_name()], true)
-	else:
-		GameState.add_river_health(3.0)
-		GameState.rupiah += 1500
-		AudioManager.play_sfx("wrong")
-		SettingsManager.vibrate(12)
-		_toast("Hampir! %s seharusnya ke tong %s. +Rp1.500" % [
-			_display_category(item_cat), _category_name_for(item_cat)
-		], false)
+	# Semua jenis sampah langsung diterima di 1 tong sampah umum
+	GameState.add_river_health(5.0)
+	GameState.rupiah += 2000
+	AudioManager.play_sfx("correct")
+	SettingsManager.vibrate(20)
+	_toast("Sampah %s dibuang ke tempat sampah! +Rp2.000" % _display_category(item_cat), true)
 
 	_bump()
 	var fact: String = _fact_for(item_cat)

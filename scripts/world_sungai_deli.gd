@@ -360,23 +360,22 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			toast("Tekad bulat! Bersihkan sampah sungai & temui Penjaga Hutan.", true)
 
 func _spawn_gameplay_objects() -> void:
-	# Hulu — tutorial alam: reboisasi terpusat di kawasan hutan (titik pohon).
-	# Sampah dinonaktifkan / dibersihkan sementara sesuai permintaan pengguna untuk ditata ulang nanti.
-	# _spawn_zone_trash("hulu", 16, ["organik", "plastik"])
-	_spawn_zone_bins("hulu", ["organik", "plastik"])
+	# Hulu — tutorial alam: reboisasi di kawasan hutan + 3 kategori sampah.
+	_spawn_zone_trash("hulu", 16, ["organik", "plastik", "b3"])
+	_spawn_zone_bins("hulu")
 	_spawn_fixed_spots("hulu", HULU_FOREST_SPOTS, "tree", "trees", "hulu_tree")
 
 	# Desa — gotong royong warga.
-	# _spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
-	_spawn_zone_bins("desa", ["organik", "plastik", "b3"])
+	_spawn_zone_trash("desa", 16, ["organik", "plastik", "b3"])
+	_spawn_zone_bins("desa")
 
 	# Kota — aspirasi warga perkotaan.
-	# _spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
-	_spawn_zone_bins("kota", ["organik", "plastik", "b3"])
+	_spawn_zone_trash("kota", 20, ["organik", "plastik", "b3"])
+	_spawn_zone_bins("kota")
 
 	# Hilir — mangrove pesisir muara.
-	# _spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
-	_spawn_zone_bins("hilir", ["organik", "plastik", "b3"])
+	_spawn_zone_trash("hilir", 16, ["organik", "plastik", "b3"])
+	_spawn_zone_bins("hilir")
 	_spawn_fixed_spots("hilir", HILIR_MANGROVE_SPOTS, "mangrove", "mangroves", "hilir_mangrove")
 
 	_spawn_pantun_boards()
@@ -430,6 +429,8 @@ func _near_planting_spot(zone: String, tile: Vector2i) -> bool:
 func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 	if tile.x < 2 or tile.x >= ZONE_WIDTH - 2 or tile.y < 2 or tile.y >= ZONE_HEIGHT - 2:
 		return false
+	if zone == "desa" and tile.y >= 27:
+		return false
 	if _zone_in_water(zone, (Vector2(tile) + Vector2(0.5, 0.5)) * TILE):
 		return false
 	if _blocked_by_building(zone, Rect2(Vector2(tile) - Vector2(1, 1), Vector2(2, 2))):
@@ -475,25 +476,37 @@ func _zone_in_water(zone: String, pos: Vector2) -> bool:
 		return false
 	return bool(map.call("is_in_water", pos))
 
-func _spawn_zone_bins(zone: String, categories: Array) -> void:
+func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 	var bin_scene := preload("res://scenes/world/bin_topdown.tscn")
-	# Di kota dan hilir sungai ada di selatan jalan, jadi tong diletakkan di bahu jalan (y=13); di desa di bahu jalan utara.
-	var y_tiles: float = 12.8 if (zone == "kota" or zone == "hilir") else (14.5 if zone == "desa" else 20.0)
-	var x_by_zone: Dictionary = {
-		"desa": [18, 41, 57],
-		"hilir": [8, 25, 38],
+	# Koordinat tong sampah umum yang diletakkan rapi di samping bangunan/warung/pasar,
+	# sehingga tidak pernah menghalangi jalan utama, trotoar, jembatan, atau gerbang zona.
+	var positions_by_zone: Dictionary = {
+		"hulu": [
+			Vector2(10.5, 13.0), # Nempel sejajar dinding kanan Rumah/Warung MC (y=208px)
+		],
+		"desa": [
+			Vector2(10.2, 13.0), # Nempel sejajar dinding kanan rumah utara (house_cream, y=208px)
+			Vector2(27.5, 24.5), # Nempel sejajar dinding kanan Warung Barokah selatan (y=392px)
+		],
+		"kota": [
+			Vector2(17.0, 6.0),  # Nempel sejajar garis dinding Gedung Office utara (y=96px, tidak maju ke tengah trotoar)
+			Vector2(13.0, 30.5), # Nempel sejajar dinding kanan Pasar Sayur Bang Jali di plaza selatan (y=488px)
+		],
+		"hilir": [
+			Vector2(10.2, 6.0),  # Nempel sejajar dinding kanan Rumah Pesisir barat (y=96px)
+			Vector2(50.2, 6.2),  # Nempel sejajar dinding kanan Pasar Ikan (market_ikan, y=100px)
+		],
 	}
 	var quest_by_zone: Dictionary = {
 		"desa": "pilah_desa",
 		"kota": "pilah_sampah_kota",
 		"hilir": "pilah_hilir",
 	}
-	for i in range(categories.size()):
+	var coords: Array = positions_by_zone.get(zone, [])
+	for tile_pos in coords:
 		var bin := bin_scene.instantiate()
-		var custom_xs: Array = x_by_zone.get(zone, [])
-		var x: int = int(custom_xs[i]) if i < custom_xs.size() else (10 + i * 15)
-		bin.position = Vector2(x, y_tiles) * TILE
-		bin.set("bin_category", categories[i])
+		bin.position = (tile_pos as Vector2) * TILE
+		bin.set("bin_category", "umum")
 		bin.set("required_quest", quest_by_zone.get(zone, ""))
 		bin.add_to_group("world_bin")
 		_zone_containers[zone].add_child(bin)
