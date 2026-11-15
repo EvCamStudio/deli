@@ -1,0 +1,75 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pak Nelayan",
+    "emosi": "sad",
+    "teks": "Hati-hati melangkah di pasir itu, nak. Masih banyak sisa pecahan botol. Dulu waktu Bapak muda, sepanjang pantai ini hutan bakau semua. Sekarang... kau lihat sendiri, tinggal sisa batang kering seperti gigi-gigi yang ompong.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kenapa pohon mangrove sepenting itu buat pantai ini, Pak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_bakau"
+      },
+      {
+        "tipe": "A",
+        "teks": "Ke mana perginya pohon-pohon bakau yang dulu, Pak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_bakau"
+      }
+    ]
+  },
+  {
+    "id": "penjelasan_bakau",
+    "speaker": "Pak Nelayan",
+    "emosi": "neutral",
+    "teks": "Banyak yang mati tertutup plastik dan ditebang orang. Padahal di bawah akar bakau itulah anak-anak ikan bersembunyi sampai cukup besar untuk berenang ke laut. Pantai ini pun begitu: kalau akar bakaunya hilang, ombak laut akan memakan tanah daratan sedikit demi sedikit setiap hari. Karena tidak pernah sekaligus, orang-orang jadi tidak sadar. Kami para nelayan cari makan dari laut yang sehat, nak. Kalau laut dan muara ini sakit, anak-anak kami terpaksa pergi merantau semua.",
+    "next": "datuk_dorong_mangrove"
+  },
+  {
+    "id": "datuk_dorong_mangrove",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Ini adalah kepingan terakhir dari perjalanan kita, nak. Dari menanam pohon di bukit hulu hingga menanam bakau di bibir laut. Bantulah Pak Nelayan ini.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Saya siap membantu menanam bibit mangrove-nya, Pak!",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "instruksi_mangrove",
+        "effect": {
+          "quest": {
+            "id": "tanam_mangrove",
+            "description": "Tanam 8 mangrove di pesisir muara",
+            "target": 8
+          }
+        }
+      },
+      {
+        "tipe": "A",
+        "teks": "Sudah tanggung jalan dari hulu sampai ke laut, sini saya bantu tanam, Pak!",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "instruksi_mangrove",
+        "effect": {
+          "quest": {
+            "id": "tanam_mangrove",
+            "description": "Tanam 8 mangrove di pesisir muara",
+            "target": 8
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "instruksi_mangrove",
+    "speaker": "Pak Nelayan",
+    "emosi": "happy",
+    "teks": "Syukurlah... terima kasih, nak. Bibit-bibit bakaunya sudah Bapak siapkan di tepian lumpur pantai itu. Tanamlah di sepanjang pesisir yang masih kosong.",
+    "next": "end"
+  }
+]
+

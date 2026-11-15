@@ -1,152 +1,160 @@
 [
   {
     "id": "start",
-    "speaker": "Kak Rina",
-    "emosi": "happy",
-    "teks": "Eh, Dek! Mau gorengan? Baru angkat, panas-panas.",
-    "pilihan": [
-      {
-        "tipe": "A",
-        "teks": "Minyak bekasnya Kakak biasa buang ke mana?",
-        "delta_sikap": 0,
-        "delta_meter": 0,
-        "next": "step1_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Jangan dibuang ke selokan, Kak, nanti mencemari.",
-        "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step1_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Kakak sadar tidak, minyak itu merusak sungai?",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step1_c"
-      }
-    ]
-  },
-  {
-    "id": "step1_a",
-    "speaker": "Kak Rina",
+    "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Ke selokan belakang, lah. Mau ke mana lagi? Botolnya mahal, tempatnya tak ada.",
-    "next": "step2"
+    "teks": "(Suara di kepala MC) Tunggu nak! Lihat apa yang mau dilakukan pedagang itu! Dia mau membuang minyak bekas gorengan itu ke saluran sungai!",
+    "next": "1"
   },
   {
-    "id": "step1_b",
-    "speaker": "Kak Rina",
-    "emosi": "neutral",
-    "teks": "Iya, iya. Jadi, Dek, mau beli apa tidak?",
-    "next": "end"
-  },
-  {
-    "id": "step1_c",
-    "speaker": "Kak Rina",
+    "id": "1",
+    "speaker": "MC",
     "emosi": "sad",
-    "teks": "Adek baru pulang sudah menyalahkan orang yang cari makan?!",
-    "next": "end"
+    "teks": "(Berbisik pelan) Ugh, hantu ini muncul lagi... memangnya kenapa kalau cuma minyak goreng?",
+    "next": "2"
   },
   {
-    "id": "step2",
+    "id": "2",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Jangan remehkan itu! Minyak jelantah kalau masuk ke sungai akan menutup permukaan air, menyumbat saluran, dan meracuni ikan-ikan di dalamnya! Cepat hentikan dia sebelum dituang!",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Eh, tunggu Kak! Beli gorengannya dulu!",
+    "next": "4"
+  },
+  {
+    "id": "4",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Eh, iya Dek! Sebentar ya, Kakak mau buang minyak bekas kemarin dulu ke selokan ini, sudah hitam sekali soalnya.",
+    "next": "5"
+  },
+  {
+    "id": "5",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Bagaimana memahami keadaan Kak Rina?",
+    "teks": "Tunggu Kak, jangan dibuang ke selokan itu! Saluran ini kan langsung mengalir ke sungai!",
+    "next": "6"
+  },
+  {
+    "id": "6",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Loh, memangnya kenapa Dek? Tumben sekali kau peduli urusan selokan.",
+    "next": "7"
+  },
+  {
+    "id": "7",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Ingat nak, jangan langsung memarahinya. Tanyakan baik-baik kenapa dia membuangnya ke situ.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Repot ya, Kak, kalau tak ada yang mau menampung minyak bekas.",
-        "delta_sikap": 1,
-        "delta_meter": 0,
-        "next": "step2_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Tapi selokan jadi bau dan mampat, Kak.",
+        "teks": "Kakak tahu gak sih minyak itu bikin sungai tercemar dan bau?!",
         "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step2_b"
+        "delta_meter": 0,
+        "next": "curhat_rina"
       },
       {
-        "tipe": "C",
-        "teks": "Gorengan laku, selokan jadi korban.",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step2_c"
+        "tipe": "A",
+        "teks": "Memangnya gak ada tempat lain buat buang minyak itu, Kak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "curhat_rina"
       }
     ]
   },
   {
-    "id": "step2_a",
-    "speaker": "Kak Rina",
-    "emosi": "neutral",
-    "teks": "Nah! Kalau ada yang mau beli, Kakak kumpul, Dek. Sayang, itu minyak, bukan air.",
-    "next": "step3"
-  },
-  {
-    "id": "step2_b",
-    "speaker": "Kak Rina",
-    "emosi": "neutral",
-    "teks": "Bau? Kakak yang tiap hari menciumnya.",
-    "next": "end"
-  },
-  {
-    "id": "step2_c",
+    "id": "curhat_rina",
     "speaker": "Kak Rina",
     "emosi": "sad",
-    "teks": "Oh, jadi Kakak penjahatnya.",
-    "next": "end"
-  },
-  {
-    "id": "step3",
-    "speaker": "MC",
-    "emosi": "neutral",
-    "teks": "Solusi apa yang bisa membantu Kak Rina dan sungai?",
+    "teks": "Hah... kau pikir Kakak senang buang-buang minyak ke situ, Dek? Masalahnya, minyak bekas ini setiap hari numpuk banyak sekali. Kalau Kakak simpan di rumah, baunya tengik dan mengundang semut. Mau ditampung pakai wadah, harga jeriken atau botol besar itu mahal, sedangkan untung jualan gorengan sehabis banjir begini pas-pasan sekali buat makan. Jadi ya mau tidak mau Kakak tuang saja ke selokan biar cepat beres.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Kak, kumpulkan di jeriken. Bank sampah beli Rp 3.000 per liter untuk biodiesel.",
-        "delta_sikap": 1,
-        "delta_meter": -3,
-        "next": "step3_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Kakak gali lubang saja di tanah.",
+        "teks": "Tetap saja itu merusak sungai kita, Kak!",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "step3_b"
+        "next": "dilema_rina"
       },
       {
-        "tipe": "C",
-        "teks": "Pokoknya jangan ke selokan lagi!",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step3_c"
+        "tipe": "A",
+        "teks": "Hmm... jadi karena gak ada wadah dan takut keluar biaya lagi ya...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "dilema_rina"
       }
     ]
   },
   {
-    "id": "step3_a",
-    "speaker": "Kak Rina",
-    "emosi": "happy",
-    "teks": "Dibeli?! Tiga ribu seliter? Itu dua bungkus terigu, Dek! Mulai hari ini Kakak simpan jelantahnya.",
-    "next": "end"
-  },
-  {
-    "id": "step3_b",
-    "speaker": "Kak Rina",
-    "emosi": "neutral",
-    "teks": "Nanti rembes ke sumur tetangga. Berantem Kakak.",
-    "next": "end"
-  },
-  {
-    "id": "step3_c",
+    "id": "dilema_rina",
     "speaker": "Kak Rina",
     "emosi": "sad",
-    "teks": "Pokoknya, pokoknya. Kau kira Kakak buang minyak karena senang?",
+    "teks": "Iya Dek, Kakak juga tahu selokannya jadi licin dan hitam. Sebenarnya sayang juga sih dibuang begitu saja, namanya juga minyak beli pakai uang. Tapi mau diapakan lagi kalau sudah kotor begitu? Memangnya kau punya wadah gratis dan tahu siapa yang mau beli minyak kotor begini?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] [Terkunci] Kumpulkan minyak di jeriken untuk dijual ke Bank Sampah.",
+        "locked": true,
+        "requires_flag": "has_jeriken_and_info",
+        "next": "start"
+      },
+      {
+        "tipe": "A",
+        "teks": "[B] Tunggu sebentar Kak, jangan dituang dulu! Aku coba tanya Pemuka Desa siapa tahu ada tempat penampungannya!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pamit_pemuka_desa",
+        "effect": {
+          "choice": {
+            "mencari_solusi_rina": true
+          }
+        }
+      },
+      {
+        "tipe": "B",
+        "teks": "[C] Kakak gali lubang saja di tanah pekarangan buat mengubur minyaknya!",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "gagal_rina",
+        "effect": {
+          "choice": {
+            "rina_peduli": false
+          }
+        }
+      },
+      {
+        "tipe": "C",
+        "teks": "[D] Enak di Kakak dong, gorengannya laku tapi selokan warga yang jadi korban!",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "gagal_rina",
+        "effect": {
+          "choice": {
+            "rina_peduli": false
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "pamit_pemuka_desa",
+    "speaker": "Kak Rina",
+    "emosi": "neutral",
+    "teks": "Yasudah, cepat sedikit ya Dek! Kalau sampai sore gak ada wadahnya, terpaksa Kakak buang ke selokan lagi lho!",
+    "next": "end"
+  },
+  {
+    "id": "gagal_rina",
+    "speaker": "Kak Rina",
+    "emosi": "sad",
+    "teks": "Eh, enak saja mulutmu ya! Kalau dikubur di tanah ya merembes ke sumur tetangga! Adek baru datang sudah menyalahkan orang kecil yang susah cari makan! Ini gorenganmu, gak usah ikut campur urusan daganganku lagi!",
     "next": "end"
   }
 ]

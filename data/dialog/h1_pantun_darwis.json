@@ -1,0 +1,70 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Ini dia Papan Pantun Petuah di Desa Suka Maju. Ada bait pantun tua yang tertulis di sini...",
+    "next": "baca_bait"
+  },
+  {
+    "id": "baca_bait",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Pohon rumbia tumbuh di hulu,\nDitebang orang diambil sagu...\n(Dua baris di bawahnya pudar tertutup lumpur. Pilih lanjutan sajak yang pas):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Kasur yang berat cincanglah dulu, / Dijual kiloan tak bikin ragu.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_benar",
+        "effect": {
+          "choice": {
+            "unlock_solusi_darwis": true
+          }
+        }
+      },
+      {
+        "tipe": "B",
+        "teks": "[B] Janganlah buang kasur ke sungai, / Nanti airnya meluap tinggi.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "[C] Bakarlah habis kasur yang basah, / Biar halaman menjadi bersih.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Kurang tepat rimanya, nak! Pantun Melayu itu bersajak a-b-a-b. Baris ketiga harus berima '-lu' dan baris keempat harus berima '-gu'. Coba baca lagi!",
+    "next": "baca_bait"
+  },
+  {
+    "id": "pantun_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Tepat sekali, nak! 'Kasur yang berat cincanglah dulu, dijual kiloan tak bikin ragu'!",
+    "next": "mc_paham"
+  },
+  {
+    "id": "mc_paham",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Aha! Busa kasur Pak Darwis gak perlu digotong utuh-utuh! Cukup dipotong-potong kecil pakai parang lalu dimasukkan karung dan dijual kiloan ke pengepul di hulu! Ayo beritahu Pak Darwis sekarang!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "unlock_solusi_darwis": true
+      }
+    }
+  }
+]
+

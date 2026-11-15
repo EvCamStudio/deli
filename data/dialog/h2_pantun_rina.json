@@ -1,0 +1,70 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Papan Pantun Petuah di Desa Suka Maju... Bait pantun tentang kebiasaan dapur warga tertulis di sini.",
+    "next": "baca_bait"
+  },
+  {
+    "id": "baca_bait",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Pergi ke pasar membeli santan,\nSinggah sebentar membawa nampan...\n(Dua baris di bawahnya pudar tertutup debu. Pilih lanjutan sajak yang pas):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Minyak jelantah jangan di selokan, / Di Bank Sampah jeriken disiapkan.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_benar",
+        "effect": {
+          "choice": {
+            "unlock_solusi_rina": true
+          }
+        }
+      },
+      {
+        "tipe": "B",
+        "teks": "[B] Minyak yang hitam kotor sekali, / Kubur di tanah belakang rumah.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "[C] Tuanglah saja ke pinggir parit, / Supaya wajan kembali bersih.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Belum tepat nak! Ingat rumus pantun: baris ketiga berima '-tan' dan baris keempat berima '-pan'. Perhatikan juga nasihat baiknya!",
+    "next": "baca_bait"
+  },
+  {
+    "id": "pantun_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Tepat sekali! 'Minyak jelantah jangan di selokan, di Bank Sampah jeriken disiapkan'! Kau baca itu, nak?",
+    "next": "mc_paham"
+  },
+  {
+    "id": "mc_paham",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Ternyata Bank Sampah Desa punya program penampungan jelantah dan membagikan jeriken gratis! Aku harus segera temui Pemuka Desa untuk meminta jerikennya!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "unlock_solusi_rina": true
+      }
+    }
+  }
+]
+

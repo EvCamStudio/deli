@@ -1,44 +1,87 @@
 [
   {
     "id": "start",
-    "speaker": "MC",
-    "emosi": "happy",
-    "teks": "Enam bulan kemudian. Pukul lima pagi, dari dalam warung terdengar bunyi yang sudah lama hilang: sendok beradu gelas.",
+    "speaker": "Narasi",
+    "emosi": "neutral",
+    "teks": "Enam bulan telah berlalu sejak perjalananku menyusuri Sungai Deli bersama suara Datuk Sampan. Pagi ini pukul lima subuh, dari dalam warung makan keluarga kami, kembali terdengar bunyi yang sudah sangat lama hilang: denting sendok yang beradu dengan gelas kaca.",
     "next": "1"
   },
   {
     "id": "1",
-    "speaker": "Pak Hendra",
+    "speaker": "Bu Mira",
     "emosi": "happy",
-    "teks": "Atap sudah kutambal. Sebelum hujan, kali ini.",
+    "teks": "Nak, tolong antarkan teh manis hangat dan nasi gurih ini ke meja depan ya! Sejak subuh tadi pelanggan tidak berhenti berdatangan.",
     "next": "2"
   },
   {
     "id": "2",
-    "speaker": "Pak Hendra",
+    "speaker": "MC",
     "emosi": "happy",
-    "teks": "Warga sekarang kerja bakti tiap Minggu jaga tanggul. Bang Jali pegang iuran bak roda, Kak Rina setor jelantah tiap Kamis, dan Pak Darwis paling rajin cincang kasur.",
+    "teks": "Iya mak, siap! Rasanya senang sekali melihat ibu bisa tersenyum dan berjualan dengan tenang lagi seperti dulu.",
     "next": "3"
   },
   {
     "id": "3",
-    "speaker": "MC",
+    "speaker": "Pak Hendra",
     "emosi": "happy",
-    "teks": "Sungai Deli jernih sampai ke dasar. Batu-batunya yang dulu tak pernah kulihat kini bisa kuhitung.",
+    "teks": "Hahaha, kau lihat garis bekas lumpur banjir yang sengaja Bapak sisakan sedikit di dinding pojok itu, nak? Setiap kali melihat garis itu, Bapak selalu bersyukur kampung kita mau berubah bersama-sama.",
     "next": "4"
   },
   {
     "id": "4",
-    "speaker": "Datuk Sampan",
+    "speaker": "Pak Hendra",
     "emosi": "happy",
-    "teks": "Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama ada yang mengingat, aku ada.",
+    "teks": "Sekarang setiap hari Minggu pagi, warga rutin kerja bakti menjaga tanggul sungai. Bang Jali paling semangat mengurus iuran bak sampah roda di mulut gangnya, Kak Rina tiap hari Kamis rajin menyetor jeriken jelantah ke Bank Sampah, bahkan Pak Darwis sekarang paling rajin mencincang busa kasur bekas untuk dijual ke pengepul di hulu!",
     "next": "5"
   },
   {
     "id": "5",
     "speaker": "MC",
     "emosi": "happy",
-    "teks": "Waktu tak bisa diputar kembali. Yang bisa hanya kebiasaan. Dan kebiasaan dimulai dari mendengar.",
+    "teks": "Syukurlah Pak... ternyata mereka semua bukannya tidak peduli, mereka kemarin hanya butuh didengarkan dan diberi jalan keluar.",
+    "next": "6"
+  },
+  {
+    "id": "6",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Airnya jernih sekali hari ini, bukan?",
+    "next": "7"
+  },
+  {
+    "id": "7",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Datuk Sampan! Kau masih ada di sini rupanya? Kupikir tugasmu sudah selesai dan kau sudah menghilang.",
+    "next": "8"
+  },
+  {
+    "id": "8",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Hahaha, aku ini bukan sekadar hantu, nak. Aku adalah ingatan kampung ini tentang cara menjaga Sungai Deli. Selama masih ada orang sepertimu dan warga yang mau mengingat serta menjaga sungai ini, aku akan selalu ada.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Terima kasih sudah membimbingku waktu itu, Datuk.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penutup_a"
+      },
+      {
+        "tipe": "A",
+        "teks": "Jangan muncul tiba-tiba lagi ya, tapi... senang bertemu denganmu, Datuk.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penutup_a"
+      }
+    ]
+  },
+  {
+    "id": "penutup_a",
+    "speaker": "Narasi",
+    "emosi": "happy",
+    "teks": "Waktu memang tidak pernah bisa diputar kembali di dunia nyata. Yang bisa kita ubah hanyalah kebiasaan kita. Dan kebiasaan baik, ternyata, selalu dimulai dari hal yang paling sederhana: mau mendengarkan.",
     "next": "end"
   }
 ]

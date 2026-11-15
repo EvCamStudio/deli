@@ -13,20 +13,20 @@ extends Control
 
 const ENDING_DATA: Dictionary = {
 	"A": {
-		"title": "🌟 Ending A: Harapan Baru Deli (Terbaik)",
-		"message": "Enam bulan kemudian. Pukul lima pagi, sendok kembali beradu gelas di warung kopi keluarga. Tujuh meja berdiri, atap tertambal sebelum hujan, dan utang telah lunas diselipkan di bawah toples gula baru.\n\n[b]Datuk Sampan:[/b] \"Aku bukan hantu, Nak. Aku ingatan kampung ini tentang cara menjaga sungai. Selama ada yang mengingat, aku ada.\"\n[i]\"Waktu tak bisa diputar kembali. Yang bisa hanya kebiasaan. Dan kebiasaan dimulai dari mendengar.\"[/i]"
+		"title": "🌟 Ending A: Harapan Baru Deli (True Ending)",
+		"message": "Enam bulan kemudian. Pukul lima subuh, dari dalam warung makan keluarga kami kembali terdengar denting sendok yang beradu dengan gelas kaca. Pelanggan ramai berdatangan, dan warga rutin kerja bakti menjaga tanggul sungai.\n\n[b]Datuk Sampan:[/b] \"Aku bukan sekadar hantu, Nak. Aku ingatan kampung ini tentang cara menjaga Sungai Deli. Selama ada yang mengingat, aku akan selalu ada.\"\n[i]\"Waktu tak bisa diputar kembali di dunia nyata. Yang bisa kita ubah hanyalah kebiasaan kita. Dan kebiasaan baik dimulai dari mendengar.\"[/i]"
 	},
 	"B": {
-		"title": "🌤 Ending B: Keluarga Mandiri (Baik)",
-		"message": "Hujan deras datang lagi bulan itu. Warung kami basah, tapi tidak tenggelam. Utang pokok hampir tak bersisa di buku Mak.\n\n[b]Bu Mira:[/b] \"Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.\"\n[b]Datuk Sampan:[/b] \"Kau tak sendirian lagi, Nak. Ada yang ikut menjaga. Teruskan.\""
+		"title": "🌤 Ending B: Keluarga Mandiri (Normal Ending)",
+		"message": "Musim hujan kembali tiba dengan curah air cukup deras. Air sungai sempat naik sampai anak tangga teras warung, tapi tidak sampai menenggelamkan meja seperti dulu.\n\n[b]Bu Mira:[/b] \"Kita memang belum menang sepenuhnya melawan banjir, Nak, tapi setidaknya kali ini kita tidak kalah seperti dulu.\"\n[b]Datuk Sampan:[/b] \"Kau tak sendirian lagi sekarang, Nak. Ada yang ikut menjaga. Teruskan perjuanganmu.\""
 	},
 	"C": {
-		"title": "🌥 Ending C: Bertahan di Tepian (Netral)",
-		"message": "Hujan lebat kembali datang. Warung bertahan, tapi dindingnya basah sampai garis lumpur lama. Utang masih tersisa dan sungai masih rawan.\n\n[b]MC:[/b] \"Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.\"\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.\""
+		"title": "🌥 Ending C: Bertahan di Tepian (Warning Ending)",
+		"message": "Hujan lebat kembali datang. Warung masih berdiri, tapi dindingnya kembali basah kuyup sampai batas lumpur lama. Perbaikan tempat makan ibu tersendat dan sungai masih rawan.\n\n[b]MC:[/b] \"Seperti menambal atap saat hujan badai sudah turun. Bisa bertahan, tapi tak pernah benar-benar kering.\"\n[b]Datuk Sampan:[/b] \"Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang, Nak. Jangan berhenti di tengah jalan.\""
 	},
 	"D": {
-		"title": "🌧 Ending D: Terpaksa Menyerah (Buruk)",
-		"message": "Banjir bandang datang malam hari tanpa aba-aba. Air coklat pekat menelan bantaran dan warung keluarga. Pagi harinya, hanya tiang yang tersisa dan sandal yang masih berpasangan.\n\n[b]Datuk Sampan (memudar):[/b] \"Sungai tak membenci siapa pun, Nak. Ia hanya kembali ke jalannya. Kalau kau diberi kesempatan sekali lagi, dengarkan dulu sebelum bicara.\"\n[b][color=#ffd166]\"Satu orang membuang, semua menanggung.\"[/color][/b]"
+		"title": "🌧 Ending D: Banjir Bandang (Bad Ending — Rewind)",
+		"message": "Banjir bandang menerjang dahsyat. Air cokelat pekat menelan warung keluarga MC hanya menyisakan tiang-tiang kayu yang patah dan sepasang sandal yang mengapung di lumpur.\n\n[b]Datuk Sampan:[/b] \"Sungai tak pernah membenci siapa pun, Nak. Ia hanya kembali mencari jalannya yang tersumbat. Satu orang membuang, semua orang yang menanggung akibatnya.\"\n[b][color=#ffd166]\"Tekan REWIND untuk memutar waktu kembali dan memulai dengan mendengar.\"[/color][/b]"
 	},
 	"baik": {
 		"title": "Sungai Deli Pulih!",
@@ -80,12 +80,11 @@ func _show_ending() -> void:
 			play_again_btn.text = "🔄 Main Lagi"
 
 	var stats: String = "[b]Statistik Akhir Perjalanan[/b]\n"
-	if GameState.has_method("get_jumlah_npc_peduli") and GameState.has_method("get_persen_utang_lunas"):
+	if GameState.has_method("get_jumlah_npc_peduli"):
 		var meter_akhir: int = int(round(GameState.meter_bencana if "meter_bencana" in GameState else (100.0 - GameState.river_health)))
 		var peduli_count: int = GameState.get_jumlah_npc_peduli()
-		var persen_utang: int = int(round(GameState.get_persen_utang_lunas() * 100.0))
 		stats += "• Meter Bencana: %d%% (Kejernihan %d%%)\n" % [meter_akhir, int(round(GameState.river_health))]
-		stats += "• Warga Peduli: %d / 3 | Utang Lunas: %d%%\n" % [peduli_count, persen_utang]
+		stats += "• Warga Peduli: %d / 3 Warga\n" % peduli_count
 	stats += "• Sampah Terkumpul: %d | Pohon Ditanam: %d\n" % [GameState.get_total_trash(), GameState.trees_planted]
 	stats += "• Mangrove: %d | Kartu: %d\n" % [GameState.mangroves_planted, GameState.collected_cards.size()]
 	stats += "• Rupiah Terkumpul: Rp %s" % _format_number(GameState.rupiah)

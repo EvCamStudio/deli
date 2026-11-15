@@ -2,65 +2,306 @@
   {
     "id": "start",
     "speaker": "MC",
-    "emosi": "surprised",
-    "teks": "Jadi suara ketukan kayu tadi dari sampan Bapak? Siapa di situ?",
-    "next": "1"
-  },
-  {
-    "id": "1",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Orang yang melamun di tepi air biasanya tak sadar ada yang menemani. Panggil saja Datuk Sampan. Aku kenal bapakmu waktu ia masih kecil di bantaran ini.",
-    "next": "2"
-  },
-  {
-    "id": "2",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Lihat sendiri, Nak. Sampah yang menumpuk menyumbat belokan air sampai sampanku saja tersangkut. Setiap hujan turun, luapan sungai itu langsung mencari jalan masuk ke warung Mak dan Bapakmu.",
-    "next": "3"
-  },
-  {
-    "id": "3",
-    "speaker": "MC",
     "emosi": "sad",
-    "teks": "Pantasan air naik sampai menghanyutkan barang warung. Tapi menyelesaikan masalah sampah sungai sebesar ini sendirian? Pekerjaanku saja tak bisa kujaga.",
-    "next": "4"
+    "teks": "Ugh, itu tadi apa? Tidak ada seorang pun di sekitar sini... Apa itu hanya halusinasiku saja, atau itu hantu?",
+    "next": "datuk_appear"
   },
   {
-    "id": "4",
+    "id": "datuk_appear",
     "speaker": "Datuk Sampan",
-    "emosi": "happy",
-    "teks": "Tak ada yang bisa sendirian. Sungai tak minta dipuji, Nak, ia hanya minta dijaga. Mulailah dari hal nyata: bersihkan sampah yang menyumbat pinggiran air, tanam kembali hutan hulu, dan dengarkan warga sepanjang kampung.",
-    "next": "5"
+    "emosi": "neutral",
+    "teks": "Anggap saja keduanya.",
+    "next": "mc_kaget"
   },
   {
-    "id": "5",
+    "id": "mc_kaget",
     "speaker": "MC",
-    "emosi": "happy",
-    "teks": "Kalau alirannya terus tersumbat sampah, warung Mak dan Bapak tak akan pernah aman. Baiklah...",
+    "emosi": "surprised",
+    "teks": "Argh! K-kau siapa?! Kenapa kau bisa tiba-tiba muncul di sana?!",
+    "next": "datuk_intro"
+  },
+  {
+    "id": "datuk_intro",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Aku adalah Datuk Sampan... Aku setiap hari berada di sini, karena aku yang menjaga sungai ini. Ya, meskipun tidak ada satu orang pun yang mengetahui hal itu. Tapi, untuk pertama kalinya ada orang yang dapat melihatku dan mengetahui hal itu. Mungkin ini suatu kesempatan untuk memperbaikinya sebelum terlambat.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Aku mau ikut selesaikan masalah sampah sungai ini, Datuk!",
+        "teks": "Huh? Penjaga sungai ini?",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "res_motivate"
+        "next": "datuk_jawab_siapa"
       },
       {
         "tipe": "B",
-        "teks": "Ajari aku harus mulai dari mana dulu, Datuk.",
+        "teks": "K-kau beneran h-hantu...?",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "res_motivate"
+        "next": "datuk_jawab_siapa"
       }
     ]
   },
   {
-    "id": "res_motivate",
+    "id": "datuk_jawab_siapa",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Ya, begitulah...",
+    "next": "datuk_tanya_nama"
+  },
+  {
+    "id": "datuk_tanya_nama",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Hei anak muda, siapa namamu?",
+    "next": "mc_jawab_nama"
+  },
+  {
+    "id": "mc_jawab_nama",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "E-em, aku {nama}.",
+    "next": "datuk_senang_nama"
+  },
+  {
+    "id": "datuk_senang_nama",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Begitulah. Pilah sampah yang mengotori pinggiran air ke tong terdekat, lalu seberangi jembatan timur untuk menemui Penjaga Hutan.",
+    "teks": "Nama yang bagus, senang bertemu denganmu.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Aku nggak tahu apakah aku harus senang juga dengan hal ini?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_ketawa"
+      },
+      {
+        "tipe": "B",
+        "teks": "Apakah aku akan mendapat musibah jika disenangi hantu?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_ketawa"
+      }
+    ]
+  },
+  {
+    "id": "datuk_ketawa",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Hahaha, kau pemuda yang lucu.",
+    "next": "datuk_kesempatan"
+  },
+  {
+    "id": "datuk_kesempatan",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Ini adalah kesempatan emas yang datang mungkin hanya sekali seumur hidupku mendapatkannya. Pemuda yang baik... apakah kamu bisa menolongku?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Menolong? Apakah hantu butuh pertolongan?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_bukan_untuk_diriku"
+      },
+      {
+        "tipe": "B",
+        "teks": "Tidak. Aku tidak ingin berurusan dengan hantu.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_bukan_untuk_diriku"
+      }
+    ]
+  },
+  {
+    "id": "datuk_bukan_untuk_diriku",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Aku tidak minta bantuanmu untuk diriku, Nak. Ini semua untuk kau dan orang lain. Sungai ini sudah membawa beban yang melampaui kesanggupannya. Jika tidak segera diperbaiki, maka yang ada di ujung hanyalah sebuah penyesalan yang tidak dapat diubah.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Apa maksudnya?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_jangan_tele"
+      },
+      {
+        "tipe": "B",
+        "teks": "Kau berbicara dengan sangat bertele-tele.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_jangan_tele"
+      }
+    ]
+  },
+  {
+    "id": "datuk_jangan_tele",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Baiklah, aku tidak akan bertele-tele mulai sekarang. Sepertinya kau pemuda yang cukup dingin...",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": ".....",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_bencana"
+      }
+    ]
+  },
+  {
+    "id": "datuk_bencana",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Dengar ini baik-baik, Nak. Bencana akan segera menimpa kota ini, dan tidak ada yang dapat kalian lakukan pada saat itu jika semuanya sudah terjadi.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bencana? Jangan bercanda.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_70_tahun"
+      },
+      {
+        "tipe": "B",
+        "teks": "Apa kau sekarang sedang membual?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_70_tahun"
+      }
+    ]
+  },
+  {
+    "id": "datuk_70_tahun",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Aku tidak berbohong. Aku adalah penjaga sungai ini selama 70 tahun. Aku dengan sungai ini sudah seperti saudara yang jiwanya terikat sangat dalam, dan aku tahu apa yang kurasakan tidak pernah salah.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bukankah banjir kemarin juga sudah bencana?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_binasa"
+      },
+      {
+        "tipe": "B",
+        "teks": "Paling hanya banjir seperti kemarin lagi.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_binasa"
+      }
+    ]
+  },
+  {
+    "id": "datuk_binasa",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Aku mengatakannya sekali lagi, Nak. Aku meminta bantuan bukan untuk diriku, melainkan untuk kalian. Terserah kau mau percaya atau tak. Satu hal yang pasti: jika bencana itu terjadi, kalian pasti akan menyesal. Atau... mungkin kalian sudah tidak bisa menyesal? Karena saat bencana itu terjadi, itu bisa saja membinasakan kalian...",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kau membuatku takut...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_jangan_khawatir"
+      },
+      {
+        "tipe": "B",
+        "teks": ".....",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_jangan_khawatir"
+      }
+    ]
+  },
+  {
+    "id": "datuk_jangan_khawatir",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Jangan khawatir… jika kau berhasil membantuku, bencana itu tidak akan terjadi.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Baiklah... aku akan membantu.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_pilihan_bijak"
+      },
+      {
+        "tipe": "B",
+        "teks": "Jadi, aku harus ngapain?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_pilihan_bijak"
+      }
+    ]
+  },
+  {
+    "id": "datuk_pilihan_bijak",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Bagus! Pilihan yang bijak.",
+    "next": "datuk_tugas"
+  },
+  {
+    "id": "datuk_tugas",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Yang kau lakukan tidaklah sulit. Pertama, karena arus sungainya lagi tidak bersahabat, yang dapat kau lakukan untuk sekarang kau hanya perlu membersihkan sampah yang ada di sekitar pinggiran sungai saja dulu. Lalu, coba carilah orang-orang yang bertanggung jawab dengan sampah yang ada di dalam sungai ini.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Mencari orang? Untuk apa?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_alasan"
+      },
+      {
+        "tipe": "B",
+        "teks": "Jika aku menemukan orangnya, apakah aku harus melemparnya ke sungai?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_alasan"
+      }
+    ]
+  },
+  {
+    "id": "datuk_alasan",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Mereka pasti punya alasan.",
+    "next": "mc_alasan_huh"
+  },
+  {
+    "id": "mc_alasan_huh",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Alasan, huh?!",
+    "next": "datuk_setiap_manusia"
+  },
+  {
+    "id": "datuk_setiap_manusia",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Setiap manusia pasti punya alasannya sendiri, Nak.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Baiklah… aku akan melakukannya.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "mc_monolog_akhir"
+      }
+    ]
+  },
+  {
+    "id": "mc_monolog_akhir",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Aku membantu hantu itu bukan karena ancamannya ya... Aku melakukannya hanya karena aku juga sejujurnya tidak suka dengan pemandangan penuh sampah ini.",
     "next": "end"
   }
 ]

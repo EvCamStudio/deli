@@ -1,0 +1,17 @@
+[
+  {
+    "id": "start",
+    "speaker": "Narasi",
+    "emosi": "neutral",
+    "teks": "Pagi ini badanku masih terasa pegal semua. Tapi setidaknya rumah sudah jauh lebih rapi dan kasur baru sudah datang kemarin sore.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Narasi",
+    "emosi": "neutral",
+    "teks": "Sebelum aku lanjut mencari orang-orang yang membuang sampah ke sungai seperti permintaan hantu tua itu, sebaiknya aku menemui ibu dulu.",
+    "next": "end"
+  }
+]
+

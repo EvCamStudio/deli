@@ -1,0 +1,89 @@
+[
+  {
+    "id": "start",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Lihatlah ke bukit hulu itu sebentar, nak. Percuma kau punguti sampah sampai pinggangmu patah kalau tanah di bukit hulu terus-menerus longsor ke sungai saat hujan turun.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Jadi aku harus naik ke bukit hutan ini juga? Yang benar saja...",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Penjaga Hutan",
+    "emosi": "sad",
+    "teks": "Kau dengar suara gemuruh air itu, nak? Dulu saat hutan ini masih lebat, bunyinya seperti hujan yang menenangkan. Sekarang... dengarlah sendiri, setiap kali mendung datang, warga di bawah sana langsung ketakutan.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Apa yang terjadi di sini, Pak? Ke mana pohon-pohonnya?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan"
+      },
+      {
+        "tipe": "A",
+        "teks": "Bapak menjaga hutan seluas ini sendirian?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan"
+      }
+    ]
+  },
+  {
+    "id": "penjelasan",
+    "speaker": "Penjaga Hutan",
+    "emosi": "neutral",
+    "teks": "Banyak pohonnya yang ditebang liar beberapa tahun lalu. Padahal akar pohon itu semacam spons raksasa, nak. Tanpa akar yang menahan di hulu, air hujan tak sempat meresap ke dalam tanah. Air itu langsung lari ke bawah membawa lumpur, sampai merendam rumah-rumah kalian.",
+    "next": "datuk_dorong"
+  },
+  {
+    "id": "datuk_dorong",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Bapak ini benar sekali, nak. Bantulah dia menanam kembali bibit pohon itu. Tenaganya sudah tidak sekuat dulu.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Baiklah Pak, biar saya bantu menanam bibitnya.",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "instruksi_tanam",
+        "effect": {
+          "quest": {
+            "id": "tanam_pohon_hulu",
+            "description": "Tanam 5 bibit pohon di bukit Hulu",
+            "target": 5
+          }
+        }
+      },
+      {
+        "tipe": "A",
+        "teks": "Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.",
+        "delta_sikap": 1,
+        "delta_meter": -3,
+        "next": "instruksi_tanam",
+        "effect": {
+          "quest": {
+            "id": "tanam_pohon_hulu",
+            "description": "Tanam 5 bibit pohon di bukit Hulu",
+            "target": 5
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "instruksi_tanam",
+    "speaker": "Penjaga Hutan",
+    "emosi": "happy",
+    "teks": "Tangan anak muda... tak apa, tanah tak pernah pilih-pilih siapa yang menanam. Ambil bibit di keranjang itu, nak. Lubang tanamnya sudah kusiapkan di sekitar hutan ini, masukkan bibitnya baik-baik, jangan sampai terbalik.",
+    "next": "end"
+  }
+]
+

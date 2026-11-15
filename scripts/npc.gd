@@ -26,13 +26,152 @@ func _ready() -> void:
 	_load_dialogue()
 	DialogueManager.dialogue_finished.connect(_on_dialogue_finished)
 
+func is_interactable_now() -> bool:
+	var step := str(GameState.choices.get("hulu_story_step", ""))
+	var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
+	var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
+	var talked_kota: Array = GameState.zone_progress.get("kota", {}).get("talked_keys", [])
+	var talked_hilir: Array = GameState.zone_progress.get("hilir", {}).get("talked_keys", [])
+
+	match npc_key:
+		"npc_ibu_mc":
+			if step.is_empty():
+				return "npc_ibu_mc" not in talked_hulu
+			if step == "butuh_pesan_kasur":
+				return true
+			if step == "pesan_gorengan":
+				return true
+			if step == "antar_gorengan":
+				return true
+			return false
+
+		"npc_pak_hendra":
+			if step.is_empty():
+				return "npc_pak_hendra" not in talked_hulu
+			return false
+
+		"npc_datuk":
+			return step == "cari_suara_jembatan"
+
+		"npc_penjaga_hutan":
+			if step == "tanam_pohon_hulu":
+				return true
+			if step == "menanam_pohon_hulu" and GameState.zone_stat("hulu", "trees") >= 5:
+				return not bool(GameState.choices.get("penjaga_hutan_selesai", false))
+			return false
+
+		"npc_petani_1": # Pak Darwis
+			if step == "ke_toko_jaya":
+				return not bool(GameState.choices.get("darwis_done", false))
+			return false
+
+		"npc_pemilik_toko":
+			if step == "ke_toko_jaya" or step == "pesan_kasur_pemilik":
+				return not bool(GameState.choices.get("pemilik_toko_done", false))
+			return false
+
+		"npc_ibu_desa": # Kak Rina
+			if step == "ke_warung_rina":
+				return not bool(GameState.choices.get("rina_done", false))
+			if step == "serahkan_jeriken_rina":
+				return not bool(GameState.choices.get("h5_rina_done", false))
+			return false
+
+		"npc_pemuka_desa":
+			if step == "cari_solusi_jelantah":
+				return not bool(GameState.choices.get("has_jeriken_and_info", false))
+			return false
+
+		"npc_pedagang": # Bang Jali
+			if step == "kota_gang_sempit":
+				return not bool(GameState.choices.get("jali_done", false))
+			if step == "serahkan_gerobak_jali":
+				return not bool(GameState.choices.get("h3_jali_done", false))
+			return false
+
+		"npc_tokoh_masyarakat": # Pak RT
+			if step == "cari_solusi_rt":
+				return not bool(GameState.choices.get("has_rt_cart_approval", false))
+			return false
+
+		"npc_ibu_rumah":
+			if step in ["periksa_saluran_kota", "pintu_air_dan_b3"]:
+				return "npc_ibu_rumah" not in talked_kota
+			return false
+
+		"npc_anak_sekolah": # Budi
+			if step in ["tanya_budi", "pintu_air_dan_b3", "ke_hilir_muara"]:
+				return "npc_anak_sekolah" not in talked_kota
+			return false
+
+		"npc_penjaga_sungai":
+			if step in ["pos_penjaga_muara", "pilah_sampah_muara"]:
+				return "npc_penjaga_sungai" not in talked_hilir
+			return false
+
+		"npc_nelayan":
+			if step == "temui_pak_nelayan":
+				return "npc_nelayan" not in talked_hilir
+			if step == "tanam_mangrove_muara" and GameState.zone_stat("hilir", "mangroves") >= 8:
+				return not bool(GameState.choices.get("nelayan_selesai", false))
+			return false
+
+	return true
+
+func _get_default_dialog_id() -> String:
+	var step := str(GameState.choices.get("hulu_story_step", ""))
+	match npc_key:
+		"npc_ibu_mc":
+			if step == "butuh_pesan_kasur":
+				return "h1_warung_kasur"
+			if step == "pesan_gorengan":
+				return "h2_warung_gorengan"
+			if step == "antar_gorengan":
+				return "h2_warung_gorengan_selesai"
+			return "h1_warung"
+		"npc_pak_hendra":
+			return "h1_warung"
+		"npc_datuk":
+			if bool(GameState.choices.get("is_rewound", false)):
+				return "h1_datuk_dejavu"
+			return "h1_datuk"
+		"npc_penjaga_hutan":
+			if GameState.zone_stat("hulu", "trees") >= 5:
+				return "h1_penjaga_hutan_selesai"
+			return "h1_penjaga_hutan"
+		"npc_petani_1":
+			return "h1_toko_jaya"
+		"npc_pemilik_toko":
+			return "h1_toko_jaya"
+		"npc_ibu_desa":
+			if bool(GameState.choices.get("has_jeriken_and_info", false)):
+				return "h5_rina"
+			return "h4_rina"
+		"npc_pemuka_desa":
+			return "h2_pemuka_desa"
+		"npc_pedagang":
+			if bool(GameState.choices.get("has_rt_cart_approval", false)):
+				return "h3_jali"
+			return "h2_jali"
+		"npc_ibu_rumah":
+			return "h3_ibu_rumah"
+		"npc_anak_sekolah":
+			return "h3_budi"
+		"npc_tokoh_masyarakat":
+			return "h3_pak_rt"
+		"npc_nelayan":
+			if GameState.zone_stat("hilir", "mangroves") >= 8:
+				return "h7_nelayan_selesai"
+			return "h7_nelayan"
+		"npc_penjaga_sungai":
+			return "h7_penjaga_sungai"
+	return ""
+
 func _load_dialogue() -> void:
-	# 1. Cek dialog_id khusus dari data/dialog/
+	# 1. Cek dialog_id khusus atau default dari data/dialog/
 	var target_id := dialog_id
 	if target_id.is_empty():
-		match npc_key:
-			"npc_ibu_mc", "npc_pak_hendra": target_id = "h1_warung"
-			"npc_datuk": target_id = "h1_datuk"
+		target_id = _get_default_dialog_id()
 
 	if not target_id.is_empty():
 		var path := "res://data/dialog/%s.json" % target_id
@@ -55,6 +194,9 @@ func _load_dialogue() -> void:
 		_dialogue_data = all_dialogues[npc_key]
 
 func get_action_label() -> String:
+	if not is_interactable_now():
+		return ""
+	_load_dialogue()
 	if _dialogue_data.is_empty():
 		return ""
 	return "Bicara"
@@ -62,15 +204,26 @@ func get_action_label() -> String:
 func has_talked() -> bool:
 	return _has_talked
 
+func set_dialog_id(new_id: String) -> void:
+	dialog_id = new_id
+	_has_talked = false
+	_load_dialogue()
+
 func interact() -> void:
+	if not is_interactable_now():
+		return
+	_load_dialogue()
 	if _dialogue_data.is_empty():
 		return
 	_in_dialogue = true
-	DialogueManager.start_dialogue(_dialogue_data, npc_key)
+	var target_id := dialog_id
+	if target_id.is_empty():
+		target_id = _get_default_dialog_id()
+	DialogueManager.start_dialogue(_dialogue_data, npc_key, target_id)
 
 func show_exclaim(visible_state: bool) -> void:
 	if exclaim:
-		exclaim.visible = visible_state
+		exclaim.visible = visible_state and is_interactable_now()
 
 func _on_dialogue_finished() -> void:
 	if not _in_dialogue:

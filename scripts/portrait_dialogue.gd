@@ -31,7 +31,8 @@ const PORTRAITS: Dictionary = {
 	"Pak Hendra": "pakrt",
 	"Bang Jali": "pedagang",
 	"Kak Rina": "ibu",
-	"Pak Darwis": "penjaga_hutan",
+	"Pak Darwis": "petani",
+	"Pemilik Toko": "pedagang",
 	"Datuk Sampan": "nelayan",
 	"Bang Ucok": "pakrt",
 	"Warga": "petani",
@@ -48,6 +49,8 @@ var _choices_shown: bool = false
 var _current_node: Dictionary = {}
 
 func _ready() -> void:
+	if text_label:
+		text_label.bbcode_enabled = true
 	panel.hide()
 	backdrop.hide()
 	portrait.hide()
@@ -67,15 +70,33 @@ func show_node(node: Dictionary) -> void:
 	_current_node = node
 	_clear_choices()
 	panel.show()
-	portrait.show()
-	backdrop.show()
-	name_plate.show()
 	tap_area.show()
 
-	speaker_label.text = str(node.get("speaker", ""))
-	_update_portrait(node)
+	var speaker_name: String = str(node.get("speaker", ""))
+	if speaker_name.to_lower() == "narasi" or speaker_name.is_empty():
+		portrait.hide()
+		backdrop.hide()
+		if speaker_name.is_empty():
+			name_plate.hide()
+		else:
+			name_plate.show()
+			name_plate.offset_left = 16.0
+			name_plate.offset_right = 160.0
+			speaker_label.text = "Narasi"
+		panel.offset_left = 16.0
+	else:
+		portrait.show()
+		backdrop.show()
+		name_plate.show()
+		panel.offset_left = 138.0
+		name_plate.offset_left = 138.0
+		name_plate.offset_right = 356.0
+		speaker_label.text = speaker_name
+		_update_portrait(node)
 
 	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
+	var p_name: String = GameState.player_name if GameState.player_name.strip_edges() != "" else "Rian"
+	full_text = full_text.replace("{nama}", p_name).replace("{Nama}", p_name).replace("{player}", p_name)
 	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_fit_panel(full_text, choices.size())
 	_has_choices = not choices.is_empty()
@@ -88,10 +109,19 @@ func show_node(node: Dictionary) -> void:
 			_show_choices(choices)
 
 func _clean_text(raw: String) -> String:
+	# Jika ada penanda suara telepati Datuk di kepala MC, pertahankan dan beri format
+	var telepathy_tag := "(Suara di kepala MC)"
+	var has_telepathy := telepathy_tag in raw
+	var temp := raw.replace(telepathy_tag, "___TELEPATHY___")
+
 	# Hilangkan petunjuk lakuan panggung/arah panggung dalam kurung: e.g. "(menunjuk ke dinding)", "(sapu berhenti)"
 	var regex := RegEx.new()
 	regex.compile("\\s*\\([a-zA-Z\\s—–,\\.]{3,80}\\)\\s*")
-	return regex.sub(raw, " ", true).strip_edges()
+	temp = regex.sub(temp, " ", true).strip_edges()
+
+	if has_telepathy:
+		temp = temp.replace("___TELEPATHY___", "[i][color=#8be9fd](Suara di kepala MC)[/color][/i]")
+	return temp
 
 func _fit_panel(text: String, choice_count: int) -> void:
 	# Perkirakan tinggi kotak dari jumlah baris teks + pilihan, supaya tidak
@@ -161,8 +191,25 @@ func _show_choices(choices: Array) -> void:
 		btn.custom_minimum_size = Vector2(0, 24)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
 		btn.add_theme_font_size_override("font_size", 11)
-		var idx: int = i
-		btn.pressed.connect(func(): _on_choice_selected(idx))
+
+		# Periksa status terkunci sesuai System Rule 3 (Mekanik Pilihan Terkunci)
+		var is_locked: bool = bool(choice.get("locked", false)) or bool(choice.get("disabled", false))
+		if choice.has("requires_flag"):
+			var req_flag: String = str(choice["requires_flag"])
+			if not bool(GameState.choices.get(req_flag, false)):
+				is_locked = true
+		if choice_text.begins_with("[TERKUNCI"):
+			is_locked = true
+
+		if is_locked:
+			btn.disabled = true
+			btn.focus_mode = Control.FOCUS_NONE
+			btn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			btn.modulate = Color(0.65, 0.65, 0.65, 0.7)
+		else:
+			var idx: int = i
+			btn.pressed.connect(func(): _on_choice_selected(idx))
+
 		choices_container.add_child(btn)
 
 func _clear_choices() -> void:

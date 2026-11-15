@@ -1,0 +1,24 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Ugh... pemandangan ini benar-benar mengerikan.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Yang mengerikan itu bukan pemandangannya, melainkan orang-orang yang membuat hal ini terjadi.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Eh? Siapa yang berbicara barusan?!",
+    "next": "end"
+  }
+]
+

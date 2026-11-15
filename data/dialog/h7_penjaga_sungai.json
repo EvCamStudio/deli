@@ -1,0 +1,46 @@
+[
+  {
+    "id": "start",
+    "speaker": "Penjaga Sungai",
+    "emosi": "neutral",
+    "teks": "Lihatlah hamparan itu, anak muda. Semua yang dibuang orang-orang dari hulu, desa, hingga kota... akhirnya sampai ke sini. Muara itu tempat sungai menyerahkan semua beban yang dibawanya sebelum masuk ke laut.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Inilah benteng terakhir kita, nak. Jika sampah di muara ini tidak dipilah dan dibersihkan, lautan lepas yang akan menanggung akibatnya.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Gunungan sampahnya banyak sekali... dari mana aku harus mulai, Pak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "arahan_pilah"
+      },
+      {
+        "tipe": "A",
+        "teks": "Jadi aku harus memisahkan semua sampah di tepian ini?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "arahan_pilah"
+      }
+    ]
+  },
+  {
+    "id": "arahan_pilah",
+    "speaker": "Penjaga Sungai",
+    "emosi": "neutral",
+    "teks": "Susuri pesisir ini, pungut yang berserakan, lalu pilah sesuai jenisnya ke dalam tong sampah yang benar: Organik, Anorganik, dan Berbahaya (B3). Kerjakan pelan-pelan saja. Gunungan sampah ini juga tak datang dalam sehari.",
+    "next": "end",
+    "effect": {
+      "quest": {
+        "id": "pilah_hilir",
+        "description": "Pilah 10 sampah pesisir muara ke tong yang benar",
+        "target": 10
+      }
+    }
+  }
+]
+

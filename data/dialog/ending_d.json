@@ -1,23 +1,65 @@
 [
   {
     "id": "start",
-    "speaker": "MC",
+    "speaker": "Narasi",
     "emosi": "sad",
-    "teks": "Banjir bandang datang malam hari tanpa aba-aba. Air coklat pekat menelan bantaran dan warung keluarga. Pagi harinya, hanya tiang yang tersisa dan sandal yang masih berpasangan.",
+    "teks": "Bencana yang diperingatkan Datuk Sampan akhirnya benar-benar datang. Tanpa akar pohon penahan di bukit hulu, air hujan meluncur ganas membawa lumpur longsor. Di desa, kasur-kasur bekas menyumbat tiang jembatan. Di kota, parit meluap memuntahkan ribuan kantong plastik dan lemak jelantah. Di muara, gunungan sampah membuat air berbalik menghantam daratan!",
     "next": "1"
   },
   {
     "id": "1",
-    "speaker": "Datuk Sampan",
+    "speaker": "Pak Hendra",
     "emosi": "sad",
-    "teks": "Sungai tak membenci siapa pun, Nak. Ia hanya kembali ke jalannya. Kalau kau diberi kesempatan sekali lagi, dengarkan dulu sebelum bicara.",
+    "teks": "Pegangan yang kuat, nak! Arusnya terlalu deras! Jangan lepaskan tangan ibumu!",
     "next": "2"
   },
   {
     "id": "2",
+    "speaker": "Bu Mira",
+    "emosi": "sad",
+    "teks": "Habis sudah semuanya, Pak... warung kita, tempat tinggal kita... semuanya hanyut dibawa air!",
+    "next": "3"
+  },
+  {
+    "id": "3",
     "speaker": "MC",
     "emosi": "sad",
-    "teks": "Satu orang membuang. Semua yang menanggung.",
+    "teks": "T-tidak mungkin... pagi harinya, warung ibu hanya menyisakan tiang-tiang kayu yang patah dan sepasang sandal yang mengapung di atas lumpur...",
+    "next": "penyesalan_darwis"
+  },
+  {
+    "id": "penyesalan_darwis",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Kasur busa yang kuhanyutkan kemarin... tersangkut di tiang jembatan dan menahan seluruh sampah sampai airnya jebol menghantam kampung kita. Jadi begini rupanya bencana yang kau bilang di toko kasur kemarin, nak...",
+    "next": "penyesalan_rina"
+  },
+  {
+    "id": "penyesalan_rina",
+    "speaker": "Kak Rina",
+    "emosi": "sad",
+    "teks": "Selokan di belakang warungku mampat total... air hitamnya meluap menghanyutkan seluruh gerobak dan wajan gorenganku! Tadi kubilang selokan itu tak apa-apa... ternyata aku sendiri yang menghancurkan tempat cari makanku!",
+    "next": "penyesalan_jali"
+  },
+  {
+    "id": "penyesalan_jali",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Bah... mustahil! Semua kantong plastik yang kami lempar ke parit berbalik mengepung gang sempit ini! Rumah kami tenggelam oleh sampah kami sendiri!",
+    "next": "datuk_kesempatan_rewind"
+  },
+  {
+    "id": "datuk_kesempatan_rewind",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Sungai tak pernah membenci siapa pun, nak. Ia hanya kembali mencari jalannya yang tersumbat. Satu orang membuang, semua orang yang menanggung akibatnya.",
+    "next": "datuk_tawaran_rewind"
+  },
+  {
+    "id": "datuk_tawaran_rewind",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "Kau sudah melihat sendiri ujung dari penyesalan yang tak dapat diubah ini. Namun... ikatan jiwaku dengan sungai ini masih memberimu satu kesempatan terakhir. Jika kau diberi kesempatan memutar kembali waktu, mulailah dengan mendengar sebelum hujan turun!",
     "next": "end"
   }
 ]

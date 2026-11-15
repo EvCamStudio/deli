@@ -1,0 +1,519 @@
+DELI REWIND: MASTER DESIGN & NASKAH LENGKAP (V2)
+Dokumen Panduan Alur Cerita, Mekanik Solusi vs Kegagalan Warga, Teka-Teki Pantun, 4 Variasi Ending, & Sistem Rewind untuk Antigravity (Godot Engine)
+PANDUAN UTAMA UNTUK AI ANTIGRAVITY (SYSTEM RULES)
+Baca aturan di bawah ini sebelum mengubah file .gd (GDScript) atau file .json di folder data/dialog/
+[1. Pisahkan Kotak Narasi, Layar Hitam, dan Dialog Karakter]• [TRANSISI LAYAR HITAM] : Gunakan layar gelap penuh (Fade to Black) dengan teks putih di tengah layar untuk perpindahan hari/waktu.• [KOTAK NARASI / MONOLOG INTERNAL] : Gunakan kotak teks narasi tanpa nama/potret NPC untuk pemikiran batin MC.• [SUARA DI KEPALA MC] : Saat Datuk Sampan berbicara secara telepati (wujudnya tidak terlihat), tampilkan dengan gaya teks miring (italic) atau efek suara gema.
+[2. JANGAN Masukkan Instruksi Tombol ke Mulut NPC]• Kalimat mekanik seperti 'Dekati tanah bertanda, lalu tekan tombol aksi' DILARANG diucapkan oleh NPC (Penjaga Hutan / Pak Nelayan).• Semua petunjuk kontrol dan misi wajib dimasukkan ke dalam UI Quest Tracker / Objective Box di pojok layar melalui tag [UPDATE MISI].
+[3. Mekanik 2 Titik Penanaman Pohon (Hulu vs Muara Hilir)]• ZONA 1 (Hutan Hulu) : Penjaga Hutan (`npc_penjaga_hutan`) meminta MC menanam 5 BIBIT POHON HUTAN untuk menahan tanah longsor & menyerap air hujan.• ZONA 4 (Pesisir Muara Hilir) : Pak Nelayan (`npc_nelayan`) meminta MC menanam 8 BIBIT POHON BAKAU (MANGROVE) untuk menahan abrasi ombak laut & rumah anak ikan.
+[4. Mekanik Cabang Warga: PEDULI (Solusi) vs MENOLAK (Gagal) & Meter Bencana]• Setiap warga utama (Pak Darwis, Kak Rina, Bang Jali) memiliki status `peduli` (true/false).• JALUR BERHASIL (PEDULI) : MC mendengarkan alasan mereka -> Mencari info & barang bukti ke NPC Kunci (Toko Jaya / Pemuka Desa / Pak RT) -> Memberikan Solusi Win-Win. Meter Bencana turun / tetap rendah.• JALUR GAGAL (MENOLAK) : Jika pemain memilih opsi menghakimi/marah (Opsi C) atau memaksa tanpa solusi nyata (Opsi B / malas mencari bantuan), warga tersinggung, menolak bicara lagi, dan terus membuang sampah ('Sampah Balasan'). Meter Bencana naik +20% hingga +25% per warga yang gagal.
+[5. Sistem 4 Ending & Mekanik REWIND (Deja Vu Loop)]• Ending ditentukan di akhir Zona 4 (atau langsung terpicu di tengah jalan jika Meter Bencana >= 80%).• ENDING A (True Ending): Meter Bencana <= 20%, 3 Warga Peduli, Tanam Pohon Hulu (5) & Mangrove (8) selesai.• ENDING B (Normal Ending): Meter Bencana <= 40%, 2 dari 3 Warga Peduli.• ENDING C (Warning Ending): Meter Bencana <= 60%, hanya 1 Warga Peduli.• ENDING D (Bad Ending -> REWIND): Meter Bencana > 60%. Memicu banjir bandang yang menghancurkan warung Ibu, menampilkan penyesalan warga yang gagal, lalu memunculkan tombol REWIND untuk memutar waktu kembali dengan ingatan Deja Vu.
+Tabel Peta NPC, File JSON, dan Variabel Ending:
+Zona / Bagian
+Nama NPC / Event
+File JSON
+Tugas & Masalah Utama
+Efek Berhasil vs Gagal
+Prolog & Hulu
+Bu Mira (Mak), Pak Hendra, Datuk Sampan
+level1.json
+Rumah kebanjiran lumpur, jembatan penuh sampah
+Bersihkan tepian sungai & buka akses ke hutan hulu / toko kasur
+Zona 1: Hulu
+Penjaga Hutan (npc_penjaga_hutan)
+level1.json
+Bukit hulu gundul memicu longsor lumpur
+Tanam 5 bibit pohon hutan. Jika dilewatkan: Meter Bencana +15%
+Zona 2: Desa Deli
+Pak Darwis (npc_petani_1 / npc_pak_tani)
+h6_darwis.json
+Buang kasur basah ke sungai karena tua renta & sakit pinggang
+Berhasil: Cincang busa kasur dijual ke pengepul. Gagal: Kasur sumbat jembatan (+20% Bencana)
+Zona 2: Desa Deli
+Pemuka Desa (npc_pemuka_desa)
+level1.json
+Kearifan gotong royong & Bank Sampah
+Memberi [Jeriken Kosong] & info Biodiesel Rp3.000/L untuk Kak Rina
+Zona 2: Desa Deli
+Kak Rina (npc_ibu_desa / npc_ibu_sari)
+h4_rina.json / h5_rina.json
+Buang minyak jelantah ke selokan karena tak punya wadah
+Berhasil: Tampung di jeriken Bank Sampah. Gagal: Selokan mampat lemak (+20% Bencana)
+Zona 3: Kota Medan
+Bang Jali (npc_pedagang) & Pak RT
+h2_jali.json / h3_jali.json
+Gang sempit tak muat truk sampah, TPS jauh 200m
+Berhasil: Gerobak Sampah Roda dari Pak RT. Gagal: Parit gang meluap plastik (+20% Bencana)
+Zona 3: Kota Medan
+Ibu Rumah Tangga & Budi
+level1.json
+Pintu air mampat, sampah B3, & petunjuk pantun
+Buka tuas urutan 1 - 3 - 2, pilah B3, & pelajari sajak a-b-a-b
+Zona 4: Hilir Muara
+Penjaga Sungai & Papan Pantun
+h7_pantun.json
+Sampah muara & 3 Pantun Melayu Deli
+Pilah sampah ke 3 tong & selesaikan 3 soal pantun muara
+Zona 4: Hilir Muara
+Pak Nelayan (npc_nelayan)
+level1.json
+Pantai abrasi & anak ikan hilang karena bakau ompong
+Tanam 8 bibit pohon mangrove di pesisir. Jika dilewatkan: Meter Bencana +15%
+Ending A / B / C / D
+Keluarga MC, Warga, & Datuk Sampan
+ending_a/b/c/d.json
+Evaluasi akhir kesehatan Sungai Deli & nasib warung Ibu
+Ending A (<=20%), B (<=40%), C (<=60%), D (>60% -> Banjir Bandang & Tombol REWIND)
+BAGIAN 1: PROLOG — RUMAH KEBANJIRAN & JEMBATAN DATUK SAMPAN
+Lokasi Awal: Rumah MC & Jembatan Sungai Hulu (level1.json)
+Adegan 1.1: Kepulangan MC Saat Banjir Surut
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Di dalam Rumah MC (Kondisi rumah berantakan dan berlumpur sisa banjir).TRIGGER: Game dimulai saat MC baru saja masuk ke dalam rumah menemui Ibu (Bu Mira / Mak) dan Bapak (Pak Hendra).
+Bu Mira (Mak) : Sudah sampai nak?
+Mc : Iya mak, maaf ya mak, seharusnya aku pulang lebih cepat.
+Pak Hendra : Banjir tidak akan menunggu siapa-siapa nak. Jangan pikul yang bukan bagianmu.
+Mc : Rumah kita sungguh berantakan ya mak, air benar-benar membuat kekacauan ini.
+Pak Hendra : Jangan mengatakan hal seperti itu nak, memangnya air salah apa? Bukan air yang seharusnya bertanggung jawab….
+Bu Mira (Mak) : Sudahlah pak. Meskipun memang banyak barang kita yang rusak akibat banjir, tapi yang terpenting kita sekeluarga masih selamat.
+Mc : Melihat rumah kita terendam sisa lumpur begini, hatiku terasa sesak. Banyak perabotan yang rusak dan harus kita benahi bersama, agar ibu juga bisa kembali berjualan.
+Pak Hendra : Yasudah. Mari kita mulai bersih-bersih apa yang tersisa dari banjir.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"2 Hari Kemudian..."
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Sungguh sangat melelahkan, selama 2 hari aku harus membersihkan semua kekacauan ini. Aku tidak tahu kenapa tapi ini sangat menjengkelkan, air sungai yang naik itu pasti karena sampah-sampah yang ada di sana. Dulu saat aku kecil sungai itu masih layak dilihat bahkan untuk mandi di sana, tapi sekarang aku bahkan tidak bisa melihat sungai itu tanpa merasa jijik. Sebenarnya dari mana semua awal kesalahannya?
+Adegan 1.2: Misi Pertama dari Ibu (Memesan Kasur Baru)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Bicara dengan Ibu (Mak) di dalam rumah.Setelah monolog narasi selesai, pemain menggerakkan MC untuk menghampiri Ibu.
+Mak : Nak, bisakah kamu ke desa sebelah untuk memesan kasur baru? Kasur kita sudah tidak bisa dipakai.
+Pilihan Dialog MC :
+• Bisa mak.
+• Tempatnya di mana ya mak?
+↳ [Ke-2 pilihan tersebut menghasilkan jawaban yang sama dari Mak]
+Mak : Tempatnya di Toko Jaya ya nak, kamu pesan saja dulu, nanti mereka akan kirim orang untuk mengantarkan ke sini.
+Mc : Baik mak.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Pergi ke Toko Jaya di desa sebelah melalui jembatan sungai.
+Adegan 1.3: Pertemuan Pertama dengan Datuk Sampan di Jembatan
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Jembatan Penyeberangan Sungai.TRIGGER EVENT 1: Saat MC melangkah masuk ke atas jembatan dan melihat tumpukan sampah di sungai, kotak dialog otomatis muncul. Wujud Datuk Sampan BELUM terlihat (masih berupa suara misterius).
+Mc : Ugh, pemandangan ini benar-benar mengerikan.
+Datuk Sampan : (Suara misterius terdengar sangat dekat, tapi wujudnya belum terlihat) Yang mengerikan itu bukan pemandangannya, melainkan orang-orang yang membuat hal ini terjadi.
+Mc : Eh? Siapa yang berbicara barusan?
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]MEKANIK SCENE: Pemain menggerakkan MC mencari ke sekitar pinggir jembatan karena bingung tidak melihat siapa-siapa.TRIGGER EVENT 2: Saat MC kembali menginjak bagian tengah jembatan, dialog kedua otomatis terpicu dan sprite Datuk Sampan muncul (fade-in) berdiri di tengah jembatan.
+Mc : Ugh, itu tadi apa? Tidak ada seseorang pun di sekitar sini… apa itu hanya halusinasiku saja atau itu hantu?
+*(Tiba-tiba sosok kakek tua berpakaian tradisional Melayu—Datuk Sampan—muncul berdiri di tengah jembatan)*
+Datuk : Anggap saja keduanya.
+Mc : Argh! K-kau siapa? Kenapa kau bisa tiba-tiba muncul di sana?
+Datuk : Aku adalah Datuk Sampan… aku setiap hari berada di sini, karena aku yang menjaga sungai ini. Ya, meskipun tidak ada satu orang pun yang mengetahui hal itu. Tapi, untuk pertama kalinya ada orang yang dapat melihatku dan mengetahui hal itu.
+Datuk : Mungkin ini suatu kesempatan untuk memperbaikinya sebelum terlambat.
+Pilihan Dialog MC :
+• Huh? Penjaga sungai ini?
+• K-kau beneran h-hantu...
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Ya, begitulah….
+Datuk : Hei anak muda, siapa namamu?
+Mc : E-em aku [Nama MC].
+Datuk : Nama yang bagus, senang bertemu denganmu.
+Pilihan Dialog MC :
+• Aku gak tahu apakah aku harus senang juga dengan hal ini?
+• Apakah aku akan mendapat musibah jika disenangi hantu?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Hahaha kau pemuda yang lucu.
+Datuk : Ini adalah kesempatan emas yang datang mungkin hanya sekali seumur hidupku mendapatkannya, pemuda yang baik… apakah kamu bisa menolongku?
+Pilihan Dialog MC :
+• Menolong? Apakah hantu butuh pertolongan?
+• Tidak. Aku tidak ingin berurusan dengan hantu.
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Aku tidak minta bantuanmu untuk diriku nak, ini semua untuk kau dan orang lain. Sungai ini sudah membawa beban yang melampaui kesanggupannya. Jika tidak segera diperbaiki, maka yang ada di ujung hanyalah sebuah penyesalan yang tidak dapat diubah.
+Pilihan Dialog MC :
+• Apa maksudnya?
+• Kau berbicara dengan sangat bertele-tele.
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Baiklah, aku tidak akan bertele-tele mulai sekarang, sepertinya kau pemuda yang cukup dingin…
+Pilihan Dialog MC :
+• …..
+↳ [Pilihan tunggal]
+Datuk : Dengar ini baik-baik nak, bencana akan segera menimpa kota ini, dan tidak ada yang dapat kalian lakukan pada saat itu jika semuanya sudah terjadi.
+Pilihan Dialog MC :
+• Bencana? Jangan bercanda.
+• Apa kau sekarang sedang membual?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Aku tidak berbohong. Aku adalah penjaga sungai ini selama 70 tahun, aku dengan sungai ini sudah seperti saudara yang jiwanya terikat sangat dalam dan aku tahu apa yang kurasakan tidak pernah salah.
+Pilihan Dialog MC :
+• Bukankah banjir kemarin juga sudah bencana?
+• Paling hanya banjir seperti kemarin lagi.
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Aku mengatakannya sekali lagi nak, aku meminta bantuan bukan untuk diriku, melainkan untuk kalian. Terserah kau mau percaya atau tak. Satu hal yang pasti jika bencana itu terjadi, kalian pasti akan menyesal, atau… mungkin kalian sudah tidak bisa menyesal? Karena saat bencana itu terjadi, itu bisa saja membinasakan kalian….
+Pilihan Dialog MC :
+• Kau membuatku takut.
+• ……
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Jangan khawatir… jika kau berhasil membantuku, bencana itu tidak akan terjadi.
+Pilihan Dialog MC :
+• Baiklah.. aku akan membantu.
+• Jadi, aku harus ngapain?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Bagus! Pilihan yang bijak.
+Datuk : Yang kau lakukan tidaklah sulit. Pertama, karena arus sungainya lagi tidak bersahabat, yang dapat kau lakukan untuk sekarang kau hanya perlu membersihkan sampah yang ada di sekitar pinggiran sungai saja dulu. Lalu, coba carilah orang-orang yang bertanggung jawab dengan sampah yang ada di dalam sungai ini.
+Pilihan Dialog MC :
+• Mencari orang? Untuk apa?
+• Jika aku menemukan orangnya, apakah aku harus melemparnya ke sungai?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : Mereka pasti punya alasan.
+Pilihan Dialog MC :
+• Alasan huh?!
+↳ [Pilihan tunggal]
+Datuk : Setiap manusia pasti punya alasannya sendiri nak. Jangan mulai dengan amarah, mulailah dengan telinga. Dengarkan kenapa mereka melakukannya, lalu carilah jalan keluarnya.
+Pilihan Dialog MC :
+• Baiklah… aku akan melakukannya.
+↳ [Pilihan tunggal]
+*(Wujud Datuk Sampan perlahan menghilang di depan mata MC. Mulai titik ini, suara Datuk Sampan akan mengikuti di dalam kepala MC sebagai pembimbing)*
+Mc : Aku membantu hantu itu bukan karena ancamannya ya… aku melakukannya hanya karena aku juga sejujurnya tidak suka dengan pemandangan penuh sampah ini.
+BAGIAN 2: ZONA 1 — TEPIAN SUNGAI HULU & HUTAN RESAPAN (5 BIBIT POHON)
+Misi: Membersihkan Pinggiran Sungai & Menanam 5 Bibit Pohon Hutan Bersama Penjaga Hutan
+Adegan 2.1: Membersihkan Sampah di Pinggiran Sungai
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Bersihkan seluruh sampah yang berserakan di pinggiran sungai.TRIGGER EVENT: Setelah seluruh objek sampah di tepian sungai berhasil dipungut, otomatis jalankan dialog di bawah ini. Wujud Datuk TIDAK dimunculkan (hanya suara di kepala MC).
+Mc : Melelahkan sekali membersihkan semua ini.
+Datuk : (Suara di kepala MC) Wajar saja… banyaknya sampah-sampah itu sungguh sebuah ironi.
+Mc : (Kaget sambil menoleh ke kanan-kiri) Suara ini? Datuk Sampan? Di mana kau? Aku gak bisa melihatmu…
+Datuk : (Suara di kepala MC) Ya… sekarang sepertinya kau tak bisa melihatku lagi.. tapi syukurlah kau masih bisa mendengar suaraku.
+Datuk : (Suara di kepala MC) Kau sudah membersihkan semuanya dengan baik. Kau sungguh pemuda yang luar biasa.
+Pilihan Dialog MC :
+• Hantu menyebalkan ini… kenapa selalu mengagetkanku.
+• Dipuji oleh hantu menyebalkan huh….?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : (Suara di kepala MC) Memangnya salah jika hantu memujimu?
+Pilihan Dialog MC :
+• …..
+↳ [Pilihan tunggal]
+Adegan 2.2: Penjaga Hutan (npc_penjaga_hutan) — Misi Tanam 5 Bibit Pohon di Hulu
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Bukit / Hutan Hulu di dekat Sungai.TARGET AKSI: Menanam 5 BIBIT POHON HUTAN di titik tanah bertanda.UPDATE MISI UI: Temui Penjaga Hutan (npc_penjaga_hutan) di Hulu Sungai.
+Datuk : (Suara di kepala MC) Lihatlah ke bukit hulu itu sebentar, nak. Percuma kau punguti sampah sampai pinggangmu patah kalau tanah di bukit hulu terus-menerus longsor ke sungai saat hujan turun.
+Mc : Jadi aku harus naik ke bukit hutan ini juga? Yang benar saja...
+*(MC menghampiri seorang bapak tua Penjaga Hutan yang sedang menatap lereng bukit yang gundul)*
+Penjaga Hutan : Kau dengar suara gemuruh air itu, nak? Dulu saat hutan ini masih lebat, bunyinya seperti hujan yang tak habis-habis namun menenangkan. Sekarang... dengarlah sendiri, setiap kali mendung datang, warga di bawah sana langsung ketakutan.
+Pilihan Dialog MC :
+• Apa yang terjadi di sini, Pak? Ke mana pohon-pohonnya?
+• Bapak menjaga hutan seluas ini sendirian?
+↳ [Apapun pilihannya, Penjaga Hutan menjawab hal yang sama]
+Penjaga Hutan : Banyak pohonnya yang ditebang liar. Padahal akar pohon itu semacam spons raksasa, nak. Tanpa akar yang menahan di hulu, air hujan tak sempat meresap ke dalam tanah. Air itu langsung lari ke bawah membawa tanah dan lumpur, sampai merendam rumah-rumah kalian.
+Datuk : (Suara di kepala MC) Bapak ini benar sekali, nak. Bantulah dia menanam kembali 5 bibit pohon hutan itu. Tenaganya sudah tidak sekuat dulu.
+Pilihan Dialog MC :
+• [BERHASIL] Baiklah Pak, biar saya bantu menanam 5 bibit pohonnya.
+• [BERHASIL] Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.
+• [MENOLAK / LEWATI] Maaf Pak, saya sedang buru-buru mau ke toko kasur, gak sempat kotor-kotoran.
+↳ [Jika memilih opsi 1 atau 2 -> Mulai Misi Tanam 5 Pohon. Jika memilih opsi 3 -> Penjaga Hutan kecewa & Meter Bencana +15%]
+Penjaga Hutan : Tangan anak muda... tak apa, tanah tak pernah pilih-pilih siapa yang menanam. Ambil 5 bibit pohon di keranjang itu, nak. Lubang tanamnya sudah kusiapkan di sekitar hutan ini, masukkan bibitnya baik-baik, tak usah terlalu dalam, cukup tak terbalik.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Tanam 5 bibit pohon hutan di titik tanah bertanda (0/5 selesai).PENTING: Jangan masukkan kalimat 'Tekan tombol aksi' ke dalam dialog Penjaga Hutan!TRIGGER SELESAI: Setelah 5 titik tanam selesai ditanami bibit, jalankan dialog penutup Penjaga Hutan di bawah ini.
+Mc : Huft... sudah tertanam semua kelima bibitnya, Pak. Tanganku penuh tanah rasanya.
+Penjaga Hutan : Terima kasih, nak. Pohon yang kau tanam hari ini mungkin tak sempat kau teduhi. Tak apa. Pohon besar yang meneduhimu sekarang pun dulunya bukan kau yang tanam.
+Mc : Aku harus segera ke Toko Jaya dulu sekarang, aku harus memesan kasur ibu sebelum tokonya tutup. Ini sudah sore!
+Datuk : (Suara di kepala MC) Aku tidak keberatan, pergilah ke toko itu dulu. Toh manusia juga butuh istirahat.
+BAGIAN 3: ZONA 2 (DESA DELI) — PAK DARWIS, PEMUKA DESA, & KAK RINA
+File Terkait: h6_darwis.json, h4_rina.json / h5_rina.json, level1.json (Lengkap dengan Cabang Peduli vs Menolak)
+Adegan 3.1: Pak Darwis di Toko Jaya (Masalah Kasur Bekas Banjir)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Di dalam Toko Jaya (Toko Kasur Desa Sebelah).FILE JSON: data/dialog/h6_darwis.jsonCATATAN PENTING: Gunakan persis alur dialog di bawah ini. Alasan Pak Darwis membuang kasur ke sungai adalah karena FISIKNYA SUDAH TUA RENTA & PINGGANGNYA SAKIT.
+*(Saat MC masuk ke dalam Toko Jaya, MC tidak sengaja mendengar Pak Darwis sedang berbicara dengan pemilik toko)*
+Pak Darwis : Untung saja kasur lama yang rusak karena banjir kemarin sudah kubuang ke sungai tadi pagi, jadi kamarku langsung kosong buat kasur baru ini.
+Pemilik Toko : Wah, memangnya tidak apa-apa dibuang ke sungai, Pak Darwis?
+Pak Darwis : Yah, mau bagaimana lagi? Pinggang tuaku ini sudah hampir patah rasanya.
+*(Mendengar hal itu, MC langsung menghampiri dan bertanya pada Pak Darwis)*
+Mc : Permisi, apa aku tidak salah dengar barusan? Bapak yang membuang kasur bekas ke sungai itu?!
+Pak Darwis : Eh? Siapa kau anak muda? Tiba-tiba saja ikut campur urusan orang tua.
+Datuk : (Suara di kepala MC) Tahan emosimu nak... ingat apa yang kukatakan tadi. Dengarkan dulu alasannya.
+Pilihan Dialog MC :
+• Bapak tahu betapa beratnya membersihkan sungai itu?!
+• Memangnya kenapa Bapak harus membuangnya ke sungai?
+↳ [Apapun pilihannya, Pak Darwis menjawab hal yang sama]
+Pak Darwis : Hah... kau pikir aku sengaja ingin mengotori sungai? Kasur busa itu terendam lumpur banjir, beratnya puluhan kilo, dan baunya busuk.
+Pak Darwis : Lihatlah tubuhku ini nak, aku sudah tua renta. Menyeret kasur basah itu keluar rumah saja napasku sudah mau habis. Tempat pembuangan sampah itu jauh di ujung desa, mana sanggup tulang tuaku ini menggotongnya ke sana sendirian? Jadi aku tidak punya pilihan lain selain menghanyutkannya ke sungai di belakang rumah.
+Pilihan Dialog MC :
+• Tetap saja itu salah, Pak! Itu malah bikin banjir lagi!
+• Hmm... jadi karena Bapak gak kuat membawanya jauh-jauh ya...
+↳ [Apapun pilihannya, Pak Darwis menjawab hal yang sama]
+Pak Darwis : Aku tahu itu salah nak... jujur saja aku juga merasa bersalah saat mendorongnya ke air. Waktu aku muda dulu, kasur itu isinya kapuk alami, bisa hancur sendiri di air. Sekarang isinya busa plastik semua. Tapi mau bagaimana lagi, tenagaku sudah tidak ada.
+Datuk : (Suara di kepala MC) Kau lihat sendiri kan, nak? Dia bukannya jahat, fisiknya saja yang sudah tidak sanggup. Coba kau berikan jalan keluar agar orang tua ini tidak perlu menggotong kasur berat itu sendirian.
+Pilihan Dialog MC :
+• [A - SOLUSI EMPATI] Kenapa busanya gak Bapak potong-potong saja dulu pakai parang?
+• [A - SOLUSI EMPATI] Sebenarnya ada cara yang gak bikin pinggang Bapak sakit, lho.
+• [B - MENGGURUI / GAGAL] Lain kali Bapak paksakan bawa ke TPA saja, Pak, daripada nyumbat sungai.
+• [C - MENGHAKIMI / GAGAL] Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!
+↳ [Pilih A untuk Jalur Berhasil (Peduli). Pilih B atau C untuk Jalur Gagal (Menolak).]
+[CABANG 1: JIKA PEMAIN MEMILIH [A - SOLUSI EMPATI] (PAK DARWIS PEDULI)]Set `darwis_peduli = true`, Meter Bencana turun/stabil.
+Mc : Begini Pak, daripada digotong utuh-utuh, lain kali kalau ada kasur busa yang rusak, belah dan cincang saja busanya pakai parang sampai kecil-kecil. Busa potongan itu ringan dibawa dan bisa dijual ke pengepul daur ulang di hulu, Pak. Bapak gak perlu angkat berat-berat, malah bisa dapat uang.
+Pak Darwis : Eh? Dijual ke pengepul? Busa bekas begitu masih laku rupanya?
+Pak Darwis : Wah... kenapa aku tidak kepikiran sampai ke situ ya. Kalau cuma membelah dan mencincang busa pakai parang di halaman rumah sih parangku masih tajam dan tenagaku masih kuat. Terima kasih sarannya ya, anak muda. Mulai sekarang kasur rusak tak akan kubuang ke sungai lagi!
+*(Pak Darwis pun pergi meninggalkan toko dengan wajah lega setelah selesai membayar)*
+Mc : (Berbicara dalam hati) Ugh... ternyata benar kata hantu tua itu. Dia bukannya jahat, dia hanya kesulitan karena sudah tua dan akhirnya mengambil jalan pintas.
+Datuk : (Suara di kepala MC) Kerja bagus, nak. Manusia sering kali merusak alam bukan karena mereka benci pada alam, tapi karena mereka merasa tidak punya pilihan lain.
+[CABANG 2: JIKA PEMAIN MEMILIH [B / C - MENGGURUI ATAU MENGHAKIMI] (PAK DARWIS MENOLAK)]Set `darwis_peduli = false`, Meter Bencana naik +20% ('Sampah Balasan' aktif: kasur bekas menyumbat jembatan desa).
+Pak Darwis : Kau pikir TPA itu dekat?! Sepuluh kilo dari sini! Memangnya kau yang mau menggendong kasurku?! Anak kemarin sore tahu apa soal susahnya orang tua! Aku sudah makan garam sebelum kau lahir, tak sopan kau menceramahi aku!
+*(Pak Darwis membanting pintu toko dan pergi dengan wajah marah)*
+Datuk : (Suara di kepala MC) Hah... kau lihat itu, nak? Karena kau langsung menyalahkannya tanpa memberi jalan keluar yang sanggup dia lakukan, hatinya malah tertutup rapat. Kalau ada barang rongsokan lagi, dia pasti tetap melemparnya ke sungai.
+Datuk : (Suara di kepala MC) Sudahlah, sebelum kau memikirkan hari esok, bukankah kau punya urusan dengan pemilik toko ini? Jangan sampai ibumu menunggu terlalu lama.
+Mc : Ah, benar juga! Hampir saja aku lupa tujuan awalku ke sini.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Bicara dengan Pemilik Toko Jaya untuk memesan kasur Ibu.
+Mc : Permisi, Koh. Saya disuruh ibu saya, Bu Mira, untuk memesan kasur baru. Kasur di rumah sudah hancur kena banjir kemarin.
+Pemilik Toko : Oh, anaknya Bu Mira ya? Bisa, nak. Kebetulan stok kasur ukuran sedang masih ada di gudang. Nanti sore saya suruh anak buah saya antar langsung ke rumahmu ya.
+Mc : Baik, Koh. Terima kasih banyak ya.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Pulang ke rumah dan beristirahat.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"1 Hari Kemudian..."
+Adegan 3.2: Hari Kedua — Misi Membeli Gorengan & Masalah Kak Rina
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Pagi ini badanku masih terasa pegal semua. Tapi setidaknya rumah sudah jauh lebih rapi dan kasur baru sudah datang kemarin sore. Sebelum aku lanjut mencari orang-orang yang membuang sampah ke sungai seperti permintaan hantu tua itu, sebaiknya aku menemui ibu dulu.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Di dalam Rumah MC.UPDATE MISI UI: Bicara dengan Ibu (Mak) di dekat dapur.
+Mak : Sudah bangun nak? Kebetulan sekali, ibu belum sempat masak pagi ini karena masih membereskan peralatan dapur. Tolong belikan gorengan di warung Kak Rina dekat jembatan sana ya buat sarapan kita.
+Pilihan Dialog MC :
+• Baik mak, sekalian aku mau jalan-jalan keluar.
+• Gorengan terus... tapi yasudahlah mak.
+↳ [Ke-2 pilihan menghasilkan jawaban yang sama dari Mak]
+Mak : Ini uangnya. Jangan lama-lama ya nak, beli selagi masih hangat.
+Mc : Iya mak, aku berangkat dulu.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Pergi ke warung gorengan Kak Rina (npc_ibu_desa / npc_ibu_sari).FILE JSON: data/dialog/h4_rina.json & h5_rina.jsonTRIGGER EVENT: Saat MC mendekati gerobak gorengan, terlihat Kak Rina sedang mengangkat wajan berisi minyak jelantah hitam pekat dan hendak menuangkannya ke selokan sungai di belakang gerobaknya.
+Datuk : (Suara di kepala MC) Tunggu nak! Lihat apa yang mau dilakukan pedagang itu! Dia mau membuang minyak bekas gorengan itu ke saluran sungai!
+Mc : (Berbisik pelan) Ugh, hantu ini muncul lagi... memangnya kenapa kalau cuma minyak goreng?
+Datuk : (Suara di kepala MC) Jangan remehkan itu! Minyak jelantah kalau masuk ke sungai akan menutup permukaan air, menyumbat saluran dengan lemaknya, dan meracuni ikan-ikan di dalamnya! Cepat hentikan dia sebelum dituang!
+*(MC bergegas menghampiri gerobak Kak Rina sebelum minyak itu dituang ke selokan)*
+Mc : Eh, tunggu Kak! Beli gorengannya dulu!
+Kak Rina : Eh, iya Dek! Sebentar ya, Kakak mau buang minyak bekas kemarin dulu ke selokan ini, sudah hitam sekali soalnya.
+Mc : Tunggu Kak, jangan dibuang ke selokan itu! Saluran ini kan langsung mengalir ke sungai!
+Kak Rina : Loh, memangnya kenapa Dek? Tumben sekali kau peduli urusan selokan.
+Datuk : (Suara di kepala MC) Ingat nak, jangan langsung memarahinya. Tanyakan baik-baik kenapa dia membuangnya ke situ.
+Pilihan Dialog MC :
+• Kakak tahu gak sih minyak itu bikin sungai tercemar dan bau?!
+• Memangnya gak ada tempat lain buat buang minyak itu, Kak?
+↳ [Apapun pilihannya, Kak Rina menjawab hal yang sama]
+Kak Rina : Hah... kau pikir Kakak senang buang-buang minyak ke situ, Dek? Masalahnya, minyak bekas ini setiap hari numpuk banyak sekali.
+Kak Rina : Kalau Kakak simpan di rumah, baunya tengik dan mengundang semut. Mau ditampung pakai wadah, harga jeriken atau botol besar itu mahal, sedangkan untung jualan gorengan sehabis banjir begini pas-pasan sekali buat makan. Jadi ya mau tidak mau Kakak tuang saja ke selokan biar cepat beres.
+Pilihan Dialog MC :
+• Tetap saja itu merusak sungai kita, Kak!
+• Hmm... jadi karena gak ada wadah dan takut keluar biaya lagi ya...
+↳ [Apapun pilihannya, Kak Rina menjawab hal yang sama]
+Kak Rina : Iya Dek, Kakak juga tahu selokannya jadi licin dan hitam. Sebenarnya sayang juga sih dibuang begitu saja, namanya juga minyak beli pakai uang. Tapi mau diapakan lagi kalau sudah kotor begitu? Memangnya kau punya wadah gratis dan tahu siapa yang mau beli minyak kotor begini?
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]MEKANIK OPSI TERKUNCI & CABANG GAGAL (PERTEMUAN 1 KAK RINA):Jika variabel `has_jeriken_and_info == false`, Pilihan 1 berstatus TERKUNCI.Pemain bisa memilih Pilihan 2 (Cari solusi ke Pemuka Desa) ATAU memilih Pilihan 3/4 (Menghakimi/Menggurui yang langsung membuat Kak Rina MENOLAK).
+Pilihan Dialog MC :
+• [TERKUNCI - Butuh Info Pengolahan Minyak & Item Jeriken Kosong dari Pemuka Desa]
+• [CARI SOLUSI] Tunggu sebentar ya Kak, jangan dituang dulu! Aku coba tanya Pemuka Desa siapa tahu ada tempat penampungannya!
+• [B - MENGGURUI / GAGAL] Kakak gali lubang saja di tanah pekarangan buat mengubur minyaknya!
+• [C - MENGHAKIMI / GAGAL] Enak di Kakak dong, gorengannya laku tapi selokan warga yang jadi korban!
+↳ [Jika pilih [CARI SOLUSI]: Lanjut ke Pemuka Desa. Jika pilih [B/C]: Kak Rina marah & menolak (Meter Bencana +20%).]
+[CABANG GAGAL KAK RINA (JIKA PEMAIN MEMILIH [B] ATAU [C])]Set `rina_peduli = false`, Meter Bencana naik +20%.Respons Kak Rina: "Eh, enak saja mulutmu ya! Kalau dikubur di tanah ya merembes ke sumur tetangga! Adek baru datang sudah menyalahkan orang kecil yang susah cari makan! Ini gorenganmu, gak usah ikut campur urusan daganganku lagi!" (Kak Rina langsung menuang minyak ke selokan).
+Adegan 3.3: Mencari Solusi ke Pemuka Desa (npc_pemuka_desa)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Temui Pemuka Desa (npc_pemuka_desa) di Desa Deli untuk menanyakan solusi limbah warga.LOKASI: Balai / Tengah Desa Deli.
+Pemuka Desa : Selamat datang, nak. Di desa ini, urusan sungai dan kampung selalu kami bicarakan bersama-sama. Kulihat dari tadi kau tampak kebingungan, ada masalah apa?
+Pilihan Dialog MC :
+• Kak Rina bingung mau buang minyak jelantah ke mana karena gak punya wadah, Pak.
+• Kenapa masalah sampah harus dibicarakan bersama-sama, Pak?
+↳ [Apapun pilihannya, Pemuka Desa menjelaskan filosofi gotong royong dan memberikan solusi]
+Pemuka Desa : Karena sungai melewati rumah semua orang, nak. Kalau dipikirkan bersama, beban yang berat jadi terasa ringan. Orang Melayu kita selalu bilang: 'berat sama dipikul, ringan sama dijinjing'.
+Pemuka Desa : Kebetulan sekali desa kita baru bekerja sama dengan Bank Sampah pengolahan biodiesel. Mereka mau membeli minyak goreng bekas (jelantah) seharga Rp3.000 per liter! Bawalah Jeriken Kosong gratis dari balai desa ini, berikan pada Rina supaya dia bisa menampung minyaknya dan menukarnya jadi uang.
+Mc : Wah, tiga ribu per liter dan dapat jeriken gratis?! Terima kasih banyak, Pak! Saya antar ke Kak Rina sekarang!
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SISTEM INVENTORY & FLAG:Set `has_jeriken_and_info = true`.Tampilkan notifikasi UI: 'Kamu mendapatkan [Jeriken Kosong] & [Info Bank Sampah Biodiesel]!'UPDATE MISI UI: Kembali ke warung Kak Rina dan berikan Jeriken Kosong.
+Adegan 3.4: Kembali ke Kak Rina (Menyerahkan Jeriken & Solusi — Kak Rina Peduli)
+Mc : Kak Rina! Jangan dibuang minyaknya! Ini aku bawakan jeriken kosong gratis dari Pemuka Desa!
+Pilihan Dialog MC :
+• [A - SOLUSI TERBUKA] Minyak kotor itu bisa dijual Rp3.000 per liter ke Bank Sampah lho, Kak!
+• [A - SOLUSI TERBUKA] Kumpulkan di jeriken ini Kak, minyaknya laku buat bahan biodiesel!
+↳ [Set `rina_peduli = true`. Apapun pilihannya, MC menjelaskan detailnya]
+Mc : Begini Kak, kata Pemuka Desa, sekarang di Bank Sampah ada pengepul yang menampung minyak jelantah untuk diolah jadi bahan bakar biodiesel. Mereka berani beli Rp3.000 per liter lho, Kak, dan jeriken penampungannya ini dipinjamkan gratis. Lumayan kan uangnya bisa buat tambah modal beli tepung terigu?
+Kak Rina : Hah?! Serius kau Dek? Minyak hitam kotor begini masih laku dijual tiga ribu seliter?!
+Kak Rina : Wah, kalau sehari Kakak bisa kumpul dua liter saja, sudah dapat dua bungkus terigu itu! Untung saja kau cegah Kakak tadi, Dek. Mulai hari ini tidak akan Kakak tuang ke selokan lagi, mau Kakak kumpulkan saja di jeriken ini. Ini gorengan pesanan ibumu, Kakak kasih bonus tahu isi buat kau!
+Mc : Terima kasih banyak, Kak.
+*(MC berjalan menjauh sedikit dari gerobak Kak Rina sambil membawa bungkusan gorengan)*
+Mc : (Berbicara dalam hati) Lumayan juga, dapat gorengan tambahan gara-gara menuruti hantu tua ini.
+Datuk : (Suara di kepala MC) Hahaha, kau lihat? Menolong sungai ternyata menguntungkan perutmu juga, bukan? Satu masalah lagi sudah teratasi.
+Pilihan Dialog MC :
+• Jangan kepedean, aku cuma kebetulan lapar saja.
+• Jadi, masih ada lagi orang yang harus kucari?
+↳ [Apapun pilihannya, Datuk menjawab hal yang sama]
+Datuk : (Suara di kepala MC) Tentu saja. Tapi sebaiknya kau antar dulu gorengan itu kepada ibumu sebelum dingin. Setelah itu, pergilah ke arah Kota Medan di dekat pemukiman gang padat. Aku merasakan banyak sekali sampah plastik yang terus berdatangan dari arah sana.
+Mc : Baiklah... aku pulang sebentar dulu.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Antar gorengan ke Ibu di rumah.
+Mc : Ini mak gorengannya. Aku mau langsung keluar lagi ya, masih ada urusan sebentar ke arah hilir kota.
+Mak : Terima kasih ya nak. Hati-hati di jalan, jangan pulang terlalu sore.
+BAGIAN 4: ZONA 3 (KOTA MEDAN) — BANG JALI, PAK RT, PINTU AIR, & BUDI
+File Terkait: h2_jali.json / h3_jali.json, level1.json
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"Beberapa saat kemudian, di pemukiman padat pinggir sungai Kota Medan..."
+Adegan 4.1: Bang Jali di Mulut Gang Sempit (Pertemuan Pertama)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Mulut Gang Sempit di Pinggir Sungai Kota Medan.FILE JSON: data/dialog/h2_jali.json & h3_jali.jsonUPDATE MISI UI: Periksa sekitar mulut gang sempit dan cari pelaku pembuang sampah plastik.TRIGGER EVENT: Saat MC mendekati jembatan kecil di depan gang sempit, Bang Jali keluar dari gang dengan tergesa-gesa sambil menenteng dua kantong kresek besar penuh sampah dan bersiap melemparnya ke aliran parit sungai.
+Datuk : (Suara di kepala MC) Itu dia orangnya, nak! Lihat kantong plastik besar di tangannya. Kalau itu dilempar ke air, aliran sungai di hilir pasti tersumbat lagi!
+*(MC langsung berjalan cepat mendekati Bang Jali. Bang Jali menghentikan ayunan tangannya karena sadar sedang diperhatikan oleh MC)*
+Bang Jali : Apa lihat-lihat, Dek? Ada masalah kau sama aku?!
+Datuk : (Suara di kepala MC) Waduh, orang yang satu ini kelihatannya mudah tersulut emosi. Hati-hati bicara dengannya, nak. Jangan sampai kalian berkelahi.
+Pilihan Dialog MC :
+• Kantong sampah sebesar itu mau Abang lempar ke sungai?!
+• Maaf Bang, kenapa sampahnya gak dibuang ke tempat sampah saja?
+↳ [Apapun pilihannya, Bang Jali menjawab hal yang sama]
+Bang Jali : Hah... kau pikir aku sengaja mau mengotori kampung sendiri?! Coba kau lihat gang tempat tinggalku di belakang ini!
+Bang Jali : Gang ini sempit sekali, Dek! Truk pengangkut sampah dari kota mana muat masuk ke dalam sini. Sedangkan tempat pembuangan sampah di jalan besar sana jaraknya lebih dari dua ratus meter!
+Bang Jali : Kau bayangkan saja, rumah kami di dalam itu sempit dan tidak punya halaman, kalau sampah disimpan sehari saja baunya sudah bikin pusing satu rumah. Mau jalan kaki buang ke jalan besar tiap pagi pun aku sudah buru-buru mau berangkat kerja sambil mengurus anak!
+Pilihan Dialog MC :
+• Tapi kalau dilempar ke situ, warga sendiri yang bakal kebanjiran lagi, Bang!
+• Hmm... jadi karena truk gak bisa masuk dan tempat sampahnya kejauhan ya...
+↳ [Apapun pilihannya, Bang Jali menghela napas dan menurunkan kantong sampahnya]
+Bang Jali : Jujur saja, Dek... aku sendiri juga muak lihat parit dan sungai ini penuh plastik dan bau busuk. Kemarin waktu banjir naik, rumahku di dalam gang itu juga ikut kebanjiran. Tapi tiap pagi kami warga gang ini selalu bingung mau dikemanakan sampah-sampah rumah tangga ini kalau tidak dilempar ke air.
+Datuk : (Suara di kepala MC) Ternyata masalahnya ada pada jarak dan akses gang mereka yang sempit, nak. Kita butuh fasilitas bersama di mulut gang ini. Coba kau temui Pak RT di sekitar sini dulu untuk meminta bantuan!
+Pilihan Dialog MC :
+• [TERKUNCI - Bicara dengan Pak RT dulu untuk mencari solusi fasilitas gang sempit]
+• [CARI SOLUSI] Tahan dulu sampahnya ya, Bang! Aku coba ngobrol sama Pak RT sebentar soal akses gang ini!
+• [B - MENGGURUI / GAGAL] Bawa sajalah ke TPS jalan besar tiap pagi Bang, bangun lebih subuh!
+• [C - MENGHAKIMI / GAGAL] Bilang saja Abang malas! Gara-gara warga gang sini jorok, satu kota kebanjiran!
+↳ [Jika pilih [CARI SOLUSI]: Lanjut ke Pak RT. Jika pilih [B/C]: Bang Jali marah & menolak (Meter Bencana +20%).]
+[CABANG GAGAL BANG JALI (JIKA PEMAIN MEMILIH [B] ATAU [C])]Set `jali_peduli = false`, Meter Bencana naik +20%.Respons Bang Jali: "Siapa kau ceramahi aku?! Kau yang bawa sampah kami tiap pagi kalau berani! Anak kemarin sore sok pintar kali!" (Bang Jali langsung melempar kantong sampahnya ke parit sungai dan pergi).
+Adegan 4.2: Mencari Solusi ke Pak RT (npc_tokoh_masyarakat)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Cari dan bicara dengan Pak RT (npc_tokoh_masyarakat) di area Kota Medan.
+Pak RT : Eh, anak muda. Kau lihatlah parit-parit kota kita ini. Orang Melayu Deli sejak dulu menyebut sungai dan saluran air itu sebagai 'urat nadi'. Kalau urat nadinya tersumbat plastik begini, seluruh tubuh kota ini ikut sakit.
+Pilihan Dialog MC :
+• Masalahnya warga di gang sempit kejauhan kalau harus jalan ke TPS jalan raya, Pak RT.
+• Bang Jali hampir buang sampah ke parit karena truk sampah gak muat masuk gang, Pak.
+↳ [Apapun pilihannya, Pak RT menjawab hal yang sama]
+Pak RT : Nah, itu dia nak. Musyawarah dan gotong royong itu bukan sekadar hiasan, tapi cara kita mengangkat beban yang tak mungkin sanggup diangkat satu orang sendirian.
+Pak RT : Di gudang RT sebenarnya sudah Bapak siapkan Roda dan Papan Kayu untuk membuat Bak Sampah Roda (Gerobak Komunal) yang ditaruh persis di mulut gang. Jadi warga dalam gang cukup buang di situ, nanti pemuda gang menariknya bergiliran ke jalan besar saat truk sampah lewat. Tolong kau sampaikan dan serahkan bahan ini pada Jali ya!
+Mc : Ide bagus itu, Pak RT! Biar saya sampaikan ke Bang Jali sekarang juga!
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SISTEM INVENTORY & FLAG:Set `has_rt_cart_approval = true`.Tampilkan notifikasi UI: 'Kamu mendapatkan [Bahan Gerobak Sampah Roda RT]!'UPDATE MISI UI: Kembali ke Bang Jali di mulut gang sempit.
+Adegan 4.3: Kembali ke Bang Jali (Solusi Gerobak Sampah Roda — Bang Jali Peduli)
+Mc : Bang Jali! Aku sudah bicara dengan Pak RT, dan beliau memberikan bahan untuk solusi gang kita!
+Pilihan Dialog MC :
+• [A - SOLUSI TERBUKA] Gimana kalau kita pasang Gerobak Sampah Roda di depan mulut gang ini, Bang?
+• [A - SOLUSI TERBUKA] Warga gang sini gak perlu jalan jauh lagi kalau pakai gerobak komunal dari Pak RT ini, Bang!
+↳ [Set `jali_peduli = true`. Apapun pilihannya, MC menjelaskan detailnya]
+Mc : Begini Bang, mulut gang di depan jalan ini kan lumayan lega. Pak RT sudah menyiapkan bahan untuk merakit satu gerobak sampah beroda yang ditaruh di mulut gang. Jadi warga cukup buang sampah di depan gang saja saat mau berangkat kerja. Nanti setiap pagi, Abang dan pemuda gang tinggal gantian mendorong gerobak itu ke jalan besar waktu truk sampah lewat.
+Bang Jali : Eh... gerobak sampah beroda di mulut gang ya?
+Bang Jali : Masuk akal juga pikiran kau dan Pak RT itu, Dek! Kalau cuma naruh satu gerobak di depan sini sih masih muat tempatnya. Warga gak perlu jalan jauh dua ratus meter tiap pagi, dan kalau didorong pakai roda gantian sama anak-anak muda sini pasti ringan sekali!
+Bang Jali : Mantap kali idemu itu! Nanti malam waktu ngumpul di pos ronda, langsung kubilang sama kawan-kawan pemuda di gang ini biar kami rakit gerobaknya. Gak jadi lah kulempar ke sungai kantong ini, kubawa ke depan saja sekalian lewat!
+*(Bang Jali menepuk bahu MC sambil tersenyum, lalu berjalan membawa kantong sampahnya menuju jalan raya)*
+Adegan 4.4: Ibu Rumah Tangga (npc_ibu_rumah) — Teka-Teki Pintu Air & Sampah B3
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Dekat Jembatan Saluran Air Kota.UPDATE MISI UI: Periksa saluran drainase kota dan bicara dengan Ibu Rumah Tangga (npc_ibu_rumah).
+Ibu Rumah Tangga : Aduh... got dan saluran di belakang rumahku mampat lagi. Kemarin sudah kuangkat plastiknya, hari ini airnya sudah penuh tertahan lagi. Yang buang sampah berbahaya entah siapa.
+Datuk : (Suara di kepala MC) Gawat nak! Aliran di bawah jembatan kota itu tertahan oleh pintu air dan sampah beracun. Tanyakan pada ibu itu di mana saluran utamanya!
+Pilihan Dialog MC :
+• Di mana saluran utamanya, Bu? Biar saya bantu periksa!
+• Kenapa pintu air di bawah jembatan itu gak langsung dibuka saja, Bu?
+↳ [Apapun pilihannya, Ibu Rumah Tangga memberikan petunjuk teka-teki]
+Ibu Rumah Tangga : Di bawah jembatan itu ada pintu air dengan tiga tuas, nak. Tapi jangan asal tarik! Kalau salah urutan, airnya bakal menghantam sekaligus dan meluap ke rumah warga.
+Ibu Rumah Tangga : Ingat baik-baik urutannya ya: Buka tuas yang PALING DEPAN dulu (1), lalu tuas yang PALING BELAKANG (3), baru terakhir buka tuas yang TENGAH (2). Satu lagi nak, hati-hati saat memungut sampah di dekat sana! Baterai bekas, kaleng kimia, dan pecahan lampu (Sampah B3) jangan dicampur sampah biasa ya, masukkan ke tong khusus warna merah!
+Mc : Urutan tuasnya: Depan (1), Belakang (3), lalu Tengah (2)... dan pisahkan sampah baterai serta lampu bekas. Baik Bu, saya ke bawah jembatan sekarang!
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI:1. Buka Pintu Air di bawah jembatan dengan urutan tuas: Tuas 1 (Depan) -> Tuas 3 (Belakang) -> Tuas 2 (Tengah).2. Pilah sampah baterai dan lampu bekas ke dalam Tong Sampah B3 (Merah).
+Adegan 4.5: Budi (npc_anak_sekolah) — Petunjuk Pantun Melayu Deli
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Pinggir Sungai Kota menuju arah Muara Hilir.KONTEKS: Budi memberikan petunjuk cara menyelesaikan teka-teki Papan Pantun Tua di Zona 4 (Muara).
+Mc : Hei dek, sedang apa duduk sendirian di pinggir sungai begini?
+Budi : Eh, Abang! Tadi di sekolah Ibu Guru menyuruh kami menghafal Pantun Melayu Deli. Kata Ibu Guru, pantun itu cara orang Melayu menyampaikan nasihat yang berat dengan cara yang indah dan ringan, jadi tak ada orang yang merasa tersinggung.
+Pilihan Dialog MC :
+• Wah, menarik juga. Memangnya gimana cara melengkapi pantun?
+• Jadi pantun itu ada aturannya ya, Dek?
+↳ [Apapun pilihannya, Budi menjelaskan aturan rima pantun]
+Budi : Gampang kok, Bang! Pantun itu bersajak a-b-a-b. Artinya bunyi akhir baris pertama harus sama dengan baris ketiga, dan bunyi akhir baris kedua harus sama dengan baris keempat!
+Budi : Oh iya Bang! Nanti di dekat Muara Hilir ada Papan Pantun Tua peninggalan orang dulu yang tulisannya mulai pudar. Abang harus lengkapi sampiran dengan isi yang bersajak benar ya! Jaga Sungai Deli tercinta kita!
+Datuk : (Suara di kepala MC) Hahaha, papan pantun tua di muara itu dulu aku dan kawan-kawanku yang memahatnya sewaktu aku masih hidup, nak! Pastikan kau melengkapinya dengan benar saat kita sampai di sana ya.
+Mc : Hantu narsis... ternyata papan buatanmu toh. Yasudah, terima kasih infonya ya, Budi!
+BAGIAN 5: ZONA 4 (HILIR & MUARA) — PEMILAHAN SAMPAH, 3 PANTUN DELI, & 8 MANGROVE
+File Terkait: h7_pantun.json, level1.json
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"Perjalanan menyusuri Sungai Deli akhirnya membawaku sampai ke ujung muara, tempat sungai bertemu dengan lautan lepas..."
+Adegan 5.1: Penjaga Sungai di Muara (npc_penjaga_sungai) — Pemilahan Sampah
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Pesisir Muara Sungai Deli.UPDATE MISI UI: Bicara dengan Penjaga Sungai (npc_penjaga_sungai) di Muara.
+Penjaga Sungai : Lihatlah hamparan itu, anak muda. Semua yang dibuang orang-orang dari hulu, desa, hingga kota... akhirnya sampai ke sini. Muara itu tempat sungai menyerahkan semua beban yang dibawanya sebelum masuk ke laut.
+Datuk : (Suara di kepala MC) Inilah benteng terakhir kita, nak. Jika sampah di muara ini tidak dipilah dan dibersihkan, lautan lepas yang akan menanggung akibatnya.
+Pilihan Dialog MC :
+• Gunungan sampahnya banyak sekali... dari mana aku harus mulai, Pak?
+• Jadi aku harus memisahkan semua sampah di tepian ini?
+↳ [Apapun pilihannya, Penjaga Sungai menjawab hal yang sama]
+Penjaga Sungai : Susuri pesisir ini, pungut yang berserakan, lalu pilah sesuai jenisnya ke dalam tong sampah yang benar: Organik, Anorganik, dan Berbahaya (B3). Kerjakan pelan-pelan saja. Gunungan sampah ini juga tak datang dalam sehari.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Susuri pesisir muara, pungut sampah yang berserakan, dan pilah ke dalam tong sampah yang sesuai (Organik / Hijau, Anorganik / Kuning, B3 / Merah).
+Adegan 5.2: Teka-Teki Papan Pantun Tua di Muara (data/dialog/h7_pantun.json)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Papan Kayu Tua di Tepi Muara.FILE JSON: data/dialog/h7_pantun.jsonMEKANIK: Saat MC berinteraksi dengan Papan Pantun Tua, tampilkan 3 Bait Pantun Melayu Deli secara berurutan. Pemain harus memilih baris Isi (baris ke-3 dan ke-4) yang sesuai dengan sajak a-b-a-b dan bermakna menjaga Sungai Deli.
+Mc : Oh, jadi ini Papan Pantun Tua yang diceritakan Budi tadi. Beberapa bagian tulisannya sudah pudar tergerus angin laut.
+Datuk : (Suara di kepala MC) Ayo nak, uji ketajaman pikiranmu! Ingat pesan anak sekolah tadi: samakan bunyi akhirnya (sajak a-b-a-b) dan resapi maknanya bagi Sungai Deli!
+[SOAL PANTUN 1 (h7_pantun.json - Tema: Menjaga Air Sungai Deli dari Sampah)]Teks Papan Pantun (Sampiran):"Kayuh sampan ke Tanjung Jati,Singgah sebentar membeli ikan..."Pilih lanjutan Isi Pantun yang tepat (Rima akhir: -ti dan -kan):
+Pilihan Dialog MC :
+• [A - JAWABAN BENAR] "Sungai Deli urat nadi hati, / Janganlah sampah kita hanyutkan."
+• [B - SALAH (Sajak tidak cocok)] "Mari kita bersihkan sungai bersama, / Supaya kampung bebas dari banjir."
+• [C - SALAH (Makna terbalik)] "Buanglah kasur ke tengah tepi, / Biar hanyut dibawa gelombang lautan."
+↳ [Jika memilih A: Papan bersinar & lanjut ke Pantun 2. Jika memilih B/C: Datuk Sampan menegur 'Kurang tepat nak, perhatikan lagi bunyi akhirnya!']
+[SOAL PANTUN 2 (h7_pantun.json - Tema: Gotong Royong & Musyawarah Warga)]Teks Papan Pantun (Sampiran):"Buah kuini di atas para,Jatuh sebiji di tepi perigi..."Pilih lanjutan Isi Pantun yang tepat (Rima akhir: -ra dan -gi):
+Pilihan Dialog MC :
+• [A - JAWABAN BENAR] "Kalau warga bersatu suara, / Bencana banjir tak datang lagi."
+• [B - SALAH (Sajak tidak cocok)] "Berat sama dipikul bersama, / Ringan sama dijinjing tiap hari."
+• [C - SALAH (Makna salah)] "Biarkan parit penuh tak terkira, / Esok pagi kita pindah pergi."
+↳ [Jika memilih A: Lanjut ke Pantun 3. Jika memilih B/C: Ulangi pilihan.]
+[SOAL PANTUN 3 (h7_pantun.json - Tema: Hutan Hulu & Bakau di Muara)]Teks Papan Pantun (Sampiran):"Burung camar terbang ke muara,Hinggap berteduh di dahan bakau..."Pilih lanjutan Isi Pantun yang tepat (Rima akhir: -ra dan -kau):
+Pilihan Dialog MC :
+• [A - JAWABAN BENAR] "Alam lestari kita pelihara, / Anak dan cucu tak lagi risau."
+• [B - SALAH (Sajak tidak cocok)] "Tanamlah pohon di atas bukit, / Agar air laut tetap bersih dan biru."
+• [C - SALAH (Makna salah)] "Tebanglah habis pohon di muara, / Supaya terang pandangan pulau."
+↳ [Jika ketiganya benar: Papan Pantun Tua selesai dipulihkan!]
+Datuk : (Suara di kepala MC) Hahaha! Sempurna sekali, anak muda! Bait-bait pantun peninggalan masa mudaku kini telah utuh kembali untuk mengingatkan siapa saja yang singgah di muara ini!
+Mc : Yah... ternyata merangkai pantun Melayu tidak sesulit yang kubayangkan.
+Adegan 5.3: Pak Nelayan (npc_nelayan) — Misi Tanam 8 Bibit Pohon Mangrove di Muara
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]LOKASI: Bibir Pantai Muara.TARGET AKSI: Menanam 8 BIBIT POHON BAKAU (MANGROVE) di sepanjang garis pantai pesisir muara.UPDATE MISI UI: Temui Pak Nelayan (npc_nelayan) di pesisir pantai.
+Pak Nelayan : Hati-hati melangkah di pasir itu, nak. Masih banyak sisa pecahan botol. Dulu waktu Bapak muda, sepanjang pantai ini hutan bakau semua. Sekarang... kau lihat sendiri, tinggal sisa batang kering seperti gigi-gigi yang ompong.
+Pilihan Dialog MC :
+• Kenapa pohon mangrove sepenting itu buat pantai ini, Pak?
+• Ke mana perginya pohon-pohon bakau yang dulu, Pak?
+↳ [Apapun pilihannya, Pak Nelayan menjawab hal yang sama]
+Pak Nelayan : Banyak yang mati tertutup plastik dan ditebang orang. Padahal di bawah akar bakau itulah anak-anak ikan bersembunyi sampai cukup besar untuk berenang ke laut. Pantai ini pun begitu: kalau akar bakaunya hilang, ombak laut akan memakan tanah daratan sedikit demi sedikit setiap hari, tak pernah sekaligus. Makanya orang tak sadar.
+Pak Nelayan : Kami para nelayan cari makan dari laut yang sehat, nak. Kalau laut dan muara ini sakit, anak-anak kami terpaksa pergi merantau semua.
+Datuk : (Suara di kepala MC) Ini adalah kepingan terakhir dari perjalanan kita, nak. Dari menanam 5 pohon di bukit hulu hingga menanam 8 bibit bakau di bibir laut. Bantulah Pak Nelayan ini.
+Pilihan Dialog MC :
+• [BERHASIL] Saya siap membantu menanam 8 bibit mangrove-nya, Pak!
+• [BERHASIL] Sudah tanggung jalan dari hulu sampai ke laut, sini saya bantu tanam, Pak!
+• [MENOLAK / LEWATI] Maaf Pak, kaki saya sudah pegal sekali, saya mau langsung pulang saja.
+↳ [Jika memilih 1 atau 2 -> Mulai Misi Tanam 8 Mangrove. Jika memilih 3 -> Meter Bencana +15%]
+Pak Nelayan : Syukurlah... terima kasih, nak. Ke-8 bibit bakaunya sudah Bapak siapkan di tepian lumpur pantai itu. Tanamlah di sepanjang pesisir yang masih kosong.
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]UPDATE MISI UI: Tanam 8 bibit mangrove di titik-titik pesisir pantai yang ditandai (0/8 selesai).PENTING: Jangan masukkan instruksi tombol ke dalam dialog Pak Nelayan!TRIGGER SELESAI: Setelah 8 bibit mangrove selesai ditanam, jalankan dialog penutup Pak Nelayan, lalu sistem mengecek nilai Meter Bencana & jumlah warga yang `peduli` untuk melompat ke Ending A, B, C, atau D.
+Pak Nelayan : Terima kasih banyak, nak. Semoga 8 bakau yang kau tanam hari ini tumbuh kuat menahan ombak dan mengembalikan ikan-ikan ke tepian pantai kita.
+BAGIAN 6: 4 VARIASI ENDING & MEKANIK REWIND (DEJA VU LOOP)
+File Terkait: ending_a.json, ending_b.json, ending_c.json, ending_d.json
+6.1. ENDING A: "Harapan Baru Deli" (Good / True Ending — ending_a.json)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SYARAT TRIGGER ENDING A:• Semua 3 warga (`darwis_peduli`, `rina_peduli`, `jali_peduli`) == `true`.• Misi tanam 5 pohon hulu & 8 mangrove muara selesai.• Meter Bencana <= 20%.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"6 Bulan Kemudian..."
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Enam bulan telah berlalu sejak perjalananku menyusuri Sungai Deli bersama suara Datuk Sampan. Pagi ini pukul lima subuh, dari dalam warung makan keluarga kami, kembali terdengar bunyi yang sudah sangat lama hilang: denting sendok yang beradu dengan gelas kaca.
+*(LOKASI: Warung Makan Ibu (Bu Mira) yang kini bersih, terang, dan ramai pelanggan. Di dinding warung yang sudah dicat ulang, sengaja disisakan satu garis kecil bekas lumpur banjir setinggi dada sebagai pengingat)*
+Bu Mira (Mak) : Nak, tolong antarkan teh manis hangat dan nasi gurih ini ke meja depan ya! Sejak subuh tadi pelanggan tidak berhenti berdatangan.
+Mc : Iya mak, siap! Rasanya senang sekali melihat ibu bisa tersenyum dan berjualan dengan tenang lagi seperti dulu.
+Pak Hendra : Hahaha, kau lihat garis bekas lumpur banjir yang sengaja Bapak sisakan sedikit di dinding pojok itu, nak? Setiap kali melihat garis itu, Bapak selalu bersyukur kampung kita mau berubah bersama-sama.
+Pak Hendra : Sekarang setiap hari Minggu pagi, warga rutin kerja bakti menjaga tanggul sungai. Bang Jali paling semangat mengurus iuran bak sampah roda di mulut gangnya, Kak Rina tiap hari Kamis rajin menyetor jeriken jelantah ke Bank Sampah, bahkan Pak Darwis sekarang paling rajin mencincang busa kasur bekas untuk dijual ke pengepul di hulu!
+Mc : Syukurlah Pak... ternyata mereka semua bukannya tidak peduli, mereka kemarin hanya butuh didengarkan dan diberi jalan keluar.
+*(Sore harinya, MC berjalan keluar menuju jembatan Sungai Deli. Air sungai tampak begitu jernih hingga batu-batu di dasarnya bisa dihitung dengan mata telanjang. Di atas sungai, tampak sosok Datuk Sampan berdiri tenang di atas sampannya)*
+Datuk : Airnya jernih sekali hari ini, bukan?
+Mc : Datuk Sampan! Kau masih ada di sini rupanya? Kupikir tugasmu sudah selesai dan kau sudah menghilang.
+Datuk : Hahaha, aku ini bukan sekadar hantu, nak. Aku adalah ingatan kampung ini tentang cara menjaga Sungai Deli. Selama masih ada orang sepertimu dan warga yang mau mengingat serta menjaga sungai ini, aku akan selalu ada.
+Pilihan Dialog MC :
+• Terima kasih sudah membimbingku waktu itu, Datuk.
+• Jangan muncul tiba-tiba lagi ya, tapi... senang bertemu denganmu, Datuk.
+↳ [Apapun pilihannya, Datuk tersenyum hangat dan melambaikan tangan]
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Waktu memang tidak pernah bisa diputar kembali di dunia nyata. Yang bisa kita ubah hanyalah kebiasaan kita. Dan kebiasaan baik, ternyata, selalu dimulai dari hal yang paling sederhana: mau mendengarkan.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"ENDING A (TRUE ENDING): HARAPAN BARU DELI — Terima Kasih Telah Menyelamatkan Sungai Deli!"
+6.2. ENDING B: "Keluarga Mandiri" (Normal Ending — ending_b.json)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SYARAT TRIGGER ENDING B:• Meter Bencana <= 40%.• Hanya 2 dari 3 warga utama yang berstatus `peduli == true` (1 warga masih menolak dan membuang sampah).
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"Beberapa Bulan Kemudian, Saat Musim Hujan Tiba..."
+*(LOKASI: Rumah & Warung Makan Keluarga MC saat hujan deras mengguyur)*
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Musim hujan kembali tiba dengan curah air yang cukup deras. Air Sungai Deli sempat meluap naik, namun kali ini airnya tertahan hanya sampai di anak tangga kedua teras warung—tidak sampai masuk dan menenggelamkan meja-meja warung seperti banjir sebelumnya.
+Bu Mira (Mak) : Huft... syukurlah nak, airnya mulai surut dari anak tangga bawah. Kita memang belum menang sepenuhnya melawan banjir, nak, tapi setidaknya kali ini kita tidak kalah dan hancur seperti dulu.
+Pak Hendra : Benar kata ibumu. Warung makan kita masih bisa tetap buka besok pagi, meskipun beberapa selokan di ujung kampung masih ada yang tersumbat karena belum semua warga mau ikut berubah.
+Mc : Iya Pak... masih ada warga yang belum berhasil kuyakinkan kemarin. Tapi aku tidak akan menyerah begitu saja.
+Datuk : (Suara di kepala MC) Kau tak sendirian lagi sekarang, nak. Warga yang tadinya hanya mendengar, kini sebagian sudah ikut bergerak menjaga sungai bersamamu. Teruskan perjuanganmu sampai seluruh aliran sungai ini benar-benar pulih.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"ENDING B (NORMAL ENDING): KELUARGA MANDIRI — Sebagian Warga Telah Berubah, Teruskan Perjuanganmu!"
+6.3. ENDING C: "Bertahan di Tepian" (Warning Ending — ending_c.json)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SYARAT TRIGGER ENDING C:• Meter Bencana <= 60%.• Hanya 1 dari 3 warga utama yang berstatus `peduli == true` (2 warga lainnya menolak solusi).
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"Beberapa Bulan Kemudian, Di Tengah Hujan Lebat..."
+*(LOKASI: Di dalam Rumah MC. Air keruh kembali menggenangi lantai warung hingga menyentuh batas garis lumpur yang lama)*
+Pak Hendra : Nak, cepat bantu Bapak angkat kursi-kursi kayu ini ke atas meja! Air sungainya naik lagi sampai ke mata kaki!
+Bu Mira (Mak) : Ya Tuhan... padahal baru minggu lalu dinding warung ini kita bersihkan. Kalau setiap hujan deras airnya masih masuk begini, kapan ibu bisa tenang berjualan lagi...
+Mc : Maafkan aku, Mak, Pak... kemarin aku terlalu cepat menyerah dan malah berdebat dengan warga, sehingga sampah-sampah mereka masih terus menyumbat sungai.
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Warung kami memang masih berdiri, tapi dindingnya kembali basah kuyup dan perbaikan tempat makan ibu kembali tersendat. Rasanya seperti menambal atap yang bocor saat hujan badai sudah turun—bisa bertahan, tapi tak pernah benar-benar kering.
+Datuk : (Suara di kepala MC) Sungai belajar dari manusia, seperti manusia belajar darinya, nak. Satu orang saja tidak cukup untuk menahan beban seluruh sungai. Jalanmu masih panjang, jangan berhenti di tengah jalan.
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"ENDING C (WARNING ENDING): BERTAHAN DI TEPIAN — Sungai Deli Masih Menunggu Kepedulian Bersama."
+6.4. ENDING D: "Banjir Bandang & Mekanik REWIND" (Bad Ending — ending_d.json)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]SYARAT TRIGGER ENDING D:• Meter Bencana > 60% di akhir permainan, ATAU langsung terpicu di tengah jalan jika Meter Bencana mencapai >= 80%.• Setelah adegan kehancuran & penyesalan warga selesai, tampilkan UI Tombol Khusus: [ REWIND / PUTAR WAKTU ].
+[TRANSISI LAYAR HITAM (FADE TO BLACK)]Tampilkan layar hitam penuh dengan teks di tengah layar:"Langit Mendadak Gelap Gulita. Hujan Badai Mengguyur Tanpa Henti..."
+[KOTAK NARASI / MONOLOG INTERNAL MC (BUKAN DIALOG NPC)]Bencana yang diperingatkan Datuk Sampan akhirnya benar-benar datang. Tanpa akar pohon penahan di bukit hulu, air hujan meluncur ganas membawa lumpur longsor. Di desa, kasur-kasur bekas menyumbat tiang jembatan. Di kota, parit meluap memuntahkan ribuan kantong plastik dan lemak jelantah. Di muara, gunungan sampah membuat air berbalik menghantam daratan!
+*(LOKASI: Rumah & Warung Keluarga MC diterjang arus banjir bandang berwarna cokelat pekat. Pak Hendra terpaksa naik ke atap membawa termos penyok, sementara Bu Mira menangis di ambang pintu memeluk sisa buku catatan warung)*
+Pak Hendra : Pegangan yang kuat, nak! Arusnya terlalu deras! Jangan lepaskan tangan ibumu!
+Bu Mira (Mak) : (Menangis tersedu-sedu) Habis sudah semuanya, Pak... warung kita, tempat tinggal kita... semuanya hanyut dibawa air!
+Mc : T-tidak mungkin... pagi harinya, warung ibu hanya menyisakan tiang-tiang kayu yang patah dan sepasang sandal yang mengapung di atas lumpur...
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]CUTSCENE PENYESALAN WARGA (Tampilkan dialog warga yang berstatus `peduli == false` secara berurutan):
+Pak Darwis (Jika Menolak) : (Terduduk lesu sambil menggendong anak tetangga di pengungsian) Kasur busa yang kuhanyutkan kemarin... tersangkut di tiang jembatan dan menahan seluruh sampah sampai airnya jebol menghantam kampung kita. Jadi begini rupanya bencana yang kau bilang di toko kasur kemarin, nak...
+Kak Rina (Jika Menolak) : (Menangis histeris) Selokan di belakang warungku mampat total... air hitamnya meluap menghanyutkan seluruh gerobak dan wajan gorenganku! Tadi kubilang selokan itu tak apa-apa... ternyata aku sendiri yang menghancurkan tempat cari makanku!
+Bang Jali (Jika Menolak) : (Berdiri terpukul menatap gang yang terendam) Bah... mustahil! Semua kantong plastik yang kami lempar ke parit berbalik mengepung gang sempit ini! Rumah kami tenggelam oleh sampah kami sendiri!
+*(Di tengah suara gemuruh air banjir, sosok Datuk Sampan muncul dengan tatapan sedih di hadapan MC)*
+Datuk : Sungai tak pernah membenci siapa pun, nak. Ia hanya kembali mencari jalannya yang tersumbat. Satu orang membuang, semua orang yang menanggung akibatnya.
+Datuk : Kau sudah melihat sendiri ujung dari penyesalan yang tak dapat diubah ini. Namun... ikatan jiwaku dengan sungai ini masih memberimu satu kesempatan terakhir. Jika kau diberi kesempatan memutar kembali waktu, mulailah dengan mendengar sebelum hujan turun!
+[MEKANIK TOMBOL UI: [ REWIND / PUTAR KEMBALI WAKTU ]]1. Tampilkan tombol besar berkilau di tengah layar: [ REWIND (PUTAR WAKTU) ].2. Saat pemain menekan tombol REWIND, putar efek visual/suara waktu berjalan mundur (air banjir surut kembali ke sungai, lumpur menghilang).3. Kembalikan MC ke Jembatan Sungai (atau ke titik awal Zona warga yang gagal) dengan membawa variabel `is_rewound = true`.
+6.5. ADEGAN KHUSUS SETELAH REWIND (DEJA VU DI JEMBATAN DATUK SAMPAN)
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]TRIGGER: Jika `is_rewound == true`, saat waktu berputar kembali ke jembatan bersama Datuk Sampan, ganti dialog perkenalan panjang dengan dialog Deja Vu singkat di bawah ini, diikuti petunjuk spesifik Datuk sesuai kesalahan pemain di loop sebelumnya.
+Mc : (Terbangun kaget sambil memegang dadanya) Hah... hah...! Tunggu dulu! Jembatan ini... udara ini... bukannya tadi warung ibuku sudah hancur diterjang banjir bandang?!
+Datuk : Kau mengingat semuanya, nak. Waktu telah berputar mundur untuk memberimu kesempatan kedua.
+Mc : Aku benar-benar kembali ke hari sebelum bencana itu terjadi! Datuk, kali ini aku tidak akan membiarkan warung ibuku dan kampung ini hancur lagi!
+[INSTRUKSI SISTEM UNTUK ANTIGRAVITY (GODOT / JSON)]DIALOG PETUNJUK SPESIFIK DATUK SAMPAN SAAT REWIND (Pilih otomatis berdasarkan penyebab kegagalan pemain di run sebelumnya):• Jika gagal karena banyak memilih Opsi C (Menuduh / Marah): Datuk berkata -> "Ingat nak, kemarin kau bicara dan menuduh lebih cepat daripada mendengar. Kali ini pelankan suaramu, dengarkan dulu beban mereka."• Jika gagal karena banyak memilih Opsi B (Menggurui tanpa solusi/barang bukti): Datuk berkata -> "Sekadar menyuruh orang berhenti tanpa memberi jalan keluar itu bukan menolong, nak. Temui Pemuka Desa dan Pak RT untuk mencari solusi nyata."• Jika gagal karena melewatkan pungut sampah sungai/muara: Datuk berkata -> "Telinga saja tak cukup, nak. Tanganmu juga perlu bekerja membersihkan tepian sungai."• Jika gagal karena melewatkan tanam 5 pohon hulu atau 8 mangrove muara: Datuk berkata -> "Ada hal yang tak bisa diselesaikan hanya dengan bicara pada manusia, nak. Pohon di bukit hulu dan bakau di muara harus kau tanam."

@@ -1,59 +1,62 @@
 [
   {
     "id": "start",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Pangkal masalah jauh di sana, ujungnya dekat di sini. Dekatkan ujungnya.",
-    "next": "solusi"
-  },
-  {
-    "id": "solusi",
     "speaker": "MC",
-    "emosi": "neutral",
-    "teks": "Solusi apa yang paling tepat untuk Bang Jali?",
+    "emosi": "happy",
+    "teks": "Bang Jali! Aku sudah bicara dengan Pak RT, dan beliau memberikan bahan untuk solusi gang kita!",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Bagaimana kalau kita buat TPS kecil di ujung gang, dengan jadwal angkut bergilir seminggu dua kali?",
+        "teks": "[A] Gimana kalau kita pasang gerobak sampah roda di depan mulut gang ini, Bang?",
         "delta_sikap": 2,
         "delta_meter": -10,
-        "next": "solusi_a"
+        "next": "penjelasan_solusi_jali",
+        "effect": {
+          "choice": {
+            "jali_peduli": true
+          }
+        }
       },
       {
-        "tipe": "B",
-        "teks": "Biar aku yang bawa sampahmu tiap pagi.",
-        "delta_sikap": 1,
-        "delta_meter": 3,
-        "next": "solusi_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Kalau masih buang, kulaporkan ke RT.",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "solusi_c"
+        "tipe": "A",
+        "teks": "[B] Warga gang sini gak perlu jalan jauh lagi kalau pakai gerobak komunal dari Pak RT ini, Bang!",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "penjelasan_solusi_jali",
+        "effect": {
+          "choice": {
+            "jali_peduli": true
+          }
+        }
       }
     ]
   },
   {
-    "id": "solusi_a",
-    "speaker": "Bang Jali",
-    "emosi": "happy",
-    "teks": "Boleh itu! Biar aku yang atur jadwal dengan anak-anak gang. Dulu aku cuek, Bang. Sekarang lihat plastik di sungai rasanya ngilu. Kau yang ajar aku.",
-    "next": "end"
+    "id": "penjelasan_solusi_jali",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Begini Bang, mulut gang di depan jalan ini kan lumayan lega. Pak RT sudah menyiapkan bahan untuk merakit satu gerobak sampah beroda yang ditaruh di mulut gang. Jadi warga cukup buang sampah di depan gang saja saat mau berangkat kerja. Nanti setiap pagi, Abang dan pemuda gang tinggal gantian mendorong gerobak itu ke jalan besar waktu truk sampah lewat.",
+    "next": "jali_paham_senang"
   },
   {
-    "id": "solusi_b",
+    "id": "jali_paham_senang",
     "speaker": "Bang Jali",
     "emosi": "neutral",
-    "teks": "Wah, mantap! Terima kasih ya, Bang.",
-    "next": "end"
+    "teks": "Eh... gerobak sampah beroda di mulut gang ya?",
+    "next": "jali_setuju"
   },
   {
-    "id": "solusi_c",
+    "id": "jali_setuju",
     "speaker": "Bang Jali",
-    "emosi": "sad",
-    "teks": "Lapor sajalah! Aku tak takut!",
+    "emosi": "happy",
+    "teks": "Masuk akal juga pikiran kau dan Pak RT itu, Dek! Kalau cuma naruh satu gerobak di depan sini sih masih muat tempatnya. Warga gak perlu jalan jauh dua ratus meter tiap pagi, dan kalau didorong pakai roda gantian sama anak-anak muda sini pasti ringan sekali!",
+    "next": "jali_janji"
+  },
+  {
+    "id": "jali_janji",
+    "speaker": "Bang Jali",
+    "emosi": "happy",
+    "teks": "Mantap kali idemu itu! Nanti malam waktu ngumpul di pos ronda, langsung kubilang sama kawan-kawan pemuda di gang ini biar kami rakit gerobaknya. Gak jadi lah kulempar ke sungai kantong ini, kubawa ke depan saja sekalian lewat!",
     "next": "end"
   }
 ]

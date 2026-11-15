@@ -1,0 +1,74 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Huft... akhirnya selesai juga semuanya.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Kerja yang sangat luar biasa, anak muda.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Eh?! Datuk Sampan?! Kau muncul lagi?! Katanya kemarin aku sudah gak bisa melihat wujudmu lagi?!",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Hahaha, itu karena kemarin aliran sungai ini masih terlalu keruh oleh beban sampah dan keputusasaan warga. Sekarang, berkat usahamu dari bukit hulu, desa, gang kota, hingga ke muara ini... ikatan jiwaku dengan Sungai Deli telah pulih sepenuhnya.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Syukurlah kalau begitu, berarti tugasku sudah benar-benar selesai kan?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_wejangan_akhir"
+      },
+      {
+        "tipe": "A",
+        "teks": "Padahal aku sudah agak tenang waktu gak harus melihat wajah hantumu itu...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_wejangan_akhir"
+      }
+    ]
+  },
+  {
+    "id": "datuk_wejangan_akhir",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Hahaha, kau ini memang pemuda yang tidak pernah bisa jujur pada perasaanmu sendiri ya. Lihatlah ke arah air sungai itu sekarang, nak.",
+    "next": "datuk_pesan_terakhir"
+  },
+  {
+    "id": "datuk_pesan_terakhir",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Kau sudah membuktikan bahwa sungai ini rusak bukan karena manusia di sekitarnya jahat, melainkan karena mereka terjepit keadaan dan kehilangan jalan keluar. Selama kalian mau saling mendengarkan, bergotong royong, dan menjaga sungai ini dari hulu sampai ke hilir, bencana besar yang kutakutkan itu tidak akan pernah terjadi.",
+    "next": "datuk_pamit"
+  },
+  {
+    "id": "datuk_pamit",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Tugasku untuk membimbingmu sudah selesai, {nama}. Kembalilah ke rumah, ibumu pasti sudah menunggu. Terima kasih, penjaga baru Sungai Deli.",
+    "next": "mc_penutup"
+  },
+  {
+    "id": "mc_penutup",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Dasar hantu tua menyebalkan... tapi yah, setidaknya sekarang aku bisa melihat sungai ini lagi tanpa harus merasa kesal seperti dulu. Sebaiknya aku segera pulang.",
+    "next": "end"
+  }
+]
+

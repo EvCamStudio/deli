@@ -1,0 +1,51 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pak RT",
+    "emosi": "neutral",
+    "teks": "Eh, anak muda. Kau lihatlah parit-parit kota kita ini. Orang Melayu Deli sejak dulu menyebut sungai dan saluran air itu sebagai 'urat nadi'. Kalau urat nadinya tersumbat plastik begini, seluruh tubuh kota ini ikut sakit.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Masalahnya warga di gang sempit kejauhan kalau harus jalan ke TPS jalan raya, Pak RT.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_rt"
+      },
+      {
+        "tipe": "A",
+        "teks": "Bang Jali hampir buang sampah ke parit karena truk sampah gak muat masuk gang, Pak.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_rt"
+      }
+    ]
+  },
+  {
+    "id": "penjelasan_rt",
+    "speaker": "Pak RT",
+    "emosi": "happy",
+    "teks": "Nah, itu dia nak. Musyawarah dan gotong royong itu bukan sekadar hiasan, tapi cara kita mengangkat beban yang tak mungkin sanggup diangkat satu orang sendirian.",
+    "next": "solusi_gerobak_roda"
+  },
+  {
+    "id": "solusi_gerobak_roda",
+    "speaker": "Pak RT",
+    "emosi": "happy",
+    "teks": "Di gudang RT sebenarnya sudah Bapak siapkan Roda dan Papan Kayu untuk membuat Bak Sampah Roda (Gerobak Komunal) yang ditaruh persis di mulut gang. Jadi warga dalam gang cukup buang di situ, nanti pemuda gang menariknya bergiliran ke jalan besar saat truk sampah lewat. Tolong kau sampaikan dan serahkan bahan ini pada Jali ya!",
+    "next": "mc_terima_bahan_rt"
+  },
+  {
+    "id": "mc_terima_bahan_rt",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Ide bagus itu, Pak RT! Biar saya sampaikan ke Bang Jali sekarang juga!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "has_rt_cart_approval": true
+      }
+    }
+  }
+]
+

@@ -33,7 +33,7 @@ const SIKAP_RAGU: int = 1
 const SIKAP_PEDULI: int = 2
 
 const FASE_WAKTU: Array[String] = ["pagi", "siang", "sore", "malam"]
-const UTANG_AWAL: int = 500000
+const UTANG_AWAL: int = 0
 const SAVE_PATH: String = "user://save.json"
 
 # ─── Variabel Inti Sesuai Kontrak Bersama ─────────────────────────────────────
@@ -316,6 +316,8 @@ var saved_zone: String = "hulu"
 var saved_player_x: float = -1.0
 var saved_player_y: float = -1.0
 var planted_spots: Array[String] = []
+## Hari tanam tiap titik (spot_id -> hari) supaya pohon tumbuh per hari, bukan per detik.
+var planted_days: Dictionary = {}
 var picked_trash_ids: Array[String] = []
 
 # ─── Fungsi Kontrak Bersama (Tahap 1: GameState & Siklus Hari) ────────────────
@@ -521,28 +523,39 @@ func get_jumlah_npc_peduli() -> int:
 	return count
 
 func get_persen_utang_lunas() -> float:
+	if UTANG_AWAL <= 0:
+		return 1.0
 	return clampf(float(UTANG_AWAL - utang) / float(UTANG_AWAL), 0.0, 1.0)
 
 ## Menghitung kode ending ("A", "B", "C", atau "D") tanpa memancarkan sinyal/pindah scene
 func hitung_kode_ending() -> String:
 	var m: int = int(round(meter_bencana))
 	var peduli: int = get_jumlah_npc_peduli()
-	var persen_lunas: float = get_persen_utang_lunas()
+	var trees_hulu: int = zone_stat("hulu", "trees")
+	var mangroves_hilir: int = zone_stat("hilir", "mangroves")
+	var trees_done: bool = (trees_hulu >= 5 and mangroves_hilir >= 8)
 
-	if m <= 20 and peduli >= 3 and utang <= 0:
+	if m <= 20 and peduli >= 3 and trees_done:
 		return "A"
-	elif m <= 40 and peduli >= 2 and persen_lunas >= 0.70:
+	elif m <= 40 and peduli >= 2:
 		return "B"
 	elif m <= 60 and peduli >= 1:
 		return "C"
 	return "D"
 
-## Ending Resolver sesuai spesifikasi Orang 1 Sistem Inti:
-## Dicek dari atas ke bawah, jatuh ke ending berikutnya jika syarat tidak lengkap.
-## - A: Meter <= 20, ketiga NPC Peduli (3), utang lunas 100%
-## - B: Meter <= 40, minimal 2 NPC Peduli, utang lunas minimal 70%
+## Menghitung alasan kegagalan dominan untuk petunjuk Datuk Sampan saat Rewind
+func hitung_alasan_kegagalan() -> String:
+	if zone_stat("hulu", "trees") < 5 or zone_stat("hilir", "mangroves") < 8:
+		return "pohon"
+	if get_sikap("darwis") == SIKAP_MENOLAK or get_sikap("rina") == SIKAP_MENOLAK or get_sikap("jali") == SIKAP_MENOLAK:
+		return "menuduh"
+	return "sampah"
+
+## Ending Resolver sesuai spesifikasi Master V2:
+## - A: Meter <= 20, ketiga NPC Peduli (3), pohon hulu (5) & mangrove hilir (8) selesai
+## - B: Meter <= 40, minimal 2 NPC Peduli
 ## - C: Meter <= 60, minimal 1 NPC Peduli
-## - D: selain itu
+## - D: selain itu (Banjir bandang & Rewind)
 ## Memancarkan ending_ditentukan(kode) dengan kode "A", "B", "C", atau "D".
 func tentukan_ending(buka_layar: bool = true) -> String:
 	var kode: String = hitung_kode_ending()
@@ -559,15 +572,20 @@ func tentukan_ending(buka_layar: bool = true) -> String:
 			SceneManager.change_scene("res://scenes/levels/level_5_epilog.tscn")
 	return kode
 
-## Tombol Rewind di Ending D: mereset GameState kembali ke Hari 1 dan memulai dari awal.
+## Tombol Rewind di Ending D: mereset GameState kembali ke awal dengan ingatan Deja Vu.
 func rewind() -> void:
+	var fail_reason := hitung_alasan_kegagalan()
 	reset()
+	choices["is_rewound"] = true
+	choices["last_fail_reason"] = fail_reason
 	save_game()
 	if is_inside_tree():
 		SceneManager.change_scene("res://scenes/world/world_sungai_deli.tscn")
 
 ## Membuka Menu Bayar Utang Hari 7 Sore (3 pilihan: bayar semua, bayar sebagian via slider, minta waktu)
 func buka_menu_bayar_utang() -> void:
+	if utang <= 0:
+		return
 	if not is_inside_tree():
 		return
 	var existing := get_tree().root.get_node_or_null("DebtPaymentPopup")
@@ -616,6 +634,12 @@ func unlock_card(card_id: String) -> void:
 
 func record_choice(key: String, value: Variant) -> void:
 	choices[key] = value
+	if key == "darwis_peduli":
+		set_sikap("darwis", SIKAP_PEDULI if bool(value) else SIKAP_MENOLAK)
+	elif key == "rina_peduli":
+		set_sikap("rina", SIKAP_PEDULI if bool(value) else SIKAP_MENOLAK)
+	elif key == "jali_peduli":
+		set_sikap("jali", SIKAP_PEDULI if bool(value) else SIKAP_MENOLAK)
 
 ## Tandai quest aktif. Progress tidak disimpan di sini — pakai counter nyata.
 func start_quest(quest_id: String, target: int) -> bool:
@@ -679,15 +703,24 @@ func show_toast(text: String, good: bool = true) -> void:
 
 # ─── Save / Load ──────────────────────────────────────────────────────────────
 
-func save_game() -> void:
+## Simpan seluruh progres. Mengembalikan true bila file berhasil ditulis.
+func save_game() -> bool:
 	# Ambil posisi player & zona dari world jika sedang berada di dalam level
 	var level := get_tree().get_first_node_in_group("level") if is_inside_tree() else null
 	if level:
 		if level.scene_file_path != "":
 			saved_scene = level.scene_file_path
-		if "_current_zone" in level:
-			saved_zone = str(level.get("_current_zone"))
-		var p := level.get_node_or_null("Player") as Node2D
+		var zone_now: String = ""
+		if level.has_method("get_current_zone"):
+			zone_now = str(level.call("get_current_zone"))
+		elif "_current_zone" in level:
+			zone_now = str(level.get("_current_zone"))
+		if not zone_now.is_empty() and zone_now != "<null>":
+			saved_zone = zone_now
+			# Jaga world_zone tetap sinkron dengan zona yang benar-benar aktif.
+			if in_world:
+				world_zone = zone_now
+		var p := _find_player(level)
 		if p:
 			saved_player_x = p.global_position.x
 			saved_player_y = p.global_position.y
@@ -738,12 +771,26 @@ func save_game() -> void:
 		"saved_player_x": saved_player_x,
 		"saved_player_y": saved_player_y,
 		"planted_spots": planted_spots,
+		"planted_days": planted_days,
 		"picked_trash_ids": picked_trash_ids,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(JSON.stringify(data))
-		file.close()
+	if file == null:
+		push_error("GameState: gagal membuka file save: " + SAVE_PATH)
+		return false
+	file.store_string(JSON.stringify(data))
+	file.close()
+	return true
+
+## Cari node pemain di dalam level (fallback ke grup "player").
+func _find_player(level: Node) -> Node2D:
+	var p := level.get_node_or_null("Player") as Node2D
+	if p:
+		return p
+	for node in get_tree().get_nodes_in_group("player"):
+		if node is Node2D and level.is_ancestor_of(node):
+			return node
+	return null
 
 func load_game() -> bool:
 	if not FileAccess.file_exists(SAVE_PATH):
@@ -849,12 +896,20 @@ func load_game() -> bool:
 
 	saved_scene = str(data.get("saved_scene", "res://scenes/world/world_sungai_deli.tscn"))
 	saved_zone = str(data.get("saved_zone", "hulu"))
+	if saved_zone.is_empty() or saved_zone == "<null>":
+		saved_zone = world_zone
 	saved_player_x = float(data.get("saved_player_x", -1.0))
 	saved_player_y = float(data.get("saved_player_y", -1.0))
 
 	planted_spots.clear()
 	for spot in data.get("planted_spots", []):
 		planted_spots.append(str(spot))
+
+	planted_days.clear()
+	var saved_days = data.get("planted_days", {})
+	if saved_days is Dictionary:
+		for spot in saved_days.keys():
+			planted_days[str(spot)] = int(saved_days[spot])
 
 	picked_trash_ids.clear()
 	for tid in data.get("picked_trash_ids", []):
@@ -969,6 +1024,7 @@ func reset() -> void:
 	saved_player_x = -1.0
 	saved_player_y = -1.0
 	planted_spots.clear()
+	planted_days.clear()
 	picked_trash_ids.clear()
 	var qm := get_node_or_null("/root/QuestManager")
 	if qm != null:
@@ -983,5 +1039,8 @@ func reset() -> void:
 # ─── Siklus Aplikasi Android ──────────────────────────────────────────────────
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_APPLICATION_PAUSED:
-		save_game()
+	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		# Hanya simpan saat benar-benar ada level yang berjalan. Tanpa penjagaan
+		# ini, membuka/menutup menu utama bisa menimpa save lama dengan state awal.
+		if is_inside_tree() and get_tree().get_first_node_in_group("level") != null:
+			save_game()

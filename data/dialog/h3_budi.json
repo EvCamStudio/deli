@@ -1,0 +1,60 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Hei dek, sedang apa duduk sendirian di pinggir sungai begini?",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Budi",
+    "emosi": "happy",
+    "teks": "Eh, Abang! Tadi di sekolah Ibu Guru menyuruh kami menghafal Pantun Melayu Deli. Kata Ibu Guru, pantun itu cara orang Melayu menyampaikan nasihat yang berat dengan cara yang indah dan ringan, jadi tak ada orang yang merasa tersinggung.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Wah, menarik juga. Memangnya gimana cara melengkapi pantun?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "rumus_pantun"
+      },
+      {
+        "tipe": "A",
+        "teks": "Jadi pantun itu ada aturannya ya, Dek?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "rumus_pantun"
+      }
+    ]
+  },
+  {
+    "id": "rumus_pantun",
+    "speaker": "Budi",
+    "emosi": "happy",
+    "teks": "Gampang kok, Bang! Pantun itu bersajak a-b-a-b. Artinya bunyi akhir baris pertama harus sama dengan baris ketiga, dan bunyi akhir baris kedua harus sama dengan baris keempat!",
+    "next": "pesan_papan_tua"
+  },
+  {
+    "id": "pesan_papan_tua",
+    "speaker": "Budi",
+    "emosi": "happy",
+    "teks": "Oh iya Bang! Nanti di dekat Muara Hilir ada Papan Pantun Tua peninggalan orang dulu yang tulisannya mulai pudar. Abang harus lengkapi sampiran dengan isi yang bersajak benar ya! Jaga Sungai Deli tercinta kita!",
+    "next": "datuk_pantun_muara"
+  },
+  {
+    "id": "datuk_pantun_muara",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Hahaha, papan pantun tua di muara itu dulu aku dan kawan-kawanku yang memahatnya sewaktu aku masih hidup, nak! Pastikan kau melengkapinya dengan benar saat kita sampai di sana ya.",
+    "next": "mc_tanggapi_budi"
+  },
+  {
+    "id": "mc_tanggapi_budi",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Hantu narsis... ternyata papan buatanmu toh. Yasudah, terima kasih infonya ya, Budi!",
+    "next": "end"
+  }
+]
+

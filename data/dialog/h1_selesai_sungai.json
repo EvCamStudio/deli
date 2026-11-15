@@ -1,0 +1,81 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Melelahkan sekali membersihkan semua ini...",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Wajar saja… banyaknya sampah-sampah itu sungguh sebuah ironi.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Suara ini? Datuk Sampan? Di mana kau? Aku gak bisa melihatmu…",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Ya… sekarang sepertinya kau tak bisa melihatku lagi.. tapi syukurlah kau masih bisa mendengar suaraku.",
+    "next": "4"
+  },
+  {
+    "id": "4",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Kau sudah membersihkan semuanya dengan baik. Kau sungguh pemuda yang luar biasa.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Hantu menyebalkan ini… kenapa selalu mengagetkanku.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "5"
+      },
+      {
+        "tipe": "A",
+        "teks": "Dipuji oleh hantu menyebalkan huh….?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "5"
+      }
+    ]
+  },
+  {
+    "id": "5",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Memangnya salah jika hantu memujimu?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "…..",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "6"
+      }
+    ]
+  },
+  {
+    "id": "6",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Tapi lihatlah ke bukit hulu itu sebentar, nak. Percuma kau punguti sampah sampai pinggangmu patah kalau tanah di bukit hulu terus-menerus longsor ke sungai saat hujan turun.",
+    "next": "7"
+  },
+  {
+    "id": "7",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Jadi aku harus naik ke bukit hutan ini juga? Yang benar saja... Baiklah, kuperiksa bukit hulu itu dulu sebelum ke toko kasur.",
+    "next": "end"
+  }
+]

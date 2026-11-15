@@ -3,150 +3,166 @@
     "id": "start",
     "speaker": "Pak Darwis",
     "emosi": "neutral",
-    "teks": "Dulu kasur rusak kami lepas ke air, hanyut sendiri sampai ke laut. Tak ada yang marah. Sekarang tiba-tiba itu dosa. Zaman ini memang aneh.",
-    "pilihan": [
-      {
-        "tipe": "A",
-        "teks": "Dulu sungainya seperti apa, Pak? Waktu Bapak muda.",
-        "delta_sikap": 0,
-        "delta_meter": 0,
-        "next": "step1_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Cara itu sudah tidak cocok sekarang, Pak.",
-        "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step1_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Bapak sendiri yang mengajari warga buang sampah ke sungai!",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step1_c"
-      }
-    ]
+    "teks": "Untung saja kasur lama yang rusak karena banjir kemarin sudah kubuang ke sungai tadi pagi, jadi kamarku langsung kosong buat kasur baru ini.",
+    "next": "1"
   },
   {
-    "id": "step1_a",
-    "speaker": "Pak Darwis",
-    "emosi": "happy",
-    "teks": "Bening, Nak. Ikan lewat bisa kau lihat sebelum sampai ke kaki. Kami mandi di situ, cuci piring di situ. Orangnya sedikit. Apa yang kami lepas, sungai terima, dan dia diam saja.",
-    "next": "step2"
-  },
-  {
-    "id": "step1_b",
-    "speaker": "Pak Darwis",
+    "id": "1",
+    "speaker": "Pemilik Toko",
     "emosi": "neutral",
-    "teks": "Anak kemarin sore. Hmm.",
-    "next": "end"
+    "teks": "Wah, memangnya tidak apa-apa dibuang ke sungai, Pak Darwis?",
+    "next": "2"
   },
   {
-    "id": "step1_c",
+    "id": "2",
     "speaker": "Pak Darwis",
     "emosi": "sad",
-    "teks": "Kau menuduh aku? Aku sudah makan garam sebelum kau lahir! Tak sopan kau!",
-    "next": "end"
+    "teks": "Yah, mau bagaimana lagi? Pinggang tuaku ini sudah hampir patah rasanya.",
+    "next": "3"
   },
   {
-    "id": "step2",
+    "id": "3",
     "speaker": "MC",
-    "emosi": "neutral",
-    "teks": "Bagaimana menjelaskannya tanpa membuat dia merasa dihakimi?",
-    "pilihan": [
-      {
-        "tipe": "A",
-        "teks": "Jadi bukan Bapak yang berubah. Sungainya yang tak sanggup lagi: orang makin banyak, dan plastik tak ikut hanyut.",
-        "delta_sikap": 1,
-        "delta_meter": 0,
-        "next": "step2_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Plastik itu ratusan tahun baru hancur, Pak.",
-        "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step2_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Orang tua memang keras kepala kalau dibilangin.",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step2_c"
-      }
-    ]
+    "emosi": "surprised",
+    "teks": "Permisi, apa aku tidak salah dengar barusan? Bapak yang membuang kasur bekas ke sungai itu?!",
+    "next": "4"
   },
   {
-    "id": "step2_a",
-    "speaker": "Pak Darwis",
-    "emosi": "neutral",
-    "teks": "Kasur zaman dulu kapuk, hancur sendiri di air. Yang sekarang ini busa… Iya juga ya.",
-    "next": "step3"
-  },
-  {
-    "id": "step2_b",
-    "speaker": "Pak Darwis",
-    "emosi": "neutral",
-    "teks": "Aku tak akan hidup ratusan tahun. Jadi bukan urusanku.",
-    "next": "end"
-  },
-  {
-    "id": "step2_c",
+    "id": "4",
     "speaker": "Pak Darwis",
     "emosi": "sad",
-    "teks": "Kalau aku keras kepala, kau keras mulut!",
-    "next": "end"
+    "teks": "Eh? Siapa kau anak muda? Tiba-tiba saja ikut campur urusan orang tua.",
+    "next": "5"
   },
   {
-    "id": "step3",
-    "speaker": "MC",
+    "id": "5",
+    "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Apa solusi yang paling masuk akal untuk Pak Darwis?",
+    "teks": "(Suara di kepala MC) Tahan emosimu nak... ingat apa yang kukatakan tadi. Dengarkan dulu alasannya.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Kasur itu kalau dicincang, busanya bisa dijual ke pengepul di hulu, Pak. Lebih baik jadi uang daripada jadi sampah di muara.",
-        "delta_sikap": 1,
-        "delta_meter": -3,
-        "next": "step3_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Bapak bawa saja ke TPA sendiri.",
+        "teks": "Bapak tahu betapa beratnya membersihkan sungai itu?!",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "step3_b"
+        "next": "curhat_darwis"
       },
       {
-        "tipe": "C",
-        "teks": "Kalau buang lagi, Bapak kulaporkan ke lurah!",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step3_c"
+        "tipe": "A",
+        "teks": "Memangnya kenapa Bapak harus membuangnya ke sungai?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "curhat_darwis"
       }
     ]
   },
   {
-    "id": "step3_a",
+    "id": "curhat_darwis",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Hah... kau pikir aku sengaja ingin mengotori sungai? Kasur busa itu terendam lumpur banjir, beratnya puluhan kilo, dan baunya busuk. Lihatlah tubuhku ini nak, aku sudah tua renta. Menyeret kasur basah itu keluar rumah saja napasku sudah mau habis. Tempat pembuangan sampah itu jauh di ujung desa, mana sanggup tulang tuaku ini menggotongnya ke sana sendirian? Jadi aku tidak punya pilihan lain selain menghanyutkannya ke sungai di belakang rumah.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Tetap saja itu salah, Pak! Itu malah bikin banjir lagi!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penyesalan_darwis"
+      },
+      {
+        "tipe": "A",
+        "teks": "Hmm... jadi karena Bapak gak kuat membawanya jauh-jauh ya...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penyesalan_darwis"
+      }
+    ]
+  },
+  {
+    "id": "penyesalan_darwis",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Aku tahu itu salah nak... jujur saja aku juga merasa bersalah saat mendorongnya ke air. Waktu aku muda dulu, kasur itu isinya kapuk alami, bisa hancur sendiri di air. Sekarang isinya busa plastik semua. Tapi mau bagaimana lagi, tenagaku sudah tidak ada.",
+    "next": "datuk_dorong_solusi"
+  },
+  {
+    "id": "datuk_dorong_solusi",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Kau dengar itu, nak? Dia bukannya jahat, fisiknya saja yang tak sanggup menggotong kasur berat itu. Tapi bagaimana caranya agar orang tua ini tidak keberatan ya? Coba tengok Papan Pantun Petuah di dekat persimpangan jalan desa sana, siapa tahu ada petunjuk kearifan Melayu yang bisa jadi jalan keluar!",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
+        "requires_flag": "unlock_solusi_darwis",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "solusi_berhasil",
+        "effect": {
+          "choice": {
+            "darwis_peduli": true
+          }
+        }
+      },
+      {
+        "tipe": "A",
+        "teks": "[B] Tunggu di sini sebentar ya, Pak! Saya carikan jalan keluarnya dulu.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pamit_cari_pantun"
+      },
+      {
+        "tipe": "B",
+        "teks": "[C] Lain kali Bapak paksakan bawa ke TPA saja, Pak, daripada nyumbat sungai.",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "cabang_gagal",
+        "effect": {
+          "choice": {
+            "darwis_peduli": false
+          }
+        }
+      },
+      {
+        "tipe": "C",
+        "teks": "[D] Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "cabang_gagal",
+        "effect": {
+          "choice": {
+            "darwis_peduli": false
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "pamit_cari_pantun",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Iya nak, aku tunggu di depan toko ini. Pinggangku juga masih ngilu kalau mau jalan jauh.",
+    "next": "end"
+  },
+  {
+    "id": "solusi_berhasil",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Begini Pak, daripada digotong utuh-utuh, lain kali kalau ada kasur busa yang rusak, belah dan cincang saja busanya pakai parang sampai kecil-kecil. Busa potongan itu ringan dibawa dan bisa dijual ke pengepul daur ulang di hulu, Pak. Bapak gak perlu angkat berat-berat, malah bisa dapat uang.",
+    "next": "darwis_terima"
+  },
+  {
+    "id": "darwis_terima",
     "speaker": "Pak Darwis",
     "emosi": "happy",
-    "teks": "Dijual? Busa? Parangku masih tajam. Mulai sekarang kasur ini tak ke sungai lagi.",
+    "teks": "Eh? Dijual ke pengepul? Busa bekas begitu masih laku rupanya? Wah... kenapa aku tidak kepikiran sampai ke situ ya. Kalau cuma membelah dan mencincang busa pakai parang di halaman rumah sih parangku masih tajam dan tenagaku masih kuat. Terima kasih sarannya ya, anak muda. Mulai sekarang kasur rusak tak akan kubuang ke sungai lagi!",
     "next": "end"
   },
   {
-    "id": "step3_b",
+    "id": "cabang_gagal",
     "speaker": "Pak Darwis",
-    "emosi": "neutral",
-    "teks": "TPA itu sepuluh kilo. Kau yang angkat?",
-    "next": "end"
-  },
-  {
-    "id": "step3_c",
-    "speaker": "Pak Darwis",
-    "emosi": "neutral",
-    "teks": "Lapor lah. Lurah itu keponakanku.",
+    "emosi": "sad",
+    "teks": "Kau pikir TPA itu dekat?! Sepuluh kilo dari sini! Memangnya kau yang mau menggendong kasurku?! Anak kemarin sore tahu apa soal susahnya orang tua! Aku sudah makan garam sebelum kau lahir, tak sopan kau menceramahi aku!",
     "next": "end"
   }
 ]

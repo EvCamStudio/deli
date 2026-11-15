@@ -2,15 +2,156 @@
   {
     "id": "start",
     "speaker": "MC",
-    "emosi": "happy",
-    "teks": "Pagi hari ke-7 di bantaran Sungai Deli. Warga berkumpul untuk festival pantun kearifan lokal!",
-    "next": "datuk"
+    "emosi": "neutral",
+    "teks": "Oh, jadi ini Papan Pantun Tua yang diceritakan Budi tadi. Beberapa bagian tulisannya sudah pudar tergerus angin laut.",
+    "next": "1"
   },
   {
-    "id": "datuk",
+    "id": "1",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Dengar dulu sebelum menegur, paham dulu sebelum menunjuk. Mari bersenandung bersama sungai.",
-    "next": "end"
+    "teks": "(Suara di kepala MC) Ayo nak, uji ketajaman pikiranmu! Ingat pesan anak sekolah tadi: samakan bunyi akhirnya (sajak a-b-a-b) dan resapi maknanya bagi Sungai Deli!",
+    "next": "pantun_1"
+  },
+  {
+    "id": "pantun_1",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Kayuh sampan ke Tanjung Jati,\nSinggah sebentar membeli ikan...\n(Pilih lanjutan isi yang berima akhir -ti dan -kan):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Sungai Deli urat nadi hati, / Janganlah sampah kita hanyutkan.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_1_benar"
+      },
+      {
+        "tipe": "B",
+        "teks": "Mari kita bersihkan sungai bersama, / Supaya kampung bebas dari banjir.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "Buanglah kasur ke tengah tepi, / Biar hanyut dibawa gelombang lautan.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Kurang tepat nak! Perhatikan lagi bunyi akhir barisnya dan makna untuk sungai kita. Coba ulangi lagi!",
+    "next": "pantun_1"
+  },
+  {
+    "id": "pantun_1_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Tepat sekali! Bait pertama bercahaya kembali! Sekarang periksa bait kedua!",
+    "next": "pantun_2"
+  },
+  {
+    "id": "pantun_2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Buah kuini di atas para,\nJatuh sebiji di tepi perigi...\n(Pilih lanjutan isi yang berima akhir -ra dan -gi):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kalau warga bersatu suara, / Bencana banjir tak datang lagi.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_2_benar"
+      },
+      {
+        "tipe": "B",
+        "teks": "Berat sama dipikul bersama, / Ringan sama dijinjing tiap hari.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_2_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "Biarkan parit penuh tak terkira, / Esok pagi kita pindah pergi.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_2_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_2_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Rimanya belum pas nak, bunyi akhirnya harus cocok dengan -ra dan -gi. Perhatikan lagi!",
+    "next": "pantun_2"
+  },
+  {
+    "id": "pantun_2_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Bagus! Tinggal satu bait terakhir!",
+    "next": "pantun_3"
+  },
+  {
+    "id": "pantun_3",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Burung camar terbang ke muara,\nHinggap berteduh di dahan bakau...\n(Pilih lanjutan isi yang berima akhir -ra dan -kau):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Alam lestari kita pelihara, / Anak dan cucu tak lagi risau.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_selesai"
+      },
+      {
+        "tipe": "B",
+        "teks": "Tanamlah pohon di atas bukit, / Agar air laut tetap bersih dan biru.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_3_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "Tebanglah habis pohon di muara, / Supaya terang pandangan pulau.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_3_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_3_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Sayang sekali, rimanya belum cocok dengan -ra dan -kau. Coba perhatikan baik-baik!",
+    "next": "pantun_3"
+  },
+  {
+    "id": "pantun_selesai",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Hahaha! Sempurna sekali, anak muda! Bait-bait pantun peninggalan masa mudaku kini telah utuh kembali untuk mengingatkan siapa saja yang singgah di muara ini!",
+    "next": "mc_pantun_lega"
+  },
+  {
+    "id": "mc_pantun_lega",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Yah... ternyata merangkai pantun Melayu tidak sesulit yang kubayangkan.",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "pantun_selesai": true
+      }
+    }
   }
 ]

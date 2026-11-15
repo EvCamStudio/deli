@@ -3,19 +3,23 @@
     {
       "id": "start",
       "speaker": "Bang Jali",
-      "text": "Apa lihat-lihat, Bang? Tong sampah itu di ujung jalan sana, dua ratus meter. Truknya pun tak muat masuk gang.",
+      "text": "Gang kami sempit sekali, truk sampah kota mana muat masuk! Mau jalan buang ke jalan besar tiap pagi pun aku sudah buru-buru berangkat kerja sambil ngurus anak!",
       "choices": [
-        { "text": "Bagaimana kalau kita buat bak sampah roda di mulut gang?", "next": "help", "effect": { "river_health": 3, "choice": { "jali_peduli": true } } },
-        { "text": "Jangan buang ke got, Bang.", "next": "end", "effect": {} }
+        { "text": "Tahan dulu sampahnya ya Bang! Aku coba ngobrol sama Pak RT sebentar soal akses gang ini!", "next": "tanya_rt", "effect": { "choice": { "mencari_solusi_jali": true } } },
+        { "text": "Bilang saja Abang malas! Gara-gara warga jorok satu kota banjir!", "next": "gagal", "effect": { "river_health": -20, "choice": { "jali_peduli": false } } }
       ]
     },
     {
-      "id": "help",
+      "id": "tanya_rt",
       "speaker": "Bang Jali",
-      "text": "Mantap kali ide Abang! Nanti kubilang sama anak-anak muda sini, kita iuran buat bak sampah roda bergiliran.",
-      "choices": [
-        { "text": "Siap, ayo kita pilah juga sampahnya.", "next": "end", "effect": { "quest": { "id": "pilah_sampah_kota", "description": "Pilah 6 sampah kota ke tong yang benar", "target": 6 } } }
-      ]
+      "text": "Hmm, yasudah sana! Tapi cepat ya, aku sudah mau berangkat kerja ini!",
+      "choices": []
+    },
+    {
+      "id": "gagal",
+      "speaker": "Bang Jali",
+      "text": "Siapa kau ceramahi aku?! Kau yang bawa sampah kami tiap pagi kalau berani!",
+      "choices": []
     },
     {
       "id": "end",
@@ -28,23 +32,15 @@
     {
       "id": "start",
       "speaker": "Ibu Rumah Tangga",
-      "text": "Got di belakang rumahku mampat lagi. Kemarin kuangkat plastiknya, hari ini sudah penuh. Yang buang entah siapa.",
+      "text": "Aduh... got di belakang rumah mampat lagi tertahan pintu air. Ingat urutan tuasnya ya: Paling DEPAN dulu (1), lalu paling BELAKANG (3), baru terakhir yang TENGAH (2). Jangan dicampur sampah B3 ya!",
       "choices": [
-        { "text": "Di mana saluran utamanya, Bu?", "next": "pintu_air", "effect": {} }
-      ]
-    },
-    {
-      "id": "pintu_air",
-      "speaker": "Ibu Rumah Tangga",
-      "text": "Di bawah jembatan ada pintu air dengan tiga tuas. Buka yang paling depan dulu (1), lalu yang paling belakang (3), baru yang tengah (2). Supaya air tak datang sekaligus.",
-      "choices": [
-        { "text": "Aku akan buka tuasnya (1-3-2)!", "next": "end", "effect": { "quest": { "id": "edukasi_industri", "description": "Buka kartu industri & kenali sampah B3", "target": 1 } } }
+        { "text": "Baik Bu, urutan 1-3-2 dan sampah B3 dipisah!", "next": "end", "effect": { "quest": { "id": "drainase_kota", "description": "Tarik tuas pintu air (1-3-2)", "target": 3 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Ibu Rumah Tangga",
-      "text": "Hati-hati ya, Nak. Baterai dan lampu bekas jangan dicampur sampah biasa ya!",
+      "text": "Hati-hati ya nak. Baterai dan lampu bekas jangan dicampur sampah biasa!",
       "choices": []
     }
   ],
@@ -52,23 +48,15 @@
     {
       "id": "start",
       "speaker": "Budi",
-      "text": "Bang! Tadi di sekolah Ibu Guru suruh kami hafal pantun. Kata Ibu Guru, pantun itu cara orang Melayu menyampaikan yang berat dengan cara yang ringan. Jadi tak ada yang tersinggung.",
+      "text": "Bang! Pantun itu bersajak a-b-a-b. Bunyi akhir baris pertama sama dengan baris ketiga, baris kedua sama dengan baris keempat! Nanti di Muara Hilir lengkapi papan pantun tua ya!",
       "choices": [
-        { "text": "Keren sekali kearifan lokal itu, Budi!", "next": "pantun", "effect": {} }
-      ]
-    },
-    {
-      "id": "pantun",
-      "speaker": "Budi",
-      "text": "Nanti di muara hilir ada papan pantun tua. Abang harus lengkapi sampiran dengan isi yang bersajak benar ya!",
-      "choices": [
-        { "text": "Pasti, aku akan lengkapi pantunnya!", "next": "end", "effect": { "river_health": 2, "quest": { "id": "pantun_kota", "description": "Lengkapi pantun Melayu Deli", "target": 1 } } }
+        { "text": "Siap Budi, terima kasih rumus sajak pantunnya!", "next": "end", "effect": { "quest": { "id": "pantun_kota", "description": "Ingat rumus sajak pantun a-b-a-b", "target": 1 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Budi",
-      "text": "Semoga berhasil, Bang! Jaga sungai Deli tercinta kita!",
+      "text": "Semoga berhasil Bang! Jaga Sungai Deli tercinta kita!",
       "choices": []
     }
   ],
@@ -76,23 +64,15 @@
     {
       "id": "start",
       "speaker": "Pak RT",
-      "text": "Orang Melayu Deli sejak dulu menyebut sungai 'urat nadi'. Kalau urat nadi tersumbat, seluruh tubuh ikut sakit.",
+      "text": "Orang Melayu Deli sejak dulu menyebut saluran air itu 'urat nadi'. Kalau urat nadinya tersumbat plastik, seluruh kota sakit. Di gudang RT sudah Bapak siapkan Roda dan Kayu untuk Gerobak Sampah Roda komunal di mulut gang. Serahkan pada Jali ya!",
       "choices": [
-        { "text": "Bagaimana kita memulihkannya, Pak?", "next": "how", "effect": {} }
-      ]
-    },
-    {
-      "id": "how",
-      "speaker": "Pak RT",
-      "text": "Musyawarah dan gotong royong itu bukan sekadar hiasan, Nak. Itu cara kami mengangkat sesuatu yang tak mungkin sanggup diangkat satu orang.",
-      "choices": [
-        { "text": "Aku siap bergotong royong!", "next": "end", "effect": { "river_health": 5, "choice": { "musyawarah": true }, "quest": { "id": "drainase_kota", "description": "Tarik tuas drainase 1-3-2", "target": 3 } } }
+        { "text": "Ide bagus Pak RT! Saya serahkan bahan gerobaknya ke Bang Jali sekarang!", "next": "end", "effect": { "choice": { "has_rt_cart_approval": true } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Pak RT",
-      "text": "Bagus, Nak. Semoga aliran sungai kita kembali lancar dan berkah untuk semua warga.",
+      "text": "Bagus nak. Gotong royong adalah cara kita mengangkat beban bersama.",
       "choices": []
     }
   ]

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "start",
+    "speaker": "Bu Mira",
+    "emosi": "neutral",
+    "teks": "Nak, bisakah kamu ke desa sebelah untuk memesan kasur baru? Kasur kita sudah tidak bisa dipakai.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bisa, Mak.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "lokasi"
+      },
+      {
+        "tipe": "B",
+        "teks": "Tempatnya di mana ya, Mak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "lokasi"
+      }
+    ]
+  },
+  {
+    "id": "lokasi",
+    "speaker": "Bu Mira",
+    "emosi": "neutral",
+    "teks": "Tempatnya di Toko Jaya ya, Nak. Kamu pesan saja dulu, nanti mereka akan kirim orang untuk mengantarkannya ke sini.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Baik, Mak.",
+    "next": "end"
+  }
+]
+

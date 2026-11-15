@@ -1,0 +1,63 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Ini dia Papan Pantun di dekat zebra cross jalan raya. Ada tulisan bait pantun tua di sini...",
+    "next": "baca_bait"
+  },
+  {
+    "id": "baca_bait",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Pergi berlayar ke Pulau Satu,\nSinggah berlabuh di Tanjung Tiga...\n(Dua baris di bawahnya agak tertutup bercak lumpur. Pilih lanjutan sajak yang pas):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Buka pintu air jangan keliru, / Tarikan ke-Dua penutupnya juga.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_benar",
+        "effect": {
+          "choice": {
+            "baca_sandi_pantun_kota": true
+          }
+        }
+      },
+      {
+        "tipe": "B",
+        "teks": "[B] Tariklah tuas dengan tenaga, / Supaya air mengalir ke muara.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Kurang pas rima akhirnya, nak! Pantun Melayu itu bersajak a-b-a-b. Baris ketiga harus berima '-tu' dan baris keempat harus berima '-ga'. Coba baca lagi!",
+    "next": "baca_bait"
+  },
+  {
+    "id": "pantun_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Aha! Kau perhatikan angka yang terselip di dalam pantun itu, nak? Pulau SATU, Tanjung TIGA, lalu penutupnya ke-DUA!",
+    "next": "mc_paham"
+  },
+  {
+    "id": "mc_paham",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Luar biasa! Jadi urutan tuas pintu airnya adalah 1 - 3 - 2! Pantas saja ditulis pakai pantun supaya orang selalu ingat. Ayo kita tarik tuasnya sekarang!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "sandi_tuas_terbuka": true
+      }
+    }
+  }
+]
+

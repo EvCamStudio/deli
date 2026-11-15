@@ -1,0 +1,17 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Ini mak gorengannya. Aku mau langsung keluar lagi ya, masih ada urusan sebentar ke arah hilir kota.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Mamak",
+    "emosi": "happy",
+    "teks": "Terima kasih ya nak. Hati-hati di jalan, jangan pulang terlalu sore.",
+    "next": "end"
+  }
+]
+

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "start",
+    "speaker": "Mamak",
+    "emosi": "neutral",
+    "teks": "Sudah bangun nak? Kebetulan sekali, ibu belum sempat masak pagi ini karena masih membereskan peralatan dapur. Tolong belikan gorengan di warung Kak Rina dekat jembatan sana ya buat sarapan kita.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Baik mak, sekalian aku mau jalan-jalan keluar.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "1"
+      },
+      {
+        "tipe": "A",
+        "teks": "Gorengan terus... tapi yasudahlah mak.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "1"
+      }
+    ]
+  },
+  {
+    "id": "1",
+    "speaker": "Mamak",
+    "emosi": "happy",
+    "teks": "Ini uangnya. Jangan lama-lama ya nak, beli selagi masih hangat.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Iya mak, aku berangkat dulu.",
+    "next": "end"
+  }
+]
+

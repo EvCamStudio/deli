@@ -76,6 +76,9 @@ func _mission_done() -> bool:
 	return bool(world.call("is_zone_cleared", zone))
 
 func _can_open() -> bool:
+	var world := _world()
+	if world and world.has_method("can_gate_open"):
+		return bool(world.call("can_gate_open", source_zone, target_zone))
 	if not require_mission_to_open:
 		return true
 	return GameState.river_health >= river_health_threshold and _mission_done()
@@ -110,15 +113,10 @@ func _on_quest_started(_quest_id: String) -> void:
 ## Dipanggil world setiap progres misi berubah.
 func refresh_gate_state() -> void:
 	var should_open: bool = _can_open()
-	if _open:
-		return  # gate yang sudah terbuka tidak menutup lagi
-	if should_open:
-		_open = true
-		_set_blocker_disabled(true)
-		if _player_in_range:
-			call_deferred("_transition_to_zone")
-	else:
-		_set_blocker_disabled(false)
+	_open = should_open
+	_set_blocker_disabled(should_open)
+	if should_open and _player_in_range:
+		call_deferred("_transition_to_zone")
 
 func get_target_zone() -> String:
 	return target_zone
@@ -164,9 +162,17 @@ func _transition_to_zone() -> void:
 			world.call("change_zone", target_zone)
 
 func _toast_hint() -> void:
+	var hint := closed_hint
+	var world := _world()
+	if world and world.has_method("get_gate_closed_hint"):
+		var h := str(world.call("get_gate_closed_hint", source_zone, target_zone))
+		if not h.is_empty():
+			hint = h
+	if hint.is_empty():
+		hint = "Selesaikan dulu misi di zona ini."
 	var level := get_tree().get_first_node_in_group("level")
 	if level and level.has_method("toast"):
-		level.call("toast", closed_hint, false)
+		level.call("toast", hint, false)
 
 func _interact_prompt_show() -> void:
 	pass

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "(Terbangun kaget sambil memegang dadanya) Hah... hah...! Tunggu dulu! Jembatan ini... udara ini... bukannya tadi warung ibuku sudah hancur diterjang banjir bandang?!",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "Kau mengingat semuanya, nak. Waktu telah berputar mundur untuk memberimu kesempatan kedua.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Aku benar-benar kembali ke hari sebelum bencana itu terjadi! Datuk, kali ini aku tidak akan membiarkan warung ibuku dan kampung ini hancur lagi!",
+    "next": "petunjuk_datuk"
+  },
+  {
+    "id": "petunjuk_datuk",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "Ingat nak, kemarin kau bicara dan menuduh lebih cepat daripada mendengar. Kali ini pelankan suaramu, temui Pemuka Desa dan Pak RT untuk mencari solusi nyata sebelum hujan turun!",
+    "next": "end"
+  }
+]
+

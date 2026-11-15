@@ -98,13 +98,15 @@ func load_dialogue_file(level_id: int) -> Dictionary:
 	return json.get_data()
 
 ## Mulai dialog untuk NPC tertentu dari array data langsung.
-func start_dialogue(npc_data: Array, npc_key_name: String = "") -> void:
+func start_dialogue(npc_data: Array, npc_key_name: String = "", custom_id: String = "") -> void:
 	_ensure_dialogue_box()
 	if _dialogue_box == null:
 		push_error("DialogueManager: dialogue_box belum didaftarkan!")
 		return
-	_current_dialog_id = "custom"
-	_current_npc_key = _detect_npc_from_id(npc_key_name)
+	_current_dialog_id = custom_id if not custom_id.is_empty() else ("custom" if npc_key_name.is_empty() else npc_key_name)
+	_current_npc_key = _detect_npc_from_id(_current_dialog_id)
+	if _current_npc_key.is_empty():
+		_current_npc_key = _detect_npc_from_id(npc_key_name)
 	_current_data = npc_data
 	_is_active = true
 	dialogue_started.emit()

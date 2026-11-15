@@ -3,40 +3,31 @@
     {
       "id": "start",
       "speaker": "Penjaga Hutan",
-      "text": "Kau dengar itu? Dulu bunyinya seperti hujan yang tak habis-habis... Sekarang dengar sendiri.",
+      "text": "Kau dengar suara gemuruh air itu, nak? Dulu saat hutan ini masih lebat, bunyinya seperti hujan yang menenangkan. Sekarang... dengarlah sendiri, setiap kali mendung datang, warga di bawah sana langsung ketakutan.",
       "choices": [
-        { "text": "Apa yang terjadi di sini, Pak?", "next": "why", "effect": {} },
-        { "text": "Aku bisa bantu.", "next": "help", "effect": { "river_health": 2 } }
+        { "text": "Apa yang terjadi di sini, Pak? Ke mana pohon-pohonnya?", "next": "penjelasan" },
+        { "text": "Bapak menjaga hutan seluas ini sendirian?", "next": "penjelasan" }
       ]
     },
     {
-      "id": "why",
+      "id": "penjelasan",
       "speaker": "Penjaga Hutan",
-      "text": "Pohonnya ditebang. Akar itu semacam spons, Nak. Tanpa akar, hujan tak sempat meresap. Ia langsung lari ke bawah, membawa tanah, sampai ke rumah-rumah kalian.",
+      "text": "Banyak pohonnya yang ditebang liar beberapa tahun lalu. Padahal akar pohon itu semacam spons raksasa, nak. Tanpa akar yang menahan di hulu, air hujan tak sempat meresap ke dalam tanah. Air itu langsung lari ke bawah membawa lumpur, sampai merendam rumah-rumah kalian.",
       "choices": [
-        { "text": "Bibitnya di mana?", "next": "plant_prompt", "effect": { "river_health": 2, "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 pohon di Hulu", "target": 5 } } }
+        { "text": "Baiklah Pak, biar saya bantu menanam bibitnya.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 bibit pohon di bukit Hulu", "target": 5 } } },
+        { "text": "Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 bibit pohon di bukit Hulu", "target": 5 } } }
       ]
     },
     {
-      "id": "help",
+      "id": "instruksi",
       "speaker": "Penjaga Hutan",
-      "text": "Tangan orang kantoran. Tak apa, tanah tak pilih-pilih. Tanah bertanda itu: dekati, tekan aksi. Tak usah dalam-dalam, cukup tak terbalik.",
-      "choices": [
-        { "text": "Siap!", "next": "plant_prompt", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 pohon di Hulu", "target": 5 } } }
-      ]
-    },
-    {
-      "id": "plant_prompt",
-      "speaker": "Penjaga Hutan",
-      "text": "Titik tanam sudah kusiapkan di sekitar hutan. Dekati tanah bertanda, lalu tekan tombol aksi untuk menanam bibit pohon.",
-      "choices": [
-        { "text": "Baik, aku mulai sekarang.", "next": "end", "effect": {} }
-      ]
+      "text": "Tangan anak muda... tak apa, tanah tak pernah pilih-pilih siapa yang menanam. Ambil bibit di keranjang itu, nak. Lubang tanamnya sudah kusiapkan di sekitar hutan ini, masukkan bibitnya baik-baik, jangan sampai terbalik.",
+      "choices": []
     },
     {
       "id": "end",
       "speaker": "Penjaga Hutan",
-      "text": "Pohon yang kau tanam hari ini mungkin tak sempat kau teduhi. Tak apa. Pohon yang meneduhimu sekarang pun bukan kau yang tanam.",
+      "text": "Pohon yang kau tanam hari ini mungkin tak sempat kau teduhi dalam waktu dekat. Tak apa. Pohon besar yang meneduhimu sekarang pun dulunya bukan kau yang tanam.",
       "choices": []
     }
   ],
@@ -44,16 +35,15 @@
     {
       "id": "start",
       "speaker": "Bu Mira",
-      "text": "Nak, kau sudah sampai. Maaf ya, warung kita jadi begini.",
+      "text": "Sudah sampai nak?",
       "choices": [
-        { "text": "Aku mulai dari sungainya dulu, Pak.", "next": "end", "effect": { "river_health": 2 } },
-        { "text": "Aku cari kerja dulu, Mak.", "next": "end", "effect": {} }
+        { "text": "Iya mak, maaf ya mak, seharusnya aku pulang lebih cepat.", "next": "end" }
       ]
     },
     {
       "id": "end",
       "speaker": "Bu Mira",
-      "text": "Bawa topi. Matahari hulu tak kenal anak Jakarta.",
+      "text": "Yang terpenting kita sekeluarga masih selamat.",
       "choices": []
     }
   ],
@@ -61,15 +51,15 @@
     {
       "id": "start",
       "speaker": "Datuk Sampan",
-      "text": "Sungai tak minta dipuji, Nak. Ia hanya minta dijaga. Besok, jangan mulai dengan tangan. Mulailah dengan telinga.",
+      "text": "Setiap manusia pasti punya alasannya sendiri nak. Jangan mulai dengan amarah, mulailah dengan telinga. Dengarkan kenapa mereka melakukannya, lalu carilah jalan keluarnya.",
       "choices": [
-        { "text": "Terima kasih wejangannya, Datuk.", "next": "end", "effect": { "river_health": 2 } }
+        { "text": "Baiklah, aku akan mendengarkan mereka.", "next": "end" }
       ]
     },
     {
       "id": "end",
       "speaker": "Datuk Sampan",
-      "text": "Dengarkan orang-orang di sini. Setiap orang punya alasan untuk sampah yang mereka buang.",
+      "text": "Jangan biarkan bencana itu terjadi. Jagalah sungai ini bersama warga.",
       "choices": []
     }
   ]

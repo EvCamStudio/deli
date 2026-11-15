@@ -1,0 +1,51 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pemuka Desa",
+    "emosi": "neutral",
+    "teks": "Selamat datang, nak. Di desa ini, urusan sungai dan kampung selalu kami bicarakan bersama-sama. Kulihat dari tadi kau tampak kebingungan, ada masalah apa?",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Kak Rina bingung mau buang minyak jelantah ke mana karena gak punya wadah, Pak.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_musyawarah"
+      },
+      {
+        "tipe": "A",
+        "teks": "Kenapa masalah sampah harus dibicarakan bersama-sama, Pak?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penjelasan_musyawarah"
+      }
+    ]
+  },
+  {
+    "id": "penjelasan_musyawarah",
+    "speaker": "Pemuka Desa",
+    "emosi": "happy",
+    "teks": "Karena sungai melewati rumah semua orang, nak. Kalau dipikirkan bersama, beban yang berat jadi terasa ringan. Orang Melayu kita selalu bilang: 'berat sama dipikul, ringan sama dijinjing'.",
+    "next": "solusi_biodiesel"
+  },
+  {
+    "id": "solusi_biodiesel",
+    "speaker": "Pemuka Desa",
+    "emosi": "happy",
+    "teks": "Kebetulan sekali desa kita baru bekerja sama dengan Bank Sampah pengolahan biodiesel. Mereka mau membeli minyak goreng bekas (jelantah) seharga Rp3.000 per liter! Bawalah Jeriken Kosong gratis dari balai desa ini, berikan pada Rina supaya dia bisa menampung minyaknya dan menukarnya jadi uang.",
+    "next": "mc_terima_jeriken"
+  },
+  {
+    "id": "mc_terima_jeriken",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Wah, tiga ribu per liter dan dapat jeriken gratis?! Terima kasih banyak, Pak! Saya antar ke Kak Rina sekarang!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "has_jeriken_and_info": true
+      }
+    }
+  }
+]
+

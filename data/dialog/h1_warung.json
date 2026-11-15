@@ -3,78 +3,56 @@
     "id": "start",
     "speaker": "Bu Mira",
     "emosi": "neutral",
-    "teks": "Sudah sampai kau.",
+    "teks": "Sudah sampai, Nak?",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Maaf, Mak. Harusnya aku pulang lebih cepat.",
+    "teks": "Iya, Mak. Maaf ya, Mak, seharusnya aku pulang lebih cepat.",
     "next": "2"
   },
   {
     "id": "2",
     "speaker": "Bu Mira",
     "emosi": "sad",
-    "teks": "Banjir tak menunggu siapa-siapa, Nak. Jangan kau pikul yang bukan bagianmu.",
+    "teks": "Banjir tidak akan menunggu siapa-siapa, Nak. Jangan pikul yang bukan bagianmu.",
     "next": "3"
   },
   {
     "id": "3",
-    "speaker": "Pak Hendra",
+    "speaker": "MC",
     "emosi": "sad",
-    "teks": "Setinggi situ. Gula, kopi, kursi, hanyut semua. Toples biru Mak pun.",
+    "teks": "Rumah kita sungguh berantakan ya, Mak... air benar-benar membuat kekacauan ini.",
     "next": "4"
   },
   {
     "id": "4",
-    "speaker": "Bu Mira",
-    "emosi": "sad",
-    "teks": "Sudahlah, Pak... Dua bulan lalu air naik sedikit. Kami pinjam lima ratus ribu untuk menambal dinding. Minggu ini air naik lagi, dan tambalannya ikut hanyut.",
+    "speaker": "Pak Hendra",
+    "emosi": "neutral",
+    "teks": "Jangan mengatakan hal seperti itu, Nak. Memangnya air salah apa? Bukan air yang seharusnya bertanggung jawab…",
     "next": "5"
   },
   {
     "id": "5",
-    "speaker": "MC",
+    "speaker": "Bu Mira",
     "emosi": "sad",
-    "teks": "Di Jakarta, lima ratus ribu cuma dua kali makan malam dan ongkos. Di sini, ia sebuah dinding yang sudah roboh.",
+    "teks": "Sudahlah, Pak. Meskipun memang banyak barang kita yang rusak akibat banjir, tapi yang terpenting kita sekeluarga masih selamat.",
     "next": "6"
   },
   {
     "id": "6",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Melihat rumah kita terendam sisa lumpur begini, hatiku terasa sesak. Banyak perabotan yang rusak dan harus kita benahi bersama, agar Ibu juga bisa kembali berjualan.",
+    "next": "7"
+  },
+  {
+    "id": "7",
     "speaker": "Pak Hendra",
-    "emosi": "neutral",
-    "teks": "Jangan kau benci sungai itu, Nak. Air itu mencari jalan, sama seperti orang. Kalau jalannya kita tutup, dia lewat rumah kita.",
-    "pilihan": [
-      {
-        "tipe": "A",
-        "teks": "Aku mulai dari sungainya dulu, Pak.",
-        "delta_sikap": 0,
-        "delta_meter": 0,
-        "next": "res_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Aku cari kerja dulu, Mak. Utang itu harus dibayar.",
-        "delta_sikap": 0,
-        "delta_meter": 0,
-        "next": "res_b"
-      }
-    ]
-  },
-  {
-    "id": "res_a",
-    "speaker": "Bu Mira",
     "emosi": "happy",
-    "teks": "Bawa topi. Matahari hulu tak kenal anak Jakarta.",
-    "next": "end"
-  },
-  {
-    "id": "res_b",
-    "speaker": "Bu Mira",
-    "emosi": "neutral",
-    "teks": "Boleh. Cari kerja bisa besok, lumpur ini tak bisa menunggu. Sehari saja, ya.",
+    "teks": "Ya sudah. Mari kita mulai bersih-bersih apa yang tersisa dari banjir.",
     "next": "end"
   }
 ]

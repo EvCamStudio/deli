@@ -1,30 +1,37 @@
 [
   {
     "id": "start",
-    "speaker": "MC",
-    "emosi": "happy",
-    "teks": "Hujan datang lagi bulan itu, deras seperti dulu. Warung kami basah, tapi tidak tenggelam.",
+    "speaker": "Narasi",
+    "emosi": "neutral",
+    "teks": "Musim hujan kembali tiba dengan curah air yang cukup deras. Air Sungai Deli sempat meluap naik, namun kali ini airnya tertahan hanya sampai di anak tangga kedua teras warung—tidak sampai masuk dan menenggelamkan meja-meja warung seperti banjir sebelumnya.",
     "next": "1"
   },
   {
     "id": "1",
     "speaker": "Bu Mira",
     "emosi": "happy",
-    "teks": "Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.",
+    "teks": "Huft... syukurlah nak, airnya mulai surut dari anak tangga bawah. Kita memang belum menang sepenuhnya melawan banjir, nak, tapi setidaknya kali ini kita tidak kalah dan hancur seperti dulu.",
     "next": "2"
   },
   {
     "id": "2",
-    "speaker": "MC",
+    "speaker": "Pak Hendra",
     "emosi": "neutral",
-    "teks": "Utang pokok sudah hampir tak bersisa di buku Mak, seperti sebuah janji yang belum jatuh tempo.",
+    "teks": "Benar kata ibumu. Warung makan kita masih bisa tetap buka besok pagi, meskipun beberapa selokan di ujung kampung masih ada yang tersumbat karena belum semua warga mau ikut berubah.",
     "next": "3"
   },
   {
     "id": "3",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Iya Pak... masih ada warga yang belum berhasil kuyakinkan kemarin. Tapi aku tidak akan menyerah begitu saja.",
+    "next": "4"
+  },
+  {
+    "id": "4",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Kau tak sendirian lagi, Nak. Yang tadinya hanya mendengar, sekarang ada yang ikut menjaga. Teruskan.",
+    "teks": "(Suara di kepala MC) Kau tak sendirian lagi sekarang, nak. Warga yang tadinya hanya mendengar, kini sebagian sudah ikut bergerak menjaga sungai bersamamu. Teruskan perjuanganmu sampai seluruh aliran sungai ini benar-benar pulih.",
     "next": "end"
   }
 ]

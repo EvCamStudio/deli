@@ -1,152 +1,132 @@
 [
   {
     "id": "start",
-    "speaker": "Bang Jali",
+    "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Apa lihat-lihat, Bang?",
+    "teks": "(Suara di kepala MC) Itu dia orangnya, nak! Lihat kantong plastik besar di tangannya. Kalau itu dilempar ke air, aliran sungai di hilir pasti tersumbat lagi!",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Bang Jali",
+    "emosi": "sad",
+    "teks": "Apa lihat-lihat, Dek? Ada masalah kau sama aku?!",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Waduh, orang yang satu ini kelihatannya mudah tersulut emosi. Hati-hati bicara dengannya, nak. Jangan sampai kalian berkelahi.",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Aku baru pulang, Bang. Boleh aku tanya, kenapa dibuang di situ?",
+        "teks": "Kantong sampah sebesar itu mau Abang lempar ke sungai?!",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "step1_a"
+        "next": "curhat_jali"
       },
       {
-        "tipe": "B",
-        "teks": "Sungai lagi sakit, Bang. Tolong jangan buang sampah ya.",
+        "tipe": "A",
+        "teks": "Maaf Bang, kenapa sampahnya gak dibuang ke tempat sampah saja?",
         "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step1_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Kalian ini jorok! Gara-gara kalian kampung banjir!",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step1_c"
+        "delta_meter": 0,
+        "next": "curhat_jali"
       }
     ]
   },
   {
-    "id": "step1_a",
-    "speaker": "Bang Jali",
-    "emosi": "neutral",
-    "teks": "Haha. Cemana lagi, Bang? Tong sampah itu di ujung jalan sana, dua ratus meter. Truknya pun tak muat masuk gang. Kau mau bawa kantong ini tiap pagi, sambil kerja, sambil gendong anak?",
-    "next": "step2"
-  },
-  {
-    "id": "step1_b",
-    "speaker": "Bang Jali",
-    "emosi": "neutral",
-    "teks": "Sakit? Aku yang sakit, Bang.",
-    "next": "end"
-  },
-  {
-    "id": "step1_c",
+    "id": "curhat_jali",
     "speaker": "Bang Jali",
     "emosi": "sad",
-    "teks": "Siapa kau ceramahi aku? Baru pulang sudah sok pintar!",
-    "next": "end"
-  },
-  {
-    "id": "step2",
-    "speaker": "MC",
-    "emosi": "neutral",
-    "teks": "Apa yang sebenarnya jadi masalahnya?",
+    "teks": "Hah... kau pikir aku sengaja mau mengotori kampung sendiri?! Coba kau lihat gang tempat tinggalku di belakang ini! Gang ini sempit sekali, Dek! Truk pengangkut sampah dari kota mana muat masuk ke dalam sini. Sedangkan tempat pembuangan sampah di jalan besar sana jaraknya lebih dari dua ratus meter! Kau bayangkan saja, rumah kami di dalam itu sempit dan tidak punya halaman, kalau sampah disimpan sehari saja baunya sudah bikin pusing satu rumah. Mau jalan kaki buang ke jalan besar tiap pagi pun aku sudah buru-buru mau berangkat kerja sambil mengurus anak!",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Berarti bukan karena malas. Tempat buangnya yang tak terjangkau.",
-        "delta_sikap": 1,
-        "delta_meter": 0,
-        "next": "step2_a"
-      },
-      {
-        "tipe": "B",
-        "teks": "Mungkin Abang buru-buru karena kerja ya.",
+        "teks": "Tapi kalau dilempar ke situ, warga sendiri yang bakal kebanjiran lagi, Bang!",
         "delta_sikap": 0,
-        "delta_meter": 3,
-        "next": "step2_b"
+        "delta_meter": 0,
+        "next": "dilema_jali"
       },
       {
-        "tipe": "C",
-        "teks": "Pokoknya malas! Anak muda sekarang begitu semua.",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step2_c"
+        "tipe": "A",
+        "teks": "Hmm... jadi karena truk gak bisa masuk dan tempat sampahnya kejauhan ya...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "dilema_jali"
       }
     ]
   },
   {
-    "id": "step2_a",
-    "speaker": "Bang Jali",
-    "emosi": "happy",
-    "teks": "Nah! Akhirnya ada yang ngerti, Bang. Kau pikir aku suka kampung ini kumuh?",
-    "next": "step3"
-  },
-  {
-    "id": "step2_b",
-    "speaker": "Bang Jali",
-    "emosi": "neutral",
-    "teks": "Ya… itu juga.",
-    "next": "end"
-  },
-  {
-    "id": "step2_c",
+    "id": "dilema_jali",
     "speaker": "Bang Jali",
     "emosi": "sad",
-    "teks": "Aku empat puluh satu, Bang. Kau yang anak muda.",
-    "next": "end"
+    "teks": "Jujur saja, Dek... aku sendiri juga muak lihat parit dan sungai ini penuh plastik dan bau busuk. Kemarin waktu banjir naik, rumahku di dalam gang itu juga ikut kebanjiran. Tapi tiap pagi kami warga gang ini selalu bingung mau dikemanakan sampah-sampah rumah tangga ini kalau tidak dilempar ke air.",
+    "next": "datuk_arah_rt"
   },
   {
-    "id": "step3",
-    "speaker": "MC",
+    "id": "datuk_arah_rt",
+    "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Bagaimana solusi terbaik untuk gang ini?",
+    "teks": "(Suara di kepala MC) Ternyata masalahnya ada pada jarak dan akses gang mereka yang sempit, nak. Kita butuh jalan keluar bersama untuk mulut gang ini. Coba kau periksa Papan Pantun di dekat zebra cross jalan raya sana, siapa tahu ada petuah kearifan yang cocok!",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Bagaimana kalau kita buat bak sampah roda di mulut gang? Ditarik bergiliran ke jalan besar.",
-        "delta_sikap": 1,
-        "delta_meter": -3,
-        "next": "step3_a"
+        "teks": "[A] [Terkunci] Gunakan gerobak sampah dorong komunal dari Pak RT di mulut gang.",
+        "locked": true,
+        "requires_flag": "has_rt_cart_approval",
+        "next": "start"
+      },
+      {
+        "tipe": "A",
+        "teks": "[B] Tahan dulu sampahnya ya, Bang! Aku coba carikan jalan keluarnya dulu sebentar!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pamit_rt",
+        "effect": {
+          "choice": {
+            "mencari_solusi_jali": true
+          }
+        }
       },
       {
         "tipe": "B",
-        "teks": "Bawa sajalah ke TPS depan tiap pagi.",
-        "delta_sikap": 0,
-        "delta_meter": 0,
-        "next": "step3_b"
+        "teks": "[C] Bawa sajalah ke TPS jalan besar tiap pagi Bang, bangun lebih subuh!",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "gagal_jali",
+        "effect": {
+          "choice": {
+            "jali_peduli": false
+          }
+        }
       },
       {
         "tipe": "C",
-        "teks": "Kalau malas ya sampai kiamat pun banjir terus.",
+        "teks": "[D] Bilang saja Abang malas! Gara-gara warga gang sini jorok, satu kota kebanjiran!",
         "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "step3_c"
+        "delta_meter": 20,
+        "next": "gagal_jali",
+        "effect": {
+          "choice": {
+            "jali_peduli": false
+          }
+        }
       }
     ]
   },
   {
-    "id": "step3_a",
-    "speaker": "Bang Jali",
-    "emosi": "happy",
-    "teks": "Mantap kali ide Abang! Nanti kubilang sama anak-anak muda sini, kita iuran buat bak sampahnya.",
-    "next": "end"
-  },
-  {
-    "id": "step3_b",
+    "id": "pamit_rt",
     "speaker": "Bang Jali",
     "emosi": "neutral",
-    "teks": "Kau yang bawa?",
+    "teks": "Hmm, yasudah sana! Tapi cepat ya, aku sudah mau berangkat kerja ini!",
     "next": "end"
   },
   {
-    "id": "step3_c",
+    "id": "gagal_jali",
     "speaker": "Bang Jali",
     "emosi": "sad",
-    "teks": "Bah.",
+    "teks": "Siapa kau ceramahi aku?! Kau yang bawa sampah kami tiap pagi kalau berani! Anak kemarin sore sok pintar kali!",
     "next": "end"
   }
 ]

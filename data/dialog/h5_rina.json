@@ -2,72 +2,97 @@
   {
     "id": "start",
     "speaker": "MC",
-    "emosi": "neutral",
-    "teks": "Kak Rina, soal minyak jelantah dan bungkus gorengan kemarin...",
+    "emosi": "happy",
+    "teks": "Kak Rina! Jangan dibuang minyaknya! Ini aku bawakan jeriken kosong gratis dari Pemuka Desa!",
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "Kak, minyak bekas ditampung di botol lalu dijual ke pengepul. Bungkus plastiknya diganti kertas.",
+        "teks": "[A] Minyak kotor itu bisa dijual Rp3.000 per liter ke Bank Sampah lho, Kak!",
         "delta_sikap": 2,
         "delta_meter": -10,
-        "next": "solusi_a"
+        "next": "penjelasan_solusi_rina",
+        "effect": {
+          "choice": {
+            "rina_peduli": true
+          }
+        }
       },
       {
-        "tipe": "B",
-        "teks": "Kak, minyaknya taruh di botol dulu saja.",
-        "delta_sikap": 1,
-        "delta_meter": 3,
-        "next": "solusi_b"
-      },
-      {
-        "tipe": "C",
-        "teks": "Kalau Kakak masih buang, kulaporkan.",
-        "delta_sikap": -1,
-        "delta_meter": 5,
-        "next": "solusi_c"
+        "tipe": "A",
+        "teks": "[B] Kumpulkan di jeriken ini Kak, minyaknya laku buat bahan biodiesel!",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "penjelasan_solusi_rina",
+        "effect": {
+          "choice": {
+            "rina_peduli": true
+          }
+        }
       }
     ]
   },
   {
-    "id": "solusi_a",
-    "speaker": "Kak Rina",
-    "emosi": "happy",
-    "teks": "Dijual? Bisa dapat uang? Mau, Dek! Pengepulnya di mana? Plastiknya sudah kuganti kertas. Pelanggan malah bilang lebih wangi. Terima kasih ya, Dek!",
-    "next": "datuk_sore"
-  },
-  {
-    "id": "solusi_b",
-    "speaker": "Kak Rina",
-    "emosi": "neutral",
-    "teks": "Terus botolnya dibuang ke mana kalau sudah penuh?",
-    "next": "datuk_sore"
-  },
-  {
-    "id": "solusi_c",
-    "speaker": "Kak Rina",
-    "emosi": "sad",
-    "teks": "Lapor saja! Jangan sok suci kau!",
-    "next": "datuk_sore"
-  },
-  {
-    "id": "datuk_sore",
-    "speaker": "Datuk Sampan",
-    "emosi": "neutral",
-    "teks": "Apa yang kau beri pada air akan kembali ke pintumu.",
-    "next": "datuk_sore_2"
-  },
-  {
-    "id": "datuk_sore_2",
+    "id": "penjelasan_solusi_rina",
     "speaker": "MC",
     "emosi": "neutral",
-    "teks": "Seperti banjir yang masuk ke warung kita.",
-    "next": "datuk_sore_3"
+    "teks": "Begini Kak, kata Pemuka Desa, sekarang di Bank Sampah ada pengepul yang menampung minyak jelantah untuk diolah jadi bahan bakar biodiesel. Mereka berani beli Rp3.000 per liter lho, Kak, dan jeriken penampungannya ini dipinjamkan gratis. Lumayan kan uangnya bisa buat tambah modal beli tepung terigu?",
+    "next": "rina_kaget_senang"
   },
   {
-    "id": "datuk_sore_3",
+    "id": "rina_kaget_senang",
+    "speaker": "Kak Rina",
+    "emosi": "happy",
+    "teks": "Hah?! Serius kau Dek? Minyak hitam kotor begini masih laku dijual tiga ribu seliter?! Wah, kalau sehari Kakak bisa kumpul dua liter saja, sudah dapat dua bungkus terigu itu! Untung saja kau cegah Kakak tadi, Dek. Mulai hari ini tidak akan Kakak tuang ke selokan lagi, mau Kakak kumpulkan saja di jeriken ini. Ini gorengan pesanan ibumu, Kakak kasih bonus tahu isi buat kau!",
+    "next": "mc_terima_gorengan"
+  },
+  {
+    "id": "mc_terima_gorengan",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Terima kasih banyak, Kak.",
+    "next": "batin_mc_gorengan"
+  },
+  {
+    "id": "batin_mc_gorengan",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "(Berbicara dalam hati) Lumayan juga, dapat gorengan tambahan gara-gara menuruti hantu tua ini.",
+    "next": "datuk_goda_mc"
+  },
+  {
+    "id": "datuk_goda_mc",
     "speaker": "Datuk Sampan",
     "emosi": "happy",
-    "teks": "Nah, kau mengerti.",
+    "teks": "(Suara di kepala MC) Hahaha, kau lihat? Menolong sungai ternyata menguntungkan perutmu juga, bukan? Satu masalah lagi sudah teratasi.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Jangan kepedean, aku cuma kebetulan lapar saja.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_arah_kota"
+      },
+      {
+        "tipe": "A",
+        "teks": "Jadi, masih ada lagi orang yang harus kucari?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "datuk_arah_kota"
+      }
+    ]
+  },
+  {
+    "id": "datuk_arah_kota",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Tentu saja. Tapi sebaiknya kau antar dulu gorengan itu kepada ibumu sebelum dingin. Setelah itu, pergilah ke arah Kota Medan di dekat pemukiman gang padat. Aku merasakan banyak sekali sampah plastik yang terus berdatangan dari arah sana.",
+    "next": "mc_pamit_antar_gorengan"
+  },
+  {
+    "id": "mc_pamit_antar_gorengan",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Baiklah... aku pulang sebentar dulu.",
     "next": "end"
   }
 ]

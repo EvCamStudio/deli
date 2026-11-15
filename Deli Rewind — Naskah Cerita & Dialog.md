@@ -32,63 +32,54 @@
 
 ## 1. PROLOG (Komik Interaktif)
 
-### Bab 1 · Jakarta, Hari Pertama Kerja
+### Prolog · Jakarta — Tiga Tahun & Ruang Kosong
 
-*Latar: kantor modern, pagi, kaca jendela memantulkan langit.*
+*Latar: kantor modern lantai lima, pagi hari, kaca jendela memantulkan langit mendung.*
 
-**Langkah 1 · \[NARASI\]** Lantai dua puluh dua. Pagi itu kaca gedung memantulkan langit sebersih kertas baru, dan kopi di mejaku masih mengepul.
+**Langkah 1 · [NARASI]** Pagi ini kaca gedung lantai lima tempatku bekerja selama tiga tahun memantulkan langit mendung. Di mejaku yang hampir kosong, terletak selembar surat dengan dua paragraf. Tiga tahun yang lalu aku memulainya di sini, dan kini hanya menyisakan ruang kosong.
 
-**Langkah 2 · \[Manajer\]** (neutral) “Selamat datang. Isi formulir ini dulu untuk data HRD. Nama lengkap, jangan disingkat.”
+**Langkah 2 · [NARASI]** Aku jadi teringat kembali saat tiga tahun lalu aku diterima di perusahaan ini. Saat itu Mamak sangat senang mendengarnya. Aku pun sungguh tidak menyangka bisa bekerja di kota metropolitan terbesar di negara ini.
 
-**Langkah 3 · \[AKSI\]** Pemain mengetik nama, lalu menekan Konfirmasi. Nama disimpan ke `GameState.player_name`.
+**Langkah 3 · [NARASI]** Aku masih ingat dengan sangat jelas betapa gugupnya aku saat HRD mewawancaraiku waktu itu...
 
-**Langkah 4 · \[Manajer\]** (neutral) “{Nama}. Oke. Kontrak satu tahun. Jangan buat saya menyesal.”
+**Langkah 4 · [HRD]** (neutral) “Selamat datang. Silakan sebutkan nama lengkapmu.”
 
-**Langkah 5 · \[PIKIRAN\]** (neutral) Gaji pertama sudah kuhitung di kepala. Separuhnya untuk Medan, untuk atap warung yang bocor tiap hujan.
+**Langkah 5 · [AKSI]** Pemain mengetik nama, lalu menekan Konfirmasi Nama. Disimpan ke `GameState.player_name`.
 
-**Langkah 6 · \[PIKIRAN\]** (neutral) Bapak selalu bilang atap itu urusan sebelum hujan, bukan sesudahnya. Aku tersenyum. Sebelum hujan, ada waktu.
+**Langkah 6 · [HRD]** (neutral) “Saya sudah melihat CV kamu, {Nama}. CV kamu sangat rapi dan bagus. Di CV ini saya melihat kalau kamu berasal dari Medan, ya? Kalau saya boleh tahu, apa alasan kamu merantau ke Jakarta dan memilih perusahaan ini?”
 
----
+**Langkah 7 · [MC]** (neutral) “Saya merantau ke Jakarta karena ingin mencari pekerjaan yang cocok dengan saya dengan gaji yang baik. Dan saya akhirnya memilih untuk mencoba di perusahaan ini, karena perusahaan ini sedang membutuhkan bidang yang cocok dengan keahlian saya dengan gaji yang pas sesuai ekspektasi saya. Jadi, saya mencoba mendaftar.”
 
-### Bab 2 · Jakarta, PHK
+**Langkah 8 · [HRD]** (neutral) “Apa kamu yakin dengan keahlian kamu itu, kamu bisa membantu perusahaan dan bekerja dengan baik?”
 
-*Latar: kantor malam, lampu setengah mati, hujan badai di luar kaca.*
+**Langkah 9 · [MC]** (neutral) “Ya, saya sangat yakin.”
 
-**Langkah 1 · \[NARASI\]** Sebelas bulan kemudian, hujan mengetuk kaca seperti orang yang tak sabar. Separuh meja di lantai ini sudah kosong. Yang tersisa hanya bekas debu berbentuk kotak.
+**Langkah 10 · [HRD]** (neutral) “Bagus, saya menyukai semangat kamu.”
 
-**Langkah 2 · \[Manajer\]** (neutral) “Duduk dulu, {Nama}.” *(jeda)* “Perusahaan sedang efisiensi. Kontrakmu tidak diperpanjang. Saya minta maaf.”
+**Langkah 11 · [NARASI]** Yah... tiga tahun itu berlalu dengan cepat, dan aku sudah cukup membantu Mamak dan Bapak untuk membangun usaha tempat makan mereka sendiri.
 
-**Langkah 3 · \[NARASI\]** Selembar surat, dua paragraf. Sebelas bulanku muat di sana, dan masih menyisakan ruang kosong.
+**Langkah 12 · [NARASI]** Aku merenung memandangi kardus yang penuh barang-barangku itu.
 
-**Langkah 4 · \[MC\]** (sad) “Baik, Pak. Terima kasih.”
+**Langkah 13 · [NARASI]** Aku tersadar dari renunganku setelah ponselku bergetar di atas meja.
 
-**Langkah 5 · \[PIKIRAN\]** (sad) Terima kasih. Kata yang paling sopan untuk sesuatu yang sebenarnya tak ingin kuucapkan.
-
-**Langkah 6 · \[NARASI\]** Saat kardus itu penuh, ponselku bergetar di atas meja. Di layar: *Mak*.
-
-**Langkah 7 · \[Bu Mira\]** (telepon, suara putus-putus, bunyi hujan di belakangnya) “Nak… sungai naik. Bapakmu lagi angkat kursi ke atas meja. Kau tak usah pulang, kerja sajalah di sana.” *(jeda)* “Eh. Pulang lah, kalau sempat.”
-
-**Langkah 8 · \[MC\]** (sad) “Mak? Mak…”
-
-**Langkah 9 · \[PIKIRAN\]** (sad) Sambungan putus. Hujan di Jakarta dan hujan di Medan. Aku tak tahu itu hujan yang sama atau bukan, tapi malam itu aku membeli tiket.
+**Langkah 14 · [NARASI]** Di layar, aku melihat nama yang meneleponku... itu Mamak.
 
 ---
 
-### Bab 3 · Medan, Kembali ke Warung
+### Bab 2 · Medan — Tiga Hari Kemudian (Transisi Layar Hitam & Narasi Banjir)
 
-*Latar: tepi Sungai Deli, langit kelabu, warung kayu berlumpur.*
+*Latar: Layar hitam pekat untuk pembuka waktu, lalu berpindah ke suasana tepi Sungai Deli yang mendung dan sisa banjir.*
 
-**Langkah 1 · \[NARASI\]** Medan, dua hari kemudian. Deli sudah surut, tetapi surut bukan berarti pergi. Ia meninggalkan jejaknya setinggi dada di dinding setiap rumah.
+**Langkah 1 · [LAYAR HITAM]** 
+*Medan, 3 hari kemudian.*
 
-**Langkah 2 · \[NARASI\]** Warung kami berdiri miring di bantaran, seperti orang yang menahan tangis. Garis lumpur melintang di dindingnya, lurus dan tak bisa dibantah. Kursi-kursi telentang. Toples gula entah di mana.
+**Langkah 2 · [NARASI]** Tiga hari yang lalu saat Mamak meneleponku, beliau mengabarkan kalau Medan sedang diguyur hujan terus-menerus. Karena itu, air Sungai Deli yang berada dekat dengan rumah kami meluap hingga banjir pun tak bisa dihindari lagi.
 
-**Langkah 3 · \[PIKIRAN\]** (sad) Dulu pukul lima pagi di sini ada bunyi sendok beradu gelas. Sekarang hanya air yang menetes dari atap.
+**Langkah 3 · [NARASI]** Mamak memberitahuku kalau tempat makan dan rumah kami terendam air bercampur sisa-sisa lumpur. Banjirnya cukup tinggi hingga banyak perabotan yang rusak karena tidak sempat dipindahkan.
 
-**Langkah 4 · \[NARASI\]** Di tepi sungai, sampah menumpuk setinggi pinggang: kasur, kantong plastik, botol, dan sepasang sandal yang masih berpasangan. Air telah mencari jalannya, dan jalan itu sudah diambil.
+**Langkah 4 · [NARASI]** Karena itu, aku mempercepat kepulanganku ke Medan. Aku ingin membantu Mamak dan Bapak. Toh, aku juga sudah tidak ada pekerjaan lagi di Jakarta... Lebih baik aku pulang dan membantu Mamak dan Bapak.
 
-**Langkah 5 · \[PIKIRAN\]** (sad) Sebanyak ini. Sejak kapan ia menumpuk? Dan kenapa aku tak pernah melihatnya?
-
-**Langkah 6 · \[Transisi\]** Layar memudar ke hitam. `in_world = true`, `world_zone = "hulu"`. Pemain muncul di depan warung.
+**Langkah 5 · [Transisi]** Layar memudar ke hitam. `in_world = true`, `world_zone = "hulu"`. Pemain muncul di depan warung.
 
 ---
 
@@ -96,66 +87,206 @@
 
 *Kesehatan Sungai awal 40%. Hint layar tetap: “Joystick kiri / WASD untuk bergerak. Dekati orang atau objek lalu tekan tombol aksi (B / E).”*
 
-### Misi 1 · Warung
+### Misi 1 · Kembali ke Rumah & Warung Keluarga
 
-**Langkah 1 · \[AKSI\]** Pemain berjalan ke depan warung dan mendekati Bu Mira dan Pak Hendra.
+**Langkah 1 · [AKSI]** Pemain berjalan ke depan warung dan mendekati Bu Mira dan Pak Hendra.
 
-**Langkah 2 · \[NARASI\]** Mak menyapu lumpur ke arah sungai dengan sapu lidi, pelan-pelan, seperti menyapu sesuatu yang akan kembali. Bapak duduk di atas ember terbalik, memegang termos penyok.
+**Langkah 2 · Dialog Sambutan**
 
-**Langkah 3 · Dialog**
+**[Bu Mira]** (neutral) “Sudah sampai, Nak?”
 
-**\[Bu Mira\]** (neutral) *(sapu berhenti)* “Sudah sampai kau.”
+**[MC]** (neutral) “Iya, Mak. Maaf ya, Mak, seharusnya aku pulang lebih cepat.”
 
-**\[MC\]** (neutral) “Maaf, Mak. Harusnya aku pulang lebih cepat.”
+**[Bu Mira]** (sad) “Banjir tidak akan menunggu siapa-siapa, Nak. Jangan pikul yang bukan bagianmu.”
 
-**\[Bu Mira\]** (sad) “Banjir tak menunggu siapa-siapa, Nak. Jangan kau pikul yang bukan bagianmu.”
+**[MC]** (sad) “Rumah kita sungguh berantakan ya, Mak... air benar-benar membuat kekacauan ini.”
 
-**\[Pak Hendra\]** (sad) *(menunjuk garis lumpur di dinding)* “Setinggi situ. Gula, kopi, kursi, hanyut semua. Toples biru Mak pun.”
+**[Pak Hendra]** (neutral) “Jangan mengatakan hal seperti itu, Nak. Memangnya air salah apa? Bukan air yang seharusnya bertanggung jawab…”
 
-**\[Bu Mira\]** (sad) “Sudahlah, Pak.” *(ia mengeluarkan buku catatan lusuh dan membukanya tanpa berkata apa-apa)*
+**[Bu Mira]** (sad) “Sudahlah, Pak. Meskipun memang banyak barang kita yang rusak akibat banjir, tapi yang terpenting kita sekeluarga masih selamat.”
 
-**\[Bu Mira\]** (sad) “Dua bulan lalu air naik sedikit. Kami pinjam lima ratus ribu untuk menambal dinding. Minggu ini air naik lagi, dan tambalannya ikut hanyut.”
+**[MC]** (sad) “Melihat rumah kita terendam sisa lumpur begini, hatiku terasa sesak. Banyak perabotan yang rusak dan harus kita benahi bersama, agar Ibu juga bisa kembali berjualan.”
 
-**\[PIKIRAN\]** (sad) Di Jakarta, lima ratus ribu cuma dua kali makan malam dan ongkos. Di sini, ia sebuah dinding yang sudah roboh.
-
-**\[Pak Hendra\]** (neutral) “Jangan kau benci sungai itu, Nak. Air itu mencari jalan, sama seperti orang. Kalau jalannya kita tutup, dia lewat rumah kita.”
-
-**Langkah 4 · \[PILIHAN\]**
-
-- **\[A\]** “Aku mulai dari sungainya dulu, Pak.”
-  - **\[Bu Mira\]** (happy) “Bawa topi. Matahari hulu tak kenal anak Jakarta.”
-- **\[B\]** “Aku cari kerja dulu, Mak. Utang itu harus dibayar.”
-  - **\[Bu Mira\]** (neutral) “Boleh. Cari kerja bisa besok, lumpur ini tak bisa menunggu. Sehari saja, ya.”
-
-*Kedua pilihan mengarah ke tujuan yang sama. Pilihan hanya mengubah nada, bukan jalur.*
+**[Pak Hendra]** (happy) “Ya sudah. Mari kita mulai bersih-bersih apa yang tersisa dari banjir.”
 
 ---
 
-### Misi 2 · Datuk Sampan
+### Misi 2 · Dua Hari Kemudian & Memesan Kasur Baru
 
-*Pemicu: menjelang senja, pemain mendekati tepi air hulu.*
+**Langkah 1 · [LAYAR HITAM TRANSISI WAKTU]**
+*2 hari kemudian.*
 
-**Langkah 1 · \[NARASI\]** Senja turun. Di tepi air, sebuah sampan tertambat tanpa tali, tanpa riak. Seseorang duduk di haluannya, kain sarung menutupi lutut, tongkat galah di pangkuan.
+**Langkah 2 · [KOTAK NARASI IN-GAME]** (`res://data/dialog/h1_narasi_2hari.json`)
+*“Sungguh sangat melelahkan, selama dua hari aku harus membersihkan semua kekacauan ini. Aku tidak tahu kenapa, tapi ini sangat menjengkelkan. Air sungai yang naik itu pasti karena sampah-sampah yang ada di sana.*
+*Dulu saat aku kecil, sungai itu masih layak dilihat bahkan untuk mandi di sana... tapi sekarang aku bahkan tidak bisa melihat sungai itu tanpa merasa jijik.*
+*Sebenarnya dari mana semua awal kesalahannya?”*
 
-**Langkah 2 · Dialog**
+**Langkah 3 · [AKSI]** Pemain kembali berbicara dengan Mak di warung.
 
-**\[MC\]** (surprised) “Siapa di situ?”
+**[Bu Mira]** (neutral) “Nak, bisakah kamu ke desa sebelah untuk memesan kasur baru? Kasur kita sudah tidak bisa dipakai.”
 
-**\[Datuk Sampan\]** (neutral) “Orang yang melamun di tepi air biasanya tak sadar ada yang menemani.”
+**Pilihan MC:**
+- **[A]** “Bisa, Mak.”
+- **[B]** “Tempatnya di mana ya, Mak?”
 
-**\[MC\]** (neutral) “Aku terlalu capek. Kalau kau halusinasi, tolong cepat hilang.”
+*(Kedua pilihan mendapat jawaban yang sama dari Mak)*
 
-**\[Datuk Sampan\]** (neutral) “Kalau aku halusinasi, aku halusinasi yang tahu nama setiap batu di sungai ini. Panggil saja Datuk Sampan. Aku kenal bapakmu waktu ia setinggi itu.” *(ia menunjuk setinggi lutut)*
+**[Bu Mira]** (neutral) “Tempatnya di Toko Jaya ya, Nak. Kamu pesan saja dulu, nanti mereka akan kirim orang untuk mengantarkannya ke sini.”
 
-**\[Datuk Sampan\]** (neutral) “Sungai tak minta dipuji, Nak. Ia hanya minta dijaga.”
+**[MC]** (neutral) “Baik, Mak.”
 
-**\[MC\]** (sad) “Menjaga sungai sendirian? Aku bahkan tak bisa menjaga pekerjaanku.”
+---
 
-**\[Datuk Sampan\]** (happy) “Tak ada yang bisa sendirian. Makanya, besok jangan mulai dengan tangan. Mulailah dengan telinga. Setiap orang di sini punya alasan untuk sampah yang mereka buang. Dengar alasannya dulu.”
+### Misi 3 · Pertemuan Misterius di Jembatan — Datuk Sampan
 
-**Langkah 3 · \[NARASI\]** Aku berkedip. Sampan itu sudah tak ada. Hanya lingkar riak yang melebar pelan-pelan di permukaan air.
+**Langkah 1 · [AKSI]** MC berjalan menuju jembatan penyeberangan ke arah desa sebelah.
 
-**Langkah 4 · \[PIKIRAN\]** (neutral) Tak ada bekas kaki di lumpur. Mungkin aku memang terlalu capek.
+**[MC]** (sad) “Ugh... pemandangan ini benar-benar mengerikan.”
+
+**[Datuk Sampan]** (neutral) *(suara menggema tanpa wujud)* “Yang mengerikan itu bukan pemandangannya, melainkan orang-orang yang membuat hal ini terjadi.”
+
+**[MC]** (surprised) “Eh? Siapa yang berbicara barusan?!”
+
+*(MC bingung celingak-celinguk mencari di sekitar jembatan, namun tak ada seorang pun. MC kembali ke tengah jembatan.)*
+
+**[MC]** (sad) “Ugh, itu tadi apa? Tidak ada seorang pun di sekitar sini... Apa itu hanya halusinasiku saja, atau itu hantu?”
+
+**Langkah 2 · Kemunculan Datuk Sampan di Tengah Jembatan**
+
+*(Sosok kakek penjaga sungai tiba-tiba berdiri di hadapan MC)*
+
+**[Datuk Sampan]** (neutral) “Anggap saja keduanya.”
+
+**[MC]** (surprised) “Argh! K-kau siapa?! Kenapa kau bisa tiba-tiba muncul di sana?!”
+
+**[Datuk Sampan]** (neutral) “Aku adalah Datuk Sampan... Aku setiap hari berada di sini, karena aku yang menjaga sungai ini. Ya, meskipun tidak ada satu orang pun yang mengetahui hal itu. Tapi, untuk pertama kalinya ada orang yang dapat melihatku dan mengetahui hal itu. Mungkin ini suatu kesempatan untuk memperbaikinya sebelum terlambat.”
+
+**Pilihan MC:**
+- **[A]** “Huh? Penjaga sungai ini?”
+- **[B]** “K-kau beneran h-hantu...?”
+
+**[Datuk Sampan]** (neutral) “Ya, begitulah... Hei anak muda, siapa namamu?”
+
+**[MC]** (neutral) “E-em, aku {nama}.”
+
+**[Datuk Sampan]** (happy) “Nama yang bagus, senang bertemu denganmu.”
+
+**Pilihan MC:**
+- **[A]** “Aku nggak tahu apakah aku harus senang juga dengan hal ini?”
+- **[B]** “Apakah aku akan mendapat musibah jika disenangi hantu?”
+
+**[Datuk Sampan]** (happy) “Hahaha, kau pemuda yang lucu. Ini adalah kesempatan emas yang datang mungkin hanya sekali seumur hidupku mendapatkannya. Pemuda yang baik... apakah kamu bisa menolongku?”
+
+**Pilihan MC:**
+- **[A]** “Menolong? Apakah hantu butuh pertolongan?”
+- **[B]** “Tidak. Aku tidak ingin berurusan dengan hantu.”
+
+**[Datuk Sampan]** (neutral) “Aku tidak minta bantuanmu untuk diriku, Nak. Ini semua untuk kau dan orang lain. Sungai ini sudah membawa beban yang melampaui kesanggupannya. Jika tidak segera diperbaiki, maka yang ada di ujung hanyalah sebuah penyesalan yang tidak dapat diubah.”
+
+**Pilihan MC:**
+- **[A]** “Apa maksudnya?”
+- **[B]** “Kau berbicara dengan sangat bertele-tele.”
+
+**[Datuk Sampan]** (neutral) “Baiklah, aku tidak akan bertele-tele mulai sekarang. Sepertinya kau pemuda yang cukup dingin...”
+
+**Pilihan MC:**
+- **[A]** “.....”
+
+**[Datuk Sampan]** (sad) “Dengar ini baik-baik, Nak. Bencana akan segera menimpa kota ini, dan tidak ada yang dapat kalian lakukan pada saat itu jika semuanya sudah terjadi.”
+
+**Pilihan MC:**
+- **[A]** “Bencana? Jangan bercanda.”
+- **[B]** “Apa kau sekarang sedang membual?”
+
+**[Datuk Sampan]** (neutral) “Aku tidak berbohong. Aku adalah penjaga sungai ini selama 70 tahun. Aku dengan sungai ini sudah seperti saudara yang jiwanya terikat sangat dalam, dan aku tahu apa yang kurasakan tidak pernah salah.”
+
+**Pilihan MC:**
+- **[A]** “Bukankah banjir kemarin juga sudah bencana?”
+- **[B]** “Paling hanya banjir seperti kemarin lagi.”
+
+**[Datuk Sampan]** (sad) “Aku mengatakannya sekali lagi, Nak. Aku meminta bantuan bukan untuk diriku, melainkan untuk kalian. Terserah kau mau percaya atau tak. Satu hal yang pasti: jika bencana itu terjadi, kalian pasti akan menyesal. Atau... mungkin kalian sudah tidak bisa menyesal? Karena saat bencana itu terjadi, itu bisa saja membinasakan kalian...”
+
+**Pilihan MC:**
+- **[A]** “Kau membuatku takut...”
+- **[B]** “.....”
+
+**[Datuk Sampan]** (neutral) “Jangan khawatir… jika kau berhasil membantuku, bencana itu tidak akan terjadi.”
+
+**Pilihan MC:**
+- **[A]** “Baiklah... aku akan membantu.”
+- **[B]** “Jadi, aku harus ngapain?”
+
+**[Datuk Sampan]** (happy) “Bagus! Pilihan yang bijak. Yang kau lakukan tidaklah sulit. Pertama, karena arus sungainya lagi tidak bersahabat, yang dapat kau lakukan untuk sekarang kau hanya perlu membersihkan sampah yang ada di sekitar pinggiran sungai saja dulu. Lalu, coba carilah orang-orang yang bertanggung jawab dengan sampah yang ada di dalam sungai ini.”
+
+**Pilihan MC:**
+- **[A]** “Mencari orang? Untuk apa?”
+- **[B]** “Jika aku menemukan orangnya, apakah aku harus melemparnya ke sungai?”
+
+**[Datuk Sampan]** (neutral) “Mereka pasti punya alasan.”
+
+**[MC]** (surprised) “Alasan, huh?!”
+
+**[Datuk Sampan]** (neutral) “Setiap manusia pasti punya alasannya sendiri, Nak.”
+
+**Pilihan MC:**
+- **[A]** “Baiklah… aku akan melakukannya.”
+
+*(Datuk Sampan menghilang di depan mata MC, namun suaranya tetap membimbing di dalam kepala)*
+
+**[MC]** (neutral) *(Batin)* “Aku membantu hantu itu bukan karena ancamannya ya... Aku melakukannya hanya karena aku juga sejujurnya tidak suka dengan pemandangan penuh sampah ini.”
+
+---
+
+### Misi 4 · Pembersihan Pinggir Sungai & Petang Hari
+
+**Langkah 1 · [Gameplay]** Pemain memungut dan memilah sampah yang mengotori pinggiran sungai hulu ke tong sampah terpilah.
+
+**Langkah 2 · Dialog Selesai Pembersihan**
+
+**[MC]** (sad) “Melelahkan sekali membersihkan semua ini...”
+
+**[Datuk Sampan]** (neutral) *(suara di batin)* “Wajar saja... banyaknya sampah-sampah itu sungguh sebuah ironi.”
+
+**[MC]** (surprised) “Suara ini? Datuk Sampan? Di mana kau? Aku nggak bisa melihatmu...”
+
+**[Datuk Sampan]** (neutral) “Ya... sekarang sepertinya kau tak bisa melihatku lagi. Tapi syukurlah, kau masih bisa mendengar suaraku. Kau sudah membersihkan semuanya dengan baik. Kau sungguh pemuda yang luar biasa.”
+
+**Pilihan MC:**
+- **[A]** “Hantu menyebalkan ini... kenapa selalu mengagetkanku?”
+- **[B]** “Dipuji oleh hantu menyebalkan, huh...?”
+
+**[Datuk Sampan]** (happy) “Memangnya salah jika hantu memujimu?”
+
+**Pilihan MC:**
+- **[A]** “.....”
+
+**[MC]** (neutral) “Aku harus ke toko dulu. Aku harus memesan kasur sebelum tokonya tutup. Ini sudah sore, untuk mencari orang yang membuang sampah-sampah itu sebaiknya besok saja.”
+
+**[Datuk Sampan]** (neutral) “Aku tidak keberatan, toh manusia juga butuh istirahat.”
+
+---
+
+### Misi 5 · Toko Jaya di Desa & Misteri Kasur Hanyut
+
+**Langkah 1 · [AKSI]** Pemain menyeberang ke Desa dan tiba di Toko Jaya.
+
+**Langkah 2 · Percakapan Tercuri Dengarkan**
+
+**[Pak Darwis]** (neutral) “Untung kasur basah yang kena banjir kemarin sudah kuhanyutkan ke sungai tadi pagi. Berat kali kalau mau dibuang ke bak sampah di ujung sana. Jadi kasur busa yang baru ini bisa langsung dikirim ke rumahku, kan?”
+
+**[Pemilik Toko]** (happy) “Bisa, Pak Darwis. Nanti sore diantar becak barang ke rumah ya.”
+
+**[MC]** (surprised) “Permisi, Pak... Tadi saya tidak sengaja dengar. Bapak menghanyutkan kasur bekas ke sungai?!”
+
+**[Pak Darwis]** (neutral) “Eh? Kau siapa, anak muda? Iya, memangnya kenapa? Kasur itu sudah basah kuyup kena lumpur banjir, beratnya bukan main. Mau kubawa ke mana lagi? Ke sungai kan langsung hanyut terbawa arus!”
+
+**Pilihan MC:**
+- **[A]** “Tapi Pak, kasur itu menyumbat aliran sungai dan bikin banjir makin parah!”
+- **[B]** “Bapak tahu tidak, rumah orang tua saya di hilir kena banjir karena luapan sampah seperti itu?”
+
+**[Pak Darwis]** (sad) “Bah! Mana kutahu bakal sampai begitu... Kami di sini juga panik air naik mendadak, perabotan rusak semua. Orang tua sepertiku mana sanggup angkat kasur basah ratusan kilo sendirian!”
+
+**[Datuk Sampan]** (neutral) *(Suara di kepala MC)* “Kau dengar itu, Nak? Seperti yang kubilang tadi... setiap orang pasti punya alasannya sendiri. Jangan langsung menghakimi, carilah jalan keluarnya.”
 
 ---
 
@@ -495,15 +626,15 @@
 
 ### 🌤 ENDING B · “Keluarga Mandiri”
 
-**Syarat:** Meter Bencana ≤ 40%, minimal 2 warga Peduli, Utang Lunas ≥ 70%. Air biru kehijauan `Color(0.28, 0.58, 0.78)`.
+**Syarat:** Meter Bencana ≤ 40%, minimal 2 warga Peduli. Air biru kehijauan `Color(0.28, 0.58, 0.78)`.
 
-**Langkah 1 · \[NARASI\]** Hujan datang lagi bulan itu, deras seperti dulu. Warung kami basah, tapi tidak tenggelam.
+**Langkah 1 · [NARASI]** Hujan datang lagi bulan itu, deras seperti dulu. Warung kami basah, tapi tidak tenggelam.
 
-**Langkah 2 · \[Bu Mira\]** (happy) “Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.”
+**Langkah 2 · [Bu Mira]** (happy) “Air naik sampai tangga kedua. Dulu sampai meja. Kita tak menang, Nak, tapi kita tak kalah seperti dulu.”
 
-**Langkah 3 · \[PIKIRAN\]** (neutral) Utang pokok sudah hampir tak bersisa. Masih ada sebagian kecil di buku Mak, dengan tulisan tangan yang rapi, seperti sebuah janji yang belum jatuh tempo.
+**Langkah 3 · [PIKIRAN]** (happy) Tempat makan Mak sudah kembali bersih dan mulai ramai pelanggan, menghidupkan kembali harapan yang sempat tersapu banjir.
 
-**Langkah 4 · \[Datuk Sampan\]** (happy) “Kau tak sendirian lagi, Nak. Yang tadinya hanya mendengar, sekarang ada yang ikut menjaga. Teruskan.”
+**Langkah 4 · [Datuk Sampan]** (happy) “Kau tak sendirian lagi, Nak. Yang tadinya hanya mendengar, sekarang ada yang ikut menjaga. Teruskan.”
 
 ---
 
@@ -511,11 +642,11 @@
 
 **Syarat:** Meter Bencana ≤ 60%, minimal 1 warga Peduli. Air keruh keabuan `Color(0.42, 0.52, 0.58)`.
 
-**Langkah 1 · \[NARASI\]** Hujan lebat datang lagi. Warung bertahan, dindingnya basah sampai ke garis lumpur yang lama. Utang masih tersisa, dan sungai masih rawan.
+**Langkah 1 · [NARASI]** Hujan lebat datang lagi. Warung bertahan, dindingnya basah sampai ke garis lumpur yang lama. Perbaikan tempat makan masih tersendat, dan sungai masih rawan.
 
-**Langkah 2 · \[PIKIRAN\]** (sad) Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.
+**Langkah 2 · [PIKIRAN]** (sad) Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.
 
-**Langkah 3 · \[Datuk Sampan\]** (neutral) “Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.”
+**Langkah 3 · [Datuk Sampan]** (neutral) “Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.”
 
 ---
 

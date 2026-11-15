@@ -1,0 +1,60 @@
+[
+  {
+    "id": "start",
+    "speaker": "Ibu Rumah Tangga",
+    "emosi": "sad",
+    "teks": "Aduh... got dan saluran di belakang rumahku mampat lagi. Kemarin sudah kuangkat plastiknya, hari ini airnya sudah penuh tertahan lagi. Yang buang sampah berbahaya entah siapa.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Gawat nak! Aliran di bawah jembatan kota itu tertahan oleh pintu air dan sampah beracun. Tanyakan pada ibu itu di mana saluran utamanya!",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Di mana saluran utamanya, Bu? Biar saya bantu periksa!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "petunjuk_tuas"
+      },
+      {
+        "tipe": "A",
+        "teks": "Kenapa pintu air di bawah jembatan itu gak langsung dibuka saja, Bu?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "petunjuk_tuas"
+      }
+    ]
+  },
+  {
+    "id": "petunjuk_tuas",
+    "speaker": "Ibu Rumah Tangga",
+    "emosi": "neutral",
+    "teks": "Di bawah jembatan itu ada pintu air dengan tiga tuas, nak. Tapi jangan asal tarik! Kalau salah urutan, airnya bakal menghantam sekaligus dan meluap ke rumah warga.",
+    "next": "urutan_tuas"
+  },
+  {
+    "id": "urutan_tuas",
+    "speaker": "Ibu Rumah Tangga",
+    "emosi": "sad",
+    "teks": "Tapi aduh nak... Ibu lupa persis urutan membukanya! Dulu petugas drainase tua pernah menulis petunjuk urutannya dalam bentuk Pantun di Papan dekat Zebra Cross jalan raya supaya warga gampang ingat. Coba kamu periksa papan pantun di pinggir jalan itu dulu ya!",
+    "next": "mc_paham_tuas"
+  },
+  {
+    "id": "mc_paham_tuas",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Papan pantun di dekat zebra cross jalan raya ya, Bu? Baik, saya ke sana untuk memecahkan sandi pantunnya dulu!",
+    "next": "end",
+    "effect": {
+      "quest": {
+        "id": "drainase_kota",
+        "description": "Pecahkan sandi pantun & buka tuas pintu air",
+        "target": 3
+      }
+    }
+  }
+]
+

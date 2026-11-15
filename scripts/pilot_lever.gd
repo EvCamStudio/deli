@@ -3,6 +3,7 @@ extends Area2D
 class_name PilotLever
 
 @export var lever_id: int = 1
+@export var custom_label: String = ""
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var label: Label = $Label
@@ -12,7 +13,10 @@ var _pressed: bool = false
 func _ready() -> void:
 	add_to_group("pilot_lever")
 	sprite.texture = load("res://assets/sprites/props/lever_off.png")
-	label.text = "Tuas %d" % lever_id
+	if not custom_label.is_empty():
+		label.text = custom_label
+	else:
+		label.text = "Tuas %d" % lever_id
 
 func get_action_label() -> String:
 	return "" if _pressed else "Tarik"

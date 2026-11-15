@@ -3,32 +3,15 @@
     {
       "id": "start",
       "speaker": "Pak Nelayan",
-      "text": "Hati-hati melangkah, Nak. Banyak pecahan botol. Dulu sepanjang pantai ini bakau semua. Sekarang tinggal gigi-gigi yang ompong.",
+      "text": "Dulu sepanjang pantai ini hutan bakau semua. Sekarang tinggal sisa batang kering seperti gigi ompong. Di bawah akar bakau itulah anak-anak ikan bersembunyi dan pantai tertahan dari abrasi ombak. Bantulah menanam bibit bakau di pesisir ini, nak.",
       "choices": [
-        { "text": "Aku bisa bantu tanam mangrove.", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } },
-        { "text": "Kenapa mangrove sepenting itu, Pak?", "next": "why", "effect": {} }
-      ]
-    },
-    {
-      "id": "why",
-      "speaker": "Pak Nelayan",
-      "text": "Di bawah akarnya, anak ikan bersembunyi sampai cukup besar untuk takut. Pantai pun begitu: kalau akarnya hilang, ombak makan tanah sedikit demi sedikit, tak pernah sekaligus. Makanya orang tak sadar.",
-      "choices": [
-        { "text": "Kalau begitu aku tanam sekarang!", "next": "plant", "effect": { "river_health": 3, "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir", "target": 8 } } }
-      ]
-    },
-    {
-      "id": "plant",
-      "speaker": "Pak Nelayan",
-      "text": "Titik tanamnya kutandai di tepian. Dekati, tekan tombol aksi. Kami cari makan dari laut yang sehat. Kalau laut sakit, anak-anak kami yang pergi merantau.",
-      "choices": [
-        { "text": "Siap, aku akan jaga muara ini!", "next": "end", "effect": {} }
+        { "text": "Saya siap membantu menanam bibit mangrove-nya, Pak!", "next": "end", "effect": { "quest": { "id": "tanam_mangrove", "description": "Tanam 8 mangrove di pesisir muara", "target": 8 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Pak Nelayan",
-      "text": "Terima kasih banyak, Nak. Semoga bakau yang kau tanam mengembalikan ikan ke tepian.",
+      "text": "Terima kasih banyak nak. Semoga 8 bakau yang kau tanam mengembalikan ikan-ikan ke tepian pantai kita.",
       "choices": []
     }
   ],
@@ -36,15 +19,15 @@
     {
       "id": "start",
       "speaker": "Penjaga Sungai",
-      "text": "Lihat itu. Semua yang dibuang di hulu akhirnya sampai ke sini. Muara itu tempat sungai menyerahkan semua yang dibawanya.",
+      "text": "Lihatlah hamparan itu. Semua yang dibuang di hulu, desa, hingga kota... akhirnya sampai ke muara ini. Susuri pesisir, pungut dan pilah ke tong Organik, Anorganik, dan B3.",
       "choices": [
-        { "text": "Ayo kita hadapi bersama.", "next": "end", "effect": { "quest": { "id": "pilah_hilir", "description": "Pilah 10 sampah ke tong yang benar", "target": 10 } } }
+        { "text": "Aku akan pilah sampahnya ke tong yang benar, Pak!", "next": "end", "effect": { "quest": { "id": "pilah_hilir", "description": "Pilah 10 sampah pesisir muara", "target": 10 } } }
       ]
     },
     {
       "id": "end",
       "speaker": "Penjaga Sungai",
-      "text": "Susuri pesisir, pungut yang berserakan, pilah sesuai jenisnya. Pelan-pelan saja. Gunungan ini juga tak datang dalam sehari.",
+      "text": "Pilah pelan-pelan saja. Gunungan sampah ini juga tak datang dalam sehari.",
       "choices": []
     }
   ]

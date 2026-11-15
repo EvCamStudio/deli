@@ -2,6 +2,9 @@
 extends Area2D
 class_name PilotPantunBoard
 
+func _ready() -> void:
+	add_to_group("pantun_board")
+
 func get_action_label() -> String:
 	return "Baca Pantun"
 

@@ -1,23 +1,37 @@
 [
   {
     "id": "start",
-    "speaker": "MC",
+    "speaker": "Pak Hendra",
     "emosi": "sad",
-    "teks": "Hujan lebat datang lagi. Warung bertahan, dindingnya basah sampai ke garis lumpur yang lama. Utang masih tersisa, dan sungai masih rawan.",
+    "teks": "Nak, cepat bantu Bapak angkat kursi-kursi kayu ini ke atas meja! Air sungainya naik lagi sampai ke mata kaki!",
     "next": "1"
   },
   {
     "id": "1",
-    "speaker": "MC",
+    "speaker": "Bu Mira",
     "emosi": "sad",
-    "teks": "Seperti menambal atap saat hujan sudah turun. Bisa, tapi tak pernah benar-benar kering.",
+    "teks": "Ya Tuhan... padahal baru minggu lalu dinding warung ini kita bersihkan. Kalau setiap hujan deras airnya masih masuk begini, kapan ibu bisa tenang berjualan lagi...",
     "next": "2"
   },
   {
     "id": "2",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Maafkan aku, Mak, Pak... kemarin aku terlalu cepat menyerah dan malah berdebat dengan warga, sehingga sampah-sampah mereka masih terus menyumbat sungai.",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "Narasi",
+    "emosi": "sad",
+    "teks": "Warung kami memang masih berdiri, tapi dindingnya kembali basah kuyup dan perbaikan tempat makan ibu kembali tersendat. Rasanya seperti menambal atap yang bocor saat hujan badai sudah turun—bisa bertahan, tapi tak pernah benar-benar kering.",
+    "next": "4"
+  },
+  {
+    "id": "4",
     "speaker": "Datuk Sampan",
     "emosi": "neutral",
-    "teks": "Sungai belajar dari kita, seperti kita belajar darinya. Jalanmu masih panjang. Jangan berhenti di tengah.",
+    "teks": "(Suara di kepala MC) Sungai belajar dari manusia, seperti manusia belajar darinya, nak. Satu orang saja tidak cukup untuk menahan beban seluruh sungai. Jalanmu masih panjang, jangan berhenti di tengah jalan.",
     "next": "end"
   }
 ]

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "sad",
+    "teks": "Huft... sudah tertanam semua, Pak. Tanganku penuh tanah rasanya.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Penjaga Hutan",
+    "emosi": "happy",
+    "teks": "Terima kasih, nak. Pohon yang kau tanam hari ini mungkin tak sempat kau teduhi dalam waktu dekat. Tak apa. Pohon besar yang meneduhimu sekarang pun dulunya bukan kau yang tanam.",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Aku harus segera ke Toko Jaya dulu sekarang, aku harus memesan kasur ibu sebelum tokonya tutup. Ini sudah sore!",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Aku tidak keberatan, pergilah ke toko itu dulu. Toh manusia juga butuh kasur untuk istirahat.",
+    "next": "end"
+  }
+]
+

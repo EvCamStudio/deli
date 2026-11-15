@@ -1,0 +1,224 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Untung saja kasur lama yang rusak karena banjir kemarin sudah kubuang ke sungai tadi pagi, jadi kamarku langsung kosong buat kasur baru ini.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "Pemilik Toko",
+    "emosi": "neutral",
+    "teks": "Wah, memangnya tidak apa-apa dibuang ke sungai, Pak Darwis?",
+    "next": "2"
+  },
+  {
+    "id": "2",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Yah, mau bagaimana lagi? Pinggang tuaku ini sudah hampir patah rasanya.",
+    "next": "3"
+  },
+  {
+    "id": "3",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Permisi, apa aku tidak salah dengar barusan? Bapak yang membuang kasur bekas ke sungai itu?!",
+    "next": "4"
+  },
+  {
+    "id": "4",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Eh? Siapa kau anak muda? Tiba-tiba saja ikut campur urusan orang tua.",
+    "next": "5"
+  },
+  {
+    "id": "5",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Tahan emosimu nak... ingat apa yang kukatakan tadi. Dengarkan dulu alasannya.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Bapak tahu betapa beratnya membersihkan sungai itu?!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "curhat_darwis"
+      },
+      {
+        "tipe": "A",
+        "teks": "Memangnya kenapa Bapak harus membuangnya ke sungai?",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "curhat_darwis"
+      }
+    ]
+  },
+  {
+    "id": "curhat_darwis",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Hah... kau pikir aku sengaja ingin mengotori sungai? Kasur busa itu terendam lumpur banjir, beratnya puluhan kilo, dan baunya busuk. Lihatlah tubuhku ini nak, aku sudah tua renta. Menyeret kasur basah itu keluar rumah saja napasku sudah mau habis. Tempat pembuangan sampah itu jauh di ujung desa, mana sanggup tulang tuaku ini menggotongnya ke sana sendirian? Jadi aku tidak punya pilihan lain selain menghanyutkannya ke sungai di belakang rumah.",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "Tetap saja itu salah, Pak! Itu malah bikin banjir lagi!",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penyesalan_darwis"
+      },
+      {
+        "tipe": "A",
+        "teks": "Hmm... jadi karena Bapak gak kuat membawanya jauh-jauh ya...",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "penyesalan_darwis"
+      }
+    ]
+  },
+  {
+    "id": "penyesalan_darwis",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Aku tahu itu salah nak... jujur saja aku juga merasa bersalah saat mendorongnya ke air. Waktu aku muda dulu, kasur itu isinya kapuk alami, bisa hancur sendiri di air. Sekarang isinya busa plastik semua. Tapi mau bagaimana lagi, tenagaku sudah tidak ada.",
+    "next": "datuk_dorong_solusi"
+  },
+  {
+    "id": "datuk_dorong_solusi",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Kau dengar itu, nak? Dia bukannya jahat, fisiknya saja yang tak sanggup menggotong kasur berat itu. Tapi bagaimana caranya agar orang tua ini tidak keberatan ya? Coba tengok Papan Pantun Petuah di dekat persimpangan jalan desa sana, siapa tahu ada petunjuk kearifan Melayu yang bisa jadi jalan keluar!",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
+        "requires_flag": "unlock_solusi_darwis",
+        "delta_sikap": 2,
+        "delta_meter": -10,
+        "next": "solusi_berhasil",
+        "effect": {
+          "choice": {
+            "darwis_peduli": true
+          }
+        }
+      },
+      {
+        "tipe": "A",
+        "teks": "[B] Tunggu di sini sebentar ya, Pak! Saya carikan jalan keluarnya dulu.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pamit_cari_pantun"
+      },
+      {
+        "tipe": "B",
+        "teks": "[C] Lain kali Bapak paksakan bawa ke TPA saja, Pak, daripada nyumbat sungai.",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "cabang_gagal",
+        "effect": {
+          "choice": {
+            "darwis_peduli": false
+          }
+        }
+      },
+      {
+        "tipe": "C",
+        "teks": "[D] Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!",
+        "delta_sikap": -1,
+        "delta_meter": 20,
+        "next": "cabang_gagal",
+        "effect": {
+          "choice": {
+            "darwis_peduli": false
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "pamit_cari_pantun",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Iya nak, aku tunggu di depan toko ini. Pinggangku juga masih ngilu kalau mau jalan jauh.",
+    "next": "end"
+  },
+  {
+    "id": "solusi_berhasil",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Begini Pak, daripada digotong utuh-utuh, lain kali kalau ada kasur busa yang rusak, belah dan cincang saja busanya pakai parang sampai kecil-kecil. Busa potongan itu ringan dibawa dan bisa dijual ke pengepul daur ulang di hulu, Pak. Bapak gak perlu angkat berat-berat, malah bisa dapat uang.",
+    "next": "darwis_terima"
+  },
+  {
+    "id": "darwis_terima",
+    "speaker": "Pak Darwis",
+    "emosi": "happy",
+    "teks": "Eh? Dijual ke pengepul? Busa bekas begitu masih laku rupanya? Wah... kenapa aku tidak kepikiran sampai ke situ ya. Kalau cuma membelah dan mencincang busa pakai parang di halaman rumah sih parangku masih tajam dan tenagaku masih kuat. Terima kasih sarannya ya, anak muda. Mulai sekarang kasur rusak tak akan kubuang ke sungai lagi!",
+    "next": "batin_mc_darwis"
+  },
+  {
+    "id": "batin_mc_darwis",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "(Berbicara dalam hati) Ugh... ternyata benar kata hantu tua itu. Dia bukannya jahat, dia hanya kesulitan karena sudah tua dan akhirnya mengambil jalan pintas.",
+    "next": "datuk_puji_darwis"
+  },
+  {
+    "id": "datuk_puji_darwis",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Kerja bagus, nak. Manusia sering kali merusak alam bukan karena mereka benci pada alam, tapi karena mereka merasa tidak punya pilihan lain.",
+    "next": "pesan_kasur_mak"
+  },
+  {
+    "id": "cabang_gagal",
+    "speaker": "Pak Darwis",
+    "emosi": "sad",
+    "teks": "Kau pikir TPA itu dekat?! Sepuluh kilo dari sini! Memangnya kau yang mau menggendong kasurku?! Anak kemarin sore tahu apa soal susahnya orang tua! Aku sudah makan garam sebelum kau lahir, tak sopan kau menceramahi aku!",
+    "next": "datuk_kecewa_darwis"
+  },
+  {
+    "id": "datuk_kecewa_darwis",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Hah... kau lihat itu, nak? Karena kau langsung menyalahkannya tanpa memberi jalan keluar yang sanggup dia lakukan, hatinya malah tertutup rapat. Kalau ada barang rongsokan lagi, dia pasti tetap melemparnya ke sungai.",
+    "next": "pesan_kasur_mak"
+  },
+  {
+    "id": "pesan_kasur_mak",
+    "speaker": "Datuk Sampan",
+    "emosi": "neutral",
+    "teks": "(Suara di kepala MC) Sudahlah, sebelum kau memikirkan hari esok, bukankah kau punya urusan dengan pemilik toko ini? Jangan sampai ibumu menunggu terlalu lama.",
+    "next": "mc_ingat_kasur"
+  },
+  {
+    "id": "mc_ingat_kasur",
+    "speaker": "MC",
+    "emosi": "surprised",
+    "teks": "Ah, benar juga! Hampir saja aku lupa tujuan awalku ke sini.",
+    "next": "bicara_pemilik_toko"
+  },
+  {
+    "id": "bicara_pemilik_toko",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Permisi, Koh. Saya disuruh ibu saya, Bu Mira, untuk memesan kasur baru. Kasur di rumah sudah hancur kena banjir kemarin.",
+    "next": "pemilik_toko_jawab"
+  },
+  {
+    "id": "pemilik_toko_jawab",
+    "speaker": "Pemilik Toko",
+    "emosi": "happy",
+    "teks": "Oh, anaknya Bu Mira ya? Bisa, nak. Kebetulan stok kasur ukuran sedang masih ada di gudang. Nanti sore saya suruh anak buah saya antar langsung ke rumahmu ya.",
+    "next": "mc_selesai_toko"
+  },
+  {
+    "id": "mc_selesai_toko",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Baik, Koh. Terima kasih banyak ya.",
+    "next": "end"
+  }
+]

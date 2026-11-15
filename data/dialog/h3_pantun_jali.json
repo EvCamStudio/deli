@@ -1,0 +1,70 @@
+[
+  {
+    "id": "start",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Papan Pantun Petuah di trotoar Kota Medan... Mari kita baca bait tentang gang sempit kota ini.",
+    "next": "baca_bait"
+  },
+  {
+    "id": "baca_bait",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Pasang pelita di malam gulita,\nCahaya terang sampai ke pekan...\n(Dua baris di bawahnya pudar tertutup asap kota. Pilih lanjutan sajak yang pas):",
+    "pilihan": [
+      {
+        "tipe": "A",
+        "teks": "[A] Jika gang sempit truk tak muat kita, / Gerobak beroda mari gilirkan.",
+        "delta_sikap": 1,
+        "delta_meter": -2,
+        "next": "pantun_benar",
+        "effect": {
+          "choice": {
+            "unlock_solusi_jali": true
+          }
+        }
+      },
+      {
+        "tipe": "B",
+        "teks": "[B] Janganlah malas berjalan kaki, / Bawa sampahmu setiap pagi.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      },
+      {
+        "tipe": "C",
+        "teks": "[C] Lempar bungkusnya ke dalam parit, / Biar hanyut sampai ke muara.",
+        "delta_sikap": 0,
+        "delta_meter": 0,
+        "next": "pantun_salah"
+      }
+    ]
+  },
+  {
+    "id": "pantun_salah",
+    "speaker": "Datuk Sampan",
+    "emosi": "sad",
+    "teks": "(Suara di kepala MC) Rima dan maknanya belum tepat, nak! Pantun itu bersajak a-b-a-b. Baris ketiga harus berima '-ta' dan baris keempat harus berima '-kan'. Coba baca lagi!",
+    "next": "baca_bait"
+  },
+  {
+    "id": "pantun_benar",
+    "speaker": "Datuk Sampan",
+    "emosi": "happy",
+    "teks": "(Suara di kepala MC) Luar biasa, nak! 'Jika gang sempit truk tak muat kita, gerobak beroda mari gilirkan'!",
+    "next": "mc_paham"
+  },
+  {
+    "id": "mc_paham",
+    "speaker": "MC",
+    "emosi": "happy",
+    "teks": "Gerobak beroda didorong bergiliran! Benar juga, kalau warga punya satu gerobak roda komunal di mulut gang, mereka tidak perlu jalan jauh ke TPS tiap pagi. Aku harus temui Pak RT untuk meminta persetujuan dan bahan gerobak roda ini sekarang!",
+    "next": "end",
+    "effect": {
+      "choice": {
+        "unlock_solusi_jali": true
+      }
+    }
+  }
+]
+

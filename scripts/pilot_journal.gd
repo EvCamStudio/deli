@@ -73,11 +73,19 @@ func _refresh() -> void:
 		_wisdom_index += 1
 
 func _on_save() -> void:
-	GameState.save_game()
-	save_hint.text = "Progres tersimpan."
+	var ok: bool = GameState.save_game()
+	if ok:
+		save_hint.text = "Progres tersimpan."
+		save_hint.add_theme_color_override("font_color", Color(0.2, 0.45, 0.25, 1))
+	else:
+		save_hint.text = "Gagal menyimpan. Coba lagi."
+		save_hint.add_theme_color_override("font_color", Color(0.68, 0.2, 0.2, 1))
 	save_hint.show()
 
 func _on_menu() -> void:
+	# Simpan juga saat keluar ke menu utama supaya progres setelah tombol
+	# simpan terakhir tidak hilang.
+	GameState.save_game()
 	get_tree().paused = false
 	SceneManager.go_to_main_menu()
 

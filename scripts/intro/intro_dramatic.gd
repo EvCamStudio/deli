@@ -5,14 +5,12 @@ extends Control
 
 const CHAPTER_SCENES: Array = [
 	preload("res://scenes/intro/chapter_1_jakarta.tscn"),
-	preload("res://scenes/intro/chapter_2_phk.tscn"),
 	preload("res://scenes/intro/chapter_3_medan.tscn"),
 ]
 
 const HEADERS: Array = [
-	"BAB 1 · JAKARTA — HARI PERTAMA KERJA",
-	"BAB 2 · JAKARTA — PHK",
-	"BAB 3 · MEDAN — TEPI SUNGAI DELI",
+	"PROLOG · JAKARTA",
+	"MEDAN · TIGA HARI KEMUDIAN",
 ]
 
 const PORTRAITS: Dictionary = {
@@ -22,104 +20,87 @@ const PORTRAITS: Dictionary = {
 	"ibu": "res://assets/sprites/portraits/ibu_neutral.png",
 }
 
-# ─── Naskah Perbaikan Bab 1, 2, 3 Sesuai Kontrak Dokumen Utama ───────────────
+# ─── Naskah Prolog Terpadu (Revisi Sesuai Arahan) ──────────────────────────────
 const SCRIPT_DATA: Array = [
-	# Bab 1 · Jakarta, Hari Pertama Kerja
+	# Prolog · Jakarta — Tiga Tahun & Ruang Kosong
 	[
 		{
 			"tipe": "narasi",
-			"teks": "Lantai dua puluh dua. Pagi itu kaca gedung memantulkan langit sebersih kertas baru, dan kopi di mejaku masih mengepul."
+			"teks": "Pagi ini kaca gedung lantai lima tempatku bekerja selama tiga tahun memantulkan langit mendung. Di mejaku yang hampir kosong, terletak selembar surat dengan dua paragraf. Tiga tahun yang lalu aku memulainya di sini, dan kini hanya menyisakan ruang kosong."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Aku jadi teringat kembali saat tiga tahun lalu aku diterima di perusahaan ini. Saat itu Mamak sangat senang mendengarnya. Aku pun sungguh tidak menyangka bisa bekerja di kota metropolitan terbesar di negara ini."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Aku masih ingat dengan sangat jelas betapa gugupnya aku saat HRD mewawancaraiku waktu itu..."
 		},
 		{
 			"tipe": "dialog",
-			"speaker": "manajer",
-			"teks": "Selamat datang. Isi formulir ini dulu untuk data HRD. Nama lengkap, jangan disingkat.",
+			"speaker": "hrd",
+			"teks": "Selamat datang. Silakan sebutkan nama lengkapmu.",
 			"input_nama": true
 		},
 		{
 			"tipe": "dialog",
-			"speaker": "manajer",
-			"teks": "{nama}. Oke. Kontrak satu tahun. Jangan buat saya menyesal."
+			"speaker": "hrd",
+			"teks": "Saya sudah melihat CV kamu, {nama}. CV kamu sangat rapi dan bagus.\n\nDi CV ini saya melihat kalau kamu berasal dari Medan, ya? Kalau saya boleh tahu, apa alasan kamu merantau ke Jakarta dan memilih perusahaan ini?"
 		},
 		{
-			"tipe": "pikiran",
+			"tipe": "dialog",
 			"speaker": "mc",
-			"teks": "Gaji pertama sudah kuhitung di kepala. Separuhnya untuk Medan, untuk atap warung yang bocor tiap hujan."
+			"teks": "Saya merantau ke Jakarta karena ingin mencari pekerjaan yang cocok dengan saya dengan gaji yang baik. Dan saya akhirnya memilih untuk mencoba di perusahaan ini, karena perusahaan ini sedang membutuhkan bidang yang cocok dengan keahlian saya dengan gaji yang pas sesuai ekspektasi saya. Jadi, saya mencoba mendaftar."
 		},
 		{
-			"tipe": "pikiran",
+			"tipe": "dialog",
+			"speaker": "hrd",
+			"teks": "Apa kamu yakin dengan keahlian kamu itu, kamu bisa membantu perusahaan dan bekerja dengan baik?"
+		},
+		{
+			"tipe": "dialog",
 			"speaker": "mc",
-			"teks": "Bapak selalu bilang atap itu urusan sebelum hujan, bukan sesudahnya. Aku tersenyum. Sebelum hujan, ada waktu."
+			"teks": "Ya, saya sangat yakin."
+		},
+		{
+			"tipe": "dialog",
+			"speaker": "hrd",
+			"teks": "Bagus, saya menyukai semangat kamu."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Yah... tiga tahun itu berlalu dengan cepat, dan aku sudah cukup membantu Mamak dan Bapak untuk membangun usaha tempat makan mereka sendiri."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Aku merenung memandangi kardus yang penuh barang-barangku itu."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Aku tersadar dari renunganku setelah ponselku bergetar di atas meja."
+		},
+		{
+			"tipe": "narasi",
+			"teks": "Di layar, aku melihat nama yang meneleponku... itu Mamak."
 		}
 	],
-	# Bab 2 · Jakarta, PHK
+	# Bab 2 · Medan — Tiga Hari Kemudian
 	[
 		{
-			"tipe": "narasi",
-			"teks": "Sebelas bulan kemudian, hujan mengetuk kaca seperti orang yang tak sabar. Separuh meja di lantai ini sudah kosong. Yang tersisa hanya bekas debu berbentuk kotak."
-		},
-		{
-			"tipe": "dialog",
-			"speaker": "manajer",
-			"teks": "Duduk dulu, {nama}. Perusahaan sedang efisiensi. Kontrakmu tidak diperpanjang. Saya minta maaf."
+			"tipe": "layar_hitam",
+			"teks": "Medan, 3 hari kemudian."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Selembar surat, dua paragraf. Sebelas bulanku muat di sana, dan masih menyisakan ruang kosong."
-		},
-		{
-			"tipe": "dialog",
-			"speaker": "mc",
-			"teks": "Baik, Pak. Terima kasih."
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Terima kasih. Kata yang paling sopan untuk sesuatu yang sebenarnya tak ingin kuucapkan."
+			"teks": "Tiga hari yang lalu saat Mamak meneleponku, beliau mengabarkan kalau Medan sedang diguyur hujan terus-menerus. Karena itu, air Sungai Deli yang berada dekat dengan rumah kami meluap hingga banjir pun tak bisa dihindari lagi."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Saat kardus itu penuh, ponselku bergetar di atas meja. Di layar: Mak."
-		},
-		{
-			"tipe": "telepon",
-			"speaker": "ibu",
-			"teks": "Nak… sungai naik. Bapakmu lagi angkat kursi ke atas meja. Kau tak usah pulang, kerja sajalah di sana... Eh. Pulang lah, kalau sempat."
-		},
-		{
-			"tipe": "dialog",
-			"speaker": "mc",
-			"teks": "Mak? Mak…"
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Sambungan putus. Hujan di Jakarta dan hujan di Medan. Aku tak tahu itu hujan yang sama atau bukan, tapi malam itu aku membeli tiket."
-		}
-	],
-	# Bab 3 · Medan, Kembali ke Warung
-	[
-		{
-			"tipe": "narasi",
-			"teks": "Medan, dua hari kemudian. Deli sudah surut, tetapi surut bukan berarti pergi. Ia meninggalkan jejaknya setinggi dada di dinding setiap rumah."
+			"teks": "Mamak memberitahuku kalau tempat makan dan rumah kami terendam air bercampur sisa-sisa lumpur. Banjirnya cukup tinggi hingga banyak perabotan yang rusak karena tidak sempat dipindahkan."
 		},
 		{
 			"tipe": "narasi",
-			"teks": "Warung kami berdiri miring di bantaran, seperti orang yang menahan tangis. Garis lumpur melintang di dindingnya, lurus dan tak bisa dibantah. Kursi-kursi telentang. Toples gula entah di mana."
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Dulu pukul lima pagi di sini ada bunyi sendok beradu gelas. Sekarang hanya air yang menetes dari atap."
-		},
-		{
-			"tipe": "narasi",
-			"teks": "Di tepi sungai, sampah menumpuk setinggi pinggang: kasur, kantong plastik, botol, dan sepasang sandal yang masih berpasangan. Air telah mencari jalannya, dan jalan itu sudah diambil."
-		},
-		{
-			"tipe": "pikiran",
-			"speaker": "mc",
-			"teks": "Sebanyak ini. Sejak kapan ia menumpuk? Dan kenapa aku tak pernah melihatnya?"
+			"teks": "Karena itu, aku mempercepat kepulanganku ke Medan. Aku ingin membantu Mamak dan Bapak. Toh, aku juga sudah tidak ada pekerjaan lagi di Jakarta... Lebih baik aku pulang dan membantu Mamak dan Bapak."
 		}
 	]
 ]
@@ -160,6 +141,10 @@ var _last_typed_char: int = 0
 var _typewriter_tween: Tween = null
 var _current_target_label: RichTextLabel = null
 var _current_target_hint: Control = null
+
+var _black_screen_container: Control = null
+var _black_screen_label: RichTextLabel = null
+var _black_screen_hint: Label = null
 
 func _ready() -> void:
 	AudioManager.play_bgm("intro")
@@ -274,7 +259,18 @@ func _render_current_step() -> void:
 		input_row.hide()
 		dialog_hint_row.show()
 
+	_ensure_black_screen_node()
+	if _black_screen_container:
+		_black_screen_container.hide()
+
 	match tipe:
+		"layar_hitam":
+			header_banner.hide()
+			narration_screen.hide()
+			dialogue_container.hide()
+			_black_screen_container.show()
+			_start_typewriter(_black_screen_label, _black_screen_hint, "[center][b]%s[/b][/center]" % processed_teks)
+
 		"narasi":
 			# Tampilkan Narasi dalam format lembaran kertas vertikal
 			header_banner.hide()
@@ -309,11 +305,11 @@ func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 		"mc":
 			speaker_label.text = player_name
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
-		"manajer":
-			speaker_label.text = "Manajer"
+		"hrd", "manajer":
+			speaker_label.text = "HRD"
 			portrait.texture = load(PORTRAITS["manajer"]) as Texture2D
-		"ibu":
-			speaker_label.text = "Bu Mira"
+		"ibu", "mamak":
+			speaker_label.text = "Mamak"
 			portrait.texture = load(PORTRAITS["ibu"]) as Texture2D
 		_:
 			speaker_label.text = speaker.capitalize()
@@ -333,6 +329,56 @@ func _setup_thought_speaker(speaker: String, player_name: String) -> void:
 func _setup_phone_speaker(_speaker: String) -> void:
 	speaker_label.text = "Bu Mira (Telepon)"
 	portrait.texture = load(PORTRAITS["ibu"]) as Texture2D
+
+func _ensure_black_screen_node() -> void:
+	if _black_screen_container and is_instance_valid(_black_screen_container):
+		return
+
+	_black_screen_container = Control.new()
+	_black_screen_container.name = "BlackScreenOverlay"
+	_black_screen_container.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_black_screen_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_black_screen_container)
+	move_child(_black_screen_container, fade_rect.get_index())
+
+	var bg := ColorRect.new()
+	bg.name = "BlackBG"
+	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	bg.color = Color(0, 0, 0, 1)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_black_screen_container.add_child(bg)
+
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_black_screen_container.add_child(center)
+
+	var vbox := VBoxContainer.new()
+	vbox.add_theme_constant_override("separation", 16)
+	vbox.custom_minimum_size = Vector2(480, 0)
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	center.add_child(vbox)
+
+	_black_screen_label = RichTextLabel.new()
+	_black_screen_label.name = "BlackScreenText"
+	_black_screen_label.bbcode_enabled = true
+	_black_screen_label.fit_content = true
+	_black_screen_label.scroll_active = false
+	_black_screen_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_black_screen_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_black_screen_label.add_theme_color_override("default_color", Color(0.96, 0.96, 0.96, 1.0))
+	_black_screen_label.add_theme_font_size_override("normal_font_size", 16)
+	_black_screen_label.add_theme_font_size_override("bold_font_size", 16)
+	vbox.add_child(_black_screen_label)
+
+	_black_screen_hint = Label.new()
+	_black_screen_hint.name = "BlackScreenHint"
+	_black_screen_hint.text = "Tap / Tekan Spasi ▶"
+	_black_screen_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_black_screen_hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 0.75))
+	_black_screen_hint.add_theme_font_size_override("font_size", 10)
+	_black_screen_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(_black_screen_hint)
 
 # ─── Navigasi & Input ─────────────────────────────────────────────────────────
 
