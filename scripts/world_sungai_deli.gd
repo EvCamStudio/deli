@@ -5,7 +5,7 @@ class_name WorldSungaiDeli
 
 const TILE: int = 16
 const ZONE_WIDTH: int = 60  # tile per zona
-const ZONE_HEIGHT: int = 34
+const ZONE_HEIGHT: int = 32
 const ZONE_ORDER: Array[String] = ["hulu", "desa", "kota", "hilir"]
 const ZONE_LABELS: Dictionary = {
 	"hulu": "HULU SUNGAI DELI",
@@ -48,53 +48,54 @@ const ZONE_WISDOM: Dictionary = {
 # Footprint bangunan (dalam satuan tile) supaya sampah/pohon tidak menimpa atap atau halaman depan pintu.
 const BUILDING_RECTS: Dictionary = {
 	"hulu": [
-		Rect2(3.5, 6.4, 7.0, 6.6),
-		Rect2(13.6, 7.5, 6.8, 5.5),
-		Rect2(3.8, 22.6, 6.5, 5.4),
+		Rect2(3.5, 5.0, 7.0, 5.5),   # house_mc.png (x: 112, y: 160)
+		Rect2(13.6, 5.0, 6.8, 5.5),  # house_suburban_orange.png (x: 272, y: 160)
 	],
 	"desa": [
-		Rect2(4.1, 7.1, 5.5, 5.9),  # house_cream.png
-		Rect2(40.5, 7.5, 6.5, 5.5),  # house_suburban_canopy.png
-		Rect2(49.1, 7.5, 6.8, 5.5),  # house_suburban_terrace.png
-		Rect2(3.3, 18.5, 6.3, 6.0),  # warung_madura.png
-		Rect2(11.3, 19.2, 6.4, 5.2),  # house_brick.png
-		Rect2(20.0, 18.6, 7.1, 5.9),  # warung_barokah.png
-		Rect2(33.6, 18.6, 6.8, 5.9),  # warung_toko_jaya.png
-		Rect2(42.0, 19.1, 7.0, 5.4),  # warung_bu_sri.png
-		Rect2(50.9, 19.0, 6.1, 5.5),  # house_modern.png
+		Rect2(1.5, 5.0, 5.5, 5.5),   # house_cream.png (x: 70, y: 160)
+		Rect2(8.5, 5.0, 6.5, 5.5),   # warung_toko_jaya.png (x: 180, y: 160)
+		Rect2(17.0, 5.0, 7.0, 5.5),  # house_cottage_orange.png (x: 320, y: 160)
+		Rect2(27.0, 5.0, 7.5, 5.5),  # house_farm_green.png (x: 480, y: 160)
+		Rect2(37.0, 5.0, 7.0, 5.5),  # house_cabin_blue.png (x: 640, y: 160)
+		Rect2(47.0, 5.0, 7.0, 5.5),  # house_suburban_terrace.png (x: 800, y: 160)
+		Rect2(4.0, 18.0, 6.0, 6.0),  # warung_madura.png (x: 110, y: 368)
+		Rect2(14.0, 18.0, 6.0, 6.0), # house_brick.png (x: 270, y: 368)
+		Rect2(24.0, 18.0, 6.5, 6.0), # warung_barokah.png (x: 430, y: 368)
+		Rect2(37.5, 18.0, 6.5, 6.0), # warung_bu_sri.png (x: 650, y: 368)
+		Rect2(50.0, 18.0, 6.0, 6.0), # house_modern.png (x: 850, y: 368)
 	],
 	"kota": [
-		Rect2(2.2, 0.7, 6.2, 5.2),  # building_apartment.png (y=94)
-		Rect2(10.6, 1.4, 5.7, 4.6),  # building_office_glass.png (y=94)
-		Rect2(23.9, 0.7, 6.0, 5.2),  # building_corporate_tower.png (y=94)
-		Rect2(35.3, 1.4, 5.7, 4.6),  # building_helipad_tower.png (y=94)
-		Rect2(47.3, 1.5, 5.8, 4.4),  # building_condo_terrace.png (y=94)
-		Rect2(53.6, 1.1, 5.9, 4.8),  # building_brick_complex.png (y=94)
-		Rect2(5.0, 24.7, 7.5, 6.1),  # market_sayur.png (y=490)
-		Rect2(24.4, 25.4, 5.7, 5.4),  # warung_madura.png (y=490)
-		Rect2(35.4, 25.4, 6.1, 5.3),  # warung_toko_jaya.png (y=490)
-		Rect2(50.0, 25.4, 6.3, 5.4),  # warung_bu_sri.png (y=490)
+		Rect2(2.2, 0.5, 6.2, 4.0),  # building_apartment.png (y=60)
+		Rect2(10.6, 0.5, 5.7, 4.0),  # building_office_glass.png (y=60)
+		Rect2(24.5, 0.5, 6.0, 4.0),  # building_corporate_tower.png (y=60)
+		Rect2(35.3, 0.5, 5.7, 4.0),  # building_helipad_tower.png (y=60)
+		Rect2(48.0, 0.5, 5.8, 4.0),  # building_condo_terrace.png (y=60)
+		Rect2(54.2, 0.5, 5.9, 4.0),  # building_brick_complex.png (y=60)
+		Rect2(5.0, 19.0, 7.5, 4.0),  # market_sayur.png (y=350)
+		Rect2(24.5, 19.0, 5.7, 4.0),  # warung_madura.png (y=350)
+		Rect2(35.8, 19.0, 6.1, 4.0),  # warung_toko_jaya.png (y=350)
+		Rect2(50.0, 19.0, 6.3, 4.0),  # warung_bu_sri.png (y=350)
 	],
 	"hilir": [
-		Rect2(4.5, 1.6, 5.0, 4.4),  # house_coastal.png (y=96)
-		Rect2(12.6, 1.2, 6.8, 4.8),  # house_suburban_blue.png (y=96)
-		Rect2(23.2, 2.5, 5.5, 3.5),  # house_courtyard.png (y=96)
-		Rect2(32.6, 1.2, 6.8, 4.8),  # house_suburban_lshape.png (y=96)
-		Rect2(42.3, 0.6, 7.4, 5.7),  # market_ikan.png (y=100)
-		Rect2(51.8, 1.7, 6.3, 4.3),  # warung_bu_sri.png (y=96)
+		Rect2(4.5, 0.8, 5.0, 3.5),  # house_coastal.png (y=64)
+		Rect2(12.6, 0.8, 6.8, 3.5),  # house_suburban_blue.png (y=64)
+		Rect2(23.2, 0.8, 5.5, 3.5),  # house_courtyard.png (y=64)
+		Rect2(32.6, 0.8, 6.8, 3.5),  # house_suburban_lshape.png (y=64)
+		Rect2(42.3, 0.8, 7.4, 3.5),  # market_ikan.png (y=68)
+		Rect2(51.8, 0.8, 6.3, 3.5),  # warung_bu_sri.png (y=64)
 	],
 }
 
 # Titik tanam pohon Hulu dikelompokkan di satu kawasan hutan khusus di sisi timur
 # (tepat di belakang Penjaga Hutan), bukan tersebar di pekarangan atau kampung/desa.
 const HULU_FOREST_SPOTS: Array[Vector2i] = [
-	Vector2i(41, 10), Vector2i(45, 9), Vector2i(50, 9),
-	Vector2i(42, 13), Vector2i(48, 12), Vector2i(53, 12),
+	Vector2i(41, 7), Vector2i(46, 6), Vector2i(51, 7),
+	Vector2i(43, 10), Vector2i(48, 10), Vector2i(53, 9),
 ]
 
 const HILIR_MANGROVE_SPOTS: Array[Vector2i] = [
-	Vector2i(6, 26), Vector2i(12, 26), Vector2i(18, 26), Vector2i(24, 26),
-	Vector2i(30, 26), Vector2i(36, 26), Vector2i(40, 26), Vector2i(52, 26),
+	Vector2i(6, 18), Vector2i(12, 19), Vector2i(18, 18), Vector2i(24, 19),
+	Vector2i(30, 18), Vector2i(36, 19), Vector2i(42, 18), Vector2i(50, 19),
 ]
 
 @onready var player: CharacterBody2D = $Player
@@ -128,8 +129,8 @@ var _lever_pressed: Array[int] = []
 var _spawn_positions: Dictionary = {
 	"hulu": Vector2(9, 15) * TILE,   # halaman depan rumah
 	"desa": Vector2(8, 15) * TILE,   # depan warung
-	"kota": Vector2(8, 12) * TILE,   # trotoar kota, tidak menimpa NPC pedagang
-	"hilir": Vector2(8, 11) * TILE,  # trotoar jalan utama nelayan
+	"kota": Vector2(8, 9.5) * TILE,  # trotoar kota, tidak menimpa NPC pedagang
+	"hilir": Vector2(8, 9.5) * TILE, # trotoar jalan utama nelayan
 }
 
 func _ready() -> void:
@@ -228,15 +229,15 @@ func _build_zones() -> void:
 
 func _spawn_gates() -> void:
 	# Akses antar-map (Hulu ↔ Desa ↔ Kota ↔ Hilir) terbuka bebas dua arah tanpa kunci misi.
-	_create_gate("hulu", Vector2(59, 17) * TILE, "desa", 0.0, "", false, Vector2(4, 17) * TILE)
-	_create_gate("desa", Vector2(1, 17) * TILE, "hulu", 0.0, "", false, Vector2(56, 17) * TILE)
-	_create_gate("desa", Vector2(59, 17) * TILE, "kota", 0.0, "", false, Vector2(4, 11) * TILE)
-	_create_gate("kota", Vector2(1, 11) * TILE, "desa", 0.0, "", false, Vector2(56, 17) * TILE)
-	_create_gate("kota", Vector2(59, 11) * TILE, "hilir", 0.0, "", false, Vector2(4, 11) * TILE)
-	_create_gate("hilir", Vector2(1, 11) * TILE, "kota", 0.0, "", false, Vector2(56, 11) * TILE)
+	_create_gate("hulu", Vector2(59, 15.5) * TILE, "desa", 0.0, "", false, Vector2(4, 15.5) * TILE)
+	_create_gate("desa", Vector2(1, 15.5) * TILE, "hulu", 0.0, "", false, Vector2(56, 15.5) * TILE)
+	_create_gate("desa", Vector2(59, 15.5) * TILE, "kota", 0.0, "", false, Vector2(4, 9.5) * TILE)
+	_create_gate("kota", Vector2(1, 9.5) * TILE, "desa", 0.0, "", false, Vector2(56, 15.5) * TILE)
+	_create_gate("kota", Vector2(59, 9.5) * TILE, "hilir", 0.0, "", false, Vector2(4, 9.5) * TILE)
+	_create_gate("hilir", Vector2(1, 9.5) * TILE, "kota", 0.0, "", false, Vector2(56, 9.5) * TILE)
 
 	# Gate akhir Hilir → Epilog (tamat perjalanan).
-	_create_gate("hilir", Vector2(59, 11) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.", true)
+	_create_gate("hilir", Vector2(59, 9.5) * TILE, "epilog", 80.0, "Tanam 8 mangrove, pilah 10 sampah, dan bicara 2 warga pesisir.", true)
 
 func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, hint: String, require_mission: bool = false, entry_pos: Vector2 = Vector2(-1, -1)) -> void:
 	var gate_scene := preload("res://scenes/world/gate_topdown.tscn")
@@ -253,33 +254,33 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 
 func _spawn_npcs() -> void:
 	# Hulu: Pak Hendra & Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul di jembatan).
-	_create_npc("hulu", "npc_pak_hendra", "pakrt", Vector2(5.5, 15) * TILE, 1, "h1_warung")
-	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 15) * TILE, 1, "h1_warung")
-	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 14) * TILE, 1)
-	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(29.5, 16.0) * TILE, 1, "h1_datuk")
+	_create_npc("hulu", "npc_pak_hendra", "pakrt", Vector2(5.5, 14.5) * TILE, 1, "h1_warung")
+	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 14.5) * TILE, 1, "h1_warung")
+	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 11) * TILE, 1)
+	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(29.5, 15.5) * TILE, 1, "h1_datuk")
 	_spawn_hulu_sampan()
 	_spawn_hulu_riverbank_spot()
 
 	_bridge_talk_spot = Node2D.new()
 	_bridge_talk_spot.name = "BridgeTalkSpot"
-	_bridge_talk_spot.position = Vector2(28.5, 16.5) * TILE
+	_bridge_talk_spot.position = Vector2(28.5, 15.5) * TILE
 	_zone_containers["hulu"].add_child(_bridge_talk_spot)
 
 	# Desa: Pak Darwis di depan Toko Jaya, Pemilik Toko Jaya, Kak Rina penjual gorengan, pemuka desa.
-	_create_npc("desa", "npc_petani_1", "petani", Vector2(10, 15) * TILE, 2, "h6_darwis")
-	_create_npc("desa", "npc_pemilik_toko", "pedagang", Vector2(12, 15) * TILE, 2, "h1_toko_jaya")
-	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 16) * TILE, 2, "h4_rina")
-	_create_npc("desa", "npc_pemuka_desa", "pakrt", Vector2(35, 15) * TILE, 2)
+	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 14.0) * TILE, 2, "h6_darwis")
+	_create_npc("desa", "npc_pemilik_toko", "pedagang", Vector2(12.5, 14.0) * TILE, 2, "h1_toko_jaya")
+	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 14.5) * TILE, 2, "h4_rina")
+	_create_npc("desa", "npc_pemuka_desa", "pakrt", Vector2(35, 14.5) * TILE, 2)
 
 	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat (di trotoar luas, berjarak dari aspal jalan).
-	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 8.5) * TILE, 3, "h2_jali")
-	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 8.5) * TILE, 3)
-	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 13) * TILE, 3)
-	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 8.5) * TILE, 3)
+	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 7.0) * TILE, 3, "h2_jali")
+	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 7.0) * TILE, 3)
+	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 12.5) * TILE, 3)
+	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 7.0) * TILE, 3)
 
 	# Hilir: Nelayan, penjaga sungai (di trotoar pesisir luas, bukan di aspal jalan).
-	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(14, 8.5) * TILE, 4)
-	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(36, 8.5) * TILE, 4)
+	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(14, 6.5) * TILE, 4)
+	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(36, 6.5) * TILE, 4)
 
 func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int, custom_dialog_id: String = "") -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
@@ -551,8 +552,8 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 	cl.add_child(center)
 
 	var vbox := VBoxContainer.new()
-	vbox.custom_minimum_size = Vector2(760, 260)
-	vbox.add_theme_constant_override("separation", 24)
+	vbox.custom_minimum_size = Vector2(560, 160)
+	vbox.add_theme_constant_override("separation", 16)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(vbox)
 
@@ -560,16 +561,10 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 	title_label.bbcode_enabled = true
 	title_label.fit_content = true
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	title_label.custom_minimum_size = Vector2(720, 160)
-	title_label.add_theme_font_size_override("normal_font_size", 14)
+	title_label.custom_minimum_size = Vector2(540, 80)
+	title_label.add_theme_color_override("default_color", Color(0.96, 0.96, 0.96, 1.0))
+	title_label.add_theme_font_size_override("normal_font_size", 18)
 	vbox.add_child(title_label)
-
-	var hint_label := Label.new()
-	hint_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	hint_label.text = "Ketuk layar / tekan Spasi untuk lanjut..."
-	hint_label.add_theme_color_override("font_color", Color(0.65, 0.65, 0.65, 0.8))
-	hint_label.add_theme_font_size_override("font_size", 11)
-	vbox.add_child(hint_label)
 
 	var input_btn := Button.new()
 	input_btn.name = "CutsceneInputBtn"
@@ -647,7 +642,7 @@ func _check_story_proximity() -> void:
 
 		# Step 1: Menuju jembatan untuk pertama kali -> Suara Datuk tanpa wujud
 		if step == "menuju_toko_jaya" and not _has_triggered_bridge_voice:
-			if player_tile.x >= 25.0 and player_tile.x <= 28.5 and abs(player_tile.y - 16.5) <= 2.5:
+			if player_tile.x >= 25.0 and player_tile.x <= 28.5 and abs(player_tile.y - 15.0) <= 3.0:
 				_has_triggered_bridge_voice = true
 				player.velocity = Vector2.ZERO
 				DialogueManager.mulai("h1_jembatan_suara")
@@ -655,7 +650,7 @@ func _check_story_proximity() -> void:
 
 		# Step 2: MC mencari suara lalu melangkah ke jembatan -> Datuk menampakkan diri
 		if step == "cari_suara_jembatan" and not _has_triggered_datuk_bridge:
-			if player_tile.x >= 28.0 and player_tile.x <= 31.0 and abs(player_tile.y - 16.5) <= 2.5:
+			if player_tile.x >= 28.0 and player_tile.x <= 31.0 and abs(player_tile.y - 15.0) <= 3.0:
 				_has_triggered_datuk_bridge = true
 				player.velocity = Vector2.ZERO
 				_sync_hulu_story_state()
@@ -1021,7 +1016,7 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 			continue
 		var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
 		var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
-		if y >= 15 and y <= 18:
+		if y >= 13 and y <= 17:
 			y += 6
 		var tile := _find_spawn_tile(zone, Vector2i(x, y))
 		if tile.x < 0:
@@ -1060,7 +1055,7 @@ func _near_planting_spot(zone: String, tile: Vector2i) -> bool:
 func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 	if tile.x < 2 or tile.x >= ZONE_WIDTH - 2 or tile.y < 2 or tile.y >= ZONE_HEIGHT - 2:
 		return false
-	if zone == "desa" and tile.y >= 27:
+	if zone == "desa" and tile.y >= 25:
 		return false
 	if _zone_in_water(zone, (Vector2(tile) + Vector2(0.5, 0.5)) * TILE):
 		return false
@@ -1115,19 +1110,19 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 	# sehingga tidak pernah menghalangi jalan utama, trotoar, jembatan, atau gerbang zona.
 	var positions_by_zone: Dictionary = {
 		"hulu": [
-			Vector2(10.5, 13.0), # Nempel sejajar dinding kanan Rumah/Warung MC (y=208px)
+			Vector2(10.5, 11.5), # Nempel sejajar dinding kanan Rumah/Warung MC (y=176px)
 		],
 		"desa": [
-			Vector2(10.2, 13.0), # Nempel sejajar dinding kanan rumah utara (house_cream, y=208px)
-			Vector2(27.5, 24.5), # Nempel sejajar dinding kanan Warung Barokah selatan (y=392px)
+			Vector2(14.0, 11.0), # Nempel sejajar dinding kanan Toko Jaya utara
+			Vector2(28.0, 22.5), # Nempel sejajar dinding kanan Warung Barokah selatan (y=368px)
 		],
 		"kota": [
-			Vector2(17.0, 6.0),  # Nempel sejajar garis dinding Gedung Office utara (y=96px, tidak maju ke tengah trotoar)
-			Vector2(13.0, 30.5), # Nempel sejajar dinding kanan Pasar Sayur Bang Jali di plaza selatan (y=488px)
+			Vector2(17.0, 5.0),  # Nempel sejajar garis dinding Gedung Office utara (y=60px)
+			Vector2(13.0, 22.0), # Nempel sejajar dinding kanan Pasar Sayur Bang Jali di plaza selatan (y=350px)
 		],
 		"hilir": [
-			Vector2(10.2, 6.0),  # Nempel sejajar dinding kanan Rumah Pesisir barat (y=96px)
-			Vector2(50.2, 6.2),  # Nempel sejajar dinding kanan Pasar Ikan (market_ikan, y=100px)
+			Vector2(10.2, 5.0),  # Nempel sejajar dinding kanan Rumah Pesisir barat (y=64px)
+			Vector2(50.2, 5.0),  # Nempel sejajar dinding kanan Pasar Ikan (market_ikan, y=68px)
 		],
 	}
 	var quest_by_zone: Dictionary = {
@@ -1148,10 +1143,10 @@ func _spawn_pantun_boards() -> void:
 	var board_scene := preload("res://scenes/world/pantun_board.tscn")
 	# Jauhkan papan pantun dari tong sampah agar label tidak bertumpuk.
 	var positions: Dictionary = {
-		"hulu": Vector2(17, 18) * TILE,
-		"desa": Vector2(17, 18) * TILE,
-		"kota": Vector2(50, 14) * TILE,
-		"hilir": Vector2(18, 12) * TILE,
+		"hulu": Vector2(17, 14) * TILE,
+		"desa": Vector2(16.5, 14.0) * TILE,
+		"kota": Vector2(50, 12.5) * TILE,
+		"hilir": Vector2(18, 12.5) * TILE,
 	}
 	for zone in positions:
 		var board := board_scene.instantiate()
@@ -1161,9 +1156,9 @@ func _spawn_pantun_boards() -> void:
 func _spawn_kota_levers() -> void:
 	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
 	var positions: Array[Vector2] = [
-		Vector2(52, 14),   # Tuas 1 (Depan - tepi utara kanal timur)
-		Vector2(57, 14),   # Tuas 2 (Tengah)
-		Vector2(54, 21),   # Tuas 3 (Belakang - tepi selatan kanal timur)
+		Vector2(52, 13),   # Tuas 1 (Depan - tepi utara kanal timur)
+		Vector2(57, 13),   # Tuas 2 (Tengah)
+		Vector2(54, 17.5), # Tuas 3 (Belakang - tepi selatan kanal timur)
 	]
 	var labels: Array[String] = [
 		"Tuas 1 (Depan)",
@@ -1415,16 +1410,16 @@ func _refresh_mission() -> void:
 				lines = ["Cari petunjuk solusi di Papan Pantun dekat Toko Jaya."]
 			elif step_desa == "ke_warung_rina":
 				title = "WARUNG GORENGAN"
-				lines = ["Temui Kak Rina di warung dekat jembatan."]
+				lines = ["Temui Kak Rina di Desa Suka Maju."]
 			elif step_desa == "pantun_jelantah_rina":
 				title = "PAPAN PANTUN"
-				lines = ["Cari petunjuk minyak jelantah di Papan Pantun Desa."]
+				lines = ["Cari petunjuk solusi di Papan Pantun Desa."]
 			elif step_desa == "cari_solusi_jelantah":
 				title = "PEMUKA DESA"
 				lines = ["Temui Pemuka Desa di Desa Suka Maju."]
 			elif step_desa == "serahkan_jeriken_rina":
-				title = "WARUNG KAK RINA"
-				lines = ["Kembali ke warung Kak Rina di Desa."]
+				title = "WARUNG GORENGAN"
+				lines = ["Kembali temui Kak Rina di warung gorengan."]
 			elif step_desa in ["ke_kota_medan", "kota_gang_sempit", "pantun_gang_jali", "cari_solusi_rt", "serahkan_gerobak_jali", "periksa_saluran_kota", "pintu_air_dan_b3", "tanya_budi"]:
 				title = "MENUJU KOTA"
 				lines = ["Pergi ke Kota Medan melalui gerbang timur."]

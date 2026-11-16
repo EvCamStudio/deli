@@ -113,6 +113,12 @@ func start_dialogue(npc_data: Array, npc_key_name: String = "", custom_id: Strin
 	_show_node("start")
 
 ## Tampilkan node dialog berdasarkan id.
+func _find_node_by_id(node_id: String) -> Dictionary:
+	for node in _current_data:
+		if str(node.get("id", "")) == node_id:
+			return node
+	return {}
+
 func _show_node(node_id: String) -> void:
 	if node_id == "end" or node_id.is_empty():
 		_end_dialogue()
@@ -168,6 +174,17 @@ func advance(choice_index: int = -1) -> void:
 		if next_id.is_empty() or next_id == "end":
 			_end_dialogue()
 		else:
+			# Jika node tujuan adalah dialog MC yang mengulang teks pilihan, lewati langsung ke respon NPC
+			var target_node: Dictionary = _find_node_by_id(next_id)
+			if not target_node.is_empty():
+				var spk: String = str(target_node.get("speaker", "")).to_lower()
+				var is_mc: bool = spk in ["mc", "player", "kamu", "arisyah", "rian", "pemain"] or spk == GameState.player_name.to_lower()
+				var has_sub_choices: bool = target_node.has("choices") or target_node.has("pilihan")
+				if is_mc and not has_sub_choices:
+					_apply_effects(target_node)
+					var skip_id: String = str(target_node.get("next", "end"))
+					if not skip_id.is_empty() and skip_id != "end":
+						next_id = skip_id
 			_show_node(next_id)
 		return
 

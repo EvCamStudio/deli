@@ -1,24 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=2 format=3]
 
-[ext_resource type="Texture2D" path="res://assets/ui/menu_bg_overcast.png" id="1_bg"]
-
-[sub_resource type="Gradient" id="Gradient_mud"]
-offsets = PackedFloat32Array(0, 0.4, 1)
-colors = PackedColorArray(0.12, 0.09, 0.06, 0, 0.16, 0.12, 0.08, 0.45, 0.14, 0.1, 0.07, 0.88)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mud"]
-gradient = SubResource("Gradient_mud")
-fill_from = Vector2(0.5, 0)
-fill_to = Vector2(0.5, 1)
-
-[sub_resource type="Gradient" id="Gradient_mist"]
-offsets = PackedFloat32Array(0, 0.5, 1)
-colors = PackedColorArray(0.65, 0.72, 0.76, 0.08, 0.7, 0.76, 0.8, 0.2, 0.65, 0.72, 0.76, 0.05)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mist"]
-gradient = SubResource("Gradient_mist")
-fill_from = Vector2(0, 0.5)
-fill_to = Vector2(1, 0.5)
+[ext_resource type="Texture2D" path="res://assets/ui/intro_medan_bg.png" id="1_bg"]
 
 [node name="Chapter3Medan" type="Control"]
 layout_mode = 3
@@ -29,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Skyline" type="TextureRect" parent="."]
+[node name="Background" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -40,39 +22,3 @@ mouse_filter = 2
 texture = ExtResource("1_bg")
 expand_mode = 1
 stretch_mode = 6
-
-[node name="OvercastTint" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.12, 0.15, 0.18, 0.3)
-
-[node name="RiverMist" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -180.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-texture = SubResource("GradientTexture2D_mist")
-expand_mode = 1
-
-[node name="MudBankGradient" type="TextureRect" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -140.0
-grow_horizontal = 2
-grow_vertical = 0
-mouse_filter = 2
-texture = SubResource("GradientTexture2D_mud")
-expand_mode = 1

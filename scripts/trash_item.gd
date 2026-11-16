@@ -29,8 +29,16 @@ func interact() -> void:
 	AudioManager.play_sfx("trash_pickup")
 	SettingsManager.vibrate(30)
 
+	if not trash_id.is_empty() and trash_id not in GameState.picked_trash_ids:
+		GameState.picked_trash_ids.append(trash_id)
+
 	# Tambah ke inventaris global sementara (akan diproses di tong pilah)
 	_add_to_inventory()
+
+	var level := get_tree().get_first_node_in_group("level")
+	if level and level.has_method("on_trash_picked"):
+		level.call("on_trash_picked", category, trash_id)
+
 	queue_free()
 
 func _add_to_inventory() -> void:

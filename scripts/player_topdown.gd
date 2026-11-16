@@ -146,6 +146,9 @@ func _add_candidate(node: Node) -> void:
 	_refresh_interactable()
 
 func _refresh_interactable() -> void:
+	if _is_dialog_active:
+		action_label.visible = false
+		return
 	var nearest: Node = null
 	var nearest_dist: float = 999999.0
 	for node in _candidates:

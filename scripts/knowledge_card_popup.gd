@@ -77,17 +77,76 @@ func _populate_collection() -> void:
 	for child in collection_list.get_children():
 		child.queue_free()
 
+	var font_res := load("res://assets/fonts/PixelifySans.ttf") as Font
+	var style_normal: StyleBoxFlat = _create_card_btn_style(false)
+	var style_hover: StyleBoxFlat = _create_card_btn_style(true)
+	var style_disabled: StyleBoxFlat = _create_card_disabled_style()
+
 	for card in _all_cards:
 		var card_id: String = card.get("id", "")
 		var is_collected: bool = card_id in GameState.collected_cards
 		var btn := Button.new()
-		btn.text = ("[v] " if is_collected else "[ ] ") + str(card.get("title", "???"))
+		btn.text = ("  [v] " if is_collected else "  [ ] ") + str(card.get("title", "???"))
 		btn.disabled = not is_collected
-		btn.custom_minimum_size = Vector2(0, 28)
+		btn.custom_minimum_size = Vector2(0, 24)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
+		if font_res:
+			btn.add_theme_font_override("font", font_res)
+		btn.add_theme_font_size_override("font_size", 10)
+		btn.add_theme_color_override("font_color", Color(0.28, 0.16, 0.08, 1))
+		btn.add_theme_color_override("font_hover_color", Color(0.18, 0.1, 0.05, 1))
+		btn.add_theme_color_override("font_pressed_color", Color(0.18, 0.1, 0.05, 1))
+		btn.add_theme_color_override("font_disabled_color", Color(0.55, 0.45, 0.35, 0.6))
+		btn.add_theme_stylebox_override("normal", style_normal)
+		btn.add_theme_stylebox_override("hover", style_hover)
+		btn.add_theme_stylebox_override("pressed", style_hover)
+		btn.add_theme_stylebox_override("focus", style_hover)
+		btn.add_theme_stylebox_override("disabled", style_disabled)
+
 		if is_collected:
 			btn.pressed.connect(func(): show_card(card); _close_collection())
 		collection_list.add_child(btn)
+
+func _create_card_btn_style(hover: bool) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.95, 0.82, 0.58, 1) if hover else Color(0.85, 0.72, 0.48, 0.95)
+	sb.border_width_left = 2
+	sb.border_width_top = 2
+	sb.border_width_right = 2
+	sb.border_width_bottom = 2
+	sb.border_color = Color(0.55, 0.35, 0.15, 1) if hover else Color(0.44, 0.28, 0.12, 1)
+	sb.corner_radius_top_left = 6
+	sb.corner_radius_top_right = 6
+	sb.corner_radius_bottom_right = 6
+	sb.corner_radius_bottom_left = 6
+	sb.shadow_color = Color(0, 0, 0, 0.25)
+	sb.shadow_size = 2
+	sb.content_margin_left = 10.0
+	sb.content_margin_top = 2.0
+	sb.content_margin_right = 10.0
+	sb.content_margin_bottom = 2.0
+	return sb
+
+func _create_card_disabled_style() -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.72, 0.62, 0.48, 0.5)
+	border_style(sb)
+	return sb
+
+func border_style(sb: StyleBoxFlat) -> void:
+	sb.border_width_left = 1
+	sb.border_width_top = 1
+	sb.border_width_right = 1
+	sb.border_width_bottom = 1
+	sb.border_color = Color(0.5, 0.4, 0.3, 0.5)
+	sb.corner_radius_top_left = 6
+	sb.corner_radius_top_right = 6
+	sb.corner_radius_bottom_right = 6
+	sb.corner_radius_bottom_left = 6
+	sb.content_margin_left = 10.0
+	sb.content_margin_top = 2.0
+	sb.content_margin_right = 10.0
+	sb.content_margin_bottom = 2.0
 
 func _close_collection() -> void:
 	collection_panel.hide()

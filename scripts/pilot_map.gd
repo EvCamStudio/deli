@@ -5,7 +5,7 @@ class_name PilotMap
 
 const TILE: int = 16
 const MAP_W: int = 60
-const MAP_H: int = 34
+const MAP_H: int = 32
 
 # Tile kota pada atlas city_tileset.png (baris 3-5).
 const T_ASPHALT := [Vector2i(0, 3), Vector2i(1, 3), Vector2i(3, 4)]
@@ -63,83 +63,86 @@ func _paint_ground() -> void:
 		for x in range(MAP_W):
 			ground.set_cell(Vector2i(x, y), 0, T_WALK[_hash(x, y) % T_WALK.size()], 0)
 
-	# Plaza pejalan kaki di selatan.
+	# Plaza pejalan kaki di selatan (kompak, baris 18..25).
 	for x in range(2, MAP_W - 2):
-		for y in range(29, MAP_H):
+		for y in range(18, MAP_H):
 			ground.set_cell(Vector2i(x, y), 0, T_PLAZA[_hash(x, y, 4) % 2], 0)
 
 	# Alun-alun timur di depan toko.
 	for x in range(47, MAP_W - 2):
-		for y in range(12, 16):
+		for y in range(10, 14):
 			ground.set_cell(Vector2i(x, y), 0, T_PLAZA[_hash(x, y, 7) % 2], 0)
 
-	# Jalan raya utama (horizontal), dua lajur + garis putus tengah.
+	# Jalan raya utama (horizontal), 4 lajur aspal lebar + garis putus tengah (Gambar 6).
 	for x in range(MAP_W):
-		for y in [10, 11]:
+		for y in [8, 9, 10, 11]:
 			ground.set_cell(Vector2i(x, y), 0, T_ASPHALT[_hash(x, y, 2) % 3], 0)
-		ground.set_cell(Vector2i(x, 10), 0, T_DASH_H, 0)
+		ground.set_cell(Vector2i(x, 9), 0, T_DASH_H, 0)
 
-	# Jalan vertikal: dua lajur, masing-masing dua petak, berhenti sebelum plaza selatan (y=28).
+	# Jalan vertikal: 4 lajur aspal lebar (kolom 20..23 dan 44..47), berhenti sebelum plaza selatan (y=18).
 	for vx in [20, 44]:
-		for y in range(28):
-			if y in [10, 11]:
+		for y in range(18):
+			if y in [8, 9, 10, 11]:
 				continue
-			for x in [vx, vx + 1]:
-				ground.set_cell(Vector2i(x, y), 0, T_ASPHALT[_hash(x, y, 6) % 3], 0)
-			ground.set_cell(Vector2i(vx, y), 0, T_DASH_V, 0)
+			for x in range(vx, vx + 4):
+				if x == vx + 1:
+					ground.set_cell(Vector2i(x, y), 0, T_DASH_V, 0)
+				else:
+					ground.set_cell(Vector2i(x, y), 0, T_ASPHALT[_hash(x, y, 6) % 3], 0)
 
 	# Zebra cross di setiap persimpangan.
 	for vx in [20, 44]:
-		for x in [vx - 2, vx - 1, vx + 2, vx + 3]:
-			for y in [10, 11]:
+		# Penyeberangan jalan horizontal (north-south) di sayap kiri dan kanan persimpangan
+		for x in [vx - 2, vx - 1, vx + 4, vx + 5]:
+			for y in [8, 9, 10, 11]:
 				ground.set_cell(Vector2i(x, y), 0, T_CROSS_V, 0)
-		for y in [8, 9, 12, 13]:
-			for x in [vx, vx + 1]:
+		# Penyeberangan jalan vertikal (east-west) di sisi utara (y=6..7) dan selatan (y=12..13)
+		for y in [6, 7, 12, 13]:
+			for x in range(vx, vx + 4):
 				ground.set_cell(Vector2i(x, y), 0, T_CROSS_H, 0)
 
 	# Kanstin trotoar pada sisi yang menghadap aspal.
 	for x in range(MAP_W):
-		if x in [20, 21, 44, 45]:
+		if (x >= 20 and x <= 23) or (x >= 44 and x <= 47):
 			continue
-		ground.set_cell(Vector2i(x, 9), 0, T_CURB_DOWN, 0)
+		ground.set_cell(Vector2i(x, 7), 0, T_CURB_DOWN, 0)
 		ground.set_cell(Vector2i(x, 12), 0, T_CURB_UP, 0)
 	for vx in [20, 44]:
-		for y in range(28):
-			if y in [8, 9, 10, 11, 12, 13]:
+		for y in range(18):
+			if y in [6, 7, 8, 9, 10, 11, 12, 13]:
 				continue
 			ground.set_cell(Vector2i(vx - 1, y), 0, T_CURB_RIGHT, 0)
-			ground.set_cell(Vector2i(vx + 2, y), 0, T_CURB_LEFT, 0)
+			ground.set_cell(Vector2i(vx + 4, y), 0, T_CURB_LEFT, 0)
 		# Kanstin penutup ujung jalan vertikal sebelum plaza pejalan kaki
-		ground.set_cell(Vector2i(vx, 28), 0, T_CURB_DOWN, 0)
-		ground.set_cell(Vector2i(vx + 1, 28), 0, T_CURB_DOWN, 0)
+		for x in range(vx, vx + 4):
+			ground.set_cell(Vector2i(x, 18), 0, T_CURB_DOWN, 0)
 
 	# Got dan manhole.
 	for p in [
 		Vector2i(11, 12), Vector2i(33, 12), Vector2i(55, 12),
-		Vector2i(18, 25), Vector2i(23, 5), Vector2i(42, 25), Vector2i(47, 6),
+		Vector2i(18, 17), Vector2i(23, 5), Vector2i(42, 17), Vector2i(47, 5),
 	]:
 		ground.set_cell(p, 0, T_DRAIN, 0)
-	for p in [Vector2i(30, 11), Vector2i(51, 10), Vector2i(20, 25), Vector2i(45, 7)]:
+	for p in [Vector2i(30, 9), Vector2i(51, 8), Vector2i(19, 17), Vector2i(43, 6)]:
 		ground.set_cell(p, 0, T_MANHOLE, 0)
 
 func _river_top(_x: int) -> int:
-	# Di kota, sungai diluruskan jadi kanal dengan tanggul beton.
-	return 15
+	# Di kota, kanal tanggul beton berada di baris 14..16.
+	return 14
 
 func _paint_water() -> void:
 	for x in range(MAP_W):
 		var top: int = _river_top(x)
-		var bottom: int = top + 3
-		var is_bridge: bool = x in [20, 21, 44, 45]
-		# Tanggul beton, bukan pasir. Kolom jembatan dibiarkan: di situ
-		# sudah tergambar aspal/zebra cross jalan.
+		var bottom: int = top + 2
+		var is_bridge: bool = (x >= 20 and x <= 23) or (x >= 44 and x <= 47)
+		# Tanggul beton, bukan pasir. Kolom jembatan dibiarkan menyambung aspal.
 		if not is_bridge:
 			ground.set_cell(Vector2i(x, top - 1), 0, T_CURB_DOWN, 0)
 			ground.set_cell(Vector2i(x, bottom + 1), 0, T_CURB_UP, 0)
 		for y in range(top, bottom + 1):
 			if is_bridge:
-				# Jembatan aspal: jalan menyambung, garis tengah ikut.
-				if x == 20 or x == 44:
+				# Jembatan aspal: jalan menyambung 4 lajur lebar, garis putus-putus tengah di kolom vx+1.
+				if x in [21, 45]:
 					bridge.set_cell(Vector2i(x, y), 0, T_DASH_V, 0)
 				else:
 					bridge.set_cell(Vector2i(x, y), 0, T_ASPHALT[_hash(x, y, 5) % 2], 0)
@@ -177,27 +180,26 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 	get_parent().add_child.call_deferred(body)
 
 func _spawn_buildings() -> void:
-	# Deret 6 gedung modern jalan utara kota berjarak mundur (y=94) memberi trotoar pejalan kaki lebar 50px (3+ tile) dari tepi jalan aspal (y=144).
-	# Tertata rapi dalam 3 blok tanpa menimpa jalan vertikal (Block 1: x<304, Block 2: 368<x<688, Block 3: x>752).
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_apartment.png", Vector2(85, 94), Vector2(96, 22), 0.38)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_office_glass.png", Vector2(215, 94), Vector2(92, 22), 0.38)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_corporate_tower.png", Vector2(430, 94), Vector2(96, 22), 0.38)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_helipad_tower.png", Vector2(610, 94), Vector2(92, 22), 0.38)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_condo_terrace.png", Vector2(804, 94), Vector2(94, 22), 0.35)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_brick_complex.png", Vector2(905, 94), Vector2(94, 22), 0.35)
+	# Deret 6 gedung modern jalan utara kota (y=60) memberi trotoar pejalan kaki lebar.
+	# Tertata rapi dalam 3 blok tanpa menimpa jalan vertikal (Block 1: x<320, Block 2: 384<x<704, Block 3: x>768).
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_apartment.png", Vector2(85, 60), Vector2(96, 22), 0.38)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_office_glass.png", Vector2(215, 60), Vector2(92, 22), 0.38)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_corporate_tower.png", Vector2(440, 60), Vector2(96, 22), 0.38)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_helipad_tower.png", Vector2(610, 60), Vector2(92, 22), 0.38)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_condo_terrace.png", Vector2(814, 60), Vector2(94, 22), 0.35)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_brick_complex.png", Vector2(915, 60), Vector2(94, 22), 0.35)
 
-	# Deret pasar sayur Bang Jali & warung kuliner bantaran selatan kota di plaza pejalan kaki (y=490).
-	# Berjarak mundur lapang 42px dari ujung jalan vertikal (y=448), memberi ruang lapang bagi pejalan kaki & pembeli.
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_sayur.png", Vector2(140, 490), Vector2(106, 22), 0.42)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(435, 490), Vector2(90, 22), 0.36)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(615, 490), Vector2(96, 22), 0.36)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(850, 490), Vector2(100, 22), 0.36)
+	# Deret pasar sayur Bang Jali & warung kuliner bantaran selatan kota di plaza pejalan kaki (y=350).
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_sayur.png", Vector2(140, 350), Vector2(106, 22), 0.42)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(440, 350), Vector2(90, 22), 0.36)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(620, 350), Vector2(96, 22), 0.36)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(850, 350), Vector2(100, 22), 0.36)
 
 func _spawn_trees() -> void:
-	# Pohon kamboja rapi di sudut pekarangan selatan kota (pohon yang nyempil di samping gedung apartemen kiri atas dihapus)
+	# Pohon kamboja rapi di pekarangan selatan kota (pohon yang menimpa gedung utara dihapus)
 	var entries: Array[Dictionary] = [
-		{"pos": Vector2(40, 410), "kind": "kamboja"},
-		{"pos": Vector2(920, 410), "kind": "kamboja"},
+		{"pos": Vector2(40, 300), "kind": "kamboja"},
+		{"pos": Vector2(920, 300), "kind": "kamboja"},
 	]
 	for entry in entries:
 		var pos: Vector2 = entry.get("pos", Vector2.ZERO)
@@ -205,59 +207,92 @@ func _spawn_trees() -> void:
 		TopdownMap.spawn_tree(get_parent(), pos, kind)
 
 func _spawn_city_props() -> void:
-	# Lampu jalan di kedua sisi jalan raya utama.
-	for x in [96, 240, 432, 624, 816]:
-		_spawn_prop("lamp.png", Vector2(x, 158))
-	for x in [96, 288, 480, 672, 864]:
-		_spawn_prop("lamp.png", Vector2(x, 206))
-	# Lampu di plaza selatan dan alun-alun timur (pada trotoar beton di atas tanggul kanal).
-	for p in [Vector2(64, 498), Vector2(525, 498), Vector2(832, 498)]:
+	# Lampu jalan di kedua sisi jalan raya utama (kolisi solid di pangkal, Gambar 9).
+	for x in [96, 240, 440, 624, 820]:
+		_spawn_prop("lamp.png", Vector2(x, 114))
+	for x in [96, 288, 480, 660, 864]:
+		_spawn_prop("lamp.png", Vector2(x, 194))
+	# Lampu di plaza selatan dan alun-alun timur.
+	for p in [Vector2(64, 370), Vector2(525, 370), Vector2(832, 370)]:
 		_spawn_prop("lamp.png", p)
-	_spawn_prop("lamp.png", Vector2(784, 224))
+	_spawn_prop("lamp.png", Vector2(790, 194))
 
-	# Bangku taman (pada trotoar beton tepi kanal dan plaza, tidak mengapung di air).
-	for p in [Vector2(608, 238), Vector2(650, 238), Vector2(280, 520), Vector2(520, 520), Vector2(750, 520)]:
-		_spawn_prop("bench.png", p)
-	for p in [Vector2(800, 224), Vector2(844, 224)]:
+	# Bangku taman
+	for p in [Vector2(608, 194), Vector2(650, 194), Vector2(280, 370), Vector2(520, 370), Vector2(750, 370)]:
 		_spawn_prop("bench.png", p)
 
 	# Hidran kebakaran.
-	for p in [Vector2(208, 206), Vector2(592, 206), Vector2(880, 206)]:
+	for p in [Vector2(208, 194), Vector2(592, 194), Vector2(880, 194)]:
 		_spawn_prop("hydrant.png", p)
 
 	# Lampu lalu lintas di sudut persimpangan jalan aspal.
-	for p in [Vector2(304, 158), Vector2(368, 158), Vector2(688, 158), Vector2(752, 158)]:
+	for p in [Vector2(304, 114), Vector2(400, 114), Vector2(688, 114), Vector2(784, 114)]:
 		_spawn_prop("traffic_light.png", p)
 
-	# Pagar di tepi jembatan kanal.
-	for bx in [320, 352, 704, 736]:
-		_spawn_prop("rail.png", Vector2(bx, 304))
+	# Pagar pengaman jembatan kanal kota (kiri dan kanan, melintasi air penuh dari tanggul utara ke selatan).
+	# Jembatan Barat (kolom 20..23 = x: 320..384, y air: 224..272)
+	_spawn_bridge_rail(Vector2(316, 248), true)
+	_spawn_bridge_rail(Vector2(388, 248), false)
+	# Jembatan Timur (kolom 44..47 = x: 704..768, y air: 224..272)
+	_spawn_bridge_rail(Vector2(700, 248), true)
+	_spawn_bridge_rail(Vector2(772, 248), false)
+
+func _spawn_bridge_rail(pos: Vector2, is_left: bool) -> void:
+	var tex_path := "res://assets/sprites/props/bridge_rail_city_left.png" if is_left else "res://assets/sprites/props/bridge_rail_city_right.png"
+	var texture: Texture2D = load(tex_path)
+	if texture == null:
+		return
+	var body := StaticBody2D.new()
+	body.position = pos
+	body.collision_layer = 1
+	body.collision_mask = 0
+
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.position = Vector2(0, 0)
+	body.add_child(sprite)
+
+	# Kolisi penghalang tepi jembatan agar pemain tidak tercebur ke air
+	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(6, 64)
+	col.shape = shape
+	col.position = Vector2(0, 0)
+	body.add_child(col)
+
+	get_parent().add_child.call_deferred(body)
 
 func _spawn_prop(prop: String, pos: Vector2) -> void:
 	var texture: Texture2D = load("res://assets/sprites/props/" + prop)
 	if texture == null:
 		return
-	var sprite := Sprite2D.new()
-	sprite.texture = texture
-	sprite.position = pos + Vector2(0, -texture.get_height() * 0.5)
-	get_parent().add_child.call_deferred(sprite)
-
-func _spawn_car(pos: Vector2, horizontal: bool, tint: Color) -> void:
 	var body := StaticBody2D.new()
 	body.position = pos
-	body.rotation_degrees = 90.0 if horizontal else 0.0
 	body.collision_layer = 1
 	body.collision_mask = 0
+
 	var sprite := Sprite2D.new()
-	var texture: Texture2D = load("res://assets/sprites/props/car.png")
-	if texture == null:
-		return
 	sprite.texture = texture
-	sprite.modulate = tint
+	sprite.position = Vector2(0, -texture.get_height() * 0.5)
 	body.add_child(sprite)
-	var shape := RectangleShape2D.new()
-	shape.size = Vector2(16, 26)
+
+	# Kolisi solid di pangkal tiang/lampu/hidran agar karakter tidak nembus (Gambar 9)
 	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	match prop:
+		"lamp.png", "traffic_light.png":
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
+		"hydrant.png":
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
+		"bench.png":
+			shape.size = Vector2(20, 8)
+			col.position = Vector2(0, -4)
+		_:
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
 	col.shape = shape
 	body.add_child(col)
+
 	get_parent().add_child.call_deferred(body)

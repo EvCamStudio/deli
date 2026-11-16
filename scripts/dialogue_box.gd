@@ -34,7 +34,12 @@ func show_node(node: Dictionary) -> void:
 	panel.show()
 	tap_area.show()
 
-	speaker_label.text = node.get("speaker", "")
+	var raw_speaker: String = str(node.get("speaker", ""))
+	var p_name: String = GameState.player_name.strip_edges() if GameState.player_name.strip_edges() != "" else "Pemain"
+	if raw_speaker.to_lower() in ["mc", "player", "kamu", "pemain", "arisyah", "rian"] or (not p_name.is_empty() and raw_speaker.to_lower() == p_name.to_lower()):
+		speaker_label.text = p_name
+	else:
+		speaker_label.text = raw_speaker
 	var full_text: String = _clean_text(str(node.get("text", node.get("teks", ""))))
 	var choices: Array = node.get("choices", node.get("pilihan", []))
 	_has_choices = not choices.is_empty()
@@ -80,7 +85,15 @@ func _show_choices(choices: Array) -> void:
 	for i in range(choices.size()):
 		var choice: Dictionary = choices[i]
 		var btn := Button.new()
-		btn.text = choice.get("text", "")
+		var choice_text: String = str(choice.get("text", choice.get("teks", "")))
+
+		var clean_choice := choice_text
+		var prefix_regex := RegEx.new()
+		prefix_regex.compile("^\\[?[A-D](\\s*[-–:]\\s*[^]]+)?\\]?\\s*(\\.\\s*)?")
+		clean_choice = prefix_regex.sub(clean_choice, "").strip_edges()
+
+		var letter: String = str(["A", "B", "C", "D", "E"][clampi(i, 0, 4)])
+		btn.text = "%s. %s" % [letter, clean_choice]
 		btn.custom_minimum_size = Vector2(0, 28)
 		# Sambungkan dengan index yang di-capture
 		var idx: int = i

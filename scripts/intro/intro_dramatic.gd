@@ -45,12 +45,22 @@ const SCRIPT_DATA: Array = [
 		{
 			"tipe": "dialog",
 			"speaker": "hrd",
-			"teks": "Saya sudah melihat CV kamu, {nama}. CV kamu sangat rapi dan bagus.\n\nDi CV ini saya melihat kalau kamu berasal dari Medan, ya? Kalau saya boleh tahu, apa alasan kamu merantau ke Jakarta dan memilih perusahaan ini?"
+			"teks": "Saya sudah melihat CV kamu, {nama}. CV kamu sangat rapi dan bagus."
+		},
+		{
+			"tipe": "dialog",
+			"speaker": "hrd",
+			"teks": "Di CV ini saya melihat kalau kamu berasal dari Medan, ya? Kalau saya boleh tahu, apa alasan kamu merantau ke Jakarta dan memilih perusahaan ini?"
 		},
 		{
 			"tipe": "dialog",
 			"speaker": "mc",
-			"teks": "Saya merantau ke Jakarta karena ingin mencari pekerjaan yang cocok dengan saya dengan gaji yang baik. Dan saya akhirnya memilih untuk mencoba di perusahaan ini, karena perusahaan ini sedang membutuhkan bidang yang cocok dengan keahlian saya dengan gaji yang pas sesuai ekspektasi saya. Jadi, saya mencoba mendaftar."
+			"teks": "Saya merantau ke Jakarta karena ingin mencari pekerjaan yang cocok dengan keahlian saya dan bergaji baik."
+		},
+		{
+			"tipe": "dialog",
+			"speaker": "mc",
+			"teks": "Saya memilih mencoba di perusahaan ini karena posisinya sesuai dengan ekspektasi saya, Pak."
 		},
 		{
 			"tipe": "dialog",
@@ -113,21 +123,22 @@ const SCRIPT_DATA: Array = [
 @onready var narration_screen: Control = $NarrationScreen
 @onready var paper_header: Label = $NarrationScreen/CenterBox/PaperCard/VBox/PaperHeader
 @onready var narration_text: RichTextLabel = $NarrationScreen/CenterBox/PaperCard/VBox/NarrationText
-@onready var narration_hint: Label = $NarrationScreen/CenterBox/PaperCard/VBox/HintRow/NarrationHint
+@onready var narration_hint: Label = $NarrationScreen/CenterBox/PaperCard/NarrationHint
 @onready var dialogue_container: Control = $DialogueContainer
-@onready var dialog_panel: PanelContainer = $DialogueContainer/DialogPanel
-@onready var speaker_tag: PanelContainer = $DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag
-@onready var speaker_label: Label = $DialogueContainer/DialogPanel/VBox/SpeakerRow/SpeakerTag/SpeakerLabel
-@onready var portrait: TextureRect = $DialogueContainer/DialogPanel/VBox/BodyHBox/PortraitFrame/Portrait
-@onready var speech_text: RichTextLabel = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/SpeechText
-@onready var input_row: HBoxContainer = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow
-@onready var name_input: LineEdit = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/NameInput
-@onready var confirm_btn: Button = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/InputRow/ConfirmBtn
-@onready var dialog_hint_row: HBoxContainer = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow
-@onready var dialog_hint: Label = $DialogueContainer/DialogPanel/VBox/BodyHBox/ContentVBox/DialogHintRow/DialogHint
+@onready var dialog_panel: Control = $DialogueContainer
+@onready var speaker_tag: Control = get_node_or_null("DialogueContainer/NamePlateSlot")
+@onready var speaker_label: Label = $DialogueContainer/NamePlateSlot/SpeakerLabel
+@onready var portrait: TextureRect = $DialogueContainer/PortraitSlot/Portrait
+@onready var speech_text: RichTextLabel = $DialogueContainer/TextSlot/ContentVBox/SpeechText
+@onready var input_row: HBoxContainer = $DialogueContainer/TextSlot/ContentVBox/InputRow
+@onready var name_input: LineEdit = $DialogueContainer/TextSlot/ContentVBox/InputRow/NameInput
+@onready var confirm_btn: Button = $DialogueContainer/TextSlot/ContentVBox/InputRow/ConfirmBtn
+@onready var dialog_hint: Label = $DialogueContainer/DialogHint
 @onready var fade_rect: ColorRect = $FadeRect
 
-const TYPEWRITER_SPEED: float = 0.028  # Kecepatan ketik (detik per karakter)
+const TYPEWRITER_SPEED: float = 0.024  # Kecepatan ketik (detik per karakter)
+const MAX_PAGE_CHARS: int = 160        # Maksimal karakter per lembar dialog (2-3 baris aman)
+const MAX_PAGE_CHARS_NARRATION: int = 320 # Narasi muat banyak di dalam plakat tengah tanpa terpotong premature
 
 var _current_chapter: int = 0
 var _current_step: int = 0
@@ -135,6 +146,9 @@ var _current_chapter_node: Control = null
 var _is_waiting_input: bool = false
 var _is_transitioning: bool = false
 var _last_advance_frame: int = -1
+
+var _current_pages: Array[String] = []
+var _current_page_idx: int = 0
 
 var _is_typing: bool = false
 var _last_typed_char: int = 0
@@ -239,17 +253,16 @@ func _render_current_step() -> void:
 	var entry: Dictionary = chapter_entries[_current_step]
 	var tipe: String = entry.get("tipe", "narasi")
 	var raw_teks: String = entry.get("teks", "")
-	var speaker: String = entry.get("speaker", "")
 	var player_name: String = GameState.player_name if GameState.player_name.strip_edges() != "" else "Pemain"
 
 	# Substitusi {nama}
-	var processed_teks: String = raw_teks.replace("{nama}", player_name)
+	var processed_teks: String = raw_teks.replace("{nama}", player_name).replace("{Nama}", player_name).replace("{player}", player_name)
 
 	# Cek apakah butuh input nama
 	if entry.get("input_nama", false) and (GameState.player_name.strip_edges() == "" or GameState.player_name == "Pemain"):
 		_is_waiting_input = true
 		input_row.show()
-		dialog_hint_row.hide()
+		dialog_hint.hide()
 		name_input.text = ""
 		name_input.placeholder_text = "Ketik nama karaktermu..."
 		name_input.grab_focus.call_deferred()
@@ -257,11 +270,40 @@ func _render_current_step() -> void:
 	else:
 		_is_waiting_input = false
 		input_row.hide()
-		dialog_hint_row.show()
+		dialog_hint.show()
 
 	_ensure_black_screen_node()
 	if _black_screen_container:
 		_black_screen_container.hide()
+
+	# Ganti background Jakarta sesuai konteks bicara/narasi
+	if _current_chapter == 0 and is_instance_valid(_current_chapter_node):
+		var bg_rect: TextureRect = _current_chapter_node.get_node_or_null("Background") as TextureRect
+		if bg_rect:
+			if tipe in ["dialog", "pikiran"]:
+				bg_rect.texture = load("res://assets/ui/intro_office_dialog_bg.png")
+			else:
+				bg_rect.texture = load("res://assets/ui/intro_jakarta_bg.png")
+
+	if entry.get("input_nama", false) and _is_waiting_input:
+		_current_pages = [processed_teks]
+	else:
+		var max_chars: int = MAX_PAGE_CHARS_NARRATION if tipe == "narasi" else (250 if tipe == "layar_hitam" else MAX_PAGE_CHARS)
+		_current_pages = _paginate_text(processed_teks, max_chars)
+
+	_current_page_idx = 0
+	_show_current_page()
+
+func _show_current_page() -> void:
+	if _current_page_idx < 0 or _current_page_idx >= _current_pages.size():
+		return
+
+	var page_text: String = _current_pages[_current_page_idx]
+	var chapter_entries: Array = SCRIPT_DATA[_current_chapter]
+	var entry: Dictionary = chapter_entries[_current_step]
+	var tipe: String = entry.get("tipe", "narasi")
+	var speaker: String = entry.get("speaker", "")
+	var player_name: String = GameState.player_name if GameState.player_name.strip_edges() != "" else "Pemain"
 
 	match tipe:
 		"layar_hitam":
@@ -269,40 +311,161 @@ func _render_current_step() -> void:
 			narration_screen.hide()
 			dialogue_container.hide()
 			_black_screen_container.show()
-			_start_typewriter(_black_screen_label, _black_screen_hint, "[center][b]%s[/b][/center]" % processed_teks)
+			if _black_screen_hint:
+				_black_screen_hint.hide()
+			_start_typewriter(_black_screen_label, null, "[center][b]%s[/b][/center]" % page_text)
 
 		"narasi":
-			# Tampilkan Narasi dalam format lembaran kertas vertikal
+			# Tampilkan Narasi dalam format plakat terpusat
 			header_banner.hide()
-			paper_header.text = "— %s —" % HEADERS[_current_chapter]
+			if paper_header:
+				paper_header.hide()
+				paper_header.text = ""
 			dialogue_container.hide()
 			narration_screen.show()
-			_start_typewriter(narration_text, narration_hint, "[i]%s[/i]" % processed_teks)
+			_start_typewriter(narration_text, narration_hint, "[i]%s[/i]" % page_text)
 
 		"dialog":
 			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_dialog_speaker(speaker, player_name)
-			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % page_text)
 
 		"pikiran":
 			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_thought_speaker(speaker, player_name)
-			_start_typewriter(speech_text, dialog_hint, "[i]%s[/i]" % processed_teks)
+			_start_typewriter(speech_text, dialog_hint, "[i]%s[/i]" % page_text)
 
 		"telepon":
 			header_banner.show()
 			narration_screen.hide()
 			dialogue_container.show()
 			_setup_phone_speaker(speaker)
-			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % processed_teks)
+			_start_typewriter(speech_text, dialog_hint, "\"%s\"" % page_text)
+
+func _paginate_text(text: String, max_chars: int = MAX_PAGE_CHARS) -> Array[String]:
+	text = text.strip_edges()
+	if text.length() <= max_chars and not "\n\n" in text:
+		return [text]
+
+	var paragraphs: PackedStringArray = text.split("\n\n")
+	var pages: Array[String] = []
+	var current_page: String = ""
+
+	for para in paragraphs:
+		para = para.strip_edges().replace("\n", " ")
+		if para.is_empty():
+			continue
+
+		var regex := RegEx.new()
+		regex.compile("([^.?!…]+[.?!…]+)")
+		var matches := regex.search_all(para)
+
+		var sentences: Array[String] = []
+		if matches.is_empty():
+			sentences.append(para)
+		else:
+			var last_end: int = 0
+			for m in matches:
+				sentences.append(m.get_string().strip_edges())
+				last_end = m.get_end()
+			if last_end < para.length():
+				var rest: String = para.substr(last_end).strip_edges()
+				if not rest.is_empty():
+					sentences.append(rest)
+
+		for s in sentences:
+			s = s.strip_edges()
+			if s.is_empty():
+				continue
+
+			var sub_chunks: Array[String] = _split_long_sentence(s, max_chars)
+			for chunk in sub_chunks:
+				if current_page.is_empty():
+					current_page = chunk
+				elif current_page.length() + 1 + chunk.length() <= max_chars:
+					current_page += " " + chunk
+				else:
+					pages.append(current_page)
+					current_page = chunk
+
+		if not current_page.is_empty():
+			pages.append(current_page)
+			current_page = ""
+
+	if not current_page.is_empty():
+		pages.append(current_page)
+
+	if pages.is_empty():
+		pages.append(text)
+	return pages
+
+func _split_long_sentence(sentence: String, max_len: int) -> Array[String]:
+	if sentence.length() <= max_len:
+		return [sentence]
+
+	# Coba pecah berdasarkan jeda koma / titik dua / tanda pisah terlebih dahulu
+	var regex := RegEx.new()
+	regex.compile("([^,;–-]+[,;–-]+)")
+	var matches := regex.search_all(sentence)
+
+	var clauses: Array[String] = []
+	if not matches.is_empty():
+		var last_end: int = 0
+		for m in matches:
+			clauses.append(m.get_string().strip_edges())
+			last_end = m.get_end()
+		if last_end < sentence.length():
+			var rest: String = sentence.substr(last_end).strip_edges()
+			if not rest.is_empty():
+				clauses.append(rest)
+
+	var chunks: Array[String] = []
+	if not clauses.is_empty():
+		var cur := ""
+		for c in clauses:
+			if cur.is_empty():
+				cur = c
+			elif cur.length() + 1 + c.length() <= max_len:
+				cur += " " + c
+			else:
+				chunks.append(cur)
+				cur = c
+		if not cur.is_empty():
+			chunks.append(cur)
+
+		var final_chunks: Array[String] = []
+		for ch in chunks:
+			if ch.length() > max_len:
+				final_chunks.append_array(_split_by_words(ch, max_len))
+			else:
+				final_chunks.append(ch)
+		return final_chunks
+	else:
+		return _split_by_words(sentence, max_len)
+
+func _split_by_words(text: String, max_len: int) -> Array[String]:
+	var words: PackedStringArray = text.split(" ")
+	var chunks: Array[String] = []
+	var cur := ""
+	for w in words:
+		if cur.is_empty():
+			cur = w
+		elif cur.length() + 1 + w.length() <= max_len:
+			cur += " " + w
+		else:
+			chunks.append(cur)
+			cur = w
+	if not cur.is_empty():
+		chunks.append(cur)
+	return chunks
 
 func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
-	match speaker:
-		"mc":
+	match speaker.to_lower():
+		"mc", "player", "pemain":
 			speaker_label.text = player_name
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 		"hrd", "manajer":
@@ -316,7 +479,7 @@ func _setup_dialog_speaker(speaker: String, player_name: String) -> void:
 			portrait.texture = load(PORTRAITS["player_neutral"]) as Texture2D
 
 func _setup_thought_speaker(speaker: String, player_name: String) -> void:
-	if speaker == "mc":
+	if speaker.to_lower() in ["mc", "player", "pemain"]:
 		speaker_label.text = "%s (Batin)" % player_name
 		if _current_chapter >= 1:
 			portrait.texture = load(PORTRAITS["player_sad"]) as Texture2D
@@ -367,16 +530,13 @@ func _ensure_black_screen_node() -> void:
 	_black_screen_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_black_screen_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_black_screen_label.add_theme_color_override("default_color", Color(0.96, 0.96, 0.96, 1.0))
-	_black_screen_label.add_theme_font_size_override("normal_font_size", 16)
-	_black_screen_label.add_theme_font_size_override("bold_font_size", 16)
+	_black_screen_label.add_theme_font_size_override("normal_font_size", 18)
+	_black_screen_label.add_theme_font_size_override("bold_font_size", 18)
 	vbox.add_child(_black_screen_label)
 
 	_black_screen_hint = Label.new()
 	_black_screen_hint.name = "BlackScreenHint"
-	_black_screen_hint.text = "Tap / Tekan Spasi ▶"
-	_black_screen_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_black_screen_hint.add_theme_color_override("font_color", Color(0.6, 0.6, 0.6, 0.75))
-	_black_screen_hint.add_theme_font_size_override("font_size", 10)
+	_black_screen_hint.visible = false
 	_black_screen_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(_black_screen_hint)
 
@@ -395,7 +555,14 @@ func _handle_advance_request() -> void:
 		_finish_typewriter()
 		return
 
-	# Jika teks sudah selesai: lanjut ke langkah berikutnya
+	# Cek apakah masih ada lembar teks lanjutan pada langkah saat ini
+	if _current_page_idx < _current_pages.size() - 1:
+		_current_page_idx += 1
+		AudioManager.play_sfx("tap_b")
+		_show_current_page()
+		return
+
+	# Jika teks sudah tuntas seluruh halaman: lanjut ke langkah berikutnya
 	AudioManager.play_sfx("tap_b")
 	_advance_step()
 
@@ -484,7 +651,7 @@ func _save_and_confirm_name(clean_name: String) -> void:
 	GameState.player_name = final_name
 	_is_waiting_input = false
 	input_row.hide()
-	dialog_hint_row.show()
+	dialog_hint.show()
 	_advance_step()
 
 func _unhandled_input(event: InputEvent) -> void:

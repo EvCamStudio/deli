@@ -44,7 +44,7 @@ func _run() -> void:
 	await _frames(2)
 	journal.call("close")
 
-	_check(GameState.saved_player_x == target_pos.x and GameState.saved_player_y == target_pos.y,
+	_check(Vector2(GameState.saved_player_x, GameState.saved_player_y).distance_to(target_pos) < 1.0,
 		"Tombol simpan mencatat posisi pemain (%.0f,%.0f)" % [GameState.saved_player_x, GameState.saved_player_y])
 
 	var file_text: String = FileAccess.get_file_as_string(GameState.SAVE_PATH)

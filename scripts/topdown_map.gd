@@ -5,8 +5,8 @@ class_name TopdownMap
 
 const TILE: int = 16
 const MAP_W: int = 60
-const MAP_H: int = 34
-const PATH_ROW: int = 16
+const MAP_H: int = 32
+const PATH_ROW: int = 15
 const BUILDING_BAND_SRC_PX: int = 8
 const BUILDING_ROOF_TUCK_PX: float = 12.0
 const BUILDING_SIDE_INSET_PX: float = 2.0
@@ -18,6 +18,10 @@ const TREE_SPECS: Dictionary = {
 	"beringin": {"path": "res://assets/sprites/props/tree_beringin.png", "scale": 0.5, "col": Vector2(28, 10)},
 	"pepaya": {"path": "res://assets/sprites/props/tree_pepaya.png", "scale": 0.5, "col": Vector2(10, 8)},
 	"kamboja": {"path": "res://assets/sprites/props/tree_kamboja.png", "scale": 0.5, "col": Vector2(14, 8)},
+	"pinus": {"path": "res://assets/sprites/props/tree_pinus.png", "scale": 0.5, "col": Vector2(14, 8)},
+	"spruce_tall": {"path": "res://assets/sprites/props/tree_spruce_tall.png", "scale": 0.5, "col": Vector2(18, 10)},
+	"cemara": {"path": "res://assets/sprites/props/tree_cemara.png", "scale": 0.5, "col": Vector2(14, 8)},
+	"spruce": {"path": "res://assets/sprites/props/tree_spruce.png", "scale": 0.5, "col": Vector2(16, 8)},
 }
 
 # Tile kota / aspal pada Source 2 (city_tileset_32.png)
@@ -154,7 +158,7 @@ func _paint_ground() -> void:
 	var p_row: int = 10 if theme == "hilir" else PATH_ROW
 	if theme != "hilir":
 		for x in range(MAP_W):
-			for y in [p_row, p_row + 1]:
+			for y in [p_row - 2, p_row - 1, p_row, p_row + 1]:
 				ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
 	match theme:
@@ -355,93 +359,76 @@ static func autotile_dirt_paths(ground_layer: TileMapLayer, map_w: int, map_h: i
 		ground_layer.set_cell(c, 0, atlas, 0)
 
 func _paint_hulu_ground() -> void:
-	# Jalur tanah dari pintu rumah Ibu & rumah tetangga ke jalan utama.
-	_paint_door_path(6, 7, 13)
-	_paint_door_path(16, 17, 13)
-	# Gang kecil kampung ke rumah warga di sisi barat daya.
-	for y in range(PATH_ROW, 29):
-		ground.set_cell(Vector2i(13, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(14, y), 0, Vector2i(5, 0), 0)
-	for x in range(6, 15):
-		ground.set_cell(Vector2i(x, 28), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(x, 29), 0, Vector2i(5, 0), 0)
+	# Jalur jalan setapak rapi dari pintu rumah Ibu & rumah tetangga ke jalan utama (lebar 2 petak)
+	_paint_door_path(6, 7, 11, 13)
+	_paint_door_path(16, 17, 11, 13)
 	# Sedikit tanah lapang alami di papan pantun.
-	ground.set_cell(Vector2i(17, 18), 0, Vector2i(7, 3), 0)
+	ground.set_cell(Vector2i(17, 13), 0, Vector2i(7, 3), 0)
 
 func _paint_desa_ground() -> void:
-	# Jalur tanah dari pintu deret utara ke jalan utama.
-	_paint_door_path(7, 8, 13)
-	_paint_door_path(30, 31, 13)
-	_paint_door_path(52, 53, 14)
-	# Gang vertikal penghubung jalan utama utara ke jalan bantaran sungai selatan (y=25).
-	for y in range(PATH_ROW, 26):
-		ground.set_cell(Vector2i(30, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(31, y), 0, Vector2i(5, 0), 0)
-	for y in range(PATH_ROW, 26):
-		ground.set_cell(Vector2i(19, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(49, y), 0, Vector2i(5, 0), 0)
-	# Jalan kampung bantaran sungai menyusuri deretan rumah selatan (y=25).
-	for x in range(5, 56):
-		ground.set_cell(Vector2i(x, 25), 0, Vector2i(4 + _hash(x, 25) % 2, 0), 0)
-	# Petak kebun sayur Pak Darwis tertata rapi di utara (dua petak luas berpagar kayu, bebas dari tumpang tindih rumah).
-	var fields: Array[Rect2i] = [Rect2i(14, 3, 11, 7), Rect2i(27, 3, 11, 7)]
-	for f_idx in range(fields.size()):
-		var field: Rect2i = fields[f_idx]
-		for x in range(field.position.x, field.end.x):
-			for y in range(field.position.y, field.end.y):
-				var atlas: Vector2i
-				if y % 2 == 0:
-					atlas = Vector2i(2, 6) if (x + f_idx) % 2 == 0 else Vector2i(1, 6)
-				else:
-					atlas = Vector2i(0, 6)
-				ground.set_cell(Vector2i(x, y), 0, atlas, 0)
+	# Jalur jalan setapak rapi dari pintu deret rumah utara ke jalan utama (lebar 2 petak, Gambar 7).
+	_paint_door_path(4, 5, 11, 13)   # house_cream (x=70)
+	_paint_door_path(11, 12, 11, 13) # warung_toko_jaya (x=180)
+	_paint_door_path(18, 19, 11, 13) # house_cottage_orange (x=320)
+	_paint_door_path(30, 31, 11, 13) # house_farm_green (x=480)
+	_paint_door_path(40, 41, 11, 13) # house_cabin_blue (x=640)
+	_paint_door_path(50, 51, 11, 13) # house_suburban_terrace (x=800)
+	# Gang vertikal rapi penghubung jalan utama utara ke jalan bantaran sungai selatan (lebar 2 petak)
+	for col in [16, 32, 48]:
+		for y in range(16, 24):
+			for x in range(col, col + 2):
+				ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
+	# Jalan kampung bantaran sungai menyusuri deretan rumah selatan (y=23..24).
+	for x in range(4, 56):
+		ground.set_cell(Vector2i(x, 23), 0, Vector2i(4 + _hash(x, 23) % 2, 0), 0)
+		ground.set_cell(Vector2i(x, 24), 0, Vector2i(4 + _hash(x, 24) % 2, 0), 0)
 
 func _paint_hilir_ground() -> void:
-	# Jalan raya pesisir utama (horizontal, 2 lajur aspal + garis putus putih tengah).
+	# Jalan raya pesisir utama (horizontal, 4 lajur aspal lebar + garis putus putih tengah, Gambar 6).
 	for x in range(MAP_W):
-		for y in [10, 11]:
+		for y in [8, 9, 10, 11]:
 			ground.set_cell(Vector2i(x, y), 2, T_ASPHALT[_hash(x, y, 2) % 3], 0)
-		ground.set_cell(Vector2i(x, 10), 2, T_DASH_H, 0)
+		ground.set_cell(Vector2i(x, 9), 2, T_DASH_H, 0)
 
-	# Kanstin trotoar beton pada tepi atas (y=9) dan bawah (y=12) jalan raya.
+	# Kanstin trotoar beton pada tepi atas (y=7) dan bawah (y=12) jalan raya.
 	for x in range(MAP_W):
-		ground.set_cell(Vector2i(x, 9), 2, T_CURB_DOWN, 0)
-		if not (x in [20, 21]):
+		ground.set_cell(Vector2i(x, 7), 2, T_CURB_DOWN, 0)
+		if not (x in [20, 21, 22]):
 			ground.set_cell(Vector2i(x, 12), 2, T_CURB_UP, 0)
 
 	# Zebra cross penyeberangan di depan gang pemukiman dan akses jembatan pesisir.
 	for cx in [20, 36]:
-		for x in [cx, cx + 1]:
-			for y in [10, 11]:
+		for x in [cx, cx + 1, cx + 2]:
+			for y in [8, 9, 10, 11]:
 				ground.set_cell(Vector2i(x, y), 2, T_CROSS_V, 0)
 
-	# Trotoar pejalan kaki lebar & mulus di sepanjang sisi utara jalan raya (y=8).
+	# Trotoar pejalan kaki lebar & mulus di sepanjang sisi utara jalan raya (y=6).
 	for x in range(MAP_W):
-		ground.set_cell(Vector2i(x, 8), 2, T_WALK[_hash(x, 8) % T_WALK.size()], 0)
+		ground.set_cell(Vector2i(x, 6), 2, T_WALK[_hash(x, 6) % T_WALK.size()], 0)
 
-	# Akses jalan / trotoar beton dari pintu deret rumah utara ke trotoar jalan raya (y=6..7).
+	# Akses jalan / trotoar beton dari pintu deret rumah utara ke trotoar jalan raya (y=4..5), lebar 4 petak seukuran rumah (Gambar 8).
 	for col in [6, 15, 25, 36, 45, 54]:
-		for y in range(6, 8):
+		for y in range(4, 6):
+			ground.set_cell(Vector2i(col - 1, y), 2, T_CURB_RIGHT, 0)
 			ground.set_cell(Vector2i(col, y), 2, T_WALK[_hash(col, y) % T_WALK.size()], 0)
 			ground.set_cell(Vector2i(col + 1, y), 2, T_WALK[_hash(col + 1, y, 5) % T_WALK.size()], 0)
-			ground.set_cell(Vector2i(col - 1, y), 2, T_CURB_RIGHT, 0)
 			ground.set_cell(Vector2i(col + 2, y), 2, T_CURB_LEFT, 0)
 
-	# Jalur beton dari jalan raya menuju jembatan kayu pesisir (x=20..21, y=12..13).
+	# Jalur beton dari jalan raya menuju jembatan kayu pesisir (x=20..22, y=12..13).
 	for y in range(12, 14):
-		ground.set_cell(Vector2i(20, y), 2, T_WALK[0], 0)
-		ground.set_cell(Vector2i(21, y), 2, T_WALK[1], 0)
+		for x in [20, 21, 22]:
+			ground.set_cell(Vector2i(x, y), 2, T_WALK[_hash(x, y) % T_WALK.size()], 0)
 
 	# Got dan manhole di sepanjang tepi jalan pesisir.
 	for p in [Vector2i(12, 12), Vector2i(28, 12), Vector2i(45, 12)]:
 		ground.set_cell(p, 2, T_DRAIN, 0)
-	for p in [Vector2i(23, 10), Vector2i(52, 11)]:
+	for p in [Vector2i(23, 9), Vector2i(52, 10)]:
 		ground.set_cell(p, 2, T_MANHOLE, 0)
 
 	# Jalur dari jembatan ke pantai selatan (tanah & papan kayu pantai).
-	for y in range(19, 25):
-		ground.set_cell(Vector2i(20, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(21, y), 0, Vector2i(5, 0), 0)
+	for y in range(18, 23):
+		for x in [20, 21, 22]:
+			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
 	# Jalan setapak di sepanjang pantai mangrove (y=24)
 	for x in range(4, 42):
@@ -463,11 +450,10 @@ func _paint_hilir_ground() -> void:
 				atlas = Vector2i(5, 7)  # tanah retak kering
 			ground.set_cell(Vector2i(x, y), 0, atlas, 0)
 
-func _paint_door_path(x_left: int, x_right: int, y_top: int, y_bottom: int = -1) -> void:
-	var bot: int = (10 if theme == "hilir" else PATH_ROW) if y_bottom == -1 else y_bottom
-	for y in range(y_top, bot + 1):
-		ground.set_cell(Vector2i(x_left, y), 0, Vector2i(4, 0), 0)
-		ground.set_cell(Vector2i(x_right, y), 0, Vector2i(5, 0), 0)
+func _paint_door_path(x_left: int, x_right: int, y_top: int, y_bottom: int = 13) -> void:
+	for y in range(y_top, y_bottom + 1):
+		for x in range(x_left, x_right + 1):
+			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
 
 # ─── Water ───────────────────────────────────────────────────────────────────
 
@@ -496,38 +482,36 @@ func _paint_bridge_cell(x: int, y: int) -> void:
 
 func _water_hulu() -> void:
 	# Bentuk air dihitung dulu sebagai satu kesatuan, lalu digambar.
-	# Dengan begitu kolam mata air benar-benar menyatu dengan sungai
-	# (tidak terpotong garis pasir seperti versi sebelumnya).
 	var water_cells: Dictionary = {}
 
-	# Aliran sungai hulu: turun dari kolam mata air melewati jembatan (y=16..17),
-	# lalu berbelok mulus ke timur (y=27..30) agar menyambung utuh dengan Sungai Desa di tepi timur peta.
-	for y in range(0, 22):
-		for x in range(28, 32):
+	# Aliran sungai hulu diperlebar (x=25..33, 9 petak = 144px, Gambar 1/4)
+	for y in range(0, 20):
+		for x in range(25, 34):
 			water_cells[Vector2i(x, y)] = true
 
+	# Belokan sungai ke timur di sisi selatan (rows 25..29) menyambung utuh dengan Desa!
 	var bend_rows: Dictionary = {
-		22: Vector2i(28, 33),
-		23: Vector2i(28, 33),
-		24: Vector2i(29, 34),
-		25: Vector2i(29, 35),
-		26: Vector2i(30, 37),
-		27: Vector2i(31, MAP_W),
-		28: Vector2i(32, MAP_W),
-		29: Vector2i(33, MAP_W),
-		30: Vector2i(35, MAP_W),
+		20: Vector2i(25, 36),
+		21: Vector2i(26, 40),
+		22: Vector2i(27, 46),
+		23: Vector2i(28, 54),
+		24: Vector2i(28, MAP_W),
+		25: Vector2i(27, MAP_W),
+		26: Vector2i(26, MAP_W),
+		27: Vector2i(26, MAP_W),
+		28: Vector2i(26, MAP_W),
+		29: Vector2i(26, MAP_W),
 	}
 	for y in bend_rows.keys():
 		var span: Vector2i = bend_rows[y]
 		for x in range(span.x, span.y):
 			water_cells[Vector2i(x, y)] = true
 
-	# Mata air: kolam lonjong di hulu, menyatu dengan aliran sungai.
-	# Sedikit variasi radial membuat tepinya tidak terlihat seperti balok.
-	var pond_center := Vector2(30.0, 6.5)
-	var pond_radius := Vector2(5.4, 4.2)
-	for y in range(0, 13):
-		for x in range(21, 40):
+	# Mata air: kolam lonjong di hulu, menyatu dengan aliran sungai lebar.
+	var pond_center := Vector2(29.0, 5.0)
+	var pond_radius := Vector2(7.5, 4.0)
+	for y in range(0, 10):
+		for x in range(20, 38):
 			var dx: float = float(x) + 0.5 - pond_center.x
 			var dy: float = float(y) + 0.5 - pond_center.y
 			var nx: float = dx / pond_radius.x
@@ -537,12 +521,17 @@ func _water_hulu() -> void:
 			if nx * nx + ny * ny <= wobble * wobble:
 				water_cells[Vector2i(x, y)] = true
 
-	# Air sungai + jembatan kayu di jalan utama.
+	# Air sungai + jembatan kayu lebar 4 lajur (rows 13..16, columns 24..34) di jalan utama.
 	for cell: Vector2i in water_cells.keys():
-		if cell.y == PATH_ROW or cell.y == PATH_ROW + 1:
+		if cell.y >= PATH_ROW - 2 and cell.y <= PATH_ROW + 1:
 			_paint_bridge_cell(cell.x, cell.y)
 		else:
 			_paint_water_cell(cell.x, cell.y)
+
+	# Ujung jembatan menapak daratan di sisi barat (x=24) dan timur (x=34)
+	for y in range(PATH_ROW - 2, PATH_ROW + 2):
+		_paint_bridge_cell(24, y)
+		_paint_bridge_cell(34, y)
 
 	# Tepi pasir mengikuti kontur air, tanpa menutup jalan.
 	for cell: Vector2i in water_cells.keys():
@@ -555,25 +544,24 @@ func _water_hulu() -> void:
 					continue
 				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
 					continue
-				if n.y == PATH_ROW or n.y == PATH_ROW + 1:
+				if n.y >= PATH_ROW - 2 and n.y <= PATH_ROW + 1:
 					continue
 				_paint_sand_cell(n.x, n.y)
 
 func _water_desa() -> void:
-	# Sungai lebar di sisi selatan desa (tanpa jembatan/dermaga kayu).
+	# Sungai lebar di sisi selatan desa (rows 26..29, 4 petak = 64px lebar air).
 	for x in range(MAP_W):
-		for y in range(27, 31):
+		for y in range(26, 30):
 			_paint_water_cell(x, y)
-		_paint_sand_cell(x, 26)
-		_paint_sand_cell(x, 31)
+		_paint_sand_cell(x, 25)
+		_paint_sand_cell(x, 30)
 
 func _water_hilir() -> void:
 	var water_cells: Dictionary = {}
 
 	# Aliran sungai masuk dari Kota Medan melintasi Hilir dari barat ke timur (rows 14..17)
-	# Mengalir lurus horizontal melintasi Hilir dengan sedikit riak alami
 	for x in range(MAP_W):
-		var top: int = int(round(14.0 + sin(float(x) * 0.12) * 0.6))
+		var top: int = int(round(14.0 + sin(float(x) * 0.12) * 0.5))
 		var bot: int = top + 3
 		for y in range(top, bot + 1):
 			water_cells[Vector2i(x, y)] = true
@@ -585,7 +573,7 @@ func _water_hilir() -> void:
 		else:
 			_paint_water_cell(cell.x, cell.y)
 
-	# Tepi pasir mengikuti kontur sungai tanpa menimpa jalan (y=10, 11)
+	# Tepi pasir mengikuti kontur sungai tanpa menimpa jalan (y=8..11)
 	for cell: Vector2i in water_cells.keys():
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
@@ -596,7 +584,7 @@ func _water_hilir() -> void:
 					continue
 				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
 					continue
-				if n.y in [10, 11]:
+				if n.y in [8, 9, 10, 11]:
 					continue
 				_paint_sand_cell(n.x, n.y)
 
@@ -606,7 +594,7 @@ func _is_open_grass(x: int, y: int) -> bool:
 	if x < 1 or x >= MAP_W - 1 or y < 1 or y >= MAP_H - 1:
 		return false
 	var p_row: int = 10 if theme == "hilir" else PATH_ROW
-	if y >= p_row - 1 and y <= p_row + 2:
+	if y >= p_row - 3 and y <= p_row + 2:
 		return false
 	# Jangan menaruh semak/batu di atas air atau jembatan.
 	if water.get_cell_source_id(Vector2i(x, y)) != -1:
@@ -638,25 +626,13 @@ func _paint_decor() -> void:
 		else:
 			atlas = Vector2i(7, 2)  # batu berlumut
 		_decor.set_cell(Vector2i(x, y), 0, atlas, 0)
-	if theme == "desa":
-		_paint_field_fences()
-	elif theme == "hilir":
+	if theme == "hilir":
 		for i in range(18):
 			var x: int = 2 + _hash(i, 19, 7) % (MAP_W - 4)
 			var y: int = 24 + _hash(i, 23, 11) % 3
 			var c := Vector2i(x, y)
 			if water.get_cell_source_id(c) == -1 and is_sand_cell(ground, c):
 				_decor.set_cell(c, 0, Vector2i(6, 7), 0)  # kerikil & kerang pantai
-
-func _paint_field_fences() -> void:
-	var fields: Array[Rect2i] = [Rect2i(14, 3, 11, 7), Rect2i(27, 3, 11, 7)]
-	for field in fields:
-		for x in range(field.position.x - 1, field.end.x + 1):
-			_decor.set_cell(Vector2i(x, field.position.y - 1), 0, Vector2i(4 + x % 2, 2), 0)
-			_decor.set_cell(Vector2i(x, field.end.y), 0, Vector2i(4 + x % 2, 2), 0)
-		for y in range(field.position.y, field.end.y):
-			_decor.set_cell(Vector2i(field.position.x - 1, y), 0, Vector2i(4, 2), 0)
-			_decor.set_cell(Vector2i(field.end.x, y), 0, Vector2i(4, 2), 0)
 
 # ─── Collision & water areas ─────────────────────────────────────────────────
 
@@ -765,78 +741,145 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 func _spawn_props() -> void:
 	match theme:
 		"hulu":
-			# Rumah MC beratap hijau + dua rumah tetangga suburban di sisi kampung hulu.
-			spawn_building(get_parent(), "res://assets/sprites/props/house_mc.png", Vector2(112, 208), Vector2(92, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_orange.png", Vector2(272, 208), Vector2(108, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_planter.png", Vector2(112, 448), Vector2(104, 22), 0.4)
-			# Pohon dirapikan mengelompok: bingkai tepi kampung barat & rumpun hutan timur (bukan acak di pekarangan).
+			# Rumah MC beratap hijau + rumah tetangga suburban di sisi kampung hulu.
+			spawn_building(get_parent(), "res://assets/sprites/props/house_mc.png", Vector2(112, 160), Vector2(92, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_orange.png", Vector2(272, 160), Vector2(108, 22), 0.4)
+
+			# Pegangan jembatan kayu Hulu (sisi atas dan sisi bawah jembatan, Gambar 5)
+			_spawn_bridge_rail(Vector2(29.0 * TILE, 12.5 * TILE), true)
+			_spawn_bridge_rail(Vector2(29.0 * TILE, 17.0 * TILE), false)
+
+			# Pohon dirapikan mengelompok: bingkai tepi kampung barat & rumpun hutan timur (bebas dari jalan utama y=224..272)
 			_spawn_typed_trees([
-				# Bingkai barat & peneduh halaman
-				[Vector2(36, 128), "mangga"], [Vector2(192, 196), "pisang"], [Vector2(36, 356), "beringin"],
-				[Vector2(40, 488), "pepaya"], [Vector2(280, 488), "kamboja"],
+				# Bingkai barat & peneduh halaman utara (jauh dari jalan)
+				[Vector2(40, 80), "beringin"], [Vector2(36, 130), "mangga"], [Vector2(192, 140), "pisang"],
+				# Padang rumput selatan
+				[Vector2(40, 360), "pepaya"], [Vector2(180, 360), "kamboja"],
 				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai)
-				[Vector2(616, 72), "mangga"], [Vector2(688, 68), "beringin"], [Vector2(768, 72), "kamboja"],
-				[Vector2(848, 72), "mangga"], [Vector2(912, 84), "kelapa"],
-				[Vector2(916, 156), "pisang"], [Vector2(916, 212), "kamboja"],
-				[Vector2(620, 392), "kelapa"], [Vector2(724, 392), "mangga"], [Vector2(828, 392), "pisang"], [Vector2(916, 392), "kamboja"],
-				[Vector2(440, 484), "beringin"], [Vector2(576, 520), "kelapa"], [Vector2(696, 520), "mangga"],
-				[Vector2(820, 520), "kamboja"], [Vector2(916, 520), "kelapa"],
+				[Vector2(616, 50), "mangga"], [Vector2(688, 48), "beringin"], [Vector2(768, 50), "kamboja"],
+				[Vector2(848, 50), "mangga"], [Vector2(912, 60), "kelapa"],
+				[Vector2(916, 110), "pisang"], [Vector2(916, 150), "kamboja"],
+				[Vector2(620, 360), "kelapa"], [Vector2(724, 360), "mangga"], [Vector2(828, 360), "pisang"], [Vector2(916, 360), "kamboja"],
+				[Vector2(440, 380), "beringin"], [Vector2(576, 380), "kelapa"], [Vector2(696, 380), "mangga"],
+				[Vector2(820, 380), "kamboja"], [Vector2(916, 380), "kelapa"],
 			])
 		"desa":
-			# Pemukiman desa di sepanjang jalan utama utara (di pekarangan barat dan timur, bebas dari kebun sayur)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(110, 208), Vector2(82, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_canopy.png", Vector2(700, 208), Vector2(104, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_terrace.png", Vector2(840, 208), Vector2(108, 22), 0.4)
-			# Deret rumah & warung lokal bantaran selatan menghadap gang tepi sungai (semua unik tanpa duplikat).
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(104, 392), Vector2(92, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(232, 392), Vector2(92, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_barokah.png", Vector2(376, 392), Vector2(100, 22), 0.38)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(592, 392), Vector2(96, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(728, 392), Vector2(100, 22), 0.36)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(864, 392), Vector2(88, 22), 0.5)
-			# Pohon tertata di sudut pekarangan & bingkai tepi peta (tidak menghalangi jalan/kebun).
+			# Deret utara: Toko Jaya Pak Darwis (dekat pintu masuk barat) dan rumah warga baru (Gambar 3 atas)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(70, 160), Vector2(82, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(180, 160), Vector2(96, 22), 0.4)
+			# 3 Rumah baru dari Gambar 3 (bagian atas) menggantikan lahan sawah/kebun berpagar
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cottage_orange.png", Vector2(320, 160), Vector2(104, 22), 0.45)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_farm_green.png", Vector2(480, 160), Vector2(112, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cabin_blue.png", Vector2(640, 160), Vector2(104, 22), 0.45)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_terrace.png", Vector2(800, 160), Vector2(108, 22), 0.4)
+
+			# Deret selatan: warung dan rumah menghadap jalan utama & sungai selatan (baseline y=368, atap di y=280, jalan bersih bebas hambatan)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(110, 368), Vector2(92, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(270, 368), Vector2(92, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_barokah.png", Vector2(430, 368), Vector2(100, 22), 0.38)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(650, 368), Vector2(100, 22), 0.36)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(850, 368), Vector2(88, 22), 0.5)
+
+			# Pohon dari Gambar 2 (atas 1 & 5: pinus, spruce_tall; bawah 1 & 3: cemara, spruce) di sekitar rumah utara & sudut pekarangan
 			_spawn_typed_trees([
-				[Vector2(40, 128), "kelapa"], [Vector2(40, 204), "pisang"], [Vector2(180, 212), "pepaya"],
-				[Vector2(750, 212), "kamboja"], [Vector2(920, 128), "kelapa"],
-				[Vector2(36, 392), "pisang"], [Vector2(168, 392), "pepaya"], [Vector2(442, 392), "pepaya"],
-				[Vector2(660, 392), "kamboja"], [Vector2(924, 392), "mangga"],
-				[Vector2(48, 520), "kelapa"], [Vector2(256, 520), "mangga"], [Vector2(704, 520), "beringin"], [Vector2(912, 520), "kelapa"],
+				# Di sekitar rumah-rumah baru bagian utara
+				[Vector2(245, 110), "pinus"],
+				[Vector2(400, 105), "spruce_tall"],
+				[Vector2(560, 105), "cemara"],
+				[Vector2(720, 110), "spruce"],
+				# Bingkai sudut pekarangan barat dan timur
+				[Vector2(36, 80), "pinus"],
+				[Vector2(880, 105), "cemara"],
+				[Vector2(920, 80), "spruce_tall"],
+				# Tepian sungai selatan
+				[Vector2(48, 410), "kelapa"], [Vector2(260, 410), "mangga"], [Vector2(704, 410), "beringin"], [Vector2(912, 410), "kelapa"],
 			])
 		"hilir":
-			# Kampung pesisir muara: deretan rumah & pasar ikan berjarak mundur (y=96..100)
-			# memberi trotoar pejalan kaki lebar 44-48px (3 tile) dari tepi jalan aspal (y=144).
-			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(112, 96), Vector2(78, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_blue.png", Vector2(256, 96), Vector2(108, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(416, 96), Vector2(88, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_lshape.png", Vector2(576, 96), Vector2(108, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/market_ikan.png", Vector2(736, 100), Vector2(110, 22), 0.42)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(880, 96), Vector2(100, 22), 0.36)
+			# Kampung pesisir muara
+			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(112, 64), Vector2(78, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_blue.png", Vector2(256, 64), Vector2(108, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(416, 64), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_lshape.png", Vector2(576, 64), Vector2(108, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/market_ikan.png", Vector2(736, 68), Vector2(110, 22), 0.42)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(880, 64), Vector2(100, 22), 0.36)
 			# Pohon pesisir ditata di celah antar-rumah & pekarangan selatan (bebas tumpang tindih)
 			_spawn_typed_trees([
-				[Vector2(40, 72), "kelapa"], [Vector2(184, 72), "kamboja"], [Vector2(336, 72), "pisang"],
-				[Vector2(496, 72), "pepaya"], [Vector2(945, 72), "kelapa"],
-				[Vector2(96, 336), "kelapa"], [Vector2(288, 336), "kelapa"],
-				[Vector2(560, 336), "kelapa"], [Vector2(904, 336), "kelapa"],
+				[Vector2(40, 50), "kelapa"], [Vector2(184, 50), "kamboja"], [Vector2(336, 50), "pisang"],
+				[Vector2(496, 50), "pepaya"], [Vector2(945, 50), "kelapa"],
+				[Vector2(96, 260), "kelapa"], [Vector2(288, 260), "kelapa"],
+				[Vector2(560, 260), "kelapa"], [Vector2(904, 260), "kelapa"],
 			])
-			for pos in [Vector2(120, 432), Vector2(480, 436), Vector2(720, 440), Vector2(60, 424)]:
+			for pos in [Vector2(120, 360), Vector2(480, 360), Vector2(720, 360), Vector2(60, 350)]:
 				_spawn_mangrove(pos)
 
-			# Lampu jalan aspal pesisir, hidran, dan bangku
+			# Lampu jalan aspal pesisir, hidran, dan bangku (berkolisi solid di pangkalnya, Gambar 9)
 			for lx in [80, 320, 500, 720]:
-				_spawn_city_prop("lamp.png", Vector2(lx, 158))
+				_spawn_city_prop("lamp.png", Vector2(lx, 114))
 			for lx in [140, 440, 680]:
-				_spawn_city_prop("lamp.png", Vector2(lx, 206))
-			_spawn_city_prop("hydrant.png", Vector2(340, 206))
-			_spawn_city_prop("bench.png", Vector2(640, 206))
+				_spawn_city_prop("lamp.png", Vector2(lx, 194))
+			_spawn_city_prop("hydrant.png", Vector2(340, 194))
+			_spawn_city_prop("bench.png", Vector2(640, 194))
+
+func _spawn_bridge_rail(pos: Vector2, _is_top: bool) -> void:
+	var texture: Texture2D = load("res://assets/sprites/props/bridge_rail_wood.png")
+	if texture == null:
+		return
+	var body := StaticBody2D.new()
+	body.position = pos
+	body.collision_layer = 1
+	body.collision_mask = 0
+
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.position = Vector2(0, 0)
+	body.add_child(sprite)
+
+	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(10 * TILE, 6)
+	col.shape = shape
+	col.position = Vector2(0, 0)
+	body.add_child(col)
+
+	get_parent().add_child.call_deferred(body)
 
 func _spawn_city_prop(prop: String, pos: Vector2) -> void:
 	var texture: Texture2D = load("res://assets/sprites/props/" + prop)
 	if texture == null:
 		return
+	var body := StaticBody2D.new()
+	body.position = pos
+	body.collision_layer = 1
+	body.collision_mask = 0
+
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
-	sprite.position = pos + Vector2(0, -texture.get_height() * 0.5)
-	get_parent().add_child.call_deferred(sprite)
+	sprite.position = Vector2(0, -texture.get_height() * 0.5)
+	body.add_child(sprite)
+
+	# Kolisi solid di pangkal tiang/lampu/hidran agar karakter tidak nembus (Gambar 9)
+	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	match prop:
+		"lamp.png", "traffic_light.png":
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
+		"hydrant.png":
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
+		"bench.png":
+			shape.size = Vector2(20, 8)
+			col.position = Vector2(0, -4)
+		"rail.png":
+			shape.size = Vector2(6, 60)
+			col.position = Vector2(0, -30)
+		_:
+			shape.size = Vector2(8, 6)
+			col.position = Vector2(0, -3)
+	col.shape = shape
+	body.add_child(col)
+
+	get_parent().add_child.call_deferred(body)
 
 ## Memunculkan sprite bangunan berkolisi dari aset 2x/1x agar sejajar di tepi jalan.
 static func spawn_building(parent: Node, path: String, pos: Vector2, collision_size: Vector2, sprite_scale: float = 0.5, tint: Color = Color.WHITE) -> void:

@@ -2,52 +2,84 @@
 
 [ext_resource type="Script" path="res://scripts/portrait_dialogue.gd" id="1_dialogue"]
 [ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="2_pixel"]
-[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="3_dialog"]
-[ext_resource type="Texture2D" path="res://assets/ui/panel_paper.png" id="4_paper"]
+[ext_resource type="Texture2D" path="res://assets/ui/dialogue_frame_ornate.png" id="3_frame"]
+[ext_resource type="Texture2D" path="res://assets/ui/plaque_frame.png" id="4_plaque"]
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_dialog"]
-texture = ExtResource("3_dialog")
-texture_margin_left = 16.0
-texture_margin_top = 16.0
-texture_margin_right = 16.0
-texture_margin_bottom = 16.0
-content_margin_left = 18.0
-content_margin_top = 10.0
-content_margin_right = 18.0
+[sub_resource type="StyleBoxTexture" id="StyleBox_plaque"]
+texture = ExtResource("4_plaque")
+texture_margin_left = 64.0
+texture_margin_top = 48.0
+texture_margin_right = 64.0
+texture_margin_bottom = 48.0
+content_margin_left = 50.0
+content_margin_top = 24.0
+content_margin_right = 50.0
+content_margin_bottom = 18.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_choice_frame"]
+content_margin_left = 20.0
+content_margin_top = 8.0
+content_margin_right = 20.0
 content_margin_bottom = 8.0
+bg_color = Color(0.96, 0.92, 0.82, 0.98)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.44, 0.28, 0.12, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_name"]
-texture = ExtResource("4_paper")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-content_margin_left = 12.0
+[sub_resource type="StyleBoxFlat" id="StyleBox_plaque_btn"]
+bg_color = Color(0.85, 0.72, 0.48, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.44, 0.28, 0.12, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 2
+content_margin_left = 10.0
 content_margin_top = 3.0
-content_margin_right = 12.0
+content_margin_right = 10.0
 content_margin_bottom = 3.0
 
-[sub_resource type="StyleBoxTexture" id="StyleBox_photo"]
-texture = ExtResource("4_paper")
-texture_margin_left = 10.0
-texture_margin_top = 10.0
-texture_margin_right = 10.0
-texture_margin_bottom = 10.0
-content_margin_left = 4.0
-content_margin_top = 4.0
-content_margin_right = 4.0
-content_margin_bottom = 4.0
+[sub_resource type="StyleBoxFlat" id="StyleBox_plaque_btn_hover"]
+bg_color = Color(0.95, 0.82, 0.58, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.55, 0.35, 0.15, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3
+content_margin_left = 10.0
+content_margin_top = 3.0
+content_margin_right = 10.0
+content_margin_bottom = 3.0
 
 [node name="DialogueBox" type="CanvasLayer"]
 layer = 20
 script = ExtResource("1_dialogue")
 
 [node name="TapArea" type="Button" parent="."]
+visible = false
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 flat = true
-visible = false
 
 [node name="Root" type="Control" parent="."]
 layout_mode = 3
@@ -56,87 +88,264 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 mouse_filter = 2
 
-[node name="Backdrop" type="Panel" parent="Root"]
+[node name="NarrationCenter" type="Control" parent="Root"]
+visible = false
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 4.0
-offset_top = -190.0
-offset_right = 136.0
-offset_bottom = -4.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -240.0
+offset_top = -134.0
+offset_right = 240.0
+offset_bottom = 134.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_photo")
 
-[node name="Portrait" type="TextureRect" parent="Root"]
+[node name="Frame" type="TextureRect" parent="Root/NarrationCenter"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -182.0
-offset_right = 130.0
-offset_bottom = -12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("4_plaque")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Content" type="Control" parent="Root/NarrationCenter"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -80.0
+offset_right = 160.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="VBox" type="VBoxContainer" parent="Root/NarrationCenter/Content"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="Header" type="Label" parent="Root/NarrationCenter/Content/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.48, 0.32, 0.16, 1)
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 11
+text = ""
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Separator" type="Control" parent="Root/NarrationCenter/Content/VBox"]
+visible = false
+custom_minimum_size = Vector2(0, 0)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Text" type="RichTextLabel" parent="Root/NarrationCenter/Content/VBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.24, 0.16, 0.08, 1)
+theme_override_fonts/normal_font = ExtResource("2_pixel")
+theme_override_fonts/italics_font = ExtResource("2_pixel")
+theme_override_font_sizes/normal_font_size = 12
+theme_override_font_sizes/italics_font_size = 12
+theme_override_constants/line_separation = 4
+bbcode_enabled = true
+text = ""
+fit_content = true
+scroll_active = false
+autowrap_mode = 3
+
+[node name="Hint" type="Label" parent="Root/NarrationCenter/Content"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -170.0
+offset_top = -24.0
+offset_right = -10.0
+offset_bottom = -8.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_colors/font_color = Color(0.55, 0.42, 0.28, 0.9)
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 10
+text = "Tap / Tekan Spasi ▶"
+horizontal_alignment = 2
+
+[node name="DialogueFrame" type="Control" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -270.0
+offset_top = -162.0
+offset_right = 270.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="FrameBG" type="TextureRect" parent="Root/DialogueFrame"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = ExtResource("3_frame")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PortraitSlot" type="Control" parent="Root/DialogueFrame"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 19.0
+offset_top = 18.0
+offset_right = 110.0
+offset_bottom = 133.0
+mouse_filter = 2
+
+[node name="Portrait" type="TextureRect" parent="Root/DialogueFrame/PortraitSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
 
-[node name="NamePlate" type="PanelContainer" parent="Root"]
+[node name="NamePlateSlot" type="Control" parent="Root/DialogueFrame"]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 138.0
-offset_top = -182.0
-offset_right = 356.0
-offset_bottom = -154.0
+anchors_preset = 0
+offset_left = 205.0
+offset_top = 30.0
+offset_right = 320.0
+offset_bottom = 54.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBox_name")
 
-[node name="Speaker" type="Label" parent="Root/NamePlate"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 1)
-theme_override_fonts/font = ExtResource("2_pixel")
-theme_override_font_sizes/font_size = 14
-text = "Pak Pedagang"
-
-[node name="Panel" type="PanelContainer" parent="Root"]
+[node name="Speaker" type="Label" parent="Root/DialogueFrame/NamePlateSlot"]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 0.0
-anchor_top = 1.0
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 138.0
-offset_top = -150.0
-offset_right = -8.0
-offset_bottom = -8.0
-theme_override_styles/panel = SubResource("StyleBox_dialog")
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.42, 0.28, 0.14, 1)
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 12
+text = "Pak Pedagang"
+vertical_alignment = 1
 
-[node name="VBox" type="VBoxContainer" parent="Root/Panel"]
+[node name="TextSlot" type="Control" parent="Root/DialogueFrame"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 150.0
+offset_top = 76.0
+offset_right = 485.0
+offset_bottom = 126.0
+mouse_filter = 2
+
+[node name="TextLabel" type="RichTextLabel" parent="Root/DialogueFrame/TextSlot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_colors/default_color = Color(0.24, 0.16, 0.08, 1)
+theme_override_fonts/normal_font = ExtResource("2_pixel")
+theme_override_fonts/italics_font = ExtResource("2_pixel")
+theme_override_font_sizes/normal_font_size = 11
+theme_override_font_sizes/italics_font_size = 11
+theme_override_constants/line_separation = 3
+bbcode_enabled = true
+text = ""
+scroll_active = false
+autowrap_mode = 3
+
+[node name="DialogHint" type="Label" parent="Root/DialogueFrame"]
+layout_mode = 1
+anchors_preset = 0
+offset_left = 310.0
+offset_top = 122.0
+offset_right = 496.0
+offset_bottom = 138.0
+theme_override_colors/font_color = Color(0.55, 0.42, 0.28, 0.9)
+theme_override_fonts/font = ExtResource("2_pixel")
+theme_override_font_sizes/font_size = 10
+text = "Tap / Tekan Spasi ▶"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="ChoiceModal" type="Control" parent="Root"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -148.0
+offset_right = 260.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="ChoicePanel" type="PanelContainer" parent="Root/ChoiceModal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBox_choice_frame")
+
+[node name="VBox" type="VBoxContainer" parent="Root/ChoiceModal/ChoicePanel"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="TextLabel" type="RichTextLabel" parent="Root/Panel/VBox"]
-custom_minimum_size = Vector2(0, 18)
+[node name="Title" type="Label" parent="Root/ChoiceModal/ChoicePanel/VBox"]
 layout_mode = 2
-size_flags_vertical = 3
-bbcode_enabled = true
-fit_content = false
-scroll_active = false
-theme_override_colors/default_color = Color(0.227, 0.165, 0.118, 1)
-theme_override_font_sizes/normal_font_size = 13
-text = "Dulu sungai ini jernih, Nak. Aku bisa cuci tangan langsung di sini. Sekarang? Bau dan kotor."
-visible_characters = 0
-
-[node name="ChoicesContainer" type="VBoxContainer" parent="Root/Panel/VBox"]
-layout_mode = 2
-theme_override_constants/separation = 3
-
-[node name="ContinueHint" type="Label" parent="Root/Panel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.29, 0.18, 0.75)
+theme_override_colors/font_color = Color(0.42, 0.28, 0.14, 1)
 theme_override_fonts/font = ExtResource("2_pixel")
-theme_override_font_sizes/font_size = 9
-text = "Ketuk / Space untuk lanjut"
-horizontal_alignment = 2
+theme_override_font_sizes/font_size = 11
+text = "— PILIH RESPON —"
+horizontal_alignment = 1
+
+[node name="Sep" type="HSeparator" parent="Root/ChoiceModal/ChoicePanel/VBox"]
+layout_mode = 2
+
+[node name="ChoicesContainer" type="VBoxContainer" parent="Root/ChoiceModal/ChoicePanel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4

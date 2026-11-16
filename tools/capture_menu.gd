@@ -1,5 +1,7 @@
 extends Node
 
+const ARTIFACT_DIR := "/home/arisyah/.gemini/antigravity/brain/d1c3a421-8729-49fd-a2ca-5379619e28e8"
+
 func _ready() -> void:
 	call_deferred("_run")
 
@@ -10,7 +12,7 @@ func _frames(count: int) -> void:
 func _shot(name: String) -> void:
 	await _frames(4)
 	var image: Image = get_viewport().get_texture().get_image()
-	image.save_png("C:/Users/Hype AMD/AppData/Local/Temp/%s.png" % name)
+	image.save_png("%s/%s.png" % [ARTIFACT_DIR, name])
 	print("captured ", name)
 
 func _run() -> void:

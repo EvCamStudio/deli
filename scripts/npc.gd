@@ -18,6 +18,7 @@ signal talked(npc_key: String)
 # ─── State ────────────────────────────────────────────────────────────────────
 var _dialogue_data: Array = []
 var _has_talked: bool = false
+var _last_talked_step: String = ""
 var _in_dialogue: bool = false
 
 func _ready() -> void:
@@ -28,6 +29,10 @@ func _ready() -> void:
 
 func is_interactable_now() -> bool:
 	var step := str(GameState.choices.get("hulu_story_step", ""))
+	var current_step_key := step if not step.is_empty() else "_initial"
+	if _last_talked_step == current_step_key:
+		return false
+
 	var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
 	var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
 	var talked_kota: Array = GameState.zone_progress.get("kota", {}).get("talked_keys", [])
@@ -66,8 +71,7 @@ func is_interactable_now() -> bool:
 			return false
 
 		"npc_pemilik_toko":
-			if step == "ke_toko_jaya" or step == "pesan_kasur_pemilik":
-				return not bool(GameState.choices.get("pemilik_toko_done", false))
+			# Di Toko Jaya urusan utama adalah adegan bersama Pak Darwis
 			return false
 
 		"npc_ibu_desa": # Kak Rina
@@ -230,6 +234,8 @@ func _on_dialogue_finished() -> void:
 		return
 	_in_dialogue = false
 	_has_talked = true
+	var step := str(GameState.choices.get("hulu_story_step", ""))
+	_last_talked_step = step if not step.is_empty() else "_initial"
 	if exclaim:
 		exclaim.hide()
 	talked.emit(npc_key)
