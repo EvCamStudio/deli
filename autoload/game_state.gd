@@ -612,6 +612,19 @@ func selesaikan_puzzle_pintu_air() -> void:
 
 # ─── Fungsi Kompatibilitas Lama ───────────────────────────────────────────────
 
+const MAX_CARRY_TRASH: int = 5
+
+func get_pending_trash() -> Array:
+	if has_meta("pending_trash"):
+		return get_meta("pending_trash")
+	return []
+
+func get_pending_trash_count() -> int:
+	return get_pending_trash().size()
+
+func can_carry_more_trash() -> bool:
+	return get_pending_trash_count() < MAX_CARRY_TRASH
+
 func add_river_health(amount: float) -> void:
 	river_health += amount
 

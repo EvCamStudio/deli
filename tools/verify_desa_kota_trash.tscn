@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dyuwmjr5sid44"]
+
+[ext_resource type="Script" path="res://tools/verify_desa_kota_trash.gd" id="1_script"]
+
+[node name="VerifyDesaKota" type="Node"]
+script = ExtResource("1_script")

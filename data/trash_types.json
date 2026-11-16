@@ -1,11 +1,442 @@
 [
-  { "id": "botol_plastik", "label": "Botol Plastik", "category": "plastik", "sprite": "botol_plastik.png" },
-  { "id": "kantong_plastik", "label": "Kantong Plastik", "category": "plastik", "sprite": "kantong_plastik.png" },
-  { "id": "styrofoam", "label": "Styrofoam", "category": "plastik", "sprite": "styrofoam.png" },
-  { "id": "sisa_makanan", "label": "Sisa Makanan", "category": "organik", "sprite": "sisa_makanan.png" },
-  { "id": "daun_kering", "label": "Daun Kering", "category": "organik", "sprite": "daun_kering.png" },
-  { "id": "karton", "label": "Karton", "category": "organik", "sprite": "karton.png" },
-  { "id": "baterai", "label": "Baterai Bekas", "category": "b3", "sprite": "baterai.png" },
-  { "id": "kaleng_cat", "label": "Kaleng Cat", "category": "b3", "sprite": "kaleng_cat.png" },
-  { "id": "lampu_bekas", "label": "Lampu Bekas", "category": "b3", "sprite": "lampu_bekas.png" }
+  {
+    "id": "botol_plastik",
+    "label": "Botol Plastik",
+    "category": "plastik",
+    "sprite": "trash/botol_plastik.png",
+    "width": 10,
+    "height": 20
+  },
+  {
+    "id": "botol_remuk",
+    "label": "Botol Plastik Remuk",
+    "category": "plastik",
+    "sprite": "trash/botol_remuk.png",
+    "width": 13,
+    "height": 20
+  },
+  {
+    "id": "botol_kaca",
+    "label": "Botol Kaca",
+    "category": "b3",
+    "sprite": "trash/botol_kaca.png",
+    "width": 10,
+    "height": 20
+  },
+  {
+    "id": "kaleng_soda",
+    "label": "Kaleng Minuman",
+    "category": "plastik",
+    "sprite": "trash/kaleng_soda.png",
+    "width": 12,
+    "height": 20
+  },
+  {
+    "id": "kaleng_remuk",
+    "label": "Kaleng Remuk",
+    "category": "plastik",
+    "sprite": "trash/kaleng_remuk.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "kaleng_timah",
+    "label": "Kaleng Timah",
+    "category": "plastik",
+    "sprite": "trash/kaleng_timah.png",
+    "width": 12,
+    "height": 20
+  },
+  {
+    "id": "kotak_jus",
+    "label": "Kotak Minuman Jus",
+    "category": "organik",
+    "sprite": "trash/kotak_jus.png",
+    "width": 11,
+    "height": 20
+  },
+  {
+    "id": "kotak_susu",
+    "label": "Kotak Susu",
+    "category": "organik",
+    "sprite": "trash/kotak_susu.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "gelas_kopi",
+    "label": "Gelas Kopi",
+    "category": "plastik",
+    "sprite": "trash/gelas_kopi.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "cup_boba",
+    "label": "Gelas Plastik Boba",
+    "category": "plastik",
+    "sprite": "trash/cup_boba.png",
+    "width": 11,
+    "height": 20
+  },
+  {
+    "id": "kantong_kresek",
+    "label": "Kantong Kresek",
+    "category": "plastik",
+    "sprite": "trash/kantong_kresek.png",
+    "width": 18,
+    "height": 20
+  },
+  {
+    "id": "kantong_hitam",
+    "label": "Kantong Sampah Hitam",
+    "category": "plastik",
+    "sprite": "trash/kantong_hitam.png",
+    "width": 19,
+    "height": 20
+  },
+  {
+    "id": "wadah_styrofoam",
+    "label": "Kotak Styrofoam",
+    "category": "plastik",
+    "sprite": "trash/wadah_styrofoam.png",
+    "width": 20,
+    "height": 16
+  },
+  {
+    "id": "cup_plastik",
+    "label": "Gelas Plastik Kecil",
+    "category": "plastik",
+    "sprite": "trash/cup_plastik.png",
+    "width": 19,
+    "height": 20
+  },
+  {
+    "id": "gelas_bening",
+    "label": "Gelas Bening",
+    "category": "plastik",
+    "sprite": "trash/gelas_bening.png",
+    "width": 15,
+    "height": 20
+  },
+  {
+    "id": "mika_makanan",
+    "label": "Mika Makanan",
+    "category": "plastik",
+    "sprite": "trash/mika_makanan.png",
+    "width": 20,
+    "height": 13
+  },
+  {
+    "id": "bungkus_snack_merah",
+    "label": "Bungkus Snack Merah",
+    "category": "plastik",
+    "sprite": "trash/bungkus_snack_merah.png",
+    "width": 19,
+    "height": 20
+  },
+  {
+    "id": "bungkus_snack_hijau",
+    "label": "Bungkus Snack Hijau",
+    "category": "plastik",
+    "sprite": "trash/bungkus_snack_hijau.png",
+    "width": 19,
+    "height": 20
+  },
+  {
+    "id": "bungkus_permen_biru",
+    "label": "Bungkus Permen Biru",
+    "category": "plastik",
+    "sprite": "trash/bungkus_permen_biru.png",
+    "width": 20,
+    "height": 15
+  },
+  {
+    "id": "bungkus_permen_merah",
+    "label": "Bungkus Permen Merah",
+    "category": "plastik",
+    "sprite": "trash/bungkus_permen_merah.png",
+    "width": 20,
+    "height": 14
+  },
+  {
+    "id": "koran_bekas",
+    "label": "Koran Bekas",
+    "category": "organik",
+    "sprite": "trash/koran_bekas.png",
+    "width": 20,
+    "height": 15
+  },
+  {
+    "id": "kertas_dokumen",
+    "label": "Kertas Bekas",
+    "category": "organik",
+    "sprite": "trash/kertas_dokumen.png",
+    "width": 20,
+    "height": 17
+  },
+  {
+    "id": "kertas_remuk",
+    "label": "Gumpalan Kertas",
+    "category": "organik",
+    "sprite": "trash/kertas_remuk.png",
+    "width": 20,
+    "height": 20
+  },
+  {
+    "id": "kardus_terbuka",
+    "label": "Kardus Terbuka",
+    "category": "organik",
+    "sprite": "trash/kardus_terbuka.png",
+    "width": 20,
+    "height": 16
+  },
+  {
+    "id": "kotak_pizza",
+    "label": "Kotak Pizza Bekas",
+    "category": "organik",
+    "sprite": "trash/kotak_pizza.png",
+    "width": 20,
+    "height": 15
+  },
+  {
+    "id": "kantong_kertas",
+    "label": "Kantong Kertas Cokelat",
+    "category": "organik",
+    "sprite": "trash/kantong_kertas.png",
+    "width": 19,
+    "height": 20
+  },
+  {
+    "id": "amplop_bekas",
+    "label": "Amplop Bekas",
+    "category": "organik",
+    "sprite": "trash/amplop_bekas.png",
+    "width": 20,
+    "height": 16
+  },
+  {
+    "id": "sobekan_kardus",
+    "label": "Sobekan Karton",
+    "category": "organik",
+    "sprite": "trash/sobekan_kardus.png",
+    "width": 20,
+    "height": 18
+  },
+  {
+    "id": "lembaran_kardus",
+    "label": "Lembaran Karton",
+    "category": "organik",
+    "sprite": "trash/lembaran_kardus.png",
+    "width": 20,
+    "height": 16
+  },
+  {
+    "id": "gulungan_karton",
+    "label": "Gulungan Tisu Karton",
+    "category": "organik",
+    "sprite": "trash/gulungan_karton.png",
+    "width": 20,
+    "height": 15
+  },
+  {
+    "id": "sisa_apel",
+    "label": "Sisa Apel",
+    "category": "organik",
+    "sprite": "trash/sisa_apel.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "kulit_pisang",
+    "label": "Kulit Pisang",
+    "category": "organik",
+    "sprite": "trash/kulit_pisang.png",
+    "width": 20,
+    "height": 14
+  },
+  {
+    "id": "kulit_jeruk",
+    "label": "Kulit Jeruk",
+    "category": "organik",
+    "sprite": "trash/kulit_jeruk.png",
+    "width": 20,
+    "height": 13
+  },
+  {
+    "id": "kulit_semangka",
+    "label": "Kulit Semangka",
+    "category": "organik",
+    "sprite": "trash/kulit_semangka.png",
+    "width": 20,
+    "height": 13
+  },
+  {
+    "id": "tulang_sisa",
+    "label": "Tulang Sisa Makanan",
+    "category": "organik",
+    "sprite": "trash/tulang_sisa.png",
+    "width": 20,
+    "height": 16
+  },
+  {
+    "id": "tulang_ikan",
+    "label": "Duri Ikan",
+    "category": "organik",
+    "sprite": "trash/tulang_ikan.png",
+    "width": 20,
+    "height": 10
+  },
+  {
+    "id": "cangkang_telur",
+    "label": "Cangkang Telur",
+    "category": "organik",
+    "sprite": "trash/cangkang_telur.png",
+    "width": 20,
+    "height": 12
+  },
+  {
+    "id": "kotak_kotor",
+    "label": "Kardus Makanan Kotor",
+    "category": "organik",
+    "sprite": "trash/kotak_kotor.png",
+    "width": 20,
+    "height": 17
+  },
+  {
+    "id": "daun_kering",
+    "label": "Daun Kering",
+    "category": "organik",
+    "sprite": "trash/daun_kering.png",
+    "width": 18,
+    "height": 20
+  },
+  {
+    "id": "pecahan_kaca",
+    "label": "Pecahan Kaca",
+    "category": "b3",
+    "sprite": "trash/pecahan_kaca.png",
+    "width": 20,
+    "height": 18
+  },
+  {
+    "id": "pecahan_botol",
+    "label": "Pecahan Botol Kaca",
+    "category": "b3",
+    "sprite": "trash/pecahan_botol.png",
+    "width": 20,
+    "height": 19
+  },
+  {
+    "id": "bohlam_lampu",
+    "label": "Bohlam Lampu Bekas",
+    "category": "b3",
+    "sprite": "trash/bohlam_lampu.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "baterai_aa",
+    "label": "Baterai Bekas AA",
+    "category": "b3",
+    "sprite": "trash/baterai_aa.png",
+    "width": 10,
+    "height": 20
+  },
+  {
+    "id": "baterai_aaa",
+    "label": "Baterai Bekas AAA",
+    "category": "b3",
+    "sprite": "trash/baterai_aaa.png",
+    "width": 11,
+    "height": 20
+  },
+  {
+    "id": "kaleng_semprot",
+    "label": "Kaleng Cat Semprot",
+    "category": "b3",
+    "sprite": "trash/kaleng_semprot.png",
+    "width": 10,
+    "height": 20
+  },
+  {
+    "id": "kaleng_cat",
+    "label": "Kaleng Cat Bekas",
+    "category": "b3",
+    "sprite": "trash/kaleng_cat.png",
+    "width": 16,
+    "height": 20
+  },
+  {
+    "id": "kaleng_sarden",
+    "label": "Kaleng Makanan Ikan",
+    "category": "plastik",
+    "sprite": "trash/kaleng_sarden.png",
+    "width": 20,
+    "height": 18
+  },
+  {
+    "id": "jarum_suntik",
+    "label": "Jarum Suntik Medis",
+    "category": "b3",
+    "sprite": "trash/jarum_suntik.png",
+    "width": 20,
+    "height": 18
+  },
+  {
+    "id": "masker_bekas",
+    "label": "Masker Medis Bekas",
+    "category": "b3",
+    "sprite": "trash/masker_bekas.png",
+    "width": 20,
+    "height": 14
+  },
+  {
+    "id": "puntung_rokok",
+    "label": "Puntung Rokok",
+    "category": "b3",
+    "sprite": "trash/puntung_rokok.png",
+    "width": 20,
+    "height": 18
+  },
+  {
+    "id": "ban_bekas",
+    "label": "Ban Mobil Bekas",
+    "category": "b3",
+    "sprite": "trash/ban_bekas.png",
+    "width": 20,
+    "height": 19
+  },
+  {
+    "id": "kaleng_berkarat",
+    "label": "Kaleng Berkarat",
+    "category": "b3",
+    "sprite": "trash/kaleng_berkarat.png",
+    "width": 14,
+    "height": 20
+  },
+  {
+    "id": "ember_cat",
+    "label": "Ember Seng Cat",
+    "category": "b3",
+    "sprite": "trash/ember_cat.png",
+    "width": 15,
+    "height": 20
+  },
+  {
+    "id": "kain_lap",
+    "label": "Kain Lap Kotor",
+    "category": "b3",
+    "sprite": "trash/kain_lap.png",
+    "width": 20,
+    "height": 17
+  },
+  {
+    "id": "kantong_jumbo",
+    "label": "Kantong Sampah Jumbo",
+    "category": "plastik",
+    "sprite": "trash/kantong_jumbo.png",
+    "width": 17,
+    "height": 20
+  }
 ]

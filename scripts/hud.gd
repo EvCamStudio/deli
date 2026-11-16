@@ -337,9 +337,13 @@ func _update_carry() -> void:
 	if pending.is_empty():
 		carry_label.hide()
 	else:
-		var first: Dictionary = pending[0]
-		var cat: String = str(first.get("category", "")).capitalize()
-		carry_label.text = "Dibawa: %d (%s)" % [pending.size(), cat]
+		var count: int = pending.size()
+		if count >= 5:
+			carry_label.text = "Kantong Sampah: 5/5 (Penuh - Buang ke Tong!)"
+			carry_label.add_theme_color_override("font_color", Color(1.0, 0.45, 0.2, 1.0))
+		else:
+			carry_label.text = "Kantong Sampah: %d/5" % count
+			carry_label.add_theme_color_override("font_color", Color(0.96, 0.92, 0.82, 1.0))
 		carry_label.show()
 
 # ─── Misi ─────────────────────────────────────────────────────────────────────

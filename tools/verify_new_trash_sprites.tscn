@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bne7jn14ffymg"]
+
+[ext_resource type="Script" path="res://tools/verify_new_trash_sprites.gd" id="1_script"]
+
+[node name="VerifyTrash" type="Node"]
+script = ExtResource("1_script")

@@ -136,8 +136,15 @@ func _update_location() -> void:
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])
-	carry_label.text = "Dibawa: %d sampah" % pending.size()
-	carry_label.visible = not pending.is_empty()
+	if pending.is_empty():
+		carry_label.hide()
+	else:
+		var count: int = pending.size()
+		if count >= 5:
+			carry_label.text = "Kantong Sampah: 5/5 (Penuh)"
+		else:
+			carry_label.text = "Kantong Sampah: %d/5" % count
+		carry_label.show()
 
 func _format_number(value: int) -> String:
 	var text: String = str(value)

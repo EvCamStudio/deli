@@ -422,6 +422,19 @@ func _open_choice_modal() -> void:
 
 		choices_container.add_child(btn)
 
+	_update_choice_modal_geometry()
+	_update_choice_modal_geometry.call_deferred()
+
+func _update_choice_modal_geometry() -> void:
+	if not choice_modal:
+		return
+	var choice_panel: PanelContainer = choice_modal.get_node_or_null("ChoicePanel") as PanelContainer
+	if not choice_panel:
+		return
+	var needed_height: float = maxf(choice_panel.get_combined_minimum_size().y, 64.0)
+	choice_modal.offset_bottom = -4.0
+	choice_modal.offset_top = -4.0 - needed_height
+
 func _create_choice_btn_style(hover: bool) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.95, 0.82, 0.58, 1) if hover else Color(0.85, 0.72, 0.48, 0.95)

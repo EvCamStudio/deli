@@ -255,9 +255,9 @@ stretch_mode = 5
 [node name="NamePlateSlot" type="Control" parent="DialogueContainer"]
 layout_mode = 1
 anchors_preset = 0
-offset_left = 205.0
+offset_left = 144.0
 offset_top = 30.0
-offset_right = 320.0
+offset_right = 326.0
 offset_bottom = 54.0
 mouse_filter = 2
 
@@ -272,6 +272,7 @@ theme_override_colors/font_color = Color(0.42, 0.28, 0.14, 1)
 theme_override_fonts/font = ExtResource("5_pixel")
 theme_override_font_sizes/font_size = 12
 text = "HRD"
+horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="TextSlot" type="Control" parent="DialogueContainer"]

@@ -753,15 +753,14 @@ func _spawn_props() -> void:
 			_spawn_typed_trees([
 				# Bingkai barat & peneduh halaman utara (jauh dari jalan)
 				[Vector2(40, 80), "beringin"], [Vector2(36, 130), "mangga"], [Vector2(192, 140), "pisang"],
-				# Padang rumput selatan
+				# Padang rumput selatan kampung barat (aman di daratan padat, jauh dari sungai)
 				[Vector2(40, 360), "pepaya"], [Vector2(180, 360), "kamboja"],
-				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai)
+				[Vector2(260, 370), "beringin"], [Vector2(120, 390), "mangga"], [Vector2(320, 390), "kelapa"],
+				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai utara)
 				[Vector2(616, 50), "mangga"], [Vector2(688, 48), "beringin"], [Vector2(768, 50), "kamboja"],
 				[Vector2(848, 50), "mangga"], [Vector2(912, 60), "kelapa"],
 				[Vector2(916, 110), "pisang"], [Vector2(916, 150), "kamboja"],
-				[Vector2(620, 360), "kelapa"], [Vector2(724, 360), "mangga"], [Vector2(828, 360), "pisang"], [Vector2(916, 360), "kamboja"],
-				[Vector2(440, 380), "beringin"], [Vector2(576, 380), "kelapa"], [Vector2(696, 380), "mangga"],
-				[Vector2(820, 380), "kamboja"], [Vector2(916, 380), "kelapa"],
+				[Vector2(600, 200), "kelapa"], [Vector2(680, 210), "mangga"], [Vector2(880, 200), "beringin"],
 			])
 		"desa":
 			# Deret utara: Toko Jaya Pak Darwis (dekat pintu masuk barat) dan rumah warga baru (Gambar 3 atas)
@@ -1010,7 +1009,17 @@ func _spawn_typed_trees(entries: Array) -> void:
 	for entry in entries:
 		var pos: Vector2 = entry[0]
 		var kind: String = str(entry[1])
-		if is_in_water(pos):
+		var hw: float = 40.0 if kind == "beringin" else 18.0
+		# Pastikan tidak ada akar kiri, batang tengah, atau akar kanan yang menjuntai ke air sungai
+		var touches_water := false
+		for check_x in [pos.x - hw, pos.x, pos.x + hw]:
+			for check_y in [pos.y - 12.0, pos.y, pos.y + 4.0]:
+				if is_in_water(Vector2(check_x, check_y)):
+					touches_water = true
+					break
+			if touches_water:
+				break
+		if touches_water:
 			continue
 		spawn_tree(get_parent(), pos, kind)
 

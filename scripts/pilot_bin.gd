@@ -46,7 +46,10 @@ func _fact_for(category: String) -> String:
 	return str(list[randi() % list.size()])
 
 func get_action_label() -> String:
-	return "Buang Sampah"
+	var pending: Array = _pending()
+	if pending.is_empty():
+		return "Tempat Sampah"
+	return "Buang Sampah (%d)" % pending.size()
 
 func _pending() -> Array:
 	if GameState.has_meta("pending_trash"):
@@ -56,30 +59,39 @@ func _pending() -> Array:
 func interact() -> void:
 	var pending: Array = _pending()
 	if pending.is_empty():
-		_toast("Bawa sampah dulu ke tempat sampah ini.", false)
+		_toast("Kantong sampah kosong. Pungut sampah di sepanjang sungai dulu!", false)
 		return
 
-	var item: Dictionary = pending[0]
-	var item_cat: String = str(item.get("category", "plastik"))
-	pending.remove_at(0)
-	GameState.set_meta("pending_trash", pending)
-	GameState.collect_trash(item_cat)
+	var count: int = pending.size()
+	var total_reward: int = 0
+	var level := get_tree().get_first_node_in_group("level")
+	var last_cat: String = "plastik"
 
-	# Semua jenis sampah langsung diterima di 1 tong sampah umum
-	GameState.add_river_health(5.0)
-	GameState.rupiah += 2000
+	# Kosongkan seluruh sampah di kantong ke dalam tong sampah
+	while not pending.is_empty():
+		var item: Dictionary = pending[0]
+		var item_cat: String = str(item.get("category", "plastik"))
+		last_cat = item_cat
+		pending.remove_at(0)
+		GameState.collect_trash(item_cat)
+		GameState.add_river_health(5.0)
+		GameState.rupiah += 2000
+		total_reward += 2000
+		if level and level.has_method("on_bin_sorted"):
+			level.call("on_bin_sorted", item_cat)
+
+	GameState.set_meta("pending_trash", pending)
 	AudioManager.play_sfx("correct")
-	SettingsManager.vibrate(20)
-	_toast("Sampah %s dibuang ke tempat sampah! +Rp2.000" % _display_category(item_cat), true)
+	SettingsManager.vibrate(30)
+	if count == 1:
+		_toast("1 sampah %s dibuang ke tempat sampah! +Rp2.000" % _display_category(last_cat), true)
+	else:
+		_toast("%d sampah dibuang ke tempat sampah! +Rp%s" % [count, _format_number(total_reward)], true)
 
 	_bump()
-	var fact: String = _fact_for(item_cat)
+	var fact: String = _fact_for(last_cat)
 	if not fact.is_empty():
 		_show_fact(fact)
-
-	var level := get_tree().get_first_node_in_group("level")
-	if level and level.has_method("on_bin_sorted"):
-		level.on_bin_sorted(item_cat)
 
 func _category_name_for(cat: String) -> String:
 	match cat:
@@ -94,6 +106,17 @@ func _display_category(cat: String) -> String:
 		"plastik": return "plastik"
 		"b3": return "B3"
 		_: return cat
+
+func _format_number(value: int) -> String:
+	var text: String = str(value)
+	var out: String = ""
+	var count: int = 0
+	for i in range(text.length() - 1, -1, -1):
+		out = text[i] + out
+		count += 1
+		if count % 3 == 0 and i > 0:
+			out = "." + out
+	return out
 
 func _show_fact(text: String) -> void:
 	var level := get_tree().get_first_node_in_group("level")

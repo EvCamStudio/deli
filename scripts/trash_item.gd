@@ -20,11 +20,21 @@ func _ready() -> void:
 		label.text = _get_label_from_id(trash_id)
 
 func get_action_label() -> String:
+	if not GameState.can_carry_more_trash():
+		return "Kantong Penuh (5/5)"
 	return "Ambil"
 
 func interact() -> void:
 	if _is_collected:
 		return
+	if not GameState.can_carry_more_trash():
+		AudioManager.play_sfx("tap_b")
+		SettingsManager.vibrate(40)
+		var level := get_tree().get_first_node_in_group("level")
+		if level and level.has_method("toast"):
+			level.toast("Kantong sampah penuh (5/5)! Buang dulu ke tempat sampah terdekat.", false)
+		return
+
 	_is_collected = true
 	AudioManager.play_sfx("trash_pickup")
 	SettingsManager.vibrate(30)
@@ -46,7 +56,13 @@ func _add_to_inventory() -> void:
 	if not GameState.has_meta("pending_trash"):
 		GameState.set_meta("pending_trash", [])
 	var pending: Array = GameState.get_meta("pending_trash")
-	pending.append({ "id": trash_id, "category": category })
+	var item_entry: Dictionary = {
+		"id": trash_id,
+		"category": category,
+		"item_id": get("item_id") if "item_id" in self else trash_id,
+		"item_name": get("item_name") if "item_name" in self else _get_label_from_id(trash_id)
+	}
+	pending.append(item_entry)
 	GameState.set_meta("pending_trash", pending)
 
 func _get_label_from_id(id: String) -> String:

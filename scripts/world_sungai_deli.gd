@@ -701,13 +701,32 @@ func _spawn_hulu_riverbank_trash() -> void:
 	_trash_spawned_hulu_river = true
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	var river_spots: Array[Vector2] = [
-		Vector2(26, 12),
-		Vector2(27, 14),
-		Vector2(26, 18),
-		Vector2(27, 20),
-		Vector2(28, 22),
+		# Bantaran barat sungai hulu (daratan pasir padat, mudah dijangkau pemain):
+		Vector2(23.5, 10.0),
+		Vector2(23.8, 11.5),
+		Vector2(23.5, 12.5),
+		Vector2(24.0, 17.5),
+		Vector2(23.5, 18.5),
+		Vector2(23.8, 20.0),
+		Vector2(23.5, 21.5),
+		Vector2(23.8, 23.0),
+		Vector2(24.0, 24.5),
+		# Bantaran timur sungai hulu (tepi hutan seberang jembatan):
+		Vector2(34.8, 9.5),
+		Vector2(34.5, 11.0),
+		Vector2(35.0, 12.5),
+		Vector2(34.6, 17.5),
+		Vector2(35.0, 19.0),
+		Vector2(37.5, 20.5),
+		# Bantaran mata air utara hulu:
+		Vector2(18.0, 3.5),
+		Vector2(18.5, 6.0),
+		Vector2(19.0, 8.5),
+		Vector2(38.5, 3.5),
+		Vector2(38.5, 6.0),
+		Vector2(38.0, 8.5),
 	]
-	var cats: Array[String] = ["plastik", "organik", "plastik", "organik", "plastik"]
+	var cats: Array[String] = ["plastik", "organik", "plastik", "b3", "organik", "plastik"]
 	for i in range(river_spots.size()):
 		var tid: String = "hulu_river_trash_%d" % i
 		if tid in GameState.picked_trash_ids:
@@ -721,12 +740,12 @@ func _spawn_hulu_riverbank_trash() -> void:
 
 func _get_hulu_riverbank_trash_cleaned_count() -> int:
 	var count: int = 0
-	for i in range(5):
+	for i in range(30):
 		var tid: String = "hulu_river_trash_%d" % i
 		if tid in GameState.picked_trash_ids:
 			count += 1
 	var sorted: int = GameState.zone_stat("hulu", "sorted")
-	return mini(5, maxi(count, sorted))
+	return maxi(count, sorted)
 
 func _trigger_selesai_sungai() -> void:
 	if _dialogue_active or DialogueManager.is_active():
@@ -1006,19 +1025,45 @@ func _spawn_gameplay_objects() -> void:
 
 	_spawn_pantun_boards()
 
+func _get_riverbank_trash_spots(zone: String) -> Array[Vector2i]:
+	var spots: Array[Vector2i] = []
+	match zone:
+		"desa":
+			# Bantaran pasir utara sungai selatan (row 25) terbentang di sepanjang peta
+			for x in [4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55]:
+				spots.append(Vector2i(x, 25))
+		"kota":
+			# Bantaran tanggul beton utara (row 13) dan selatan (row 17) kanal kota
+			for x in [5, 8, 11, 14, 17, 26, 29, 32, 35, 38, 41, 50, 53, 56]:
+				spots.append(Vector2i(x, 13))
+				spots.append(Vector2i(x, 17))
+		"hilir":
+			# Bantaran utara (row 13) dan selatan (row 18) sungai mangrove pesisir
+			for x in [4, 8, 12, 16, 25, 29, 33, 37, 41, 45, 49, 53, 56]:
+				spots.append(Vector2i(x, 13))
+				spots.append(Vector2i(x, 18))
+	return spots
+
 func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	# Saat melanjutkan save, jangan munculkan lagi sampah yang sudah dipilah.
 	var already_sorted: int = GameState.zone_stat(zone, "sorted")
-	for i in range(count):
+	var river_spots := _get_riverbank_trash_spots(zone)
+	var max_items: int = maxi(count, river_spots.size())
+
+	for i in range(max_items):
 		var tid: String = "%s_trash_%d" % [zone, i]
 		if tid in GameState.picked_trash_ids or i < already_sorted:
 			continue
-		var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
-		var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
-		if y >= 13 and y <= 17:
-			y += 6
-		var tile := _find_spawn_tile(zone, Vector2i(x, y))
+		var target_tile: Vector2i
+		if i < river_spots.size():
+			target_tile = river_spots[i]
+		else:
+			var x: int = 4 + (i * 73 + 17) % (ZONE_WIDTH - 8)
+			var y: int = 4 + (i * 37 + 11) % (ZONE_HEIGHT - 8)
+			target_tile = Vector2i(x, y)
+
+		var tile := _find_spawn_tile(zone, target_tile)
 		if tile.x < 0:
 			continue
 		var trash := trash_scene.instantiate()
@@ -1032,6 +1077,7 @@ func _spawn_zone_trash(zone: String, count: int, categories: Array) -> void:
 func _find_spawn_tile(zone: String, base: Vector2i) -> Vector2i:
 	var offsets: Array[Vector2i] = [
 		Vector2i(0, 0),
+		Vector2i(0, 1), Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, -1),
 		Vector2i(0, 2), Vector2i(2, 0), Vector2i(-2, 0), Vector2i(0, -2),
 		Vector2i(3, 0), Vector2i(0, 3), Vector2i(-3, 0), Vector2i(0, -3),
 		Vector2i(2, 2), Vector2i(-2, 2), Vector2i(2, -2), Vector2i(-2, -2),
@@ -1054,8 +1100,6 @@ func _near_planting_spot(zone: String, tile: Vector2i) -> bool:
 
 func _is_valid_spawn_tile(zone: String, tile: Vector2i) -> bool:
 	if tile.x < 2 or tile.x >= ZONE_WIDTH - 2 or tile.y < 2 or tile.y >= ZONE_HEIGHT - 2:
-		return false
-	if zone == "desa" and tile.y >= 25:
 		return false
 	if _zone_in_water(zone, (Vector2(tile) + Vector2(0.5, 0.5)) * TILE):
 		return false
@@ -1111,18 +1155,24 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 	var positions_by_zone: Dictionary = {
 		"hulu": [
 			Vector2(10.5, 11.5), # Nempel sejajar dinding kanan Rumah/Warung MC (y=176px)
+			Vector2(23.5, 12.0), # Sisi barat jembatan Hulu tepat di tepi sungai
+			Vector2(35.0, 12.0), # Sisi timur jembatan Hulu tepat di tepi sungai
 		],
 		"desa": [
 			Vector2(14.0, 11.0), # Nempel sejajar dinding kanan Toko Jaya utara
 			Vector2(28.0, 22.5), # Nempel sejajar dinding kanan Warung Barokah selatan (y=368px)
+			Vector2(20.0, 24.5), # Di bantaran sungai selatan Desa dekat jalan setapak
 		],
 		"kota": [
 			Vector2(17.0, 5.0),  # Nempel sejajar garis dinding Gedung Office utara (y=60px)
 			Vector2(13.0, 22.0), # Nempel sejajar dinding kanan Pasar Sayur Bang Jali di plaza selatan (y=350px)
+			Vector2(25.0, 13.0), # Di tepi tanggul kanal dekat jembatan barat
+			Vector2(49.0, 13.0), # Di tepi tanggul kanal dekat tuas pintu air
 		],
 		"hilir": [
 			Vector2(10.2, 5.0),  # Nempel sejajar dinding kanan Rumah Pesisir barat (y=64px)
 			Vector2(50.2, 5.0),  # Nempel sejajar dinding kanan Pasar Ikan (market_ikan, y=68px)
+			Vector2(19.0, 13.0), # Di dekat pangkal jembatan kayu sungai muara
 		],
 	}
 	var quest_by_zone: Dictionary = {
@@ -1359,11 +1409,24 @@ func _refresh_mission() -> void:
 				title = "JEMBATAN SUNGAI"
 				lines = ["Periksa suara misterius di sekitar jembatan."]
 			elif step == "bersihkan_sungai":
-				var hulu_cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
+				var sorted_count: int = GameState.zone_stat("hulu", "sorted")
+				var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
 				title = "PINGGIRAN SUNGAI"
-				lines = [
-					"Bersihkan sampah di bantaran sungai: %d/5" % hulu_cleaned
-				]
+				if carry_cnt >= 5:
+					lines = [
+						"Kantong penuh (5/5)! Buang sampah ke tong di dekat jembatan.",
+						"Telah dibuang: %d/5" % sorted_count
+					]
+				elif carry_cnt > 0:
+					lines = [
+						"Pungut sampah sungai lalu buang ke tong sampah.",
+						"Di kantong: %d/5 · Telah dibuang: %d/5" % [carry_cnt, sorted_count]
+					]
+				else:
+					lines = [
+						"Pungut sampah di sepanjang bantaran sungai.",
+						"Telah dibuang ke tong: %d/5" % sorted_count
+					]
 			elif step == "tanam_pohon_hulu":
 				title = "BUKIT HULU"
 				lines = ["Temui Penjaga Hutan di perbukitan hulu."]
@@ -1526,11 +1589,15 @@ func on_trash_picked(category: String, trash_id: String) -> void:
 	if not trash_id.is_empty() and trash_id not in GameState.picked_trash_ids:
 		GameState.picked_trash_ids.append(trash_id)
 	GameState.rupiah += 500
-	toast("Sampah %s dipungut. +Rp500" % category, true)
+	var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
+	if carry_cnt > 0:
+		toast("Sampah %s dipungut (%d/5 di kantong). +Rp500" % [category, carry_cnt], true)
+	else:
+		toast("Sampah %s dipungut. +Rp500" % category, true)
 
 	if _current_zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
 		var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
-		if cleaned >= 5:
+		if carry_cnt == 0 and cleaned >= 5:
 			call_deferred("_trigger_selesai_sungai")
 
 	_refresh_mission()
@@ -1551,8 +1618,8 @@ func on_bin_sorted(category: String) -> void:
 	toast("Sampah %s terpilah. Sungai membaik." % category, true)
 
 	if zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
-		var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
-		if cleaned >= 5:
+		var sorted: int = GameState.zone_stat("hulu", "sorted")
+		if sorted >= 5:
 			call_deferred("_trigger_selesai_sungai")
 	elif zone == "hilir" and GameState.choices.get("hulu_story_step") == "pilah_sampah_muara":
 		if count >= 10:
@@ -2036,11 +2103,20 @@ func _nearest_bin(category: String) -> Node2D:
 	return best
 
 func _nearest_trash_or_bin() -> Node2D:
-	# Saat belum membawa sampah, arahkan ke sampah terdekat (bukan ke tong kosong).
+	var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
+	# Jika kantong penuh (5/5), kompas langsung mengarahkan ke tong sampah terdekat
+	if carry_cnt >= 5:
+		var bin := _nearest_in_group("world_bin")
+		if bin != null:
+			return bin
+	# Jika kantong belum penuh, prioritaskan sampah terdekat di tanah
 	var trash := _nearest_in_group("world_trash")
 	if trash != null:
 		return trash
-	return _nearest_in_group("world_bin")
+	# Jika semua sampah di tanah sudah habis tapi masih ada di kantong, arahkan ke tong sampah
+	if carry_cnt > 0:
+		return _nearest_in_group("world_bin")
+	return null
 
 func _nearest_unplanted(kind: String) -> Node2D:
 	var best: Node2D = null

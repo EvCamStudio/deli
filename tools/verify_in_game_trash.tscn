@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://3d5g4620dl20"]
+
+[ext_resource type="Script" path="res://tools/verify_in_game_trash.gd" id="1_script"]
+
+[node name="VerifyInGameTrash" type="Node"]
+script = ExtResource("1_script")
