@@ -254,7 +254,7 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 
 func _spawn_npcs() -> void:
 	# Hulu: Pak Hendra & Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul di jembatan).
-	_create_npc("hulu", "npc_pak_hendra", "pakrt", Vector2(5.5, 14.5) * TILE, 1, "h1_warung")
+	_create_npc("hulu", "npc_pak_hendra", "bapak", Vector2(5.5, 14.5) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 14.5) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 11) * TILE, 1)
 	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(29.5, 15.5) * TILE, 1, "h1_datuk")
@@ -1894,6 +1894,7 @@ func _target_label(target: Node2D) -> String:
 		var key := str(target.get("npc_key"))
 		match key:
 			"npc_ibu_mc": return "Mamak"
+			"npc_pak_hendra": return "Bapak"
 			"npc_petani_1": return "Pak Darwis"
 			"npc_pemilik_toko": return "Toko Jaya"
 			"npc_ibu_desa": return "Kak Rina"

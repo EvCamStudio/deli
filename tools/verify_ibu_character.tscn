@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bbxr2ni5v8ymf"]
+
+[ext_resource type="Script" path="res://tools/verify_ibu_character.gd" id="1_script"]
+
+[node name="VerifyIbu" type="Node"]
+script = ExtResource("1_script")

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dwrjn86acwi6w"]
+
+[ext_resource type="Script" path="res://tools/verify_mc_dialogue.gd" id="1_script"]
+
+[node name="VerifyMCDialogue" type="Node"]
+script = ExtResource("1_script")
+

@@ -69,28 +69,36 @@ func _build_frames() -> void:
 		return
 	var frames := SpriteFrames.new()
 	frames.remove_animation("default")
+	var frame_w: float = texture.get_width() / 4.0
+	var frame_h: float = texture.get_height() / 4.0
 	for dir in ROWS:
 		var row: int = ROWS[dir]
 		var idle_name := "idle_%s" % dir
 		var walk_name := "walk_%s" % dir
 		frames.add_animation(idle_name)
-		# Satu frame tanpa loop: karakter diam total saat berhenti.
 		frames.set_animation_loop(idle_name, false)
 		frames.set_animation_speed(idle_name, 4.0)
 		frames.add_animation(walk_name)
 		frames.set_animation_loop(walk_name, true)
-		frames.set_animation_speed(walk_name, 8.0)
-		for col in range(4):
-			var atlas := AtlasTexture.new()
-			atlas.atlas = texture
-			atlas.region = Rect2(col * 16.0, row * 24.0, 16.0, 24.0)
-			frames.add_frame(walk_name, atlas)
-			# Diam = satu frame kolom 0 saja (kaki rapat). Kolom 2 adalah frame
-			# langkah dengan kaki terbuka, jadi jangan dipakai untuk idle —
-			# kalau dipakai, sprite terlihat berjalan di tempat.
-			if col == 0:
-				frames.add_frame(idle_name, atlas)
+		frames.set_animation_speed(walk_name, 7.0)
+
+		# Col 0 adalah pose berdiri diam (idle)
+		var idle_atlas := AtlasTexture.new()
+		idle_atlas.atlas = texture
+		idle_atlas.region = Rect2(0.0, row * frame_h, frame_w, frame_h)
+		frames.add_frame(idle_name, idle_atlas)
+
+		# Langkah jalan: Col 1 -> Col 2 -> Col 3 -> Col 0/2 untuk siklus langkah kaki alami
+		for col in [1, 2, 3, 0]:
+			var walk_atlas := AtlasTexture.new()
+			walk_atlas.atlas = texture
+			walk_atlas.region = Rect2(col * frame_w, row * frame_h, frame_w, frame_h)
+			frames.add_frame(walk_name, walk_atlas)
+
 	sprite.sprite_frames = frames
+	sprite.position = Vector2(0, -frame_h / 2.0)
+	if action_label:
+		action_label.position.y = -frame_h - 18.0
 	sprite.play("idle_down")
 
 func _update_animation(direction: Vector2) -> void:
