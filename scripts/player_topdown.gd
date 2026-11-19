@@ -44,6 +44,8 @@ func _physics_process(delta: float) -> void:
 	var current_speed: float = speed * water_speed_mult if _in_water else speed
 	velocity = direction * current_speed
 	move_and_slide()
+	if not _candidates.is_empty():
+		_refresh_interactable()
 
 	if direction.length() > 0.05 and velocity.length() > 5.0:
 		_step_timer += delta
@@ -163,7 +165,9 @@ func _refresh_interactable() -> void:
 		if not is_instance_valid(node):
 			continue
 		var node_2d := node as Node2D
-		if node_2d == null:
+		if node_2d == null or not node_2d.is_visible_in_tree():
+			continue
+		if node.has_method("get_action_label") and str(node.get_action_label()).is_empty():
 			continue
 		var dist: float = global_position.distance_squared_to(node_2d.global_position)
 		if dist < nearest_dist:

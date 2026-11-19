@@ -162,7 +162,7 @@ var _black_screen_label: RichTextLabel = null
 var _black_screen_hint: Label = null
 
 func _ready() -> void:
-	AudioManager.play_bgm("intro")
+	AudioManager.stop_bgm()
 	fade_rect.color = Color(0, 0, 0, 0)
 	tap_advance_btn.pressed.connect(_on_tap_advanced)
 	confirm_btn.pressed.connect(_on_confirm_name_pressed)

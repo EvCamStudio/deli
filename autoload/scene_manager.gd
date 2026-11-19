@@ -46,6 +46,14 @@ func go_to_world() -> void:
 	GameState.in_world = true
 	change_scene("res://scenes/world/world_sungai_deli.tscn")
 
+## Pindah ke layar ending / epilog.
+func go_to_ending(ending_code: String = "") -> void:
+	if not ending_code.is_empty():
+		GameState.ending_terakhir = ending_code
+	GameState.in_world = false
+	GameState.current_level = 5
+	change_scene("res://scenes/levels/level_5_epilog.tscn")
+
 ## Pindah ke main menu.
 func go_to_main_menu() -> void:
 	change_scene("res://scenes/main_menu/main_menu.tscn")

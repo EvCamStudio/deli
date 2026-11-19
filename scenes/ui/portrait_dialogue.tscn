@@ -246,9 +246,9 @@ stretch_mode = 5
 layout_mode = 1
 anchors_preset = 0
 offset_left = 144.0
-offset_top = 30.0
-offset_right = 326.0
-offset_bottom = 54.0
+offset_top = 34.0
+offset_right = 321.0
+offset_bottom = 56.0
 mouse_filter = 2
 
 [node name="Speaker" type="Label" parent="Root/DialogueFrame/NamePlateSlot"]

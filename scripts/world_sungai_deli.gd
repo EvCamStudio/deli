@@ -253,9 +253,9 @@ func _create_gate(zone: String, pos: Vector2, target: String, threshold: float, 
 	_zone_containers[zone].add_child(gate)
 
 func _spawn_npcs() -> void:
-	# Hulu: Pak Hendra & Bu Mira di depan warung + penjaga hutan + Datuk Sampan (muncul di jembatan).
-	_create_npc("hulu", "npc_pak_hendra", "bapak", Vector2(5.5, 14.5) * TILE, 1, "h1_warung")
-	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 14.5) * TILE, 1, "h1_warung")
+	# Hulu: Pak Hendra & Bu Mira tepat di teras depan Warung/Rumah MC + Penjaga Hutan di hutan timur + Datuk Sampan di jembatan.
+	_create_npc("hulu", "npc_pak_hendra", "bapak", Vector2(5.5, 11.8) * TILE, 1, "h1_warung")
+	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7.5, 11.8) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 11) * TILE, 1)
 	_create_npc("hulu", "npc_datuk", "datuk", Vector2(29.5, 15.5) * TILE, 1, "h1_datuk")
 	_spawn_hulu_sampan()
@@ -266,21 +266,23 @@ func _spawn_npcs() -> void:
 	_bridge_talk_spot.position = Vector2(28.5, 15.5) * TILE
 	_zone_containers["hulu"].add_child(_bridge_talk_spot)
 
-	# Desa: Pak Darwis di depan Toko Jaya, Pemilik Toko Jaya, Kak Rina penjual gorengan, pemuka desa.
-	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 14.0) * TILE, 2, "h1_toko_jaya")
-	_create_npc("desa", "npc_pemilik_toko", "pemilik_toko", Vector2(12.5, 14.0) * TILE, 2, "h1_toko_jaya")
-	_create_npc("desa", "npc_ibu_desa", "kak_rina", Vector2(53, 14.5) * TILE, 2, "h4_rina")
-	_create_npc("desa", "npc_pemuka_desa", "pemuka_desa", Vector2(35, 14.5) * TILE, 2)
+	# Desa: Pak Darwis & Pemilik Toko Jaya tepat di depan teras Toko Jaya (utara),
+	# Kak Rina tepat di depan Warung Gorengan (warung_bu_sri selatan), Pemuka Desa di depan rumah besar tengah.
+	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 11.8) * TILE, 2, "h1_toko_jaya")
+	_create_npc("desa", "npc_pemilik_toko", "pemilik_toko", Vector2(12.2, 11.5) * TILE, 2, "h1_toko_jaya")
+	_create_npc("desa", "npc_ibu_desa", "kak_rina", Vector2(40.5, 24.0) * TILE, 2, "h4_rina")
+	_create_npc("desa", "npc_pemuka_desa", "pemuka_desa", Vector2(30.5, 11.8) * TILE, 2)
 
-	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat (di trotoar luas, berjarak dari aspal jalan).
-	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 7.0) * TILE, 3, "h2_jali")
-	_create_npc("kota", "npc_ibu_rumah", "ibu_rumah", Vector2(30, 7.0) * TILE, 3)
-	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 12.5) * TILE, 3)
-	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 7.0) * TILE, 3)
+	# Kota: Bang Jali tepat di tepi sungai/kanal barat (hendak membuang sampah ke sungai), Ibu Rumah Tangga di dekat saluran drainase kanal tengah,
+	# Budi di dekat papan pantun alun-alun timur, Pak RT di depan gedung perumahan timur.
+	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(10.5, 12.8) * TILE, 3, "h2_jali")
+	_create_npc("kota", "npc_ibu_rumah", "ibu_rumah", Vector2(31.5, 12.5) * TILE, 3)
+	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(48.2, 12.5) * TILE, 3)
+	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(51.0, 5.2) * TILE, 3)
 
-	# Hilir: Nelayan, penjaga sungai (di trotoar pesisir luas, bukan di aspal jalan).
-	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(14, 6.5) * TILE, 4)
-	_create_npc("hilir", "npc_penjaga_sungai", "penjaga_sungai", Vector2(36, 6.5) * TILE, 4)
+	# Hilir: Penjaga Sungai di dekat pangkal jembatan muara, Pak Nelayan di pesisir pantai selatan dekat area tanam mangrove.
+	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(21.0, 21.5) * TILE, 4)
+	_create_npc("hilir", "npc_penjaga_sungai", "penjaga_sungai", Vector2(23.5, 12.5) * TILE, 4)
 
 func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int, custom_dialog_id: String = "") -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
@@ -530,7 +532,96 @@ func _sync_hulu_story_state() -> void:
 	if step in ["bersihkan_sungai", "tanam_pohon_hulu", "menanam_pohon_hulu", "ke_toko_jaya", "pulang_istirahat"]:
 		_spawn_hulu_riverbank_trash()
 
-func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") -> void:
+func _build_walking_shadow_mc(walk_dir: String = "right", travel_duration: float = 0.65) -> Control:
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(200, 92)
+	holder.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+	# Halo cahaya lembut di tengah layar agar siluet dan karakter terlihat kontras & hidup
+	var halo_img := Image.create(140, 44, false, Image.FORMAT_RGBA8)
+	for y in range(44):
+		for x in range(140):
+			var nx: float = (float(x) - 69.5) / 68.0
+			var ny: float = (float(y) - 21.5) / 20.0
+			var d: float = nx * nx + ny * ny
+			if d < 1.0:
+				var a: float = pow(1.0 - d, 1.6) * 0.22
+				halo_img.set_pixel(x, y, Color(0.92, 0.78, 0.52, a))
+	var halo_sprite := Sprite2D.new()
+	halo_sprite.texture = ImageTexture.create_from_image(halo_img)
+	halo_sprite.position = Vector2(100, 58)
+	holder.add_child(halo_sprite)
+
+	# Garis pijakan tanah pixel-art tipis di bawah kaki MC
+	var track_line := ColorRect.new()
+	track_line.color = Color(0.55, 0.45, 0.32, 0.35)
+	track_line.position = Vector2(36, 66)
+	track_line.size = Vector2(128, 2)
+	track_line.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(track_line)
+
+	var tex: Texture2D = load("res://assets/sprites/characters/player.png")
+	if tex != null:
+		var frames := SpriteFrames.new()
+		frames.remove_animation("default")
+		var fw: float = tex.get_width() / 4.0
+		var fh: float = tex.get_height() / 4.0
+		var row: int = 1 if walk_dir == "left" else 2
+		frames.add_animation("walk")
+		frames.set_animation_loop("walk", true)
+		frames.set_animation_speed("walk", 8.5)
+		for col in [1, 2, 3, 0]:
+			var atlas := AtlasTexture.new()
+			atlas.atlas = tex
+			atlas.region = Rect2(col * fw, row * fh, fw, fh)
+			frames.add_frame("walk", atlas)
+
+		var start_x: float = 122.0 if walk_dir == "left" else 78.0
+		var end_x: float = 78.0 if walk_dir == "left" else 122.0
+
+		var walker_node := Node2D.new()
+		walker_node.position = Vector2(start_x, 42)
+		holder.add_child(walker_node)
+
+		# Bayangan pijakan oval di bawah kaki MC
+		var sh_img := Image.create(24, 8, false, Image.FORMAT_RGBA8)
+		for y in range(8):
+			for x in range(24):
+				var nx: float = (float(x) - 11.5) / 11.0
+				var ny: float = (float(y) - 3.5) / 3.5
+				if nx * nx + ny * ny < 1.0:
+					sh_img.set_pixel(x, y, Color(0.0, 0.0, 0.0, 0.55))
+		var foot_shadow := Sprite2D.new()
+		foot_shadow.texture = ImageTexture.create_from_image(sh_img)
+		foot_shadow.position = Vector2(0, 23)
+		walker_node.add_child(foot_shadow)
+
+		# Rim glow keemasan tipis di tepi karakter
+		var rim_sprite := AnimatedSprite2D.new()
+		rim_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		rim_sprite.sprite_frames = frames
+		rim_sprite.scale = Vector2(1.58, 1.58)
+		rim_sprite.modulate = Color(0.95, 0.80, 0.52, 0.42)
+		rim_sprite.play("walk")
+		walker_node.add_child(rim_sprite)
+
+		# Sprite MC dengan tone siluet malam hangat (tetap terlihat detail rambut & bajunya dengan jelas)
+		var mc_sprite := AnimatedSprite2D.new()
+		mc_sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		mc_sprite.sprite_frames = frames
+		mc_sprite.scale = Vector2(1.5, 1.5)
+		mc_sprite.modulate = Color(0.72, 0.76, 0.86, 1.0)
+		mc_sprite.play("walk")
+		walker_node.add_child(mc_sprite)
+
+		# Animasi MC benar-benar melangkah maju di atas garis pijakan selama loading
+		var walk_tw := holder.create_tween()
+		walk_tw.tween_property(walker_node, "position:x", end_x, maxf(0.45, travel_duration)).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+	return holder
+
+func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "", auto_close_delay: float = -1.0, walk_dir: String = "right") -> void:
 	if _is_cutscene_active:
 		return
 	_is_cutscene_active = true
@@ -545,30 +636,90 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 	cl.name = "TwoDaysCutscene"
 	add_child(cl)
 
+	var root_ctrl := Control.new()
+	root_ctrl.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root_ctrl.mouse_filter = Control.MOUSE_FILTER_STOP
+	cl.add_child(root_ctrl)
+
 	var bg := ColorRect.new()
 	bg.set_anchors_preset(Control.PRESET_FULL_RECT)
-	bg.color = Color.BLACK
-	bg.mouse_filter = Control.MOUSE_FILTER_STOP
-	cl.add_child(bg)
+	bg.color = Color(0.05, 0.06, 0.08, 1.0)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	root_ctrl.add_child(bg)
 
 	var center := CenterContainer.new()
 	center.set_anchors_preset(Control.PRESET_FULL_RECT)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	cl.add_child(center)
+	root_ctrl.add_child(center)
 
 	var vbox := VBoxContainer.new()
-	vbox.custom_minimum_size = Vector2(560, 160)
-	vbox.add_theme_constant_override("separation", 16)
+	vbox.custom_minimum_size = Vector2(520, 200)
+	vbox.add_theme_constant_override("separation", 10)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	center.add_child(vbox)
+
+	var is_pure_loading: bool = slide_text.strip_edges().is_empty()
+	var dur: float = 0.55 if auto_close_delay > 0.0 else 1.1
+
+	# Karakter MC berjalan melintasi pijakan di tengah layar
+	var mc_shadow := _build_walking_shadow_mc(walk_dir, dur + (auto_close_delay if auto_close_delay > 0.0 else 0.4))
+	vbox.add_child(mc_shadow)
+
+	var pixel_font: Font = load("res://assets/fonts/PixelifySans.ttf") if ResourceLoader.exists("res://assets/fonts/PixelifySans.ttf") else null
+
+	# Bar loading pixel-art ramping + tulisan LOADING...
+	var load_box := VBoxContainer.new()
+	load_box.add_theme_constant_override("separation", 6)
+	load_box.alignment = BoxContainer.ALIGNMENT_CENTER
+	load_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(load_box)
+
+	var progress := ProgressBar.new()
+	progress.custom_minimum_size = Vector2(140, 7)
+	progress.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	progress.min_value = 0.0
+	progress.max_value = 100.0
+	progress.value = 0.0
+	progress.show_percentage = false
+	var sb_bg := StyleBoxFlat.new()
+	sb_bg.bg_color = Color(0.16, 0.18, 0.24, 0.95)
+	sb_bg.border_width_left = 1
+	sb_bg.border_width_top = 1
+	sb_bg.border_width_right = 1
+	sb_bg.border_width_bottom = 1
+	sb_bg.border_color = Color(0.45, 0.38, 0.26, 0.85)
+	sb_bg.set_corner_radius_all(3)
+	var sb_fill := StyleBoxFlat.new()
+	sb_fill.bg_color = Color(0.92, 0.74, 0.38, 0.95)
+	sb_fill.set_corner_radius_all(2)
+	progress.add_theme_stylebox_override("background", sb_bg)
+	progress.add_theme_stylebox_override("fill", sb_fill)
+	load_box.add_child(progress)
+
+	var loading_lbl := Label.new()
+	loading_lbl.text = "LOADING..."
+	loading_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	loading_lbl.add_theme_color_override("font_color", Color(0.86, 0.78, 0.62, 0.92))
+	loading_lbl.add_theme_font_size_override("font_size", 11)
+	if pixel_font:
+		loading_lbl.add_theme_font_override("font", pixel_font)
+	load_box.add_child(loading_lbl)
+	load_box.visible = is_pure_loading
 
 	var title_label := RichTextLabel.new()
 	title_label.bbcode_enabled = true
 	title_label.fit_content = true
+	title_label.scroll_active = false
 	title_label.autowrap_mode = TextServer.AUTOWRAP_WORD
-	title_label.custom_minimum_size = Vector2(540, 80)
-	title_label.add_theme_color_override("default_color", Color(0.96, 0.96, 0.96, 1.0))
-	title_label.add_theme_font_size_override("normal_font_size", 18)
+	title_label.custom_minimum_size = Vector2(500, 48)
+	title_label.add_theme_color_override("default_color", Color(0.90, 0.88, 0.82, 0.96))
+	title_label.add_theme_font_size_override("normal_font_size", 15)
+	title_label.add_theme_font_size_override("bold_font_size", 16)
+	if pixel_font:
+		title_label.add_theme_font_override("normal_font", pixel_font)
+		title_label.add_theme_font_override("bold_font", pixel_font)
+		title_label.add_theme_font_override("italics_font", pixel_font)
 	vbox.add_child(title_label)
 
 	var input_btn := Button.new()
@@ -576,7 +727,7 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 	input_btn.set_anchors_preset(Control.PRESET_FULL_RECT)
 	input_btn.flat = true
 	input_btn.focus_mode = Control.FOCUS_NONE
-	cl.add_child(input_btn)
+	root_ctrl.add_child(input_btn)
 
 	var state := {
 		"is_typing": false,
@@ -593,6 +744,7 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 				state.tween.kill()
 			state.is_typing = false
 			title_label.visible_ratio = 1.0
+			progress.value = 100.0
 			AudioManager.play_sfx("tap_b")
 			return
 
@@ -603,8 +755,7 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 		if is_instance_valid(player) and player.has_method("set_physics_process"):
 			player.set_physics_process(true)
 		var fade := cl.create_tween()
-		fade.tween_property(bg, "modulate:a", 0.0, 0.25)
-		fade.parallel().tween_property(center, "modulate:a", 0.0, 0.2)
+		fade.tween_property(root_ctrl, "modulate:a", 0.0, 0.22)
 		fade.tween_callback(func():
 			if is_instance_valid(cl):
 				cl.queue_free()
@@ -614,18 +765,29 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "") ->
 
 	_cutscene_advance_cb = finish_cutscene
 
-	# Tampilkan teks waktu layar hitam
+	title_label.visible = not is_pure_loading
 	title_label.text = slide_text
 	title_label.visible_ratio = 0.0
 	state.is_typing = true
 	var tw0 := cl.create_tween()
 	state.tween = tw0
-	tw0.tween_property(title_label, "visible_ratio", 1.0, 1.2)
+	tw0.tween_property(title_label, "visible_ratio", 1.0, dur)
+	tw0.parallel().tween_property(progress, "value", 100.0, dur).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tw0.tween_callback(func():
 		state.is_typing = false
+		if auto_close_delay > 0.0:
+			var tw_close := cl.create_tween()
+			tw_close.tween_interval(auto_close_delay)
+			tw_close.tween_callback(func():
+				if not state.is_closing:
+					finish_cutscene.call()
+			)
 	)
 
 	input_btn.pressed.connect(func(): finish_cutscene.call())
+
+func play_zone_loading_transition(_zone: String, walk_dir: String = "right") -> void:
+	play_time_skip_cutscene("", "", 0.35, walk_dir)
 
 func play_two_days_later_cutscene() -> void:
 	play_time_skip_cutscene("[center][b][font_size=22]2 hari kemudian.[/font_size][/b][/center]", "h1_narasi_2hari")
@@ -664,7 +826,7 @@ func _check_story_proximity() -> void:
 
 		# Step 4: Kembali pulang dari Toko Jaya untuk istirahat -> Cutscene 1 Hari Kemudian
 		if step == "pulang_istirahat" and not _has_triggered_home_day:
-			if player_tile.distance_to(Vector2(8.0, 15.0)) <= 4.0:
+			if player_tile.distance_to(Vector2(7.0, 12.5)) <= 4.2:
 				_has_triggered_home_day = true
 				player.velocity = Vector2.ZERO
 				play_time_skip_cutscene("[center][b][font_size=22]1 Hari Kemudian...[/font_size][/b][/center]", "h2_narasi_pagi")
@@ -675,15 +837,15 @@ func _check_story_proximity() -> void:
 
 		# Step 3: Di Toko Jaya (Desa), mendapati Pak Darwis membeli kasur baru & mengaku menghanyutkan kasur lama
 		if step == "ke_toko_jaya" and not _has_triggered_toko_jaya:
-			if local_tile.distance_to(Vector2(11.0, 15.0)) <= 3.5:
+			if local_tile.distance_to(Vector2(11.2, 12.2)) <= 3.5:
 				_has_triggered_toko_jaya = true
 				player.velocity = Vector2.ZERO
 				DialogueManager.mulai("h1_toko_jaya")
 				return
 
-		# Step 5: Menghampiri warung Kak Rina untuk membeli gorengan
+		# Step 5: Menghampiri warung Kak Rina (di deret warung selatan Desa) untuk membeli gorengan
 		if step == "ke_warung_rina" and not _has_triggered_warung_rina:
-			if local_tile.distance_to(Vector2(53.0, 16.0)) <= 3.5:
+			if local_tile.distance_to(Vector2(40.5, 24.0)) <= 3.5:
 				_has_triggered_warung_rina = true
 				player.velocity = Vector2.ZERO
 				DialogueManager.mulai("h4_rina")
@@ -692,9 +854,9 @@ func _check_story_proximity() -> void:
 	elif _current_zone == "kota":
 		var local_tile: Vector2 = (player.global_position - _zone_containers["kota"].global_position) / float(TILE)
 
-		# Step 6: Menghampiri mulut gang sempit Bang Jali
+		# Step 6: Menghampiri Bang Jali di tepi sungai/kanal kota
 		if step == "kota_gang_sempit" and not _has_triggered_kota_gang:
-			if local_tile.distance_to(Vector2(8.0, 8.5)) <= 3.5:
+			if local_tile.distance_to(Vector2(10.5, 12.8)) <= 3.5:
 				_has_triggered_kota_gang = true
 				player.velocity = Vector2.ZERO
 				DialogueManager.mulai("h2_jali")
@@ -760,9 +922,13 @@ func _trigger_selesai_sungai() -> void:
 func _trigger_final_ending() -> void:
 	if _dialogue_active or DialogueManager.is_active():
 		return
-	var ending_code: String = GameState.hitung_kode_ending()
-	GameState.catat_ending_tercapai(ending_code)
-	SceneManager.go_to_ending(ending_code)
+	for level in [1, 2, 3, 4]:
+		if level not in GameState.levels_completed:
+			GameState.levels_completed.append(level)
+	GameState.world_completed = true
+	GameState.in_world = false
+	GameState.current_level = 5
+	GameState.tentukan_ending(true)
 
 func _on_hulu_riverbank_investigated() -> void:
 	pass
@@ -1039,12 +1205,12 @@ func _get_riverbank_trash_spots(zone: String) -> Array[Vector2i]:
 	var spots: Array[Vector2i] = []
 	match zone:
 		"desa":
-			# Bantaran pasir utara sungai selatan (row 25) terbentang di sepanjang peta
-			for x in [4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 40, 43, 46, 49, 52, 55]:
+			# Bantaran pasir utara sungai selatan (row 25) terbentang di sepanjang peta (x=40 dikosongkan di depan warung Kak Rina)
+			for x in [4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34, 37, 43, 46, 49, 52, 55]:
 				spots.append(Vector2i(x, 25))
 		"kota":
-			# Bantaran tanggul beton utara (row 13) dan selatan (row 17) kanal kota
-			for x in [5, 8, 11, 14, 17, 26, 29, 32, 35, 38, 41, 50, 53, 56]:
+			# Bantaran tanggul beton utara (row 13) dan selatan (row 17) kanal kota (x=11 & x=32 dikosongkan untuk Bang Jali & Ibu Rumah Tangga)
+			for x in [5, 8, 14, 17, 26, 29, 35, 38, 41, 50, 53, 56]:
 				spots.append(Vector2i(x, 13))
 				spots.append(Vector2i(x, 17))
 		"hilir":
@@ -1208,10 +1374,10 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 
 func _spawn_pantun_boards() -> void:
 	var board_scene := preload("res://scenes/world/pantun_board.tscn")
-	# Jauhkan papan pantun dari tong sampah agar label tidak bertumpuk.
+	# Letakkan papan pantun di tepi rumput pinggir jalan (bukan di tengah jalan setapak/jalan raya).
 	var positions: Dictionary = {
-		"hulu": Vector2(17, 14) * TILE,
-		"desa": Vector2(16.5, 14.0) * TILE,
+		"hulu": Vector2(19.5, 13.5) * TILE,
+		"desa": Vector2(16.0, 13.5) * TILE,
 		"kota": Vector2(50, 12.5) * TILE,
 		"hilir": Vector2(18, 12.5) * TILE,
 	}
@@ -1274,6 +1440,10 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1), save
 	for z in _zone_containers.values():
 		z.visible = false
 
+	var prev_idx: int = ZONE_ORDER.find(_current_zone)
+	var next_idx: int = ZONE_ORDER.find(zone)
+	var walk_dir: String = "left" if (prev_idx > next_idx and prev_idx >= 0 and next_idx >= 0) else "right"
+
 	# Show target zone
 	_zone_containers[zone].visible = true
 	_current_zone = zone
@@ -1307,12 +1477,13 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1), save
 		var step_k: String = str(GameState.choices.get("hulu_story_step", ""))
 		if step_k == "ke_kota_medan":
 			GameState.record_choice("hulu_story_step", "kota_gang_sempit")
-			call_deferred("play_time_skip_cutscene", "[center][b][font_size=18]Beberapa saat kemudian, di pemukiman padat pinggir sungai Kota Medan...[/font_size][/b][/center]")
 	elif zone == "hilir":
 		var step_h: String = str(GameState.choices.get("hulu_story_step", ""))
 		if step_h in ["ke_hilir_muara", "tanya_budi"]:
 			GameState.record_choice("hulu_story_step", "pos_penjaga_muara")
-			call_deferred("play_time_skip_cutscene", "[center][b][font_size=18]Perjalanan menyusuri Sungai Deli akhirnya membawaku sampai ke ujung muara...[/font_size][/b][/center]")
+
+	if _show_zone_wisdom:
+		call_deferred("play_zone_loading_transition", zone, walk_dir)
 
 	_sync_hulu_story_state()
 	_refresh_mission()

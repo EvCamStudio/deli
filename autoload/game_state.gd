@@ -557,6 +557,10 @@ func hitung_alasan_kegagalan() -> String:
 ## - C: Meter <= 60, minimal 1 NPC Peduli
 ## - D: selain itu (Banjir bandang & Rewind)
 ## Memancarkan ending_ditentukan(kode) dengan kode "A", "B", "C", atau "D".
+func catat_ending_tercapai(kode: String) -> void:
+	ending_terakhir = kode
+	ending_ditentukan.emit(kode)
+
 func tentukan_ending(buka_layar: bool = true) -> String:
 	var kode: String = hitung_kode_ending()
 
