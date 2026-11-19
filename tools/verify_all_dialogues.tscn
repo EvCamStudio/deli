@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c6a8p1q2r3s4t"]
+
+[ext_resource type="Script" path="res://tools/verify_all_dialogues.gd" id="1_verify"]
+
+[node name="VerifyAllDialogues" type="Node"]
+script = ExtResource("1_verify")
+

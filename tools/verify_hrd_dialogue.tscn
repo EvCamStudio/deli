@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://dq1ft1pqu6jtk"]
+
+[ext_resource type="Script" path="res://tools/verify_hrd_dialogue.gd" id="1_verify"]
+
+[node name="VerifyHRDDialogue" type="Node"]
+script = ExtResource("1_verify")
+

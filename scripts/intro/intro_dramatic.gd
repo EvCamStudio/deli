@@ -16,7 +16,8 @@ const HEADERS: Array = [
 const PORTRAITS: Dictionary = {
 	"player_neutral": "res://assets/sprites/portraits/player_neutral.png",
 	"player_sad": "res://assets/sprites/portraits/player_sad.png",
-	"manajer": "res://assets/sprites/portraits/pakrt_neutral.png",
+	"hrd": "res://assets/sprites/portraits/hrd_neutral.png",
+	"manajer": "res://assets/sprites/portraits/hrd_neutral.png",
 	"ibu": "res://assets/sprites/portraits/ibu_neutral.png",
 }
 

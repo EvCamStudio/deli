@@ -257,7 +257,7 @@ func _spawn_npcs() -> void:
 	_create_npc("hulu", "npc_pak_hendra", "bapak", Vector2(5.5, 14.5) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_ibu_mc", "ibu", Vector2(7, 14.5) * TILE, 1, "h1_warung")
 	_create_npc("hulu", "npc_penjaga_hutan", "penjaga_hutan", Vector2(45, 11) * TILE, 1)
-	_create_npc("hulu", "npc_datuk", "nelayan", Vector2(29.5, 15.5) * TILE, 1, "h1_datuk")
+	_create_npc("hulu", "npc_datuk", "datuk", Vector2(29.5, 15.5) * TILE, 1, "h1_datuk")
 	_spawn_hulu_sampan()
 	_spawn_hulu_riverbank_spot()
 
@@ -268,19 +268,19 @@ func _spawn_npcs() -> void:
 
 	# Desa: Pak Darwis di depan Toko Jaya, Pemilik Toko Jaya, Kak Rina penjual gorengan, pemuka desa.
 	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 14.0) * TILE, 2, "h6_darwis")
-	_create_npc("desa", "npc_pemilik_toko", "pedagang", Vector2(12.5, 14.0) * TILE, 2, "h1_toko_jaya")
-	_create_npc("desa", "npc_ibu_desa", "ibu", Vector2(53, 14.5) * TILE, 2, "h4_rina")
-	_create_npc("desa", "npc_pemuka_desa", "pakrt", Vector2(35, 14.5) * TILE, 2)
+	_create_npc("desa", "npc_pemilik_toko", "pemilik_toko", Vector2(12.5, 14.0) * TILE, 2, "h1_toko_jaya")
+	_create_npc("desa", "npc_ibu_desa", "kak_rina", Vector2(53, 14.5) * TILE, 2, "h4_rina")
+	_create_npc("desa", "npc_pemuka_desa", "pemuka_desa", Vector2(35, 14.5) * TILE, 2)
 
 	# Kota: Bang Jali di depan gang, ibu rumah, anak sekolah, tokoh masyarakat (di trotoar luas, berjarak dari aspal jalan).
 	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(8, 7.0) * TILE, 3, "h2_jali")
-	_create_npc("kota", "npc_ibu_rumah", "ibu", Vector2(30, 7.0) * TILE, 3)
+	_create_npc("kota", "npc_ibu_rumah", "ibu_rumah", Vector2(30, 7.0) * TILE, 3)
 	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(53, 12.5) * TILE, 3)
 	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(52, 7.0) * TILE, 3)
 
 	# Hilir: Nelayan, penjaga sungai (di trotoar pesisir luas, bukan di aspal jalan).
 	_create_npc("hilir", "npc_nelayan", "nelayan", Vector2(14, 6.5) * TILE, 4)
-	_create_npc("hilir", "npc_penjaga_sungai", "pakrt", Vector2(36, 6.5) * TILE, 4)
+	_create_npc("hilir", "npc_penjaga_sungai", "penjaga_sungai", Vector2(36, 6.5) * TILE, 4)
 
 func _create_npc(zone: String, dialogue_key: String, sprite_key: String, pos: Vector2, npc_level: int, custom_dialog_id: String = "") -> void:
 	var npc_scene := preload("res://scenes/world/npc_topdown.tscn")
