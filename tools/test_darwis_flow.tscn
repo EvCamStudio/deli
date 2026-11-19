@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8darwisflw01"]
+
+[ext_resource type="Script" path="res://tools/test_darwis_flow.gd" id="1_test"]
+
+[node name="TestDarwisFlow" type="Node"]
+script = ExtResource("1_test")
+

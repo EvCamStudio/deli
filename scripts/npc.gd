@@ -31,7 +31,10 @@ func is_interactable_now() -> bool:
 	var step := str(GameState.choices.get("hulu_story_step", ""))
 	var current_step_key := step if not step.is_empty() else "_initial"
 	if _last_talked_step == current_step_key:
-		return false
+		if npc_key == "npc_petani_1" and bool(GameState.choices.get("unlock_solusi_darwis", false)) and not bool(GameState.choices.get("darwis_done", false)):
+			pass
+		else:
+			return false
 
 	var talked_hulu: Array = GameState.zone_progress.get("hulu", {}).get("talked_keys", [])
 	var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
@@ -66,7 +69,7 @@ func is_interactable_now() -> bool:
 			return false
 
 		"npc_petani_1": # Pak Darwis
-			if step == "ke_toko_jaya":
+			if step in ["ke_toko_jaya", "pantun_kasur_darwis"]:
 				return not bool(GameState.choices.get("darwis_done", false))
 			return false
 
@@ -116,7 +119,7 @@ func is_interactable_now() -> bool:
 		"npc_nelayan":
 			if step == "temui_pak_nelayan":
 				return "npc_nelayan" not in talked_hilir
-			if step == "tanam_mangrove_muara" and GameState.zone_stat("hilir", "mangroves") >= 8:
+			if (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and GameState.zone_stat("hilir", "mangroves") >= 8:
 				return not bool(GameState.choices.get("nelayan_selesai", false))
 			return false
 
@@ -144,8 +147,16 @@ func _get_default_dialog_id() -> String:
 				return "h1_penjaga_hutan_selesai"
 			return "h1_penjaga_hutan"
 		"npc_petani_1":
+			if bool(GameState.choices.get("unlock_solusi_darwis", false)):
+				return "h6_darwis"
+			if bool(GameState.choices.get("mencari_solusi_darwis", false)):
+				return "h1_darwis_menunggu"
 			return "h1_toko_jaya"
 		"npc_pemilik_toko":
+			if bool(GameState.choices.get("unlock_solusi_darwis", false)):
+				return "h6_darwis"
+			if bool(GameState.choices.get("mencari_solusi_darwis", false)):
+				return "h1_darwis_menunggu"
 			return "h1_toko_jaya"
 		"npc_ibu_desa":
 			if bool(GameState.choices.get("has_jeriken_and_info", false)):
@@ -209,9 +220,16 @@ func has_talked() -> bool:
 	return _has_talked
 
 func set_dialog_id(new_id: String) -> void:
-	dialog_id = new_id
-	_has_talked = false
-	_load_dialogue()
+	if dialog_id != new_id:
+		dialog_id = new_id
+		_has_talked = false
+		_last_talked_step = ""
+		_load_dialogue()
+
+func get_target_dialog_id() -> String:
+	if not dialog_id.is_empty():
+		return dialog_id
+	return _get_default_dialog_id()
 
 func interact() -> void:
 	if not is_interactable_now():

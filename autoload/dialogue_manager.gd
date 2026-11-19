@@ -264,7 +264,7 @@ func _detect_npc_from_id(id_dialog: String) -> String:
 		return "jali"
 	elif "rina" in lower:
 		return "rina"
-	elif "darwis" in lower:
+	elif "darwis" in lower or "toko_jaya" in lower or "petani" in lower:
 		return "darwis"
 	elif "ucok" in lower:
 		return "ucok"

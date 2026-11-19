@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://d3m7qaq1r2s3t"]
+
+[ext_resource type="Script" path="res://tools/verify_map_fixes.gd" id="1_verify"]
+
+[node name="VerifyMapFixes" type="Node"]
+script = ExtResource("1_verify")

@@ -19,7 +19,7 @@ const ZONE_TARGETS: Dictionary = {
 	"hulu": {"trees": 5},
 	"desa": {"sorted": 10, "talked": 2},
 	"kota": {"sorted": 6, "talked": 4},
-	"hilir": {"mangroves": 8, "sorted": 10, "talked": 2},
+	"hilir": {"mangroves": 8, "sorted": 6, "talked": 2},
 }
 
 const NEXT_ZONE: Dictionary = {
@@ -73,8 +73,8 @@ const BUILDING_RECTS: Dictionary = {
 		Rect2(54.2, 0.5, 5.9, 4.0),  # building_brick_complex.png (y=60)
 		Rect2(5.0, 19.0, 7.5, 4.0),  # market_sayur.png (y=350)
 		Rect2(24.5, 19.0, 5.7, 4.0),  # warung_madura.png (y=350)
-		Rect2(35.8, 19.0, 6.1, 4.0),  # warung_toko_jaya.png (y=350)
-		Rect2(50.0, 19.0, 6.3, 4.0),  # warung_bu_sri.png (y=350)
+		Rect2(35.8, 19.0, 6.1, 4.0),  # market_kelontong.png (y=350)
+		Rect2(50.0, 19.0, 6.3, 4.0),  # market_sembako.png (y=350)
 	],
 	"hilir": [
 		Rect2(4.5, 0.8, 5.0, 3.5),  # house_coastal.png (y=64)
@@ -82,7 +82,7 @@ const BUILDING_RECTS: Dictionary = {
 		Rect2(23.2, 0.8, 5.5, 3.5),  # house_courtyard.png (y=64)
 		Rect2(32.6, 0.8, 6.8, 3.5),  # house_suburban_lshape.png (y=64)
 		Rect2(42.3, 0.8, 7.4, 3.5),  # market_ikan.png (y=68)
-		Rect2(51.8, 0.8, 6.3, 3.5),  # warung_bu_sri.png (y=64)
+		Rect2(51.8, 0.8, 6.5, 3.5),  # house_suburban_canopy.png (y=64)
 	],
 }
 
@@ -267,7 +267,7 @@ func _spawn_npcs() -> void:
 	_zone_containers["hulu"].add_child(_bridge_talk_spot)
 
 	# Desa: Pak Darwis di depan Toko Jaya, Pemilik Toko Jaya, Kak Rina penjual gorengan, pemuka desa.
-	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 14.0) * TILE, 2, "h6_darwis")
+	_create_npc("desa", "npc_petani_1", "petani", Vector2(10.5, 14.0) * TILE, 2, "h1_toko_jaya")
 	_create_npc("desa", "npc_pemilik_toko", "pemilik_toko", Vector2(12.5, 14.0) * TILE, 2, "h1_toko_jaya")
 	_create_npc("desa", "npc_ibu_desa", "kak_rina", Vector2(53, 14.5) * TILE, 2, "h4_rina")
 	_create_npc("desa", "npc_pemuka_desa", "pemuka_desa", Vector2(35, 14.5) * TILE, 2)
@@ -410,22 +410,27 @@ func _sync_hulu_story_state() -> void:
 					npc.show_exclaim(false)
 		elif key == "npc_petani_1":
 			var darwis_done: bool = bool(GameState.choices.get("darwis_done", false))
-			if step in ["ke_toko_jaya", "pantun_kasur_darwis"] and not darwis_done:
+			if step == "ke_toko_jaya" and not darwis_done:
 				if npc.has_method("set_dialog_id"):
-					npc.set_dialog_id("h1_toko_jaya")
+					if bool(GameState.choices.get("unlock_solusi_darwis", false)):
+						npc.set_dialog_id("h6_darwis")
+					elif bool(GameState.choices.get("mencari_solusi_darwis", false)):
+						npc.set_dialog_id("h1_darwis_menunggu")
+					else:
+						npc.set_dialog_id("h1_toko_jaya")
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(true)
+			elif step == "pantun_kasur_darwis" and not darwis_done:
+				if npc.has_method("set_dialog_id"):
+					npc.set_dialog_id("h1_darwis_menunggu")
+				if npc.has_method("show_exclaim"):
+					npc.show_exclaim(false)
 			else:
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(false)
 		elif key == "npc_pemilik_toko":
-			var toko_done: bool = bool(GameState.choices.get("pemilik_toko_done", false))
-			if (step in ["ke_toko_jaya", "pantun_kasur_darwis"] or step == "pesan_kasur_pemilik") and not toko_done:
-				if npc.has_method("show_exclaim"):
-					npc.show_exclaim(true)
-			else:
-				if npc.has_method("show_exclaim"):
-					npc.show_exclaim(false)
+			if npc.has_method("show_exclaim"):
+				npc.show_exclaim(false)
 		elif key == "npc_ibu_desa": # Kak Rina
 			var rina_done: bool = bool(GameState.choices.get("rina_done", false))
 			if step in ["ke_warung_rina", "pantun_jelantah_rina"] and not rina_done:
@@ -505,7 +510,7 @@ func _sync_hulu_story_state() -> void:
 					npc.set_dialog_id("h7_nelayan")
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(true)
-			elif step == "tanam_mangrove_muara" and mangroves >= 8 and not nelayan_done:
+			elif (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and mangroves >= 8 and not nelayan_done:
 				if npc.has_method("set_dialog_id"):
 					npc.set_dialog_id("h7_nelayan_selesai")
 				if npc.has_method("show_exclaim"):
@@ -824,19 +829,24 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 				GameState.record_choice("pemilik_toko_done", true)
 				GameState.record_choice("hulu_story_step", "pulang_istirahat")
 				toast("Pak Darwis paham! Kembali ke warung hulu untuk beristirahat.", true)
-			elif not bool(GameState.choices.get("unlock_solusi_darwis", false)):
+			elif bool(GameState.choices.get("mencari_solusi_darwis", false)) and not bool(GameState.choices.get("unlock_solusi_darwis", false)):
 				GameState.record_choice("hulu_story_step", "pantun_kasur_darwis")
 				toast("Periksa Papan Pantun di dekat Toko Jaya untuk mencari jalan keluar.", true)
 			else:
+				# Pilihan C atau D: Gagal dan final! Tidak bisa diubah atau diulang lagi.
 				GameState.record_choice("darwis_done", true)
 				GameState.record_choice("pemilik_toko_done", true)
+				GameState.record_choice("darwis_peduli", false)
+				GameState.record_choice("darwis_menolak", true)
 				GameState.record_choice("hulu_story_step", "pulang_istirahat")
-				toast("Urusan kasur selesai. Kembali ke warung hulu.", true)
+				toast("Pak Darwis menolak saranmu. Urusan kasur selesai, kembali ke warung hulu.", false)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_refresh_gates()
 			_update_guidance()
 			GameState.save_game()
+		"h1_darwis_menunggu":
+			_update_guidance()
 		"h1_pantun_darwis":
 			GameState.record_choice("unlock_solusi_darwis", true)
 			GameState.record_choice("hulu_story_step", "ke_toko_jaya")
@@ -1160,7 +1170,7 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 		],
 		"desa": [
 			Vector2(14.0, 11.0), # Nempel sejajar dinding kanan Toko Jaya utara
-			Vector2(28.0, 22.5), # Nempel sejajar dinding kanan Warung Barokah selatan (y=368px)
+			Vector2(32.5, 24.5), # Di tepi jalan kampung selatan (bebas dari badan Warung Barokah)
 			Vector2(20.0, 24.5), # Di bantaran sungai selatan Desa dekat jalan setapak
 		],
 		"kota": [
@@ -1170,9 +1180,9 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 			Vector2(49.0, 13.0), # Di tepi tanggul kanal dekat tuas pintu air
 		],
 		"hilir": [
-			Vector2(10.2, 5.0),  # Nempel sejajar dinding kanan Rumah Pesisir barat (y=64px)
-			Vector2(50.2, 5.0),  # Nempel sejajar dinding kanan Pasar Ikan (market_ikan, y=68px)
-			Vector2(19.0, 13.0), # Di dekat pangkal jembatan kayu sungai muara
+			{"pos": Vector2(10.2, 5.0), "cat": "organik"},  # Rumah Pesisir barat (Tong Hijau Organik)
+			{"pos": Vector2(50.2, 5.0), "cat": "plastik"},  # Pasar Ikan (Tong Kuning Anorganik)
+			{"pos": Vector2(19.0, 13.0), "cat": "b3"},       # Pangkal jembatan kayu pesisir (Tong Merah B3)
 		],
 	}
 	var quest_by_zone: Dictionary = {
@@ -1181,10 +1191,17 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 		"hilir": "pilah_hilir",
 	}
 	var coords: Array = positions_by_zone.get(zone, [])
-	for tile_pos in coords:
+	for entry in coords:
 		var bin := bin_scene.instantiate()
-		bin.position = (tile_pos as Vector2) * TILE
-		bin.set("bin_category", "umum")
+		var pos: Vector2 = Vector2.ZERO
+		var cat: String = "umum"
+		if entry is Dictionary:
+			pos = entry.get("pos", Vector2.ZERO)
+			cat = str(entry.get("cat", "umum"))
+		elif entry is Vector2:
+			pos = entry
+		bin.position = pos * TILE
+		bin.set("bin_category", cat)
 		bin.set("required_quest", quest_by_zone.get(zone, ""))
 		bin.add_to_group("world_bin")
 		_zone_containers[zone].add_child(bin)
@@ -1208,7 +1225,7 @@ func _spawn_kota_levers() -> void:
 	var positions: Array[Vector2] = [
 		Vector2(52, 13),   # Tuas 1 (Depan - tepi utara kanal timur)
 		Vector2(57, 13),   # Tuas 2 (Tengah)
-		Vector2(54, 17.5), # Tuas 3 (Belakang - tepi selatan kanal timur)
+		Vector2(54, 24.0), # Tuas 3 (Belakang - plaza pejalan kaki selatan, di depan toko sembako terbuka & bebas halangan)
 	]
 	var labels: Array[String] = [
 		"Tuas 1 (Depan)",
@@ -1622,7 +1639,7 @@ func on_bin_sorted(category: String) -> void:
 		if sorted >= 5:
 			call_deferred("_trigger_selesai_sungai")
 	elif zone == "hilir" and GameState.choices.get("hulu_story_step") == "pilah_sampah_muara":
-		if count >= 10:
+		if count >= 6:
 			GameState.record_choice("hulu_story_step", "papan_pantun_muara")
 
 	_refresh_mission()

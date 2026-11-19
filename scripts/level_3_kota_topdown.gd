@@ -51,7 +51,7 @@ func _spawn_entities() -> void:
 	# Tuas drainase.
 	_spawn_lever(1, Vector2(816, 224))
 	_spawn_lever(2, Vector2(912, 216))
-	_spawn_lever(3, Vector2(864, 352))
+	_spawn_lever(3, Vector2(864, 384))
 
 	# Papan pantun di dekat jembatan.
 	var board := BOARD_SCENE.instantiate()

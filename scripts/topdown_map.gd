@@ -362,8 +362,6 @@ func _paint_hulu_ground() -> void:
 	# Jalur jalan setapak rapi dari pintu rumah Ibu & rumah tetangga ke jalan utama (lebar 2 petak)
 	_paint_door_path(6, 7, 11, 13)
 	_paint_door_path(16, 17, 11, 13)
-	# Sedikit tanah lapang alami di papan pantun.
-	ground.set_cell(Vector2i(17, 13), 0, Vector2i(7, 3), 0)
 
 func _paint_desa_ground() -> void:
 	# Jalur jalan setapak rapi dari pintu deret rumah utara ke jalan utama (lebar 2 petak, Gambar 7).
@@ -374,14 +372,16 @@ func _paint_desa_ground() -> void:
 	_paint_door_path(40, 41, 11, 13) # house_cabin_blue (x=640)
 	_paint_door_path(50, 51, 11, 13) # house_suburban_terrace (x=800)
 	# Gang vertikal rapi penghubung jalan utama utara ke jalan bantaran sungai selatan (lebar 2 petak)
-	for col in [16, 32, 48]:
+	# Melewati celah antar-bangunan selatan yang luas (x=352 / col 22, x=544 / col 34),
+	# tidak membelah badan rumah warga (house_brick di col 16/17 bersih berpekarangan rumput).
+	for col in [22, 34]:
 		for y in range(16, 24):
 			for x in range(col, col + 2):
 				ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
-	# Jalan kampung bantaran sungai menyusuri deretan rumah selatan (y=23..24).
+	# Jalan kampung bantaran sungai menyusuri deretan rumah selatan (y=24..25).
 	for x in range(4, 56):
-		ground.set_cell(Vector2i(x, 23), 0, Vector2i(4 + _hash(x, 23) % 2, 0), 0)
 		ground.set_cell(Vector2i(x, 24), 0, Vector2i(4 + _hash(x, 24) % 2, 0), 0)
+		ground.set_cell(Vector2i(x, 25), 0, Vector2i(4 + _hash(x, 25) % 2, 0), 0)
 
 func _paint_hilir_ground() -> void:
 	# Jalan raya pesisir utama (horizontal, 4 lajur aspal lebar + garis putus putih tengah, Gambar 6).
@@ -790,8 +790,8 @@ func _spawn_props() -> void:
 				[Vector2(36, 80), "pinus"],
 				[Vector2(880, 105), "cemara"],
 				[Vector2(920, 80), "spruce_tall"],
-				# Tepian sungai selatan
-				[Vector2(48, 410), "kelapa"], [Vector2(260, 410), "mangga"], [Vector2(704, 410), "beringin"], [Vector2(912, 410), "kelapa"],
+				# Tepian sungai selatan (pohon di samping pekarangan rumput bersih)
+				[Vector2(48, 410), "kelapa"], [Vector2(325, 368), "mangga"], [Vector2(704, 410), "beringin"], [Vector2(912, 410), "kelapa"],
 			])
 		"hilir":
 			# Kampung pesisir muara
@@ -800,10 +800,13 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_courtyard.png", Vector2(416, 64), Vector2(88, 22), 0.5)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_lshape.png", Vector2(576, 64), Vector2(108, 22), 0.4)
 			spawn_building(get_parent(), "res://assets/sprites/props/market_ikan.png", Vector2(736, 68), Vector2(110, 22), 0.42)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(880, 64), Vector2(100, 22), 0.36)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_canopy.png", Vector2(880, 64), Vector2(104, 22), 0.4)
+			# Pagar pengaman jembatan kayu pesisir (sisi kiri dan kanan, melintasi sungai rows 14..18)
+			_spawn_wood_bridge_rail_vertical(Vector2(318, 264), true)
+			_spawn_wood_bridge_rail_vertical(Vector2(369, 264), false)
 			# Pohon pesisir ditata di celah antar-rumah & pekarangan selatan (bebas tumpang tindih)
 			_spawn_typed_trees([
-				[Vector2(40, 50), "kelapa"], [Vector2(184, 50), "kamboja"], [Vector2(336, 50), "pisang"],
+				[Vector2(40, 50), "kelapa"], [Vector2(178, 56), "kelapa"], [Vector2(336, 50), "pisang"],
 				[Vector2(496, 50), "pepaya"], [Vector2(945, 50), "kelapa"],
 				[Vector2(96, 260), "kelapa"], [Vector2(288, 260), "kelapa"],
 				[Vector2(560, 260), "kelapa"], [Vector2(904, 260), "kelapa"],
@@ -818,6 +821,30 @@ func _spawn_props() -> void:
 				_spawn_city_prop("lamp.png", Vector2(lx, 194))
 			_spawn_city_prop("hydrant.png", Vector2(340, 194))
 			_spawn_city_prop("bench.png", Vector2(640, 194))
+
+func _spawn_wood_bridge_rail_vertical(pos: Vector2, is_left: bool) -> void:
+	var tex_path := "res://assets/sprites/props/bridge_rail_wood_left.png" if is_left else "res://assets/sprites/props/bridge_rail_wood_right.png"
+	var texture: Texture2D = load(tex_path)
+	if texture == null:
+		return
+	var body := StaticBody2D.new()
+	body.position = pos
+	body.collision_layer = 1
+	body.collision_mask = 0
+
+	var sprite := Sprite2D.new()
+	sprite.texture = texture
+	sprite.position = Vector2(0, 0)
+	body.add_child(sprite)
+
+	var col := CollisionShape2D.new()
+	var shape := RectangleShape2D.new()
+	shape.size = Vector2(6, 80)
+	col.shape = shape
+	col.position = Vector2(0, 0)
+	body.add_child(col)
+
+	get_parent().add_child.call_deferred(body)
 
 func _spawn_bridge_rail(pos: Vector2, _is_top: bool) -> void:
 	var texture: Texture2D = load("res://assets/sprites/props/bridge_rail_wood.png")

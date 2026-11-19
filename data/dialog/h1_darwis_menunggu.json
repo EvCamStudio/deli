@@ -1,0 +1,17 @@
+[
+  {
+    "id": "start",
+    "speaker": "Pak Darwis",
+    "emosi": "neutral",
+    "teks": "Bagaimana nak, sudah periksa Papan Pantun di dekat persimpangan jalan desa? Pinggang tuaku masih ngilu kalau mau jalan jauh.",
+    "next": "1"
+  },
+  {
+    "id": "1",
+    "speaker": "MC",
+    "emosi": "neutral",
+    "teks": "Iya Pak, tunggu sebentar ya, saya sedang mencari petunjuknya di sana.",
+    "next": "end"
+  }
+]
+

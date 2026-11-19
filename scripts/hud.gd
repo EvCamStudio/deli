@@ -97,7 +97,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	if hint_card and hint_card.visible:
 		if event.is_action_pressed("move_up") or event.is_action_pressed("move_down") or \
 		   event.is_action_pressed("move_left") or event.is_action_pressed("move_right") or \
-		   event.is_action_pressed("interact") or (event is InputEventScreenTouch and event.pressed) or \
+		   event.is_action_pressed("action") or (event is InputEventScreenTouch and event.pressed) or \
 		   (event is InputEventScreenDrag):
 			hide_hint()
 

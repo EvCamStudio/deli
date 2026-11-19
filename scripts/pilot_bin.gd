@@ -12,8 +12,14 @@ class_name PilotBin
 var _facts: Dictionary = {}
 
 func _ready() -> void:
-	# Gunakan 1 tampilan tong sampah standar dan sembunyikan label teks di atasnya
-	sprite.texture = load("res://assets/sprites/props/bin_organik.png")
+	# Sesuaikan tekstur visual dengan kategori tong sampah (Organik/Hijau, Plastik/Kuning, B3/Merah)
+	match bin_category:
+		"plastik", "anorganik":
+			sprite.texture = load("res://assets/sprites/props/bin_plastik.png")
+		"b3":
+			sprite.texture = load("res://assets/sprites/props/bin_b3.png")
+		_:
+			sprite.texture = load("res://assets/sprites/props/bin_organik.png")
 	if label:
 		label.hide()
 	_load_facts()

@@ -109,7 +109,12 @@
         "teks": "[B] Tunggu di sini sebentar ya, Pak! Saya carikan jalan keluarnya dulu.",
         "delta_sikap": 0,
         "delta_meter": 0,
-        "next": "pamit_cari_pantun"
+        "next": "pamit_cari_pantun",
+        "effect": {
+          "choice": {
+            "mencari_solusi_darwis": true
+          }
+        }
       },
       {
         "tipe": "B",
@@ -119,7 +124,8 @@
         "next": "cabang_gagal",
         "effect": {
           "choice": {
-            "darwis_peduli": false
+            "darwis_peduli": false,
+            "darwis_menolak": true
           }
         }
       },
@@ -131,7 +137,8 @@
         "next": "cabang_gagal",
         "effect": {
           "choice": {
-            "darwis_peduli": false
+            "darwis_peduli": false,
+            "darwis_menolak": true
           }
         }
       }
