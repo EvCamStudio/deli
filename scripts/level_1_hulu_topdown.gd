@@ -49,10 +49,9 @@ func on_tree_planted(_kind: String) -> void:
 	_trees += 1
 	if _trees >= TREES_TARGET:
 		GameState.unlock_card("card_hutan_01")
-		GameState.rupiah += 1000
-		toast("Hutan kembali rimbun! +Rp1.000", true)
+		toast("Hutan kembali rimbun!", true)
 	else:
-		toast("Pohon ditanam! (%d/%d) +Rp500" % [_trees, TREES_TARGET], true)
+		toast("Pohon ditanam! (%d/%d)" % [_trees, TREES_TARGET], true)
 	_refresh_mission()
 
 func on_npc_talked(npc_key: String) -> void:

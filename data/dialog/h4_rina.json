@@ -100,14 +100,14 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] [Terkunci] Kumpulkan minyak di jeriken untuk dijual ke Bank Sampah.",
+        "teks": "[Terkunci] Kumpulkan minyak di jeriken untuk dijual ke Bank Sampah.",
         "locked": true,
         "requires_flag": "has_jeriken_and_info",
         "next": "start"
       },
       {
         "tipe": "A",
-        "teks": "[B] Tunggu sebentar Kak, jangan dituang dulu! Aku coba tanya Pemuka Desa siapa tahu ada tempat penampungannya!",
+        "teks": "Tunggu sebentar Kak, jangan dituang dulu! Aku coba tanya Pemuka Desa siapa tahu ada tempat penampungannya!",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pamit_pemuka_desa",
@@ -119,7 +119,7 @@
       },
       {
         "tipe": "B",
-        "teks": "[C] Kakak gali lubang saja di tanah pekarangan buat mengubur minyaknya!",
+        "teks": "Kakak gali lubang saja di tanah pekarangan buat mengubur minyaknya!",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "gagal_rina",
@@ -131,7 +131,7 @@
       },
       {
         "tipe": "C",
-        "teks": "[D] Enak di Kakak dong, gorengannya laku tapi selokan warga yang jadi korban!",
+        "teks": "Enak di Kakak dong, gorengannya laku tapi selokan warga yang jadi korban!",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "gagal_rina",

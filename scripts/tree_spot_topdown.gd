@@ -32,7 +32,18 @@ func _ready() -> void:
 	marker.scale = Vector2.ONE
 
 	var is_mangrove := kind == "mangrove"
-	var tree_path: String = "res://assets/sprites/props/mangrove.png" if is_mangrove else "res://assets/sprites/props/tree_mangga.png"
+	var tree_path: String = "res://assets/sprites/props/mangrove.png"
+	if not is_mangrove:
+		var forest_trees := [
+			"res://assets/sprites/props/tree_beringin.png",
+			"res://assets/sprites/props/tree_cemara.png",
+			"res://assets/sprites/props/tree_pinus.png",
+			"res://assets/sprites/props/tree_spruce.png",
+			"res://assets/sprites/props/tree.png",
+		]
+		var idx: int = abs(spot_id.hash()) % forest_trees.size()
+		tree_path = forest_trees[idx]
+
 	var seedling_path: String = "res://assets/sprites/props/seedling_mangrove.png" if is_mangrove else "res://assets/sprites/props/seedling_tree.png"
 	_target_scale = Vector2.ONE if is_mangrove else Vector2(0.5, 0.5)
 	planted_sprite.texture = load(tree_path)

@@ -46,6 +46,7 @@ func _run_test() -> void:
 	var world = world_scene.instantiate()
 	get_tree().root.add_child(world)
 	await get_tree().create_timer(0.3).timeout
+	world._show_zone_wisdom = false
 
 	# 1. Talk to Bu Mira at warung (h1_warung)
 	print("Step 1: Talking to Bu Mira at warung...")
@@ -182,7 +183,7 @@ func _run_test() -> void:
 	world.change_zone("desa")
 	await get_tree().create_timer(0.3).timeout
 
-	world.player.global_position = world._zone_containers["desa"].global_position + Vector2(11.0, 15.0) * 16.0
+	world.player.global_position = world._zone_containers["desa"].global_position + Vector2(11.2, 12.2) * 16.0
 	world._check_story_proximity()
 	await get_tree().create_timer(0.2).timeout
 
@@ -231,7 +232,7 @@ func _run_test() -> void:
 	print("Step 10: Returning to Hulu home...")
 	world.change_zone("hulu")
 	await get_tree().create_timer(0.3).timeout
-	world.player.global_position = Vector2(8.0, 15.0) * 16.0
+	world.player.global_position = Vector2(7.0, 12.5) * 16.0
 	world._check_story_proximity()
 	await get_tree().create_timer(0.2).timeout
 

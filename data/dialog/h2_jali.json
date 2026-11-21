@@ -72,14 +72,14 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] [Terkunci] Gunakan gerobak sampah dorong komunal dari Pak RT di mulut gang.",
+        "teks": "[Terkunci] Gunakan gerobak sampah dorong komunal dari Pak RT di mulut gang.",
         "locked": true,
         "requires_flag": "has_rt_cart_approval",
         "next": "start"
       },
       {
         "tipe": "A",
-        "teks": "[B] Tahan dulu sampahnya ya, Bang! Aku coba carikan jalan keluarnya dulu sebentar!",
+        "teks": "Tahan dulu sampahnya ya, Bang! Aku coba carikan jalan keluarnya dulu sebentar!",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pamit_rt",
@@ -91,7 +91,7 @@
       },
       {
         "tipe": "B",
-        "teks": "[C] Bawa sajalah ke TPS jalan besar tiap pagi Bang, bangun lebih subuh!",
+        "teks": "Bawa sajalah ke TPS jalan besar tiap pagi Bang, bangun lebih subuh!",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "gagal_jali",
@@ -103,7 +103,7 @@
       },
       {
         "tipe": "C",
-        "teks": "[D] Bilang saja Abang malas! Gara-gara warga gang sini jorok, satu kota kebanjiran!",
+        "teks": "Bilang saja Abang malas! Gara-gara warga gang sini jorok, satu kota kebanjiran!",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "gagal_jali",

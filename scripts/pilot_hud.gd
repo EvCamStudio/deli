@@ -2,12 +2,13 @@
 extends CanvasLayer
 class_name PilotHUD
 
-@onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
-@onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
+@onready var river_bar: ProgressBar = (get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/RiverBar") if has_node("SafeMargin/Root/TopBar/ClarityCard/RiverBar") else get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar")) as ProgressBar
+@onready var river_label: Label = (get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/RiverLabel") if has_node("SafeMargin/Root/TopBar/ClarityCard/RiverLabel") else get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel")) as Label
 @onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
 @onready var money_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/MoneyLabel
-@onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
-@onready var mission_title: Label = $SafeMargin/Root/MissionCard/VBox/MissionTitle
+@onready var mission_card: Control = get_node_or_null("SafeMargin/Root/MissionCard") as Control
+@onready var mission_label: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionLabel") if has_node("SafeMargin/Root/MissionCard/MissionLabel") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionLabel")) as Label
+@onready var mission_title: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionTitle") if has_node("SafeMargin/Root/MissionCard/MissionTitle") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionTitle")) as Label
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
@@ -60,6 +61,10 @@ var _mid_style := StyleBoxFlat.new()
 var _ok_style := StyleBoxFlat.new()
 
 func _ready() -> void:
+	var money_card := get_node_or_null("SafeMargin/Root/TopBar/MoneyCard") as CanvasItem
+	if money_card:
+		money_card.visible = false
+
 	completion.hide()
 	toast.hide()
 	pause_btn.pressed.connect(_on_pause_pressed)
@@ -67,20 +72,20 @@ func _ready() -> void:
 	GameState.level_completed.connect(_on_level_completed)
 
 	_low_style.bg_color = Color(0.78, 0.38, 0.31)
-	_low_style.corner_radius_top_left = 4
-	_low_style.corner_radius_top_right = 4
-	_low_style.corner_radius_bottom_left = 4
-	_low_style.corner_radius_bottom_right = 4
-	_ok_style.bg_color = Color(0.24, 0.63, 0.74)
-	_ok_style.corner_radius_top_left = 4
-	_ok_style.corner_radius_top_right = 4
-	_ok_style.corner_radius_bottom_left = 4
-	_ok_style.corner_radius_bottom_right = 4
-	_mid_style.bg_color = Color(0.82, 0.66, 0.22)
-	_mid_style.corner_radius_top_left = 4
-	_mid_style.corner_radius_top_right = 4
-	_mid_style.corner_radius_bottom_left = 4
-	_mid_style.corner_radius_bottom_right = 4
+	_low_style.set_corner_radius_all(3)
+	_low_style.set_border_width_all(1)
+	_low_style.border_color = Color(0.55, 0.24, 0.05, 0.9)
+	_ok_style.bg_color = Color(0.24, 0.72, 0.42)
+	_ok_style.set_corner_radius_all(3)
+	_ok_style.set_border_width_all(1)
+	_ok_style.border_color = Color(0.55, 0.24, 0.05, 0.9)
+	_mid_style.bg_color = Color(0.94, 0.65, 0.15)
+	_mid_style.set_corner_radius_all(3)
+	_mid_style.set_border_width_all(1)
+	_mid_style.border_color = Color(0.55, 0.24, 0.05, 0.9)
+	if river_bar:
+		var bar_bg := StyleBoxEmpty.new()
+		river_bar.add_theme_stylebox_override("background", bar_bg)
 
 	_on_river_health_changed(GameState.river_health)
 	_update_money()
@@ -108,11 +113,12 @@ func _process(delta: float) -> void:
 	_update_carry()
 
 func _on_river_health_changed(value: float) -> void:
-	river_bar.value = value
-	river_label.text = "%d%%" % int(round(value))
-	if value >= 70.0:
+	var meter_val: float = 100.0 - value
+	river_bar.value = meter_val
+	river_label.text = "Bencana %d%%" % int(round(meter_val))
+	if meter_val <= 35.0:
 		river_bar.add_theme_stylebox_override("fill", _ok_style)
-	elif value >= 40.0:
+	elif meter_val <= 65.0:
 		river_bar.add_theme_stylebox_override("fill", _mid_style)
 	else:
 		river_bar.add_theme_stylebox_override("fill", _low_style)
@@ -120,10 +126,10 @@ func _on_river_health_changed(value: float) -> void:
 func update_mission(text: String) -> void:
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
-		mission_title.text = "◆ " + lines[0].to_upper()
+		mission_title.text = lines[0].trim_prefix("◆ ").strip_edges().to_upper()
 		mission_label.text = "\n".join(lines.slice(1))
 	else:
-		mission_title.text = "◆ MISI"
+		mission_title.text = "MISI"
 		mission_label.text = text
 
 func _update_money() -> void:

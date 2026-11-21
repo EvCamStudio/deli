@@ -68,8 +68,7 @@ func gate() -> Node:
 # ─── Callback gameplay ───────────────────────────────────────────────────────
 
 func on_trash_picked(category: String, _trash_id: String) -> void:
-	GameState.rupiah += 500
-	toast("Sampah %s dipungut. +Rp500" % category, true)
+	toast("Sampah %s dipungut." % category, true)
 
 func on_bin_sorted(_category: String) -> void:
 	pass

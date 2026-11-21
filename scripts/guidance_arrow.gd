@@ -11,13 +11,13 @@ func _ready() -> void:
 	_label.text = "▼"
 	_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_label.size = Vector2(18, 18)
-	_label.position = Vector2(-9, -18)
+	_label.size = Vector2(12, 12)
+	_label.position = Vector2(-6, -12)
 	_label.add_theme_font_override("font", load("res://assets/fonts/PixelifySans.ttf"))
-	_label.add_theme_font_size_override("font_size", 18)
+	_label.add_theme_font_size_override("font_size", 10)
 	_label.add_theme_color_override("font_color", Color(1.0, 0.82, 0.18, 1.0))
 	_label.add_theme_color_override("font_outline_color", Color(0.24, 0.16, 0.09, 1.0))
-	_label.add_theme_constant_override("outline_size", 4)
+	_label.add_theme_constant_override("outline_size", 2)
 	add_child(_label)
 	visible = false
 
@@ -33,5 +33,5 @@ func _process(delta: float) -> void:
 		visible = false
 		return
 	_time += delta
-	global_position = _target.global_position + Vector2(0, -34.0 + sin(_time * 3.2) * 3.0)
+	global_position = _target.global_position + Vector2(0, -38.0 + sin(_time * 3.2) * 2.0)
 	visible = true

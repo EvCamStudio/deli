@@ -61,8 +61,7 @@ func _refresh_mission() -> void:
 	if talked_count() >= NPC_TARGET and not _gotong_bonus:
 		_gotong_bonus = true
 		GameState.add_river_health(5.0)
-		GameState.rupiah += 1500
-		toast("Warga bergotong royong! +Rp1.500", true)
+		toast("Warga bergotong royong!", true)
 
 	if not GameState.has_quest("pilah_desa"):
 		update_mission_lines("Bersihkan Desa", [

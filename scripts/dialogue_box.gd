@@ -87,13 +87,12 @@ func _show_choices(choices: Array) -> void:
 		var btn := Button.new()
 		var choice_text: String = str(choice.get("text", choice.get("teks", "")))
 
-		var clean_choice := choice_text
+		var clean_choice := choice_text.strip_edges()
 		var prefix_regex := RegEx.new()
-		prefix_regex.compile("^\\[?[A-D](\\s*[-–:]\\s*[^]]+)?\\]?\\s*(\\.\\s*)?")
+		prefix_regex.compile("^(?:\\[?[A-Ea-e]\\]|(?:\\[?[A-Ea-e][\\.\\-–:]))\\s*")
 		clean_choice = prefix_regex.sub(clean_choice, "").strip_edges()
 
-		var letter: String = str(["A", "B", "C", "D", "E"][clampi(i, 0, 4)])
-		btn.text = "%s. %s" % [letter, clean_choice]
+		btn.text = "  %s" % clean_choice
 		btn.custom_minimum_size = Vector2(0, 28)
 		# Sambungkan dengan index yang di-capture
 		var idx: int = i

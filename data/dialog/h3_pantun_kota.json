@@ -14,7 +14,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Buka pintu air jangan keliru, / Tarikan ke-Dua penutupnya juga.",
+        "teks": "Buka pintu air jangan keliru, / Tarikan ke-Dua penutupnya juga.",
         "delta_sikap": 1,
         "delta_meter": -2,
         "next": "pantun_benar",
@@ -26,7 +26,7 @@
       },
       {
         "tipe": "B",
-        "teks": "[B] Tariklah tuas dengan tenaga, / Supaya air mengalir ke muara.",
+        "teks": "Tariklah tuas dengan tenaga, / Supaya air mengalir ke muara.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
@@ -60,4 +60,3 @@
     }
   }
 ]
-

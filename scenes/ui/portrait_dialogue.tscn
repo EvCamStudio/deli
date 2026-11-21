@@ -245,9 +245,9 @@ stretch_mode = 5
 [node name="NamePlateSlot" type="Control" parent="Root/DialogueFrame"]
 layout_mode = 1
 anchors_preset = 0
-offset_left = 144.0
+offset_left = 128.0
 offset_top = 34.0
-offset_right = 321.0
+offset_right = 308.0
 offset_bottom = 56.0
 mouse_filter = 2
 

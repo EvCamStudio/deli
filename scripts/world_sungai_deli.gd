@@ -49,20 +49,19 @@ const ZONE_WISDOM: Dictionary = {
 const BUILDING_RECTS: Dictionary = {
 	"hulu": [
 		Rect2(3.5, 5.0, 7.0, 5.5),   # house_mc.png (x: 112, y: 160)
-		Rect2(13.6, 5.0, 6.8, 5.5),  # house_suburban_orange.png (x: 272, y: 160)
+		Rect2(13.6, 5.0, 6.8, 5.5),  # house_terrace_pots.png (x: 272, y: 160)
 	],
 	"desa": [
-		Rect2(1.5, 5.0, 5.5, 5.5),   # house_cream.png (x: 70, y: 160)
-		Rect2(8.5, 5.0, 6.5, 5.5),   # warung_toko_jaya.png (x: 180, y: 160)
-		Rect2(17.0, 5.0, 7.0, 5.5),  # house_cottage_orange.png (x: 320, y: 160)
-		Rect2(27.0, 5.0, 7.5, 5.5),  # house_farm_green.png (x: 480, y: 160)
-		Rect2(37.0, 5.0, 7.0, 5.5),  # house_cabin_blue.png (x: 640, y: 160)
-		Rect2(47.0, 5.0, 7.0, 5.5),  # house_suburban_terrace.png (x: 800, y: 160)
+		Rect2(7.0, 4.0, 9.0, 11.0),  # warung_toko_jaya.png + halaman depan bebas sampah (x: 180, y: 160)
+		Rect2(18.0, 5.0, 7.0, 5.5),  # house_cottage_orange.png (x: 340, y: 160)
+		Rect2(28.0, 5.0, 6.5, 5.5),  # house_seng_gate.png (x: 500, y: 160)
+		Rect2(38.0, 5.0, 7.0, 5.5),  # house_cabin_blue.png (x: 660, y: 160)
+		Rect2(48.0, 5.0, 7.0, 5.5),  # house_seng_motor.png (x: 820, y: 160)
 		Rect2(4.0, 18.0, 6.0, 6.0),  # warung_madura.png (x: 110, y: 368)
 		Rect2(14.0, 18.0, 6.0, 6.0), # house_brick.png (x: 270, y: 368)
-		Rect2(24.0, 18.0, 6.5, 6.0), # warung_barokah.png (x: 430, y: 368)
+		Rect2(24.0, 18.0, 6.5, 6.0), # warung_kios_snack.png (x: 430, y: 368)
 		Rect2(37.5, 18.0, 6.5, 6.0), # warung_bu_sri.png (x: 650, y: 368)
-		Rect2(50.0, 18.0, 6.0, 6.0), # house_modern.png (x: 850, y: 368)
+		Rect2(50.0, 18.0, 6.0, 6.0), # house_modern_garage.png (x: 850, y: 368)
 	],
 	"kota": [
 		Rect2(2.2, 0.5, 6.2, 4.0),  # building_apartment.png (y=60)
@@ -72,7 +71,7 @@ const BUILDING_RECTS: Dictionary = {
 		Rect2(48.0, 0.5, 5.8, 4.0),  # building_condo_terrace.png (y=60)
 		Rect2(54.2, 0.5, 5.9, 4.0),  # building_brick_complex.png (y=60)
 		Rect2(5.0, 19.0, 7.5, 4.0),  # market_sayur.png (y=350)
-		Rect2(24.5, 19.0, 5.7, 4.0),  # warung_madura.png (y=350)
+		Rect2(24.5, 19.0, 5.7, 4.0),  # warung_seng_awning.png (y=350)
 		Rect2(35.8, 19.0, 6.1, 4.0),  # market_kelontong.png (y=350)
 		Rect2(50.0, 19.0, 6.3, 4.0),  # market_sembako.png (y=350)
 	],
@@ -354,6 +353,14 @@ func _sync_hulu_story_state() -> void:
 	var talked_desa: Array = GameState.zone_progress.get("desa", {}).get("talked_keys", [])
 	var talked_kota: Array = GameState.zone_progress.get("kota", {}).get("talked_keys", [])
 	var talked_hilir: Array = GameState.zone_progress.get("hilir", {}).get("talked_keys", [])
+
+	# Parameter bencana masih 0% di awal sebelum bertemu Datuk Sampan
+	if step in ["", "butuh_pesan_kasur", "menuju_toko_jaya", "cari_suara_jembatan"] and not bool(GameState.choices.get("datuk_bencana_revealed", false)):
+		GameState.meter_bencana = 0.0
+	elif not bool(GameState.choices.get("datuk_bencana_revealed", false)):
+		GameState.record_choice("datuk_bencana_revealed", true)
+		if GameState.meter_bencana <= 0.0:
+			GameState.meter_bencana = 20.0
 
 	# Jika step cerita baru belum dimulai, pastikan warung siap untuk percakapan pembuka
 	if step.is_empty() and "npc_ibu_mc" in talked_hulu:
@@ -959,13 +966,15 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Suara siapa itu tadi? Cari di sekitar jembatan!", true)
 		"h1_datuk":
+			GameState.record_choice("datuk_bencana_revealed", true)
+			GameState.meter_bencana = 20.0
 			GameState.record_choice("hulu_story_step", "bersihkan_sungai")
 			_sync_hulu_story_state()
 			_spawn_hulu_riverbank_trash()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
-			toast("Bersihkan seluruh sampah di pinggiran sungai hulu!", true)
+			toast("Datuk Sampan memperingatkan: Bencana sungai kini 20%! Bersihkan sampah di pinggiran sungai.", true)
 		"h1_selesai_sungai":
 			GameState.record_choice("hulu_story_step", "tanam_pohon_hulu")
 			_sync_hulu_story_state()
@@ -1776,12 +1785,11 @@ func _on_quest_started(_quest_id: String) -> void:
 func on_trash_picked(category: String, trash_id: String) -> void:
 	if not trash_id.is_empty() and trash_id not in GameState.picked_trash_ids:
 		GameState.picked_trash_ids.append(trash_id)
-	GameState.rupiah += 500
 	var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
 	if carry_cnt > 0:
-		toast("Sampah %s dipungut (%d/5 di kantong). +Rp500" % [category, carry_cnt], true)
+		toast("Sampah %s dipungut (%d/5 di kantong)." % [category, carry_cnt], true)
 	else:
-		toast("Sampah %s dipungut. +Rp500" % category, true)
+		toast("Sampah %s dipungut." % category, true)
 
 	if _current_zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
 		var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
@@ -1823,24 +1831,22 @@ func on_tree_planted(kind: String) -> void:
 		GameState.add_zone_stat("hilir", "mangroves")
 		var count: int = GameState.zone_stat("hilir", "mangroves")
 		if count >= 8:
-			GameState.rupiah += 2000
 			GameState.unlock_card("card_mangrove_01")
-			toast("Mangrove lengkap! Pesisir terlindungi. +Rp2.000", true)
+			toast("Mangrove lengkap! Pesisir terlindungi.", true)
 			GameState.record_choice("hulu_story_step", "selesai_mangrove")
 			_sync_hulu_story_state()
 		else:
-			toast("Bibit mangrove ditanam! (%d/8) +Rp2.000 · tumbuh dalam 1–2 hari" % mini(count, 8), true)
+			toast("Bibit mangrove ditanam! (%d/8) · tumbuh dalam 1–2 hari" % mini(count, 8), true)
 	elif kind == "tree" and _current_zone == "hulu":
 		GameState.add_zone_stat("hulu", "trees")
 		var count: int = GameState.zone_stat("hulu", "trees")
 		if count >= 5:
-			GameState.rupiah += 1000
 			GameState.unlock_card("card_hutan_01")
 			GameState.unlock_card("card_sungai_deli_01")
-			toast("Hutan kembali rimbun! +Rp1.000", true)
+			toast("Hutan kembali rimbun!", true)
 			_sync_hulu_story_state()
 		else:
-			toast("Bibit pohon ditanam! (%d/5) +Rp500 · tumbuh dalam 1–2 hari" % mini(count, 5), true)
+			toast("Bibit pohon ditanam! (%d/5) · tumbuh dalam 1–2 hari" % mini(count, 5), true)
 	else:
 		toast("%s ditanam. Sungai membaik." % label, true)
 	_refresh_mission()
@@ -1868,10 +1874,9 @@ func lever_pressed(lever_id: int) -> void:
 	if _lever_pressed.size() == _lever_sequence.size():
 		GameState.record_choice("pintu_air_terbuka", true)
 		GameState.add_river_health(10.0)
-		GameState.rupiah += 2500
 		GameState.unlock_card("card_drainase_01")
 		AudioManager.play_sfx("correct")
-		toast("Drainase pintu air terbuka! Aliran lancar. +Rp2.500", true)
+		toast("Drainase pintu air terbuka! Aliran lancar.", true)
 		GameState.record_choice("hulu_story_step", "tanya_budi")
 		_sync_hulu_story_state()
 		_refresh_mission()
@@ -1947,8 +1952,7 @@ func on_npc_talked(npc_key: String) -> void:
 	var target: int = zone_target(zone, "talked")
 	var count: int = GameState.zone_talked_count(zone)
 	if target > 0 and count == target:
-		GameState.rupiah += 1500
-		toast("Semua warga zona ini sudah bicara. +Rp1.500", true)
+		toast("Semua warga zona ini sudah bicara.", true)
 
 	_sync_hulu_story_state()
 	_refresh_mission()
@@ -2000,10 +2004,9 @@ func on_pantun_completed() -> void:
 		return
 	GameState.pantun_completed = true
 	GameState.add_river_health(8.0)
-	GameState.rupiah += 2000
 	GameState.unlock_card("card_pantun_01")
 	AudioManager.play_sfx("level_done")
-	toast("Pantun Melayu Deli lengkap! +Rp2.000", true)
+	toast("Pantun Melayu Deli lengkap!", true)
 	_refresh_mission()
 	GameState.save_game()
 

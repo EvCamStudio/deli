@@ -97,8 +97,7 @@ func _spawn_lever(id: int, pos: Vector2) -> void:
 # ─── Callback gameplay ───────────────────────────────────────────────────────
 
 func on_trash_picked(category: String, _trash_id: String) -> void:
-	GameState.rupiah += 500
-	toast("Sampah %s dipungut. +Rp500" % category, true)
+	toast("Sampah %s dipungut." % category, true)
 
 func on_bin_sorted(_category: String) -> void:
 	_sorted += 1
@@ -153,7 +152,7 @@ func _open_gate() -> void:
 	AudioManager.play_sfx("correct")
 	if _gate and _gate.has_method("open"):
 		_gate.open()
-	toast("Drainase terbuka! +Rp2.500", true)
+	toast("Drainase terbuka!", true)
 	_refresh_mission()
 
 func open_pantun() -> void:
@@ -169,9 +168,8 @@ func on_pantun_completed() -> void:
 		return
 	_pantun_done = true
 	GameState.add_river_health(8.0)
-	GameState.rupiah += 2000
 	GameState.unlock_card("card_pantun_01")
-	toast("Pantun lengkap! +Rp2.000", true)
+	toast("Pantun lengkap!", true)
 	_refresh_mission()
 
 func try_complete_level() -> void:

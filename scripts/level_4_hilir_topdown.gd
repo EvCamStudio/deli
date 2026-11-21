@@ -55,10 +55,9 @@ func on_tree_planted(kind: String) -> void:
 	_mangroves += 1
 	if _mangroves >= MANGROVE_TARGET:
 		GameState.unlock_card("card_mangrove_01")
-		GameState.rupiah += 2000
-		toast("Mangrove lengkap! +Rp2.000", true)
+		toast("Mangrove lengkap!", true)
 	else:
-		toast("Mangrove ditanam! (%d/%d) +Rp2.000" % [_mangroves, MANGROVE_TARGET], true)
+		toast("Mangrove ditanam! (%d/%d)" % [_mangroves, MANGROVE_TARGET], true)
 	_refresh_mission()
 
 func on_bin_sorted(category: String) -> void:

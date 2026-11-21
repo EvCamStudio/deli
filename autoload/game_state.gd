@@ -50,8 +50,8 @@ func _ready() -> void:
 		_debug_panel.set_script(dbg_script)
 		add_child(_debug_panel)
 
-## Meter Bencana mulai 60 -> river_health mulai 40 (Meter Bencana = 100 - river_health)
-@export_range(0.0, 100.0, 1.0) var river_health: float = 40.0 :
+## Meter Bencana mulai 0 di awal, baru aktif 20% setelah bertemu Datuk Sampan (Meter Bencana = 100 - river_health)
+@export_range(0.0, 100.0, 1.0) var river_health: float = 100.0 :
 	set(value):
 		river_health = clampf(value, 0.0, 100.0)
 		river_health_changed.emit(river_health)
@@ -988,7 +988,7 @@ func prepare_epilog_preview() -> void:
 	ending_terakhir = "A"
 
 func reset() -> void:
-	river_health = 40.0
+	river_health = 100.0
 	hari = 1
 	waktu = "pagi"
 	uang = 0

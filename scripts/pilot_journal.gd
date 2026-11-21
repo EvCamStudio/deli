@@ -62,9 +62,8 @@ func _refresh() -> void:
 	var zone_text: String = ""
 	if GameState.in_world:
 		zone_text = "\nZona: %s" % GameState.world_zone.capitalize()
-	stats.text = "Kejernihan %d%%   ·   Rp %s   ·   Hari %d%s" % [
+	stats.text = "Kejernihan %d%%   ·   Hari %d%s" % [
 		int(GameState.river_health),
-		_format_number(GameState.rupiah),
 		GameState.day,
 		zone_text,
 	]

@@ -93,7 +93,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
+        "teks": "Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
         "requires_flag": "unlock_solusi_darwis",
         "delta_sikap": 2,
         "delta_meter": -10,
@@ -106,7 +106,7 @@
       },
       {
         "tipe": "A",
-        "teks": "[B] Tunggu di sini sebentar ya, Pak! Saya carikan jalan keluarnya dulu.",
+        "teks": "Tunggu di sini sebentar ya, Pak! Saya carikan jalan keluarnya dulu.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pamit_cari_pantun",
@@ -118,7 +118,7 @@
       },
       {
         "tipe": "B",
-        "teks": "[C] Lain kali Bapak paksakan bawa ke TPA saja, Pak, daripada nyumbat sungai.",
+        "teks": "Lain kali Bapak paksakan bawa ke TPA saja, Pak, daripada nyumbat sungai.",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "cabang_gagal",
@@ -131,7 +131,7 @@
       },
       {
         "tipe": "C",
-        "teks": "[D] Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!",
+        "teks": "Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!",
         "delta_sikap": -1,
         "delta_meter": 20,
         "next": "cabang_gagal",

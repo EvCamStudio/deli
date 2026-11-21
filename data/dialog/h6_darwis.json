@@ -7,7 +7,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
+        "teks": "Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
         "delta_sikap": 2,
         "delta_meter": -10,
         "next": "solusi_berhasil",

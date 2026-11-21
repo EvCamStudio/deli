@@ -106,10 +106,14 @@ func _process(_delta: float) -> void:
 			AudioManager.play_typewriter_blip()
 
 func show_node(node: Dictionary) -> void:
+	if not is_node_ready():
+		await ready
 	_current_node = node
 	_clear_choices()
-	choice_modal.hide()
-	tap_area.show()
+	if choice_modal:
+		choice_modal.hide()
+	if tap_area:
+		tap_area.show()
 
 	var speaker_name: String = str(node.get("speaker", ""))
 	var is_narration: bool = speaker_name.to_lower() == "narasi" or speaker_name.is_empty()
@@ -319,6 +323,8 @@ func _start_typewriter(text: String) -> void:
 		narration_continue_hint.modulate.a = 0.0
 
 	var target: RichTextLabel = _active_label if _active_label else text_label
+	if not target:
+		return
 	target.text = text
 	target.visible_characters = 0
 
@@ -336,7 +342,8 @@ func _finish_typewriter() -> void:
 		_tween.kill()
 	_is_typing = false
 	var target: RichTextLabel = _active_label if _active_label else text_label
-	target.visible_characters = -1
+	if target:
+		target.visible_characters = -1
 	if advance_icon:
 		advance_icon.modulate.a = 1.0
 	if dialog_hint and not _is_narration_active:
@@ -361,7 +368,6 @@ func _on_tap() -> void:
 
 	# Halaman terakhir tercapai:
 	if _has_choices:
-		# Sesuai arahan user: tutup kotak dialog NPC, lalu tampilkan modal pilihan MC
 		AudioManager.play_sfx("tap_b")
 		dialogue_frame.hide()
 		if narration_center:
@@ -377,6 +383,8 @@ func _page_index_has_next() -> bool:
 func _open_choice_modal() -> void:
 	tap_area.hide()
 	dialogue_frame.hide()
+	if narration_center:
+		narration_center.hide()
 	choice_modal.show()
 	_clear_choices()
 
@@ -396,24 +404,28 @@ func _open_choice_modal() -> void:
 		if "[terkunci" in choice_text.to_lower():
 			is_locked = true
 
-		var clean_choice := choice_text
-		var prefix_regex := RegEx.new()
-		prefix_regex.compile("^(?:\\[?[A-D]\\]|(?:\\[?[A-D][\\.\\-–:]))\\s*")
-		clean_choice = prefix_regex.sub(clean_choice, "").strip_edges()
-
+		var clean_choice := choice_text.strip_edges()
 		var was_text_locked := false
 		if clean_choice.to_lower().begins_with("[terkunci]"):
 			was_text_locked = true
 			clean_choice = clean_choice.substr(10).strip_edges()
 
-		var letter: String = str(["A", "B", "C", "D", "E"][clampi(i, 0, 4)])
+		var prefix_regex := RegEx.new()
+		prefix_regex.compile("^(?:\\[?[A-Ea-e]\\]|(?:\\[?[A-Ea-e][\\.\\-–:]))\\s*")
+		clean_choice = prefix_regex.sub(clean_choice, "").strip_edges()
+
+		if clean_choice.to_lower().begins_with("[terkunci]"):
+			was_text_locked = true
+			clean_choice = clean_choice.substr(10).strip_edges()
+
 		if is_locked or was_text_locked:
-			btn.text = "  %s. [Terkunci] %s" % [letter, clean_choice]
+			btn.text = "  [Terkunci] %s" % clean_choice
 		else:
-			btn.text = "  %s. %s" % [letter, clean_choice]
+			btn.text = "  %s" % clean_choice
 
 		btn.custom_minimum_size = Vector2(0, 26)
 		btn.autowrap_mode = TextServer.AUTOWRAP_WORD
+		btn.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		btn.add_theme_font_override("font", load("res://assets/fonts/PixelifySans.ttf"))
 		btn.add_theme_font_size_override("font_size", 11)
 		btn.add_theme_color_override("font_color", Color(0.28, 0.16, 0.08, 1))
@@ -445,6 +457,9 @@ func _update_choice_modal_geometry() -> void:
 	if not choice_panel:
 		return
 	var needed_height: float = maxf(choice_panel.get_combined_minimum_size().y, 64.0)
+	needed_height = clampf(needed_height, 64.0, 160.0)
+	choice_modal.offset_left = -260.0
+	choice_modal.offset_right = 260.0
 	choice_modal.offset_bottom = -4.0
 	choice_modal.offset_top = -4.0 - needed_height
 
@@ -470,6 +485,7 @@ func _create_choice_btn_style(hover: bool) -> StyleBoxFlat:
 
 func _clear_choices() -> void:
 	for child in choices_container.get_children():
+		choices_container.remove_child(child)
 		child.queue_free()
 
 func _on_choice_selected(index: int) -> void:

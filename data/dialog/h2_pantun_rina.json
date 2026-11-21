@@ -14,7 +14,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Minyak jelantah jangan di selokan, / Di Bank Sampah jeriken disiapkan.",
+        "teks": "Minyak jelantah jangan di selokan, / Di Bank Sampah jeriken disiapkan.",
         "delta_sikap": 1,
         "delta_meter": -2,
         "next": "pantun_benar",
@@ -26,14 +26,14 @@
       },
       {
         "tipe": "B",
-        "teks": "[B] Minyak yang hitam kotor sekali, / Kubur di tanah belakang rumah.",
+        "teks": "Minyak yang hitam kotor sekali, / Kubur di tanah belakang rumah.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
       },
       {
         "tipe": "C",
-        "teks": "[C] Tuanglah saja ke pinggir parit, / Supaya wajan kembali bersih.",
+        "teks": "Tuanglah saja ke pinggir parit, / Supaya wajan kembali bersih.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
@@ -67,4 +67,3 @@
     }
   }
 ]
-

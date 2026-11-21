@@ -8,13 +8,13 @@ extends CanvasLayer
 class_name HUD
 
 # ─── Node ─────────────────────────────────────────────────────────────────────
-@onready var river_bar: ProgressBar = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar
-@onready var river_label: Label = $SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel
+@onready var river_bar: ProgressBar = (get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/RiverBar") if has_node("SafeMargin/Root/TopBar/ClarityCard/RiverBar") else get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/Row/RiverBar")) as ProgressBar
+@onready var river_label: Label = (get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/RiverLabel") if has_node("SafeMargin/Root/TopBar/ClarityCard/RiverLabel") else get_node_or_null("SafeMargin/Root/TopBar/ClarityCard/Row/RiverLabel")) as Label
 @onready var location_label: Label = get_node_or_null("SafeMargin/Root/TopBar/LocationCard/Label") as Label
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
-@onready var mission_card: PanelContainer = $SafeMargin/Root/MissionCard
-@onready var mission_label: Label = $SafeMargin/Root/MissionCard/VBox/MissionLabel
-@onready var mission_title: Label = $SafeMargin/Root/MissionCard/VBox/MissionTitle
+@onready var mission_card: Control = $SafeMargin/Root/MissionCard
+@onready var mission_label: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionLabel") if has_node("SafeMargin/Root/MissionCard/MissionLabel") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionLabel")) as Label
+@onready var mission_title: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionTitle") if has_node("SafeMargin/Root/MissionCard/MissionTitle") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionTitle")) as Label
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
 @onready var toast_panel: PanelContainer = $SafeMargin/Root/Toast
 @onready var toast_label: Label = $SafeMargin/Root/Toast/Label
@@ -57,6 +57,10 @@ const LOCATION_NAMES: Dictionary = {
 }
 
 func _ready() -> void:
+	var money_card := get_node_or_null("SafeMargin/Root/TopBar/MoneyCard") as CanvasItem
+	if money_card:
+		money_card.visible = false
+
 	_build_bar_styles()
 	_build_sikap_panel()
 
@@ -110,18 +114,18 @@ func _process(_delta: float) -> void:
 
 func _build_bar_styles() -> void:
 	_bar_danger = _make_bar_style(Color(0.85, 0.28, 0.22))
-	_bar_warn = _make_bar_style(Color(0.92, 0.68, 0.20))
+	_bar_warn = _make_bar_style(Color(0.94, 0.65, 0.15))
 	_bar_safe = _make_bar_style(Color(0.24, 0.72, 0.42))
 	if river_bar:
-		var bar_bg := StyleBoxFlat.new()
-		bar_bg.bg_color = Color(0.85, 0.80, 0.70, 0.85)
-		bar_bg.set_corner_radius_all(3)
+		var bar_bg := StyleBoxEmpty.new()
 		river_bar.add_theme_stylebox_override("background", bar_bg)
 
 func _make_bar_style(color: Color) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
 	style.bg_color = color
 	style.set_corner_radius_all(3)
+	style.set_border_width_all(1)
+	style.border_color = Color(0.55, 0.24, 0.05, 0.9)
 	return style
 
 ## Membuat panel indikator Sikap NPC (Jali, Rina, Darwis) dengan kotak warna & teks
@@ -353,10 +357,10 @@ func update_mission(text: String) -> void:
 		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
-		mission_title.text = "◆ " + lines[0].to_upper()
+		mission_title.text = lines[0].trim_prefix("◆ ").strip_edges().to_upper()
 		mission_label.text = "\n".join(lines.slice(1))
 	else:
-		mission_title.text = "◆ MISI AKTIF"
+		mission_title.text = "MISI AKTIF"
 		mission_label.text = text
 	mission_card.reset_size()
 	mission_card.show()

@@ -14,7 +14,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Jika gang sempit truk tak muat kita, / Gerobak beroda mari gilirkan.",
+        "teks": "Jika gang sempit truk tak muat kita, / Gerobak beroda mari gilirkan.",
         "delta_sikap": 1,
         "delta_meter": -2,
         "next": "pantun_benar",
@@ -26,14 +26,14 @@
       },
       {
         "tipe": "B",
-        "teks": "[B] Janganlah malas berjalan kaki, / Bawa sampahmu setiap pagi.",
+        "teks": "Janganlah malas berjalan kaki, / Bawa sampahmu setiap pagi.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
       },
       {
         "tipe": "C",
-        "teks": "[C] Lempar bungkusnya ke dalam parit, / Biar hanyut sampai ke muara.",
+        "teks": "Lempar bungkusnya ke dalam parit, / Biar hanyut sampai ke muara.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
@@ -67,4 +67,3 @@
     }
   }
 ]
-

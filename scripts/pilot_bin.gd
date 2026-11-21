@@ -90,9 +90,9 @@ func interact() -> void:
 	AudioManager.play_sfx("correct")
 	SettingsManager.vibrate(30)
 	if count == 1:
-		_toast("1 sampah %s dibuang ke tempat sampah! +Rp2.000" % _display_category(last_cat), true)
+		_toast("1 sampah %s dibuang ke tempat sampah!" % _display_category(last_cat), true)
 	else:
-		_toast("%d sampah dibuang ke tempat sampah! +Rp%s" % [count, _format_number(total_reward)], true)
+		_toast("%d sampah dibuang ke tempat sampah!" % count, true)
 
 	_bump()
 	var fact: String = _fact_for(last_cat)

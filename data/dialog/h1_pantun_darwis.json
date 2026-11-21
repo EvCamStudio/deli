@@ -14,7 +14,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Kasur yang berat cincanglah dulu, / Dijual kiloan tak bikin ragu.",
+        "teks": "Kasur yang berat cincanglah dulu, / Dijual kiloan tak bikin ragu.",
         "delta_sikap": 1,
         "delta_meter": -2,
         "next": "pantun_benar",
@@ -26,14 +26,14 @@
       },
       {
         "tipe": "B",
-        "teks": "[B] Janganlah buang kasur ke sungai, / Nanti airnya meluap tinggi.",
+        "teks": "Janganlah buang kasur ke sungai, / Nanti airnya meluap tinggi.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
       },
       {
         "tipe": "C",
-        "teks": "[C] Bakarlah habis kasur yang basah, / Biar halaman menjadi bersih.",
+        "teks": "Bakarlah habis kasur yang basah, / Biar halaman menjadi bersih.",
         "delta_sikap": 0,
         "delta_meter": 0,
         "next": "pantun_salah"
@@ -67,4 +67,3 @@
     }
   }
 ]
-

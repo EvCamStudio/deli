@@ -48,7 +48,7 @@ func interact() -> void:
 	# Toast
 	var level := get_tree().get_first_node_in_group("level")
 	if level and level.has_method("toast"):
-		level.toast("Berhasil! Sampah %s dipilah. +Rp1.500" % _display_category(item_cat), true)
+		level.toast("Berhasil! Sampah %s dipilah." % _display_category(item_cat), true)
 	
 	if level and level.has_method("on_bin_sorted"):
 		level.on_bin_sorted(item_cat)

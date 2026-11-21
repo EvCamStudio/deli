@@ -86,8 +86,7 @@ func _show_ending() -> void:
 		stats += "• Meter Bencana: %d%% (Kejernihan %d%%)\n" % [meter_akhir, int(round(GameState.river_health))]
 		stats += "• Warga Peduli: %d / 3 Warga\n" % peduli_count
 	stats += "• Sampah Terkumpul: %d | Pohon Ditanam: %d\n" % [GameState.get_total_trash(), GameState.trees_planted]
-	stats += "• Mangrove: %d | Kartu: %d\n" % [GameState.mangroves_planted, GameState.collected_cards.size()]
-	stats += "• Rupiah Terkumpul: Rp %s" % _format_number(GameState.rupiah)
+	stats += "• Mangrove: %d | Kartu: %d" % [GameState.mangroves_planted, GameState.collected_cards.size()]
 	stats_label.text = stats
 
 	if river_visual:

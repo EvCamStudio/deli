@@ -1,10 +1,12 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/pilot_hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/droplet.png" id="2_droplet"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/coin.png" id="4_coin"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/card.png" id="5_card"]
 [ext_resource type="FontFile" path="res://assets/fonts/Nunito.ttf" id="6_nunito"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud_bencana_bar_bg_180.png" id="7_bencana_bg"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud_mission_box_209.png" id="8_mission_bg"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_card"]
 content_margin_left = 5.0
@@ -91,41 +93,49 @@ layout_mode = 2
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 22.0
+offset_bottom = 24.0
 grow_horizontal = 2
 theme_override_constants/separation = 5
 
-[node name="ClarityCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+[node name="ClarityCard" type="Control" parent="SafeMargin/Root/TopBar"]
+custom_minimum_size = Vector2(180, 24)
 layout_mode = 2
 size_flags_vertical = 4
-theme_override_styles/panel = SubResource("StyleBox_card")
 
-[node name="Row" type="HBoxContainer" parent="SafeMargin/Root/TopBar/ClarityCard"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Icon" type="TextureRect" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(11, 11)
-layout_mode = 2
-size_flags_vertical = 4
-texture = ExtResource("2_droplet")
+[node name="BG" type="TextureRect" parent="SafeMargin/Root/TopBar/ClarityCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("7_bencana_bg")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(46, 6)
-layout_mode = 2
-size_flags_vertical = 4
-value = 20.0
+[node name="RiverBar" type="ProgressBar" parent="SafeMargin/Root/TopBar/ClarityCard"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 8.0
+offset_right = 162.0
+offset_bottom = 17.0
+value = 0.0
 show_percentage = false
 
-[node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard/Row"]
-custom_minimum_size = Vector2(30, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+[node name="RiverLabel" type="Label" parent="SafeMargin/Root/TopBar/ClarityCard"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 5.0
+offset_right = 162.0
+offset_bottom = 19.0
+theme_override_colors/font_color = Color(0.24, 0.16, 0.08, 1)
+theme_override_colors/font_outline_color = Color(0.98, 0.95, 0.88, 0.9)
+theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("6_nunito")
-theme_override_font_sizes/font_size = 9
-text = "20%"
+theme_override_font_sizes/font_size = 8
+text = "Bencana 0%"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Spacer" type="Control" parent="SafeMargin/Root/TopBar"]
 layout_mode = 2
@@ -145,6 +155,7 @@ text = "HULU SUNGAI DELI"
 horizontal_alignment = 1
 
 [node name="MoneyCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBox_card")
@@ -178,28 +189,45 @@ icon = ExtResource("5_card")
 expand_icon = true
 icon_max_width = 13
 
-[node name="MissionCard" type="PanelContainer" parent="SafeMargin/Root"]
+[node name="MissionCard" type="Control" parent="SafeMargin/Root"]
+custom_minimum_size = Vector2(209, 86)
 layout_mode = 0
-offset_top = 26.0
-offset_right = 162.0
-offset_bottom = 58.0
-theme_override_styles/panel = SubResource("StyleBox_mission")
+offset_top = 28.0
+offset_right = 209.0
+offset_bottom = 114.0
 
-[node name="VBox" type="VBoxContainer" parent="SafeMargin/Root/MissionCard"]
-layout_mode = 2
-theme_override_constants/separation = 1
+[node name="BG" type="TextureRect" parent="SafeMargin/Root/MissionCard"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("8_mission_bg")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="MissionTitle" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.32, 0.14, 1)
+[node name="MissionTitle" type="Label" parent="SafeMargin/Root/MissionCard"]
+layout_mode = 0
+offset_left = 21.0
+offset_top = 2.0
+offset_right = 86.0
+offset_bottom = 14.0
+theme_override_colors/font_color = Color(0.48, 0.25, 0.1, 1)
 theme_override_fonts/font = ExtResource("6_nunito")
-theme_override_font_sizes/font_size = 8
-text = "◆ MISI"
+theme_override_font_sizes/font_size = 7
+text = "MISI"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
 
-[node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard/VBox"]
-custom_minimum_size = Vector2(148, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.2, 0.14, 0.1, 1)
+[node name="MissionLabel" type="Label" parent="SafeMargin/Root/MissionCard"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 22.0
+offset_right = 194.0
+offset_bottom = 80.0
+theme_override_colors/font_color = Color(0.18, 0.12, 0.05, 1)
 theme_override_fonts/font = ExtResource("6_nunito")
 theme_override_font_sizes/font_size = 9
 theme_override_constants/line_spacing = 1

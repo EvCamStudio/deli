@@ -10,7 +10,7 @@ const PATH_ROW: int = 15
 const BUILDING_BAND_SRC_PX: int = 8
 const BUILDING_ROOF_TUCK_PX: float = 12.0
 const BUILDING_SIDE_INSET_PX: float = 2.0
-
+  
 const TREE_SPECS: Dictionary = {
 	"kelapa": {"path": "res://assets/sprites/props/tree_kelapa.png", "scale": 0.5, "col": Vector2(12, 8)},
 	"mangga": {"path": "res://assets/sprites/props/tree_mangga.png", "scale": 0.5, "col": Vector2(14, 8)},
@@ -22,6 +22,7 @@ const TREE_SPECS: Dictionary = {
 	"spruce_tall": {"path": "res://assets/sprites/props/tree_spruce_tall.png", "scale": 0.5, "col": Vector2(18, 10)},
 	"cemara": {"path": "res://assets/sprites/props/tree_cemara.png", "scale": 0.5, "col": Vector2(14, 8)},
 	"spruce": {"path": "res://assets/sprites/props/tree_spruce.png", "scale": 0.5, "col": Vector2(16, 8)},
+	"rindang": {"path": "res://assets/sprites/props/tree.png", "scale": 0.5, "col": Vector2(16, 8)},
 }
 
 # Tile kota / aspal pada Source 2 (city_tileset_32.png)
@@ -365,12 +366,11 @@ func _paint_hulu_ground() -> void:
 
 func _paint_desa_ground() -> void:
 	# Jalur jalan setapak rapi dari pintu deret rumah utara ke jalan utama (lebar 2 petak, Gambar 7).
-	_paint_door_path(4, 5, 11, 13)   # house_cream (x=70)
 	_paint_door_path(11, 12, 11, 13) # warung_toko_jaya (x=180)
-	_paint_door_path(18, 19, 11, 13) # house_cottage_orange (x=320)
-	_paint_door_path(30, 31, 11, 13) # house_farm_green (x=480)
-	_paint_door_path(40, 41, 11, 13) # house_cabin_blue (x=640)
-	_paint_door_path(50, 51, 11, 13) # house_suburban_terrace (x=800)
+	_paint_door_path(21, 22, 11, 13) # house_cottage_orange (x=340)
+	_paint_door_path(31, 32, 11, 13) # house_seng_gate (x=500)
+	_paint_door_path(41, 42, 11, 13) # house_cabin_blue (x=660)
+	_paint_door_path(51, 52, 11, 13) # house_seng_motor (x=820)
 	# Gang vertikal rapi penghubung jalan utama utara ke jalan bantaran sungai selatan (lebar 2 petak)
 	# Melewati celah antar-bangunan selatan yang luas (x=352 / col 22, x=544 / col 34),
 	# tidak membelah badan rumah warga (house_brick di col 16/17 bersih berpekarangan rumput).
@@ -741,57 +741,54 @@ func _add_collision(pos: Vector2, size: Vector2) -> void:
 func _spawn_props() -> void:
 	match theme:
 		"hulu":
-			# Rumah MC beratap hijau + rumah tetangga suburban di sisi kampung hulu.
+			# Rumah MC beratap hijau + rumah teras pot bunga warga di sisi kampung hulu.
 			spawn_building(get_parent(), "res://assets/sprites/props/house_mc.png", Vector2(112, 160), Vector2(92, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_orange.png", Vector2(272, 160), Vector2(108, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_terrace_pots.png", Vector2(272, 160), Vector2(104, 22), 0.44)
 
 			# Pegangan jembatan kayu Hulu (sisi atas dan sisi bawah jembatan, Gambar 5)
 			_spawn_bridge_rail(Vector2(29.0 * TILE, 12.5 * TILE), true)
 			_spawn_bridge_rail(Vector2(29.0 * TILE, 17.0 * TILE), false)
 
-			# Pohon dirapikan mengelompok: bingkai tepi kampung barat & rumpun hutan timur (bebas dari jalan utama y=224..272)
+			# Pohon dirapikan mengelompok: ragam pohon alami (pohon mangga dikurangi drastis agar tidak berulang)
 			_spawn_typed_trees([
 				# Bingkai barat & peneduh halaman utara (jauh dari jalan)
-				[Vector2(40, 80), "beringin"], [Vector2(36, 130), "mangga"], [Vector2(192, 140), "pisang"],
+				[Vector2(40, 80), "beringin"], [Vector2(36, 130), "pisang"], [Vector2(192, 140), "pisang"],
 				# Padang rumput selatan kampung barat (aman di daratan padat, jauh dari sungai)
 				[Vector2(40, 360), "pepaya"], [Vector2(180, 360), "kamboja"],
-				[Vector2(260, 370), "beringin"], [Vector2(120, 390), "mangga"], [Vector2(320, 390), "kelapa"],
+				[Vector2(260, 370), "beringin"], [Vector2(120, 390), "rindang"], [Vector2(320, 390), "kelapa"],
 				# Kawasan hutan timur (mengelilingi titik tanam reboisasi & tepi sungai utara)
-				[Vector2(616, 50), "mangga"], [Vector2(688, 48), "beringin"], [Vector2(768, 50), "kamboja"],
-				[Vector2(848, 50), "mangga"], [Vector2(912, 60), "kelapa"],
+				[Vector2(616, 50), "pinus"], [Vector2(688, 48), "beringin"], [Vector2(768, 50), "kamboja"],
+				[Vector2(848, 50), "cemara"], [Vector2(912, 60), "kelapa"],
 				[Vector2(916, 110), "pisang"], [Vector2(916, 150), "kamboja"],
 				[Vector2(600, 200), "kelapa"], [Vector2(680, 210), "mangga"], [Vector2(880, 200), "beringin"],
 			])
 		"desa":
-			# Deret utara: Toko Jaya Pak Darwis (dekat pintu masuk barat) dan rumah warga baru (Gambar 3 atas)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_cream.png", Vector2(70, 160), Vector2(82, 22), 0.5)
+			# Deret utara: Toko Jaya Pak Darwis dan deretan rumah warga berjarak lega (tidak mepet)
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(180, 160), Vector2(96, 22), 0.4)
-			# 3 Rumah baru dari Gambar 3 (bagian atas) menggantikan lahan sawah/kebun berpagar
-			spawn_building(get_parent(), "res://assets/sprites/props/house_cottage_orange.png", Vector2(320, 160), Vector2(104, 22), 0.45)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_farm_green.png", Vector2(480, 160), Vector2(112, 22), 0.4)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_cabin_blue.png", Vector2(640, 160), Vector2(104, 22), 0.45)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_suburban_terrace.png", Vector2(800, 160), Vector2(108, 22), 0.4)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cottage_orange.png", Vector2(340, 160), Vector2(104, 22), 0.45)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_seng_gate.png", Vector2(500, 160), Vector2(102, 22), 0.42)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_cabin_blue.png", Vector2(660, 160), Vector2(104, 22), 0.45)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_seng_motor.png", Vector2(820, 160), Vector2(104, 22), 0.44)
 
-			# Deret selatan: warung dan rumah menghadap jalan utama & sungai selatan (baseline y=368, atap di y=280, jalan bersih bebas hambatan)
+			# Deret selatan: warung dan rumah menghadap jalan utama & sungai selatan
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(110, 368), Vector2(92, 22), 0.4)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(270, 368), Vector2(92, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_barokah.png", Vector2(430, 368), Vector2(100, 22), 0.38)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_kios_snack.png", Vector2(430, 368), Vector2(98, 22), 0.42)
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(650, 368), Vector2(100, 22), 0.36)
-			spawn_building(get_parent(), "res://assets/sprites/props/house_modern.png", Vector2(850, 368), Vector2(88, 22), 0.5)
+			spawn_building(get_parent(), "res://assets/sprites/props/house_modern_garage.png", Vector2(850, 368), Vector2(110, 22), 0.44)
 
-			# Pohon dari Gambar 2 (atas 1 & 5: pinus, spruce_tall; bawah 1 & 3: cemara, spruce) di sekitar rumah utara & sudut pekarangan
+			# Pohon di sekitar rumah utara & sudut pekarangan (diatur di celah antar-rumah yang luas)
 			_spawn_typed_trees([
-				# Di sekitar rumah-rumah baru bagian utara
-				[Vector2(245, 110), "pinus"],
-				[Vector2(400, 105), "spruce_tall"],
-				[Vector2(560, 105), "cemara"],
-				[Vector2(720, 110), "spruce"],
-				# Bingkai sudut pekarangan barat dan timur
-				[Vector2(36, 80), "pinus"],
-				[Vector2(880, 105), "cemara"],
-				[Vector2(920, 80), "spruce_tall"],
+				# Di pintu masuk kampung barat & celah antar-rumah utara yang lega
+				[Vector2(60, 95), "beringin"],
+				[Vector2(260, 105), "pinus"],
+				[Vector2(420, 105), "spruce_tall"],
+				[Vector2(580, 105), "cemara"],
+				[Vector2(740, 110), "spruce"],
+				# Bingkai sudut pekarangan timur
+				[Vector2(900, 105), "cemara"],
 				# Tepian sungai selatan (pohon di samping pekarangan rumput bersih)
-				[Vector2(48, 410), "kelapa"], [Vector2(325, 368), "mangga"], [Vector2(704, 410), "beringin"], [Vector2(912, 410), "kelapa"],
+				[Vector2(48, 410), "kelapa"], [Vector2(325, 368), "rindang"], [Vector2(704, 410), "beringin"], [Vector2(912, 410), "kelapa"],
 			])
 		"hilir":
 			# Kampung pesisir muara
@@ -1051,10 +1048,10 @@ func _spawn_typed_trees(entries: Array) -> void:
 		spawn_tree(get_parent(), pos, kind)
 
 ## Memunculkan sprite pohon bervariasi (kelapa, mangga, pisang, beringin, pepaya, kamboja) dengan kolisi batang di pangkal.
-static func spawn_tree(parent: Node, pos: Vector2, kind: String = "mangga") -> void:
+static func spawn_tree(parent: Node, pos: Vector2, kind: String = "rindang") -> void:
 	if parent == null:
 		return
-	var spec: Dictionary = TREE_SPECS.get(kind, TREE_SPECS["mangga"])
+	var spec: Dictionary = TREE_SPECS.get(kind, TREE_SPECS["rindang"])
 	var texture: Texture2D = load(str(spec["path"]))
 	var sprite_scale: float = float(spec["scale"])
 	var col_size: Vector2 = spec["col"]

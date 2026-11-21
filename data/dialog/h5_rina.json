@@ -7,7 +7,7 @@
     "pilihan": [
       {
         "tipe": "A",
-        "teks": "[A] Minyak kotor itu bisa dijual Rp3.000 per liter ke Bank Sampah lho, Kak!",
+        "teks": "Minyak kotor itu bisa dijual Rp3.000 per liter ke Bank Sampah lho, Kak!",
         "delta_sikap": 2,
         "delta_meter": -10,
         "next": "penjelasan_solusi_rina",
@@ -19,7 +19,7 @@
       },
       {
         "tipe": "A",
-        "teks": "[B] Kumpulkan di jeriken ini Kak, minyaknya laku buat bahan biodiesel!",
+        "teks": "Kumpulkan di jeriken ini Kak, minyaknya laku buat bahan biodiesel!",
         "delta_sikap": 2,
         "delta_meter": -10,
         "next": "penjelasan_solusi_rina",
