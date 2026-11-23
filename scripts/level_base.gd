@@ -25,6 +25,8 @@ func _ready() -> void:
 	add_to_group("level")
 	add_to_group("pause_menu")
 	GameState.current_level = level_id
+	if hud and hud.has_method("_update_location"):
+		hud._update_location()
 
 	_player = get_node_or_null("Player") as Node2D
 

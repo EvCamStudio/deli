@@ -1,0 +1,115 @@
+{
+  "static": [
+    {
+      "name": "MAMAK (BU MIRA)",
+      "status": "Ibu MC",
+      "journal": "Ibu yang membesarkanku dan mengelola warung makan sederhana keluarga kami. Sosoknya penyayang, tegar, dan selalu menanamkan nilai-nilai luhur padaku sejak kecil. Meskipun warung kebanggaannya sering hancur direndam banjir lumpur, Mak tidak pernah menyalahkan air sungai apalagi menyerah. Perjuanganku membersihkan kampung ini, sebagian besar adalah untuk melihat senyum Mak kembali tenang berjualan."
+    },
+    {
+      "name": "BAPAK (PAK HENDRA)",
+      "status": "Ayah MC",
+      "journal": "Bapak adalah pria yang tidak banyak bicara namun selalu tahu cara menenangkan keluarga. Ketika banjir bandang datang dan menghanyutkan sebagian perabotan, Bapak adalah orang pertama yang sigap menyelamatkan kami. Dia sering mengingatkanku bahwa air tidak pernah salah, karena manusialah yang harus sadar menjaga jalannya. Kalau soal memperbaiki perabotan patah bekas banjir, Bapak jagonya."
+    },
+    {
+      "name": "DATUK SAMPAN",
+      "status": "Penjaga Sungai Deli",
+      "journal": "Hantu tua, oh ralat... roh penjaga Sungai Deli yang tiba-tiba muncul di jembatan dan hanya bisa dilihat olehku. Selama 70 tahun dia menjaga sungai ini tanpa ada yang menyadarinya. Gaya bicaranya sering bertele-tele dan menyebalkan, tapi dia tahu segalanya tentang isi hati sungai ini. Kalau bukan karena ancaman bencananya, mungkin aku tidak akan repot-repot memungut sampah dari hulu sampai ke laut. Jangan bilang-bilang padanya, tapi kehadirannya cukup membantuku."
+    },
+    {
+      "name": "PENJAGA HUTAN (PAK HARUN)",
+      "status": "Petugas Bukit Hulu",
+      "journal": "Bapak tua yang menjaga hutan di bukit hulu sendirian. Dia terlihat sedih menatap lereng bukit yang gundul akibat penebangan liar. Kata Pak Harun, akar pohon itu seperti spons raksasa. Tanpa akar di hulu, air hujan akan langsung meluncur membawa tanah longsor dan merendam rumah warga. Aku sudah membantunya menanam 5 bibit pohon hutan. Semoga pohon itu cepat besar sebelum hujan badai berikutnya turun."
+    },
+    {
+      "name": "PEMILIK TOKO JAYA",
+      "status": "Pedagang Desa Deli",
+      "journal": "Koh Jaya, pemilik toko kasur satu-satunya di desa sebelah. Banjir kemarin merendam hampir setengah isi tokonya, jadi dia tahu betul betapa repotnya mengurus barang yang berlumpur. Dari dia jugalah aku tahu kalau pengepul barang bekas di hulu mau membeli busa kasur sintetik yang sudah dicincang."
+    },
+    {
+      "name": "PEMUKA DESA",
+      "status": "Tetua Desa Deli",
+      "journal": "Tetua di Desa Deli yang sangat memegang teguh petuah Melayu tentang gotong royong: 'berat sama dipikul, ringan sama dijinjing'. Dari bapak inilah aku belajar bahwa masalah sampah tidak bisa dipikul sendirian. Berkat informasi dan jeriken gratis yang diberikannya, aku berhasil menyelamatkan selokan desa dari tumpahan minyak jelantah Kak Rina."
+    },
+    {
+      "name": "PAK RT (KOTA MEDAN)",
+      "status": "Tokoh Masyarakat Kota",
+      "journal": "Pak RT di pemukiman padat pinggiran kota. Pemikirannya sangat terbuka. Dia mengajarkan filosofi bahwa saluran air kota itu ibarat 'urat nadi'; kalau tersumbat, seluruh tubuh kota akan sakit. Pak RT inilah yang memberiku izin dan bahan roda bekas agar pemuda di gang Bang Jali bisa merakit Gerobak Sampah Komunal mereka sendiri."
+    },
+    {
+      "name": "IBU RUMAH TANGGA",
+      "status": "Warga Pinggir Drainase",
+      "journal": "Ibu yang rumahnya berada tepat di tepi saluran air besar dekat jembatan kota. Dia sering panik kalau air selokan tertahan oleh tumpukan sampah B3 (Berbahaya dan Beracun) seperti baterai dan pecahan lampu. Berkat petunjuk darinya, aku berhasil menemukan tuas pintu air yang tersembunyi."
+    },
+    {
+      "name": "BUDI",
+      "status": "Pelajar Sekolah",
+      "journal": "Anak sekolah dasar yang kutemui di pinggir sungai kota. Dia sedang sibuk menghafalkan rumus rima sajak a-b-a-b untuk pelajaran Pantun Melayu Deli. Tanpa petunjuk dari Budi, aku pasti tidak akan tahu cara melengkapi Papan Pantun Tua peninggalan leluhur (dan Datuk Sampan) di hilir muara."
+    },
+    {
+      "name": "PENJAGA SUNGAI",
+      "status": "Petugas Kebersihan Muara",
+      "journal": "Petugas yang berjaga di pesisir muara tempat bertemunya Sungai Deli dengan lautan. Dia tampak kelelahan melihat gunungan sampah kiriman dari hulu dan kota yang menumpuk di depan matanya. Aku membantunya memilah tumpukan sampah itu ke dalam tong Organik, Anorganik (plastik), dan B3 (berbahaya). Dia benar, muara adalah tempat sungai menyerahkan semua beban yang dibawanya."
+    },
+    {
+      "name": "PAK NELAYAN",
+      "status": "Nelayan Pesisir Pantai",
+      "journal": "Nelayan tua yang hidupnya bergantung pada hasil laut. Dia sangat terpukul melihat hutan bakau (mangrove) di sepanjang pantai yang kini ompong dan rusak. Padahal akar bakau adalah tempat anak-anak ikan berlindung dan benteng penahan abrasi ombak. Aku membantunya menanam 8 bibit mangrove baru di tepian pantai. Semoga nelayan sepertinya tidak harus merantau jauh meninggalkan kampung halaman lagi."
+    }
+  ],
+  "dynamic": [
+    {
+      "name": "Pak Darwis",
+      "key": "darwis",
+      "phases": {
+        "fase_1": {
+          "status": "Belum Ada Tindakan",
+          "journal": "Bapak tua ini langganan Toko Jaya. Tadi aku dengar dia mengeluh pinggangnya sakit setelah membuang kasur lamanya ke sungai di belakang rumah. Kalau dibiarkan, kasur itu pasti bakal menyumbat aliran air. Sebaiknya aku tegur dia sebelum jadi kebiasaan buruk."
+        },
+        "fase_2a": {
+          "status": "Mau Berubah (Peduli)",
+          "journal": "Syukurlah Pak Darwis mau mendengarkan. Ternyata dia membuang kasur ke sungai karena fisiknya sudah tua dan tidak sanggup menggotongnya jauh-jauh ke TPS. Kasur zaman sekarang terbuat dari busa plastik sintetik yang butuh ratusan tahun untuk hancur di air, sangat berbeda dengan kasur isi kapuk zaman dulu yang mudah terurai. Untungnya, busa kasur itu bisa dipotong kecil-kecil pakai parang untuk dijual ke pengepul daur ulang. Pak Darwis senang karena pinggangnya aman dan malah dapat uang tambahan!"
+        },
+        "fase_2b": {
+          "status": "Menolak (Tersinggung)",
+          "journal": "Ugh... aku terlalu emosi dan malah menceramahinya. Dia tersinggung berat dan pergi begitu saja. Padahal kasur busa sebesar itu tidak akan hancur di air. Kalau dibiarkan hanyut, kasur itu pasti akan tersangkut dan menyumbat pilar jembatan di hilir desa. Aliran sungai bisa mampat total dan memicu banjir bandang kalau hujan deras turun. Harusnya tadi aku mendengarkan alasannya dulu dan membantunya mencari jalan keluar, bukan malah langsung menyalahkannya..."
+        }
+      }
+    },
+    {
+      "name": "Kak Rina",
+      "key": "rina",
+      "phases": {
+        "fase_1": {
+          "status": "Belum Ada Tindakan",
+          "journal": "Pedagang gorengan langganan ibu di simpang jembatan desa. Gorengannya memang enak, tapi aku baru sadar kalau dia selalu membuang minyak bekas gorengannya (jelantah) langsung ke parit selokan yang mengalir ke sungai. Aku harus menghentikannya sebelum dia menuang minyak hitam pekat itu lagi!"
+        },
+        "fase_2a": {
+          "status": "Mau Berubah (Peduli)",
+          "journal": "Ternyata Kak Rina bukannya sengaja ingin mengotori selokan, dia hanya tidak punya wadah dan takut rugi kalau harus beli jeriken penampungan sendiri. Minyak jelantah yang dibuang sembarangan itu sangat berbahaya karena lemaknya bisa menutup permukaan sungai, mencegah oksigen masuk, dan meracuni ekosistem ikan. Berkat info dari Pemuka Desa, sekarang Kak Rina tahu kalau minyak kotornya bisa ditampung di jeriken gratis dari Bank Sampah untuk diolah menjadi bahan bakar Biodiesel. Bukannya rugi, dia malah dapat tambahan modal Rp3.000 per liter!"
+        },
+        "fase_2b": {
+          "status": "Menolak (Sakit Hati)",
+          "journal": "Dia benar-benar marah dan mengusirku dari warungnya. Minyak jelantah itu akhirnya tetap dia tuang ke selokan! Aku baru tahu kalau minyak itu bisa mengeras menjadi gumpalan lemak padat (fatberg) yang akan menyumbat total seluruh saluran drainase desa. Bau tengiknya pasti akan menyebar dan kalau hujan turun, air selokan yang tersumbat itu bakal meluap merendam warungnya sendiri. Sial, kenapa tadi aku malah menyalahkan dagangannya padahal dia sedang susah cari makan..."
+        }
+      }
+    },
+    {
+      "name": "Bang Jali",
+      "key": "jali",
+      "phases": {
+        "fase_1": {
+          "status": "Belum Ada Tindakan",
+          "journal": "Pemuda temperamental yang tinggal di pemukiman padat mulut gang kota. Tadi aku memergokinya sedang menenteng dua kantong plastik besar penuh sampah rumah tangga yang berbau busuk. Gelagatnya aneh, sepertinya dia bersiap untuk melempar bungkusan raksasa itu langsung ke aliran parit sungai. Aku harus mencegahnya sekarang!"
+        },
+        "fase_2a": {
+          "status": "Mau Berubah (Peduli)",
+          "journal": "Gaya bicaranya memang galak, tapi Bang Jali sebenarnya warga yang masuk akal. Dia terpaksa membuang ke parit karena gang rumahnya terlalu sempit untuk dilewati truk pengangkut kota, dan jarak ke TPS di jalan raya terlalu jauh untuk ditempuh jalan kaki setiap pagi. Sampah kantong plastik rumah tangga adalah penyumbang utama banjir kota karena ia tidak akan pernah hancur terurai dan selalu berakhir menyumbat pintu air. Untungnya, dengan membuat Gerobak Sampah Roda komunal hasil bantuan Pak RT di mulut gang, warga sekarang bisa bergotong royong menarik sampah mereka tanpa harus berjalan jauh sendirian!"
+        },
+        "fase_2b": {
+          "status": "Menolak (Marah Besar)",
+          "journal": "Dia membentakku, melempar plastiknya ke parit, dan menolak bicara denganku lagi! Sialan, kantong sampah sebesar itu pasti berisi ribuan plastik tak terurai yang perlahan-lahan akan menumpuk dan mematikan fungsi saluran drainase kota. Begitu pintu air di bawah jembatan tersumbat plastik-plastik ini, air sungai pasti akan berbalik arah dan mengepung gang sempit mereka sendiri! Kenapa tadi aku malah menuduhnya malas padahal akses fasilitas di gang mereka memang sangat buruk..."
+        }
+      }
+    }
+  ]
+}

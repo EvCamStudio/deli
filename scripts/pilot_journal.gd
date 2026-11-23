@@ -61,7 +61,15 @@ func is_open() -> bool:
 func _refresh() -> void:
 	var zone_text: String = ""
 	if GameState.in_world:
-		zone_text = "\nZona: %s" % GameState.world_zone.capitalize()
+		var loc_map: Dictionary = {
+			"hulu": "Hulu Sungai Deli",
+			"desa": "Desa Suka Maju",
+			"kota": "Kota Medan",
+			"hilir": "Muara Sungai Deli",
+			"epilog": "Tepian Sungai Deli",
+		}
+		var loc_display: String = loc_map.get(str(GameState.world_zone).to_lower(), GameState.world_zone.capitalize())
+		zone_text = "\nLokasi: %s" % loc_display
 	stats.text = "Kejernihan %d%%   ·   Hari %d%s" % [
 		int(GameState.river_health),
 		GameState.day,

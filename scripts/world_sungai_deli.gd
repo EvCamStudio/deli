@@ -9,14 +9,15 @@ const ZONE_HEIGHT: int = 32
 const ZONE_ORDER: Array[String] = ["hulu", "desa", "kota", "hilir"]
 const ZONE_LABELS: Dictionary = {
 	"hulu": "HULU SUNGAI DELI",
-	"desa": "DESA SUNGAI DELI",
+	"desa": "DESA SUKA MAJU",
 	"kota": "KOTA MEDAN",
-	"hilir": "HILIR SUNGAI DELI",
+	"hilir": "MUARA SUNGAI DELI",
+	"epilog": "TEPIAN SUNGAI DELI",
 }
 
 ## Target misi tiap zona. Dibaca dari progres nyata, bukan teks statis.
 const ZONE_TARGETS: Dictionary = {
-	"hulu": {"trees": 5},
+	"hulu": {"trees": 10},
 	"desa": {"sorted": 10, "talked": 2},
 	"kota": {"sorted": 6, "talked": 4},
 	"hilir": {"mangroves": 8, "sorted": 6, "talked": 2},
@@ -49,19 +50,19 @@ const ZONE_WISDOM: Dictionary = {
 const BUILDING_RECTS: Dictionary = {
 	"hulu": [
 		Rect2(3.5, 5.0, 7.0, 5.5),   # house_mc.png (x: 112, y: 160)
-		Rect2(13.6, 5.0, 6.8, 5.5),  # house_terrace_pots.png (x: 272, y: 160)
+		Rect2(13.6, 5.0, 7.0, 5.5),  # house_cabin_blue.png (x: 272, y: 160)
 	],
 	"desa": [
 		Rect2(7.0, 4.0, 9.0, 11.0),  # warung_toko_jaya.png + halaman depan bebas sampah (x: 180, y: 160)
 		Rect2(18.0, 5.0, 7.0, 5.5),  # house_cottage_orange.png (x: 340, y: 160)
-		Rect2(28.0, 5.0, 6.5, 5.5),  # house_seng_gate.png (x: 500, y: 160)
-		Rect2(38.0, 5.0, 7.0, 5.5),  # house_cabin_blue.png (x: 660, y: 160)
-		Rect2(48.0, 5.0, 7.0, 5.5),  # house_seng_motor.png (x: 820, y: 160)
+		Rect2(28.0, 5.0, 7.0, 5.5),  # building_kantor_desa.png (x: 500, y: 160)
+		Rect2(38.0, 5.0, 7.0, 5.5),  # house_cozy_red.png (x: 660, y: 160)
+		Rect2(48.0, 5.0, 7.0, 5.5),  # building_mesjid_desa.png (x: 820, y: 160)
 		Rect2(4.0, 18.0, 6.0, 6.0),  # warung_madura.png (x: 110, y: 368)
 		Rect2(14.0, 18.0, 6.0, 6.0), # house_brick.png (x: 270, y: 368)
-		Rect2(24.0, 18.0, 6.5, 6.0), # warung_kios_snack.png (x: 430, y: 368)
+		Rect2(24.0, 18.0, 6.5, 6.0), # warung_sayur_fresh.png (x: 430, y: 368)
 		Rect2(37.5, 18.0, 6.5, 6.0), # warung_bu_sri.png (x: 650, y: 368)
-		Rect2(50.0, 18.0, 6.0, 6.0), # house_modern_garage.png (x: 850, y: 368)
+		Rect2(50.0, 18.0, 7.0, 6.0), # house_modern_2story.png (x: 850, y: 368)
 	],
 	"kota": [
 		Rect2(2.2, 0.5, 6.2, 4.0),  # building_apartment.png (y=60)
@@ -71,7 +72,7 @@ const BUILDING_RECTS: Dictionary = {
 		Rect2(48.0, 0.5, 5.8, 4.0),  # building_condo_terrace.png (y=60)
 		Rect2(54.2, 0.5, 5.9, 4.0),  # building_brick_complex.png (y=60)
 		Rect2(5.0, 19.0, 7.5, 4.0),  # market_sayur.png (y=350)
-		Rect2(24.5, 19.0, 5.7, 4.0),  # warung_seng_awning.png (y=350)
+		Rect2(24.5, 19.0, 6.5, 4.0),  # building_minimarket.png (y=350)
 		Rect2(35.8, 19.0, 6.1, 4.0),  # market_kelontong.png (y=350)
 		Rect2(50.0, 19.0, 6.3, 4.0),  # market_sembako.png (y=350)
 	],
@@ -88,8 +89,8 @@ const BUILDING_RECTS: Dictionary = {
 # Titik tanam pohon Hulu dikelompokkan di satu kawasan hutan khusus di sisi timur
 # (tepat di belakang Penjaga Hutan), bukan tersebar di pekarangan atau kampung/desa.
 const HULU_FOREST_SPOTS: Array[Vector2i] = [
-	Vector2i(41, 7), Vector2i(46, 6), Vector2i(51, 7),
-	Vector2i(43, 10), Vector2i(48, 10), Vector2i(53, 9),
+	Vector2i(42, 7), Vector2i(44, 7), Vector2i(46, 7), Vector2i(48, 7), Vector2i(50, 7),
+	Vector2i(42, 9), Vector2i(44, 9), Vector2i(46, 9), Vector2i(48, 9), Vector2i(50, 9),
 ]
 
 const HILIR_MANGROVE_SPOTS: Array[Vector2i] = [
@@ -360,7 +361,7 @@ func _sync_hulu_story_state() -> void:
 	elif not bool(GameState.choices.get("datuk_bencana_revealed", false)):
 		GameState.record_choice("datuk_bencana_revealed", true)
 		if GameState.meter_bencana <= 0.0:
-			GameState.meter_bencana = 20.0
+			GameState.meter_bencana = 55.0
 
 	# Jika step cerita baru belum dimulai, pastikan warung siap untuk percakapan pembuka
 	if step.is_empty() and "npc_ibu_mc" in talked_hulu:
@@ -409,7 +410,7 @@ func _sync_hulu_story_state() -> void:
 					npc.set_dialog_id("h1_penjaga_hutan")
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(true)
-			elif step == "menanam_pohon_hulu" and trees >= 5 and not hutan_done:
+			elif step == "menanam_pohon_hulu" and trees >= 10 and not hutan_done:
 				if npc.has_method("set_dialog_id"):
 					npc.set_dialog_id("h1_penjaga_hutan_selesai")
 				if npc.has_method("show_exclaim"):
@@ -669,9 +670,11 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "", au
 	var is_pure_loading: bool = slide_text.strip_edges().is_empty()
 	var dur: float = 0.55 if auto_close_delay > 0.0 else 1.1
 
-	# Karakter MC berjalan melintasi pijakan di tengah layar
-	var mc_shadow := _build_walking_shadow_mc(walk_dir, dur + (auto_close_delay if auto_close_delay > 0.0 else 0.4))
-	vbox.add_child(mc_shadow)
+	# Karakter MC berjalan melintasi pijakan HANYA pada perpindahan map / loading antar-zona,
+	# BUKAN pada perpindahan hari (perpindahan hari tampil hening & bersih dengan teks saja).
+	if is_pure_loading:
+		var mc_shadow := _build_walking_shadow_mc(walk_dir, dur + (auto_close_delay if auto_close_delay > 0.0 else 0.4))
+		vbox.add_child(mc_shadow)
 
 	var pixel_font: Font = load("res://assets/fonts/PixelifySans.ttf") if ResourceLoader.exists("res://assets/fonts/PixelifySans.ttf") else null
 
@@ -875,30 +878,19 @@ func _spawn_hulu_riverbank_trash() -> void:
 	_trash_spawned_hulu_river = true
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	var river_spots: Array[Vector2] = [
-		# Bantaran barat sungai hulu (daratan pasir padat, mudah dijangkau pemain):
-		Vector2(23.5, 10.0),
-		Vector2(23.8, 11.5),
-		Vector2(23.5, 12.5),
-		Vector2(24.0, 17.5),
-		Vector2(23.5, 18.5),
-		Vector2(23.8, 20.0),
-		Vector2(23.5, 21.5),
-		Vector2(23.8, 23.0),
-		Vector2(24.0, 24.5),
-		# Bantaran timur sungai hulu (tepi hutan seberang jembatan):
-		Vector2(34.8, 9.5),
-		Vector2(34.5, 11.0),
-		Vector2(35.0, 12.5),
-		Vector2(34.6, 17.5),
-		Vector2(35.0, 19.0),
-		Vector2(37.5, 20.5),
-		# Bantaran mata air utara hulu:
-		Vector2(18.0, 3.5),
-		Vector2(18.5, 6.0),
-		Vector2(19.0, 8.5),
-		Vector2(38.5, 3.5),
-		Vector2(38.5, 6.0),
-		Vector2(38.0, 8.5),
+		# Bantaran barat sungai hulu (tersebar rapi dan berjarak lega, tidak menumpuk):
+		Vector2(23.5, 8.0),   # Tepi pasir utara dekat mata air
+		Vector2(23.8, 11.5),  # Bantaran pasir utara
+		Vector2(23.5, 15.0),  # Sisi barat dekat jembatan
+		Vector2(23.8, 19.0),  # Bantaran pasir selatan bawah jembatan
+		Vector2(24.0, 23.5),  # Ujung pasir selatan
+
+		# Bantaran timur sungai hulu (tersebar rapi di tepi air, tidak berkerumun di pohon/railing):
+		Vector2(35.5, 7.5),   # Tepi pasir utara seberang jembatan
+		Vector2(36.0, 11.0),  # Tepi air timur (berjarak lega dari pohon & pagar teras)
+		Vector2(35.5, 14.5),  # Tepi jembatan timur
+		Vector2(36.0, 18.5),  # Tepi air selatan bawah jembatan
+		Vector2(38.0, 22.0),  # Tikungan pasir selatan
 	]
 	var cats: Array[String] = ["plastik", "organik", "plastik", "b3", "organik", "plastik"]
 	for i in range(river_spots.size()):
@@ -967,14 +959,14 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			toast("Suara siapa itu tadi? Cari di sekitar jembatan!", true)
 		"h1_datuk":
 			GameState.record_choice("datuk_bencana_revealed", true)
-			GameState.meter_bencana = 20.0
+			GameState.meter_bencana = 55.0
 			GameState.record_choice("hulu_story_step", "bersihkan_sungai")
 			_sync_hulu_story_state()
 			_spawn_hulu_riverbank_trash()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
-			toast("Datuk Sampan memperingatkan: Bencana sungai kini 20%! Bersihkan sampah di pinggiran sungai.", true)
+			toast("Datuk Sampan memperingatkan: Ancaman bencana sungai sudah 55%! Bersihkan sampah di pinggiran sungai.", true)
 		"h1_selesai_sungai":
 			GameState.record_choice("hulu_story_step", "tanam_pohon_hulu")
 			_sync_hulu_story_state()
@@ -988,7 +980,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
-			toast("Tanam 5 bibit pohon hutan di titik-titik bertanda!", true)
+			toast("Tanam 10 bibit pohon hutan di titik-titik bertanda!", true)
 		"h1_penjaga_hutan_selesai":
 			GameState.record_choice("penjaga_hutan_selesai", true)
 			GameState.record_choice("hulu_story_step", "ke_toko_jaya")
@@ -1344,7 +1336,6 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 			Vector2(35.0, 12.0), # Sisi timur jembatan Hulu tepat di tepi sungai
 		],
 		"desa": [
-			Vector2(14.0, 11.0), # Nempel sejajar dinding kanan Toko Jaya utara
 			Vector2(32.5, 24.5), # Di tepi jalan kampung selatan (bebas dari badan Warung Barokah)
 			Vector2(20.0, 24.5), # Di bantaran sungai selatan Desa dekat jalan setapak
 		],
@@ -1383,17 +1374,21 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 
 func _spawn_pantun_boards() -> void:
 	var board_scene := preload("res://scenes/world/pantun_board.tscn")
-	# Letakkan papan pantun di tepi rumput pinggir jalan (bukan di tengah jalan setapak/jalan raya).
-	var positions: Dictionary = {
-		"hulu": Vector2(19.5, 13.5) * TILE,
-		"desa": Vector2(16.0, 13.5) * TILE,
-		"kota": Vector2(50, 12.5) * TILE,
-		"hilir": Vector2(18, 12.5) * TILE,
-	}
-	for zone in positions:
+	# 4 Papan Pantun tersebar di Desa & Kota untuk memecahkan dilema lingkungan,
+	# ditambah 1 papan pantun ujian akhir di Muara Hilir (total 5 papan):
+	var board_configs: Array[Dictionary] = [
+		{"zone": "hulu", "pos": Vector2(19.5, 13.5) * TILE, "dialog": ""},
+		{"zone": "desa", "pos": Vector2(16.0, 13.5) * TILE, "dialog": "h1_pantun_darwis"}, # Papan Kasur Darwis (Toko Jaya)
+		{"zone": "desa", "pos": Vector2(37.0, 23.0) * TILE, "dialog": "h2_pantun_rina"},   # Papan Jelantah Rina (Warung)
+		{"zone": "kota", "pos": Vector2(14.0, 12.8) * TILE, "dialog": "h3_pantun_jali"},   # Papan Gang Jali (Mulut Gang)
+		{"zone": "kota", "pos": Vector2(50.0, 12.5) * TILE, "dialog": "h3_pantun_kota"},   # Papan Sandi Pintu Air (Kanal)
+		{"zone": "hilir", "pos": Vector2(18.0, 12.5) * TILE, "dialog": "h7_pantun"},      # Papan Pantun Ujian Muara
+	]
+	for cfg in board_configs:
 		var board := board_scene.instantiate()
-		board.position = positions[zone]
-		_zone_containers[zone].add_child(board)
+		board.position = cfg["pos"]
+		board.set("pantun_id", cfg["dialog"])
+		_zone_containers[cfg["zone"]].add_child(board)
 
 func _spawn_kota_levers() -> void:
 	var lever_scene := preload("res://scenes/world/lever_topdown.tscn")
@@ -1469,6 +1464,8 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1), save
 
 	# Update kamera & label lokasi
 	var zone_offset: int = ZONE_ORDER.find(zone)
+	if zone_offset >= 0:
+		GameState.current_level = zone_offset + 1
 	camera.limit_left = zone_offset * ZONE_WIDTH * TILE
 	camera.limit_right = (zone_offset + 1) * ZONE_WIDTH * TILE
 	if camera.has_method("reset_smoothing"):
@@ -1478,7 +1475,7 @@ func change_zone(zone: String, custom_local_pos: Vector2 = Vector2(-1, -1), save
 
 	# Toast + kearifan lokal zona. Kearifan muncul setelah toast agar tidak
 	# bertumpuk dengan panel bawah.
-	toast("Memasuki zona: %s" % zone.capitalize(), true)
+	toast("Memasuki: %s" % ZONE_LABELS.get(zone, zone.capitalize()), true)
 	if _show_zone_wisdom:
 		_show_zone_wisdom_delayed(zone)
 
@@ -1629,7 +1626,7 @@ func _refresh_mission() -> void:
 				lines = ["Temui Penjaga Hutan di perbukitan hulu."]
 			elif step == "menanam_pohon_hulu":
 				title = "PENANAMAN POHON"
-				lines = ["Tanam bibit pohon di titik bertanda: %d/5" % trees]
+				lines = ["Tanam bibit pohon di titik bertanda: %d/10" % trees]
 			elif step == "ke_toko_jaya":
 				title = "MENUJU DESA"
 				lines = ["Lanjutkan ke Toko Jaya di Desa Suka Maju."]
@@ -1792,6 +1789,8 @@ func on_trash_picked(category: String, trash_id: String) -> void:
 		toast("Sampah %s dipungut." % category, true)
 
 	if _current_zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
+		# Setiap sampah yang dipungut sedikit mengurangi ancaman bencana (dari 55% turun bertahap)
+		GameState.meter_bencana = maxf(40.0, GameState.meter_bencana - 1.5)
 		var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
 		if carry_cnt == 0 and cleaned >= 5:
 			call_deferred("_trigger_selesai_sungai")
@@ -1814,6 +1813,8 @@ func on_bin_sorted(category: String) -> void:
 	toast("Sampah %s terpilah. Sungai membaik." % category, true)
 
 	if zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
+		# Memilah sampah ke tong juga membantu sedikit menurunkan ancaman bencana
+		GameState.meter_bencana = maxf(35.0, GameState.meter_bencana - 1.5)
 		var sorted: int = GameState.zone_stat("hulu", "sorted")
 		if sorted >= 5:
 			call_deferred("_trigger_selesai_sungai")
@@ -1896,6 +1897,10 @@ func on_npc_talked(npc_key: String) -> void:
 	var zone: String = _current_zone
 	# Pak Hendra dan Bu Mira memakai dialog warung hulu yang sama.
 	var effective_key: String = "npc_ibu_mc" if (zone == "hulu" and npc_key == "npc_pak_hendra") else npc_key
+	GameState.mark_character_talked(npc_key)
+	if effective_key == "npc_ibu_mc":
+		GameState.mark_character_talked("ibu_mc")
+		GameState.mark_character_talked("bapak")
 	var is_new: bool = GameState.mark_zone_talked(zone, effective_key)
 	if effective_key == "npc_ibu_mc":
 		for npc in get_tree().get_nodes_in_group("world_npc"):
@@ -1914,8 +1919,8 @@ func on_npc_talked(npc_key: String) -> void:
 			GameState.unlock_card("card_kearifan_02")
 		"npc_penjaga_hutan":
 			if not GameState.has_quest("tanam_pohon_hulu"):
-				GameState.start_quest("tanam_pohon_hulu", 5)
-				QuestManager.trigger_npc_quest("tanam_pohon_hulu", "Tanam 5 pohon di Hulu", 5)
+				GameState.start_quest("tanam_pohon_hulu", 10)
+				QuestManager.trigger_npc_quest("tanam_pohon_hulu", "Tanam 10 pohon di Hulu", 10)
 			GameState.unlock_card("card_hutan_01")
 		"npc_pemuka_desa":
 			GameState.unlock_card("card_adat_01")
@@ -1961,6 +1966,12 @@ func on_npc_talked(npc_key: String) -> void:
 	GameState.save_game()
 
 # ─── Pantun Melayu Deli ──────────────────────────────────────────────────────
+
+func open_pantun_board(board_dialog_id: String = "") -> void:
+	if not board_dialog_id.is_empty():
+		DialogueManager.mulai(board_dialog_id)
+		return
+	open_pantun()
 
 func open_pantun() -> void:
 	var step := str(GameState.choices.get("hulu_story_step", ""))
@@ -2177,7 +2188,7 @@ func _zone_intro_npc() -> Node2D:
 			if step == "tanam_pohon_hulu":
 				return _npc_by_key("npc_penjaga_hutan")
 			if step == "menanam_pohon_hulu":
-				if GameState.zone_stat("hulu", "trees") >= 5:
+				if GameState.zone_stat("hulu", "trees") >= 10:
 					return _npc_by_key("npc_penjaga_hutan")
 				return null
 			if step == "ke_toko_jaya":

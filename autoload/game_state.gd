@@ -123,6 +123,9 @@ var npc_sikap: Dictionary = {
 	"darwis": SIKAP_ACUH,
 }
 
+## Catatan karakter NPC yang sudah diajak bicara oleh MC untuk Buku Jurnal Karakter
+var talked_characters: Dictionary = {}
+
 ## Mencatat NPC yang sudah pernah memberikan bonus -10 Meter saat pertama kali jadi Peduli
 var _npc_peduli_bonus: Dictionary = {
 	"jali": false,
@@ -232,6 +235,7 @@ func add_zone_stat(zone: String, key: String, amount: int = 1) -> void:
 
 ## Catat NPC yang sudah diajak bicara. Mengembalikan true jika baru pertama kali.
 func mark_zone_talked(zone: String, npc_key: String) -> bool:
+	mark_character_talked(npc_key)
 	if not zone_progress.has(zone):
 		zone_progress[zone] = {}
 	var data: Dictionary = zone_progress[zone]
@@ -242,6 +246,86 @@ func mark_zone_talked(zone: String, npc_key: String) -> bool:
 	data["talked_keys"] = keys
 	data["talked"] = keys.size()
 	return true
+
+func mark_character_talked(char_key: String) -> void:
+	if char_key.is_empty():
+		return
+	talked_characters[char_key] = true
+	var map_alias := {
+		"npc_ibu_mc": ["ibu_mc", "bapak"],
+		"npc_pak_hendra": ["bapak", "ibu_mc"],
+		"ibu_mc": ["ibu_mc", "bapak"],
+		"bapak": ["bapak", "ibu_mc"],
+		"npc_datuk": ["datuk"],
+		"datuk": ["datuk"],
+		"npc_penjaga_hutan": ["penjaga_hutan"],
+		"penjaga_hutan": ["penjaga_hutan"],
+		"npc_petani_1": ["darwis"],
+		"npc_darwis": ["darwis"],
+		"darwis": ["darwis"],
+		"npc_pemilik_toko": ["pemilik_toko"],
+		"pemilik_toko": ["pemilik_toko"],
+		"npc_ibu_desa": ["rina"],
+		"npc_rina": ["rina"],
+		"rina": ["rina"],
+		"npc_pemuka_desa": ["pemuka_desa"],
+		"pemuka_desa": ["pemuka_desa"],
+		"npc_pedagang": ["jali"],
+		"npc_jali": ["jali"],
+		"jali": ["jali"],
+		"npc_tokoh_masyarakat": ["pak_rt"],
+		"npc_pak_rt": ["pak_rt"],
+		"pak_rt": ["pak_rt"],
+		"npc_ibu_rumah": ["ibu_rumah"],
+		"ibu_rumah": ["ibu_rumah"],
+		"npc_anak_sekolah": ["budi"],
+		"npc_budi": ["budi"],
+		"budi": ["budi"],
+		"npc_penjaga_sungai": ["penjaga_sungai"],
+		"penjaga_sungai": ["penjaga_sungai"],
+		"npc_nelayan": ["nelayan"],
+		"nelayan": ["nelayan"]
+	}
+	if map_alias.has(char_key):
+		for k in map_alias[char_key]:
+			talked_characters[k] = true
+
+func has_talked_to_npc(char_key: String) -> bool:
+	if talked_characters.get(char_key, false):
+		return true
+	var zone_keys_mapping: Dictionary = {
+		"ibu_mc": ["npc_ibu_mc", "npc_pak_hendra", "ibu_mc", "bapak"],
+		"bapak": ["npc_ibu_mc", "npc_pak_hendra", "ibu_mc", "bapak"],
+		"datuk": ["npc_datuk", "datuk"],
+		"penjaga_hutan": ["npc_penjaga_hutan", "penjaga_hutan"],
+		"pemilik_toko": ["npc_pemilik_toko", "pemilik_toko"],
+		"pemuka_desa": ["npc_pemuka_desa", "pemuka_desa"],
+		"pak_rt": ["npc_tokoh_masyarakat", "npc_pak_rt", "pak_rt"],
+		"ibu_rumah": ["npc_ibu_rumah", "ibu_rumah"],
+		"budi": ["npc_anak_sekolah", "npc_budi", "budi"],
+		"penjaga_sungai": ["npc_penjaga_sungai", "penjaga_sungai"],
+		"nelayan": ["npc_nelayan", "nelayan"],
+		"darwis": ["npc_petani_1", "npc_darwis", "darwis"],
+		"rina": ["npc_ibu_desa", "npc_rina", "rina"],
+		"jali": ["npc_pedagang", "npc_jali", "jali"]
+	}
+	var check_keys: Array = zone_keys_mapping.get(char_key, [char_key, "npc_" + char_key])
+	for z in zone_progress.keys():
+		var z_keys: Array = zone_progress[z].get("talked_keys", [])
+		for k in check_keys:
+			if k in z_keys or talked_characters.get(k, false):
+				return true
+	return false
+
+func has_decided_npc(char_key: String) -> bool:
+	var raw_key := char_key.replace("npc_", "")
+	if choices.has(raw_key + "_peduli"):
+		return true
+	if choices.has(raw_key + "_menolak"):
+		return true
+	if get_sikap(raw_key) != SIKAP_ACUH:
+		return true
+	return false
 
 func zone_talked_count(zone: String) -> int:
 	return zone_stat(zone, "talked")
@@ -432,9 +516,6 @@ func _cek_otomatis_ujian_hujan() -> void:
 		jalankan_ujian_hujan(1)
 	elif hari == 5 and waktu == "sore" and not _ujian_sudah_jalan.get(2, false):
 		jalankan_ujian_hujan(2)
-	elif hari == 7 and waktu == "sore" and not _menu_utang_h7_muncul:
-		_menu_utang_h7_muncul = true
-		buka_menu_bayar_utang()
 	elif hari == 7 and waktu == "malam" and not _ujian_sudah_jalan.get(3, false):
 		jalankan_ujian_hujan(3)
 
@@ -586,22 +667,9 @@ func rewind() -> void:
 	if is_inside_tree():
 		SceneManager.change_scene("res://scenes/world/world_sungai_deli.tscn")
 
-## Membuka Menu Bayar Utang Hari 7 Sore (3 pilihan: bayar semua, bayar sebagian via slider, minta waktu)
+## Membuka Menu Bayar Utang (dinonaktifkan sesuai Naskah V2: Warung tidak berutang)
 func buka_menu_bayar_utang() -> void:
-	if utang <= 0:
-		return
-	if not is_inside_tree():
-		return
-	var existing := get_tree().root.get_node_or_null("DebtPaymentPopup")
-	if existing:
-		existing.queue_free()
-
-	var popup_script := load("res://scripts/debt_payment_popup.gd")
-	if popup_script:
-		var popup := CanvasLayer.new()
-		popup.name = "DebtPaymentPopup"
-		popup.set_script(popup_script)
-		get_tree().root.add_child(popup)
+	return
 
 ## Dipanggil saat puzzle tuas pintu air di Hari 7 malam selesai
 func selesaikan_puzzle_pintu_air() -> void:
@@ -790,6 +858,7 @@ func save_game() -> bool:
 		"planted_spots": planted_spots,
 		"planted_days": planted_days,
 		"picked_trash_ids": picked_trash_ids,
+		"talked_characters": talked_characters,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file == null:
@@ -894,6 +963,7 @@ func load_game() -> bool:
 	player_name = str(data.get("player_name", ""))
 	parent_shop_status = str(data.get("parent_shop_status", "pulih" if warung_bersih else "rusak"))
 	quest_progress = int(data.get("quest_progress", 0))
+	talked_characters = data.get("talked_characters", {})
 	zone_unlocked = data.get("zone_unlocked", {"hulu": true, "desa": true, "kota": true, "hilir": true})
 	for z in ["hulu", "desa", "kota", "hilir"]:
 		zone_unlocked[z] = true
@@ -929,6 +999,7 @@ func load_game() -> bool:
 			planted_days[str(spot)] = int(saved_days[spot])
 
 	picked_trash_ids.clear()
+	talked_characters.clear()
 	for tid in data.get("picked_trash_ids", []):
 		picked_trash_ids.append(str(tid))
 
@@ -1043,6 +1114,7 @@ func reset() -> void:
 	planted_spots.clear()
 	planted_days.clear()
 	picked_trash_ids.clear()
+	talked_characters.clear()
 	var qm := get_node_or_null("/root/QuestManager")
 	if qm != null:
 		if qm.has_method("reset_all"):

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://hud_scene"]
+[gd_scene load_steps=31 format=3 uid="uid://hud_scene"]
 
 [ext_resource type="Script" path="res://scripts/hud.gd" id="1_hud"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/droplet.png" id="2_droplet"]
@@ -7,6 +7,18 @@
 [ext_resource type="FontFile" path="res://assets/fonts/Nunito.ttf" id="8_nunito"]
 [ext_resource type="Texture2D" path="res://assets/ui/hud_bencana_bar_bg_180.png" id="9_bencana_bg"]
 [ext_resource type="Texture2D" path="res://assets/ui/hud_mission_box_209.png" id="10_mission_bg"]
+[ext_resource type="Texture2D" uid="uid://csetgw3gusbs4" path="res://assets/ui/hud_location_banner_124.png" id="11_location_banner"]
+[ext_resource type="Texture2D" uid="uid://8f31hpw85k0k" path="res://assets/ui/hud_menu_button_24.png" id="12_menu_btn"]
+[ext_resource type="Texture2D" uid="uid://dltp6du5qgamj" path="res://assets/ui/hud_menu_button_24_hover.png" id="13_menu_btn_hover"]
+[ext_resource type="Texture2D" uid="uid://wcujvf6jov21" path="res://assets/ui/hud_menu_button_24_pressed.png" id="14_menu_btn_pressed"]
+[ext_resource type="Texture2D" uid="uid://bqafwx8vkcfxu" path="res://assets/ui/hud_mission_toggle_btn_24.png" id="15_mission_toggle_normal"]
+[ext_resource type="Texture2D" uid="uid://dgd6jv3mjw6vv" path="res://assets/ui/hud_mission_toggle_btn_24_open.png" id="16_mission_toggle_open"]
+[ext_resource type="Texture2D" uid="uid://d13nou2l6nglw" path="res://assets/ui/hud_mission_toggle_btn_24_hover.png" id="17_mission_toggle_hover"]
+[ext_resource type="Texture2D" uid="uid://b4abid77c03li" path="res://assets/ui/hud_mission_toggle_btn_24_pressed.png" id="18_mission_toggle_pressed"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud_book_button_24.png" id="19_book_btn_normal"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud_book_button_24_hover.png" id="20_book_btn_hover"]
+[ext_resource type="Texture2D" path="res://assets/ui/hud_book_button_24_pressed.png" id="21_book_btn_pressed"]
+[ext_resource type="PackedScene" path="res://scenes/ui/character_book.tscn" id="22_character_book"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_paper_card"]
 content_margin_left = 5.0
@@ -24,21 +36,54 @@ corner_radius_top_right = 4
 corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 
-[sub_resource type="StyleBoxFlat" id="StyleBox_location"]
-content_margin_left = 6.0
-content_margin_top = 1.0
-content_margin_right = 6.0
-content_margin_bottom = 1.0
-bg_color = Color(0.96, 0.93, 0.84, 0.94)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.55, 0.32, 0.14, 0.9)
-corner_radius_top_left = 4
-corner_radius_top_right = 4
-corner_radius_bottom_right = 4
-corner_radius_bottom_left = 4
+[sub_resource type="StyleBoxTexture" id="StyleBox_location"]
+content_margin_left = 14.0
+content_margin_top = 2.0
+content_margin_right = 14.0
+content_margin_bottom = 2.0
+texture = ExtResource("11_location_banner")
+texture_margin_left = 16.0
+texture_margin_top = 4.0
+texture_margin_right = 16.0
+texture_margin_bottom = 4.0
+axis_stretch_horizontal = 1
+axis_stretch_vertical = 1
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_pause_normal"]
+texture = ExtResource("12_menu_btn")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_pause_hover"]
+texture = ExtResource("13_menu_btn_hover")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_pause_pressed"]
+texture = ExtResource("14_menu_btn_pressed")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_pause_focus"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_mission_toggle_normal"]
+texture = ExtResource("15_mission_toggle_normal")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_mission_toggle_open"]
+texture = ExtResource("16_mission_toggle_open")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_mission_toggle_hover"]
+texture = ExtResource("17_mission_toggle_hover")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_mission_toggle_pressed"]
+texture = ExtResource("18_mission_toggle_pressed")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_mission_toggle_focus"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_book_normal"]
+texture = ExtResource("19_book_btn_normal")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_book_hover"]
+texture = ExtResource("20_book_btn_hover")
+
+[sub_resource type="StyleBoxTexture" id="StyleBox_book_pressed"]
+texture = ExtResource("21_book_btn_pressed")
+
+[sub_resource type="StyleBoxEmpty" id="StyleBox_book_focus"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBox_mission"]
 content_margin_left = 6.0
@@ -174,17 +219,19 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="LocationCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
+custom_minimum_size = Vector2(124, 24)
 layout_mode = 2
 size_flags_vertical = 4
 theme_override_styles/panel = SubResource("StyleBox_location")
 
 [node name="Label" type="Label" parent="SafeMargin/Root/TopBar/LocationCard"]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.55, 0.32, 0.14, 1)
+theme_override_colors/font_color = Color(0.24, 0.16, 0.08, 1)
 theme_override_fonts/font = ExtResource("8_nunito")
-theme_override_font_sizes/font_size = 9
+theme_override_font_sizes/font_size = 8
 text = "HULU SUNGAI DELI"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MoneyCard" type="PanelContainer" parent="SafeMargin/Root/TopBar"]
 visible = false
@@ -213,20 +260,50 @@ theme_override_font_sizes/font_size = 9
 text = "Rp 0"
 
 [node name="PauseBtn" type="Button" parent="SafeMargin/Root/TopBar"]
-custom_minimum_size = Vector2(22, 19)
+custom_minimum_size = Vector2(24, 24)
 layout_mode = 2
 size_flags_vertical = 4
+focus_mode = 0
 tooltip_text = "Jurnal / Menu"
-icon = ExtResource("7_card")
-expand_icon = true
-icon_max_width = 13
+theme_override_styles/normal = SubResource("StyleBox_pause_normal")
+theme_override_styles/hover = SubResource("StyleBox_pause_hover")
+theme_override_styles/pressed = SubResource("StyleBox_pause_pressed")
+theme_override_styles/focus = SubResource("StyleBox_pause_focus")
+
+[node name="MissionToggleBtn" type="Button" parent="SafeMargin/Root"]
+visible = false
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 0
+offset_top = 28.0
+offset_right = 24.0
+offset_bottom = 52.0
+focus_mode = 0
+tooltip_text = "Lihat Misi"
+theme_override_styles/normal = SubResource("StyleBox_mission_toggle_normal")
+theme_override_styles/hover = SubResource("StyleBox_mission_toggle_hover")
+theme_override_styles/pressed = SubResource("StyleBox_mission_toggle_pressed")
+theme_override_styles/focus = SubResource("StyleBox_mission_toggle_focus")
+
+[node name="BookBtn" type="Button" parent="SafeMargin/Root"]
+custom_minimum_size = Vector2(24, 24)
+layout_mode = 0
+offset_top = 56.0
+offset_right = 24.0
+offset_bottom = 80.0
+focus_mode = 0
+tooltip_text = "Buku Karakter"
+theme_override_styles/normal = SubResource("StyleBox_book_normal")
+theme_override_styles/hover = SubResource("StyleBox_book_hover")
+theme_override_styles/pressed = SubResource("StyleBox_book_pressed")
+theme_override_styles/focus = SubResource("StyleBox_book_focus")
 
 [node name="MissionCard" type="Control" parent="SafeMargin/Root"]
 visible = false
 custom_minimum_size = Vector2(209, 86)
 layout_mode = 0
+offset_left = 28.0
 offset_top = 28.0
-offset_right = 209.0
+offset_right = 237.0
 offset_bottom = 114.0
 
 [node name="BG" type="TextureRect" parent="SafeMargin/Root/MissionCard"]
@@ -362,3 +439,5 @@ text = ""
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
+
+[node name="CharacterBook" parent="." instance=ExtResource("22_character_book")]

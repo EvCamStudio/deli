@@ -13,6 +13,9 @@ class_name HUD
 @onready var location_label: Label = get_node_or_null("SafeMargin/Root/TopBar/LocationCard/Label") as Label
 @onready var rupiah_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/RupiahLabel
 @onready var mission_card: Control = $SafeMargin/Root/MissionCard
+@onready var mission_toggle_btn: Button = get_node_or_null("SafeMargin/Root/MissionToggleBtn") as Button
+@onready var book_btn: Button = get_node_or_null("SafeMargin/Root/BookBtn") as Button
+@onready var character_book: CanvasLayer = get_node_or_null("CharacterBook") as CanvasLayer
 @onready var mission_label: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionLabel") if has_node("SafeMargin/Root/MissionCard/MissionLabel") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionLabel")) as Label
 @onready var mission_title: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionTitle") if has_node("SafeMargin/Root/MissionCard/MissionTitle") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionTitle")) as Label
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
@@ -50,10 +53,15 @@ const NPC_DISPLAY_NAMES: Dictionary = {
 
 const LOCATION_NAMES: Dictionary = {
 	1: "HULU SUNGAI DELI",
-	2: "DESA SUNGAI DELI",
+	2: "DESA SUKA MAJU",
 	3: "KOTA MEDAN",
-	4: "HILIR SUNGAI DELI",
-	5: "EPILOG",
+	4: "MUARA SUNGAI DELI",
+	5: "TEPIAN SUNGAI DELI",
+	"hulu": "HULU SUNGAI DELI",
+	"desa": "DESA SUKA MAJU",
+	"kota": "KOTA MEDAN",
+	"hilir": "MUARA SUNGAI DELI",
+	"epilog": "TEPIAN SUNGAI DELI",
 }
 
 func _ready() -> void:
@@ -62,7 +70,7 @@ func _ready() -> void:
 		money_card.visible = false
 
 	_build_bar_styles()
-	_build_sikap_panel()
+	# Indikator sikap dihapus dari HUD (digantikan oleh Buku Karakter)
 
 	# Hubungkan sinyal GameState
 	if GameState.has_signal("meter_changed"):
@@ -85,6 +93,17 @@ func _ready() -> void:
 	_apply_safe_area()
 	if pause_btn:
 		pause_btn.pressed.connect(_on_pause_pressed)
+	if mission_toggle_btn:
+		mission_toggle_btn.pressed.connect(_on_mission_toggle_pressed)
+	if book_btn:
+		book_btn.pressed.connect(_on_book_btn_pressed)
+	if character_book == null:
+		var book_scene: PackedScene = load("res://scenes/ui/character_book.tscn")
+		if book_scene:
+			character_book = book_scene.instantiate()
+			add_child(character_book)
+	if mission_card:
+		mission_card.gui_input.connect(_on_mission_card_gui_input)
 
 	if toast_panel:
 		toast_panel.hide()
@@ -92,11 +111,18 @@ func _ready() -> void:
 		hint_card.hide()
 	if compass_panel:
 		compass_panel.hide()
-	hide_mission()
+	# Kotak misi langsung terbuka di awal jika ada misi aktif (player opsional bisa menutup)
+	if mission_card and mission_label and not mission_label.text.strip_edges().is_empty():
+		show_mission()
+	else:
+		hide_mission()
 	update_all()
 	_update_sikap_visibility()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.keycode == KEY_B:
+			_on_book_btn_pressed()
 	# Hilangkan petunjuk otomatis begitu pemain bergerak atau menyentuh layar
 	if hint_card and hint_card.visible:
 		if event.is_action_pressed("move_up") or event.is_action_pressed("move_down") or \
@@ -128,97 +154,24 @@ func _make_bar_style(color: Color) -> StyleBoxFlat:
 	style.border_color = Color(0.55, 0.24, 0.05, 0.9)
 	return style
 
-## Membuat panel indikator Sikap NPC (Jali, Rina, Darwis) dengan kotak warna & teks
+## Indikator sikap di layar HUD dihapus (sesuai permintaan user, digantikan oleh Buku Karakter)
 func _build_sikap_panel() -> void:
-	if _sikap_card != null or root_control == null:
-		return
-	_sikap_card = PanelContainer.new()
-	_sikap_card.name = "SikapCard"
-	_sikap_card.layout_mode = 1
-	_sikap_card.anchors_preset = Control.PRESET_TOP_RIGHT
-	_sikap_card.anchor_left = 1.0
-	_sikap_card.anchor_right = 1.0
-	_sikap_card.offset_left = -160.0
-	_sikap_card.offset_top = 26.0
-	_sikap_card.offset_right = 0.0
-	_sikap_card.offset_bottom = 44.0
+	pass
 
-	var card_style := StyleBoxFlat.new()
-	card_style.bg_color = Color(0.96, 0.93, 0.84, 0.94)
-	card_style.border_color = Color(0.48, 0.35, 0.22, 0.85)
-	card_style.set_border_width_all(1)
-	card_style.set_corner_radius_all(4)
-	card_style.content_margin_left = 5
-	card_style.content_margin_top = 1
-	card_style.content_margin_right = 5
-	card_style.content_margin_bottom = 1
-	_sikap_card.add_theme_stylebox_override("panel", card_style)
-
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 6)
-	row.alignment = BoxContainer.ALIGNMENT_CENTER
-	_sikap_card.add_child(row)
-
-	var font: FontFile = load("res://assets/fonts/Nunito.ttf")
-
-	for npc_key in ["jali", "rina", "darwis"]:
-		var item_box := HBoxContainer.new()
-		item_box.add_theme_constant_override("separation", 3)
-
-		var color_rect := ColorRect.new()
-		color_rect.custom_minimum_size = Vector2(7, 7)
-		color_rect.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		color_rect.color = Color(0.55, 0.55, 0.55)
-		item_box.add_child(color_rect)
-
-		var lbl := Label.new()
-		if font:
-			lbl.add_theme_font_override("font", font)
-		lbl.add_theme_font_size_override("font_size", 9)
-		lbl.add_theme_color_override("font_color", Color(0.2, 0.14, 0.1))
-		lbl.text = "%s: Acuh" % NPC_DISPLAY_NAMES[npc_key]
-		item_box.add_child(lbl)
-
-		row.add_child(item_box)
-		_npc_ui[npc_key] = {
-			"container": item_box,
-			"box": color_rect,
-			"label": lbl,
-		}
-
-	root_control.add_child(_sikap_card)
-	_update_sikap_visibility()
-
-## Menyesuaikan tampilan sikap agar hanya muncul untuk NPC yang relevan di zona saat ini
 func _update_sikap_visibility() -> void:
-	if _sikap_card == null:
-		return
-	var zone: String = ""
-	if "in_world" in GameState and GameState.in_world and "world_zone" in GameState:
-		zone = str(GameState.world_zone).to_lower()
-	elif "current_level" in GameState:
-		match GameState.current_level:
-			1: zone = "hulu"
-			2: zone = "desa"
-			3: zone = "kota"
-			4: zone = "hilir"
-			_: zone = ""
+	pass
 
-	# Di Hulu, Hilir, atau Epilog, warga desa/kota (Jali, Rina, Darwis) tidak ada.
-	# Sembunyikan panel sikap agar UI tetap bersih dan tidak menyemak.
-	if zone == "hulu" or zone == "hilir" or zone == "epilog" or zone.is_empty():
-		_sikap_card.hide()
-		return
-
-	_sikap_card.show()
-	if zone == "desa":
-		if "jali" in _npc_ui: _npc_ui["jali"]["container"].hide()
-		if "rina" in _npc_ui: _npc_ui["rina"]["container"].show()
-		if "darwis" in _npc_ui: _npc_ui["darwis"]["container"].show()
-	elif zone == "kota":
-		if "jali" in _npc_ui: _npc_ui["jali"]["container"].show()
-		if "rina" in _npc_ui: _npc_ui["rina"]["container"].hide()
-		if "darwis" in _npc_ui: _npc_ui["darwis"]["container"].hide()
+func _on_book_btn_pressed() -> void:
+	if character_book == null:
+		var book_scene: PackedScene = load("res://scenes/ui/character_book.tscn")
+		if book_scene:
+			character_book = book_scene.instantiate()
+			add_child(character_book)
+	if character_book:
+		if character_book.is_open():
+			character_book.close()
+		else:
+			character_book.open()
 
 func _apply_safe_area() -> void:
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
@@ -247,18 +200,20 @@ func update_all() -> void:
 func _update_location() -> void:
 	if not location_label:
 		return
+	var loc_name: String = ""
 	if "in_world" in GameState and GameState.in_world and "world_zone" in GameState:
-		set_location(GameState.world_zone.capitalize() + " Deli")
-	else:
-		var zone_name: String = LOCATION_NAMES.get(GameState.current_level, "")
-		if not zone_name.is_empty():
-			location_label.text = zone_name
+		loc_name = LOCATION_NAMES.get(str(GameState.world_zone).to_lower(), "")
+	if loc_name.is_empty():
+		loc_name = LOCATION_NAMES.get(GameState.current_level, "")
+	if not loc_name.is_empty():
+		location_label.text = loc_name
 	_update_sikap_visibility()
 
 ## Dipakai world map saat berpindah zona.
 func set_location(zone_name: String) -> void:
 	if location_label:
-		location_label.text = zone_name
+		var display_name: String = LOCATION_NAMES.get(zone_name.to_lower(), zone_name)
+		location_label.text = display_name
 	_update_sikap_visibility()
 
 func _on_river_health_changed(value: float) -> void:
@@ -278,37 +233,12 @@ func _on_meter_changed(meter_val: float) -> void:
 		river_bar.add_theme_stylebox_override("fill", _bar_danger)
 
 func _update_all_sikap() -> void:
-	for npc_key in ["jali", "rina", "darwis"]:
-		var val: int = GameState.get_sikap(npc_key) if GameState.has_method("get_sikap") else 0
-		_on_sikap_changed(npc_key, val)
+	if character_book and character_book.is_open():
+		character_book._render_page()
 
-func _on_sikap_changed(npc: String, nilai: int) -> void:
-	var key: String = npc.to_lower()
-	if key not in _npc_ui:
-		return
-	var entry: Dictionary = _npc_ui[key]
-	var box: ColorRect = entry["box"]
-	var lbl: Label = entry["label"]
-	var display_name: String = NPC_DISPLAY_NAMES.get(key, key.capitalize())
-
-	var status_text: String = "Acuh"
-	var status_color := Color(0.55, 0.55, 0.55)  # 0: Acuh (Abu-abu)
-	match nilai:
-		GameState.SIKAP_MENOLAK:
-			status_text = "Menolak"
-			status_color = Color(0.80, 0.22, 0.20)  # -1: Merah
-		GameState.SIKAP_ACUH:
-			status_text = "Acuh"
-			status_color = Color(0.55, 0.55, 0.55)  # 0: Abu-abu
-		GameState.SIKAP_RAGU:
-			status_text = "Ragu"
-			status_color = Color(0.86, 0.62, 0.14)  # 1: Kuning/Oranye
-		GameState.SIKAP_PEDULI:
-			status_text = "Peduli"
-			status_color = Color(0.22, 0.68, 0.36)  # 2: Hijau
-
-	box.color = status_color
-	lbl.text = "%s: %s" % [display_name, status_text]
+func _on_sikap_changed(_npc: String, _nilai: int) -> void:
+	if character_book and character_book.is_open():
+		character_book._render_page()
 
 func _on_energy_changed(value: float) -> void:
 	if energy_label:
@@ -355,6 +285,9 @@ func _update_carry() -> void:
 func update_mission(text: String) -> void:
 	if not mission_card or not mission_label or not mission_title:
 		return
+	if text.strip_edges().is_empty():
+		hide_mission()
+		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
 		mission_title.text = lines[0].trim_prefix("◆ ").strip_edges().to_upper()
@@ -363,15 +296,60 @@ func update_mission(text: String) -> void:
 		mission_title.text = "MISI AKTIF"
 		mission_label.text = text
 	mission_card.reset_size()
-	mission_card.show()
+	# Kotak misi langsung muncul terbuka saat misi baru diterima (opsional player bisa menutup via tombol toggle)
+	show_mission()
 
 func show_mission() -> void:
 	if mission_card:
 		mission_card.show()
+	if mission_toggle_btn:
+		mission_toggle_btn.show()
+	_update_mission_toggle_icon()
 
 func hide_mission() -> void:
 	if mission_card:
 		mission_card.hide()
+	if mission_toggle_btn:
+		mission_toggle_btn.hide()
+	_update_mission_toggle_icon()
+
+func _on_mission_toggle_pressed() -> void:
+	if not mission_card:
+		return
+	mission_card.visible = not mission_card.visible
+	_update_mission_toggle_icon()
+
+func _on_mission_card_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		mission_card.hide()
+		_update_mission_toggle_icon()
+
+func _update_mission_toggle_icon() -> void:
+	if not mission_toggle_btn:
+		return
+	var is_open: bool = mission_card != null and mission_card.visible
+	if is_open:
+		var norm := StyleBoxTexture.new()
+		norm.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open.png")
+		var hov := StyleBoxTexture.new()
+		hov.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open_hover.png")
+		var prs := StyleBoxTexture.new()
+		prs.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open_pressed.png")
+		mission_toggle_btn.add_theme_stylebox_override("normal", norm)
+		mission_toggle_btn.add_theme_stylebox_override("hover", hov)
+		mission_toggle_btn.add_theme_stylebox_override("pressed", prs)
+		mission_toggle_btn.tooltip_text = "Tutup Misi"
+	else:
+		var norm := StyleBoxTexture.new()
+		norm.texture = preload("res://assets/ui/hud_mission_toggle_btn_24.png")
+		var hov := StyleBoxTexture.new()
+		hov.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_hover.png")
+		var prs := StyleBoxTexture.new()
+		prs.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_pressed.png")
+		mission_toggle_btn.add_theme_stylebox_override("normal", norm)
+		mission_toggle_btn.add_theme_stylebox_override("hover", hov)
+		mission_toggle_btn.add_theme_stylebox_override("pressed", prs)
+		mission_toggle_btn.tooltip_text = "Lihat Misi"
 
 # ─── Toast ────────────────────────────────────────────────────────────────────
 

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://eu7jhm6p1lbb"]
+
+[ext_resource type="Script" path="res://tools/test_world_load_save.gd" id="1_script"]
+
+[node name="TestWorldLoad" type="Node"]
+script = ExtResource("1_script")
+

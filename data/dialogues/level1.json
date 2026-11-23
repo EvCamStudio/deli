@@ -14,8 +14,8 @@
       "speaker": "Penjaga Hutan",
       "text": "Banyak pohonnya yang ditebang liar beberapa tahun lalu. Padahal akar pohon itu semacam spons raksasa, nak. Tanpa akar yang menahan di hulu, air hujan tak sempat meresap ke dalam tanah. Air itu langsung lari ke bawah membawa lumpur, sampai merendam rumah-rumah kalian.",
       "choices": [
-        { "text": "Baiklah Pak, biar saya bantu menanam bibitnya.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 bibit pohon di bukit Hulu", "target": 5 } } },
-        { "text": "Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 5 bibit pohon di bukit Hulu", "target": 5 } } }
+        { "text": "Baiklah Pak, biar saya bantu menanam bibitnya.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 bibit pohon di bukit Hulu", "target": 10 } } },
+        { "text": "Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.", "next": "instruksi", "effect": { "quest": { "id": "tanam_pohon_hulu", "description": "Tanam 10 bibit pohon di bukit Hulu", "target": 10 } } }
       ]
     },
     {

@@ -191,7 +191,7 @@ func _spawn_buildings() -> void:
 
 	# Deret pasar sayur Bang Jali & pertokoan kuliner bantaran selatan kota di plaza pejalan kaki (y=350).
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_sayur.png", Vector2(140, 350), Vector2(106, 22), 0.42)
-	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/warung_seng_awning.png", Vector2(440, 350), Vector2(98, 22), 0.42)
+	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/building_minimarket.png", Vector2(440, 350), Vector2(106, 22), 0.40)
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_kelontong.png", Vector2(620, 350), Vector2(96, 22), 0.36)
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_sembako.png", Vector2(850, 350), Vector2(100, 22), 0.36)
 

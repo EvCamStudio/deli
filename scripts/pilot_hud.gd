@@ -7,6 +7,7 @@ class_name PilotHUD
 @onready var location_label: Label = $SafeMargin/Root/TopBar/LocationCard/Label
 @onready var money_label: Label = $SafeMargin/Root/TopBar/MoneyCard/Row/MoneyLabel
 @onready var mission_card: Control = get_node_or_null("SafeMargin/Root/MissionCard") as Control
+@onready var mission_toggle_btn: Button = get_node_or_null("SafeMargin/Root/MissionToggleBtn") as Button
 @onready var mission_label: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionLabel") if has_node("SafeMargin/Root/MissionCard/MissionLabel") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionLabel")) as Label
 @onready var mission_title: Label = (get_node_or_null("SafeMargin/Root/MissionCard/MissionTitle") if has_node("SafeMargin/Root/MissionCard/MissionTitle") else get_node_or_null("SafeMargin/Root/MissionCard/VBox/MissionTitle")) as Label
 @onready var carry_label: Label = $SafeMargin/Root/CarryLabel
@@ -20,10 +21,15 @@ class_name PilotHUD
 
 const LOCATION_NAMES: Dictionary = {
 	1: "HULU SUNGAI DELI",
-	2: "DESA SUNGAI DELI",
+	2: "DESA SUKA MAJU",
 	3: "KOTA MEDAN",
-	4: "HILIR SUNGAI DELI",
-	5: "EPILOG",
+	4: "MUARA SUNGAI DELI",
+	5: "TEPIAN SUNGAI DELI",
+	"hulu": "HULU SUNGAI DELI",
+	"desa": "DESA SUKA MAJU",
+	"kota": "KOTA MEDAN",
+	"hilir": "MUARA SUNGAI DELI",
+	"epilog": "TEPIAN SUNGAI DELI",
 }
 
 const COMPLETION_INFO: Dictionary = {
@@ -97,6 +103,12 @@ func _ready() -> void:
 		cont_btn.pressed.connect(_on_continue)
 	if menu_btn:
 		menu_btn.pressed.connect(_on_menu)
+	if mission_toggle_btn:
+		mission_toggle_btn.pressed.connect(_on_mission_toggle_pressed)
+	if mission_card:
+		mission_card.gui_input.connect(_on_mission_card_gui_input)
+		mission_card.hide()
+	_update_mission_toggle_icon()
 
 func _process(delta: float) -> void:
 	if get_tree().paused:
@@ -124,6 +136,11 @@ func _on_river_health_changed(value: float) -> void:
 		river_bar.add_theme_stylebox_override("fill", _low_style)
 
 func update_mission(text: String) -> void:
+	if not mission_card or not mission_label or not mission_title:
+		return
+	if text.strip_edges().is_empty():
+		hide_mission()
+		return
 	var lines: PackedStringArray = text.split("\n")
 	if lines.size() > 1:
 		mission_title.text = lines[0].trim_prefix("◆ ").strip_edges().to_upper()
@@ -131,14 +148,79 @@ func update_mission(text: String) -> void:
 	else:
 		mission_title.text = "MISI"
 		mission_label.text = text
+	# Kotak misi langsung muncul terbuka saat misi baru diterima
+	show_mission()
+
+func show_mission() -> void:
+	if mission_card:
+		mission_card.show()
+	if mission_toggle_btn:
+		mission_toggle_btn.show()
+	_update_mission_toggle_icon()
+
+func hide_mission() -> void:
+	if mission_card:
+		mission_card.hide()
+	if mission_toggle_btn:
+		mission_toggle_btn.hide()
+	_update_mission_toggle_icon()
+
+func _on_mission_toggle_pressed() -> void:
+	if not mission_card:
+		return
+	mission_card.visible = not mission_card.visible
+	_update_mission_toggle_icon()
+
+func _on_mission_card_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		mission_card.hide()
+		_update_mission_toggle_icon()
+
+func _update_mission_toggle_icon() -> void:
+	if not mission_toggle_btn:
+		return
+	var is_open: bool = mission_card != null and mission_card.visible
+	if is_open:
+		var norm := StyleBoxTexture.new()
+		norm.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open.png")
+		var hov := StyleBoxTexture.new()
+		hov.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open_hover.png")
+		var prs := StyleBoxTexture.new()
+		prs.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_open_pressed.png")
+		mission_toggle_btn.add_theme_stylebox_override("normal", norm)
+		mission_toggle_btn.add_theme_stylebox_override("hover", hov)
+		mission_toggle_btn.add_theme_stylebox_override("pressed", prs)
+		mission_toggle_btn.tooltip_text = "Tutup Misi"
+	else:
+		var norm := StyleBoxTexture.new()
+		norm.texture = preload("res://assets/ui/hud_mission_toggle_btn_24.png")
+		var hov := StyleBoxTexture.new()
+		hov.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_hover.png")
+		var prs := StyleBoxTexture.new()
+		prs.texture = preload("res://assets/ui/hud_mission_toggle_btn_24_pressed.png")
+		mission_toggle_btn.add_theme_stylebox_override("normal", norm)
+		mission_toggle_btn.add_theme_stylebox_override("hover", hov)
+		mission_toggle_btn.add_theme_stylebox_override("pressed", prs)
+		mission_toggle_btn.tooltip_text = "Lihat Misi"
 
 func _update_money() -> void:
 	money_label.text = "Rp %s" % _format_number(GameState.rupiah)
 
 func _update_location() -> void:
-	var location_name: String = LOCATION_NAMES.get(GameState.current_level, "")
-	if not location_name.is_empty():
-		location_label.text = location_name
+	if not location_label:
+		return
+	var loc_name: String = ""
+	if "in_world" in GameState and GameState.in_world and "world_zone" in GameState:
+		loc_name = LOCATION_NAMES.get(str(GameState.world_zone).to_lower(), "")
+	if loc_name.is_empty():
+		loc_name = LOCATION_NAMES.get(GameState.current_level, "")
+	if not loc_name.is_empty():
+		location_label.text = loc_name
+
+func set_location(zone_name: String) -> void:
+	if location_label:
+		var display_name: String = LOCATION_NAMES.get(zone_name.to_lower(), zone_name)
+		location_label.text = display_name
 
 func _update_carry() -> void:
 	var pending: Array = GameState.get_meta("pending_trash", [])
