@@ -196,15 +196,8 @@ func _spawn_buildings() -> void:
 	TopdownMap.spawn_building(get_parent(), "res://assets/sprites/props/market_sembako.png", Vector2(850, 350), Vector2(100, 22), 0.36)
 
 func _spawn_trees() -> void:
-	# Pohon kamboja rapi di pekarangan selatan kota (pohon yang menimpa gedung utara dihapus)
-	var entries: Array[Dictionary] = [
-		{"pos": Vector2(40, 300), "kind": "kamboja"},
-		{"pos": Vector2(920, 300), "kind": "kamboja"},
-	]
-	for entry in entries:
-		var pos: Vector2 = entry.get("pos", Vector2.ZERO)
-		var kind: String = str(entry.get("kind", "kamboja"))
-		TopdownMap.spawn_tree(get_parent(), pos, kind)
+	# Pohon di trotoar / pekarangan Kota Medan dihapus sesuai permintaan user (Gambar 3 & 4)
+	pass
 
 func _spawn_city_props() -> void:
 	# Lampu jalan di kedua sisi jalan raya utama (kolisi solid di pangkal, Gambar 9).
@@ -217,8 +210,8 @@ func _spawn_city_props() -> void:
 		_spawn_prop("lamp.png", p)
 	_spawn_prop("lamp.png", Vector2(790, 194))
 
-	# Bangku taman
-	for p in [Vector2(608, 194), Vector2(650, 194), Vector2(280, 370), Vector2(520, 370), Vector2(750, 370)]:
+	# Bangku taman (mundur ke trotoar pejalan kaki y=205 agar aman dari jalan raya)
+	for p in [Vector2(610, 205), Vector2(646, 205), Vector2(280, 370), Vector2(520, 370), Vector2(750, 370)]:
 		_spawn_prop("bench.png", p)
 
 	# Hidran kebakaran.
@@ -228,6 +221,11 @@ func _spawn_city_props() -> void:
 	# Lampu lalu lintas di sudut persimpangan jalan aspal.
 	for p in [Vector2(304, 114), Vector2(400, 114), Vector2(688, 114), Vector2(784, 114)]:
 		_spawn_prop("traffic_light.png", p)
+
+	# ─── Sampah Lingkungan Perkotaan Kota Medan (Gambar 4 User: Kantong Sampah Hitam & Biru/Putih, Tong Roda) ───
+	# Sampah di trotoar utara (50, 114) & (200, 114) serta tong roda (460, 194) & (475, 194) telah dihapus sesuai gambar user
+	TopdownMap.spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_pile_box.png", Vector2(650, 114), 0.25, true, Vector2(32, 10), Vector2(0, -5))
+	TopdownMap.spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_bags_blue_white.png", Vector2(890, 370), 0.25, true, Vector2(34, 10), Vector2(0, -5))
 
 	# Pagar pengaman jembatan kanal kota (kiri dan kanan, melintasi air penuh dari tanggul utara ke selatan).
 	# Jembatan Barat (kolom 20..23 = x: 320..384, y air: 224..272)

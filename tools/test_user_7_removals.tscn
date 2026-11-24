@@ -1,0 +1,4 @@
+[gd_scene format=3 uid="uid://4q8lsjcmo1l5"]
+[ext_resource type="Script" path="res://tools/test_user_7_removals.gd" id="1_script"]
+[node name="TestUser7Removals" type="Node"]
+script = ExtResource("1_script")

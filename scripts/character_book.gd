@@ -467,19 +467,29 @@ func _render_character(data_char: Dictionary, photo_rect: TextureRect, label_nam
 	
 	var is_dynamic: bool = data_char.get("is_dynamic", false)
 	var key: String = data_char.get("key", "")
-	var name_text: String = data_char.get("name", "")
+	var name_text: String = "???"
 	var status_text: String = ""
-	var notes_text: String = ""
+	var notes_text: String = "???"
 	var status_color: Color = COLOR_STATIS
-	var portrait_path: String = data_char.get("portrait_neutral", "")
+	var portrait_path: String = "res://assets/sprites/portraits/unknown_neutral.png"
 	
-	if is_dynamic:
-		# PENGECUALIAN untuk 3 NPC Dinamis (Pak Darwis, Kak Rina, Bang Jali):
-		# Foto profil dan nama selalu terbuka sejak awal.
-		# Sebelum MC menjawab solusi mereka: status kosong ("") dan catatan karakter "???".
-		# Setelah MC menjawab solusi mereka: status "Mau Berubah" (hijau) atau "Tidak Suka" (merah),
-		# dan catatan karakter terisi narasi fase terkait.
+	var has_talked: bool = GameState.has_talked_to_npc(key)
+	
+	if not has_talked:
+		# Belum pernah bertemu/berbicara dengan karakter ini (berlaku untuk SEMUA NPC):
+		# Foto tanda tanya/siluet, nama "???", status kosong (""), catatan "???"
+		portrait_path = "res://assets/sprites/portraits/unknown_neutral.png"
+		name_text = "???"
+		status_text = ""
+		notes_text = "???"
+	elif is_dynamic:
+		# 3 NPC Dinamis Pembawa Indikator (Pak Darwis, Kak Rina, Bang Jali) saat MC SUDAH BERTEMU:
+		# Yang terbuka HANYA Foto Profil Netral dan Nama Asli.
+		# Status dan catatan karakter TETAP tanda tanya sampai MC memberi tindakan penentu indikator!
 		name_text = data_char.get("name", "")
+		portrait_path = data_char.get("portrait_neutral", "")
+		
+		# Cek apakah MC sudah memberikan tindakan/solusi yang merubah indikator:
 		var has_decided: bool = GameState.has_decided_npc(key)
 		if has_decided:
 			var sikap: int = GameState.get_sikap(key)
@@ -502,28 +512,19 @@ func _render_character(data_char: Dictionary, photo_rect: TextureRect, label_nam
 			else:
 				status_text = ""
 				notes_text = "???"
-				portrait_path = data_char.get("portrait_neutral", portrait_path)
 		else:
+			# Sudah ketemu tapi belum ada tindakan / jawaban MC:
+			# Status masih kosong, catatan karakter masih tanda tanya ("???")
 			status_text = ""
 			notes_text = "???"
-			portrait_path = data_char.get("portrait_neutral", portrait_path)
 	else:
-		# NPC Statis (11 Karakter Pendukung):
-		# Muncul saat MC sudah berbicara dengan karakter tersebut.
-		# Sebelum MC berbicara: foto tanda tanya, nama "???", status kosong (""), catatan "???".
-		# Setelah MC berbicara: foto profil asli, nama asli, status kesan positif, catatan narasi lengkap.
-		var has_talked: bool = GameState.has_talked_to_npc(key)
-		if has_talked:
-			portrait_path = data_char.get("portrait_neutral", "")
-			name_text = data_char.get("name", "")
-			status_text = data_char.get("status", "")
-			status_color = COLOR_STATIS
-			notes_text = data_char.get("notes", "")
-		else:
-			portrait_path = "res://assets/sprites/portraits/unknown_neutral.png"
-			name_text = "???"
-			status_text = ""
-			notes_text = "???"
+		# NPC Statis (11 Karakter Pendukung) saat MC SUDAH BERTEMU:
+		# Foto profil asli, nama asli, status kesan, dan catatan narasi lengkap terbuka
+		portrait_path = data_char.get("portrait_neutral", "")
+		name_text = data_char.get("name", "")
+		status_text = data_char.get("status", "")
+		status_color = COLOR_STATIS
+		notes_text = data_char.get("notes", "")
 	
 	label_name.text = name_text
 	label_status.text = status_text

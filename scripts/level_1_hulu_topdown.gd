@@ -2,7 +2,7 @@
 ## Misi: tanam 5 pohon di titik tanam, lalu menuju gerbang desa.
 extends TopdownLevelBase
 
-const TREES_TARGET: int = 5
+const TREES_TARGET: int = 15
 
 var _trees: int = 0
 

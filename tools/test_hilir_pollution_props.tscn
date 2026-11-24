@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://c3uyfmnt8seeu"]
+
+[ext_resource type="Script" path="res://tools/test_hilir_pollution_props.gd" id="1_script"]
+
+[node name="TestHilirPollutionProps" type="Node"]
+script = ExtResource("1_script")
+

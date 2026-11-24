@@ -15,13 +15,22 @@ func _ready() -> void:
 	var img := get_viewport().get_texture().get_image()
 	img.save_png("tools/capture_book_initial_page1.png")
 	
-	# 2. Initial Page 6
+	# 2. Initial Page 6 (Both Nelayan & Darwis locked initially)
 	book.goto_page(6)
 	for i in range(5):
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	img = get_viewport().get_texture().get_image()
 	img.save_png("tools/capture_book_initial_page6.png")
+	
+	# 2b. Meet Darwis (Only Photo & Name unlock, Status empty, Notes ???)
+	GameState.mark_character_talked("darwis")
+	book.goto_page(6)
+	for i in range(5):
+		await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	img = get_viewport().get_texture().get_image()
+	img.save_png("tools/capture_book_darwis_met_unresolved.png")
 	
 	# 3. Unlock warung (Bu Mira & Pak Hendra) and capture Page 1
 	GameState.mark_character_talked("ibu_mc")

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://ubyn0c08k0mi"]
+
+[ext_resource type="Script" path="res://tools/capture_user_fixes_mounds.gd" id="1_script"]
+
+[node name="CaptureUserFixesMounds" type="Node"]
+script = ExtResource("1_script")
+

@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://dnevy7rmyp2ge"]
+
+[ext_resource type="Script" path="res://tools/test_kota_bench_position.gd" id="1_script"]
+
+[node name="TestKotaBenchPosition" type="Node"]
+script = ExtResource("1_script")

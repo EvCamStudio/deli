@@ -27,8 +27,8 @@ func _ready() -> void:
 	await get_tree().process_frame
 	assert(char_book.visible == true, "CharacterBook must be visible!")
 
-	# --- TEST ITEM 1: INITIAL STATE (BEFORE TALKING) ---
-	print("\n[TEST 1] Verifying Initial State: Static NPCs locked (???), 3 Dynamic NPCs photo & name visible...")
+	# --- TEST ITEM 1: INITIAL STATE (BEFORE TALKING TO ANYONE) ---
+	print("\n[TEST 1] Verifying Initial State: ALL NPCs locked (silhouette '?' & '???')...")
 	# Page 1 (Bu Mira & Pak Hendra - Static)
 	char_book.goto_page(1)
 	await get_tree().process_frame
@@ -50,25 +50,25 @@ func _ready() -> void:
 	assert(char_book.left_photo.texture.resource_path.get_file() == "unknown_neutral.png", "Nelayan must be locked initially!")
 	assert(char_book.left_name.text == "???", "Nelayan name must be '???' initially!")
 
-	# Dynamic NPC: Pak Darwis (Profile photo and name ALWAYS visible from start!)
-	assert(char_book.right_photo.texture.resource_path.get_file() == "pak_darwis_neutral.png", "Pak Darwis photo MUST be neutral portrait initially (always visible)!")
-	assert(char_book.right_name.text == "Pak Darwis", "Pak Darwis name MUST be visible from start!")
-	assert(char_book.right_status.text == "", "Pak Darwis status MUST be empty before MC answers!")
-	assert(char_book.right_notes.text == "???", "Pak Darwis notes MUST be '???' before MC answers!")
+	# Dynamic NPC: Pak Darwis must ALSO be locked before MC meets him!
+	assert(char_book.right_photo.texture.resource_path.get_file() == "unknown_neutral.png", "Pak Darwis photo MUST be question mark initially before meeting!")
+	assert(char_book.right_name.text == "???", "Pak Darwis name MUST be '???' initially before meeting!")
+	assert(char_book.right_status.text == "", "Pak Darwis status MUST be empty initially!")
+	assert(char_book.right_notes.text == "???", "Pak Darwis notes MUST be '???' initially!")
 
 	# Page 7 (Left: Kak Rina - Dynamic; Right: Bang Jali - Dynamic)
 	char_book.goto_page(7)
 	await get_tree().process_frame
-	assert(char_book.left_photo.texture.resource_path.get_file() == "kak_rina_neutral.png", "Kak Rina photo MUST be neutral portrait initially!")
-	assert(char_book.left_name.text == "Kak Rina", "Kak Rina name MUST be visible from start!")
-	assert(char_book.left_status.text == "", "Kak Rina status MUST be empty before MC answers!")
-	assert(char_book.left_notes.text == "???", "Kak Rina notes MUST be '???' before MC answers!")
+	assert(char_book.left_photo.texture.resource_path.get_file() == "unknown_neutral.png", "Kak Rina photo MUST be question mark initially!")
+	assert(char_book.left_name.text == "???", "Kak Rina name MUST be '???' initially!")
+	assert(char_book.left_status.text == "", "Kak Rina status MUST be empty initially!")
+	assert(char_book.left_notes.text == "???", "Kak Rina notes MUST be '???' initially!")
 
-	assert(char_book.right_photo.texture.resource_path.get_file() == "bang_jali_neutral.png", "Bang Jali photo MUST be neutral portrait initially!")
-	assert(char_book.right_name.text == "Bang Jali", "Bang Jali name MUST be visible from start!")
-	assert(char_book.right_status.text == "", "Bang Jali status MUST be empty before MC answers!")
-	assert(char_book.right_notes.text == "???", "Bang Jali notes MUST be '???' before MC answers!")
-	print("  -> PASS: Keadaan awal tepat sesuai instruksi user (Statis terkunci '???', 3 Target Edukasi terbuka foto & nama, status kosong, catatan '???').")
+	assert(char_book.right_photo.texture.resource_path.get_file() == "unknown_neutral.png", "Bang Jali photo MUST be question mark initially!")
+	assert(char_book.right_name.text == "???", "Bang Jali name MUST be '???' initially!")
+	assert(char_book.right_status.text == "", "Bang Jali status MUST be empty initially!")
+	assert(char_book.right_notes.text == "???", "Bang Jali notes MUST be '???' initially!")
+	print("  -> PASS: Seluruh karakter (baik Statis maupun 3 Dinamis) terkunci awal dengan siluet '?' dan nama '???'.")
 
 	# --- TEST ITEM 2: UNLOCKING STATIC NPC AFTER TALKING ---
 	print("\n[TEST 2] Verifying Static NPC Unlock after MC speaks with them...")
@@ -91,8 +91,22 @@ func _ready() -> void:
 	assert(char_book.right_status.text == "Tenang & Bijaksana", "Pak Hendra status must be unlocked!")
 	print("  -> PASS: Bu Mira dan Pak Hendra berhasil terbuka penuh setelah MC berbicara di warung.")
 
-	# --- TEST ITEM 3: DYNAMIC NPC DECISION (PEDULI / MAU BERUBAH) ---
-	print("\n[TEST 3] Verifying Dynamic NPC Decision: Win-Win Solution (Mau Berubah - Hijau)...")
+	# --- TEST ITEM 3: DYNAMIC NPC MET BUT UNRESOLVED (FOTO & NAMA TERBUKA, STATUS & CATATAN MASIH TANDA TANYA) ---
+	print("\n[TEST 3] Verifying Dynamic NPC Met but Dilemma Unresolved: Only Photo & Name Open...")
+	# MC meets Pak Darwis (talks to him)
+	world.on_npc_talked("npc_petani_1")
+	await get_tree().process_frame
+
+	char_book.goto_page(6)
+	await get_tree().process_frame
+	assert(char_book.right_photo.texture.resource_path.get_file() == "pak_darwis_neutral.png", "Pak Darwis photo MUST open upon meeting him!")
+	assert(char_book.right_name.text == "Pak Darwis", "Pak Darwis name MUST open upon meeting him!")
+	assert(char_book.right_status.text == "", "Pak Darwis status MUST remain empty/question mark before action taken!")
+	assert(char_book.right_notes.text == "???", "Pak Darwis notes MUST remain '???' before action taken!")
+	print("  -> PASS: Pak Darwis setelah ditemui hanya terbuka foto netral dan nama, status & catatan tetap tanda tanya.")
+
+	# --- TEST ITEM 4: DYNAMIC NPC DECISION (PEDULI / MAU BERUBAH) ---
+	print("\n[TEST 4] Verifying Dynamic NPC Decision: Win-Win Solution (Mau Berubah - Hijau)...")
 	# Simulate player choosing win-win solution for Pak Darwis
 	GameState.record_choice("darwis_peduli", true)
 	await get_tree().process_frame
@@ -104,10 +118,21 @@ func _ready() -> void:
 	assert(char_book.right_status.text == "Mau Berubah", "Pak Darwis status must now be 'Mau Berubah'!")
 	assert(char_book.right_status.get_theme_color("font_color") == Color(0.15, 0.58, 0.22, 1.0), "Pak Darwis status color must be green!")
 	assert(char_book.right_notes.text.contains("Syukurlah Pak Darwis mau mendengarkan"), "Pak Darwis notes must display Fase 2A narrative!")
-	print("  -> PASS: Pak Darwis berhasil berubah ke status 'Mau Berubah' (Hijau) dengan foto tersenyum dan catatan solusi.")
+	print("  -> PASS: Pak Darwis berhasil berubah ke status 'Mau Berubah' (Hijau) dengan foto tersenyum dan catatan narasi.")
 
-	# --- TEST ITEM 4: DYNAMIC NPC DECISION (MENOLAK / TIDAK SUKA) ---
-	print("\n[TEST 4] Verifying Dynamic NPC Decision: Failed Debate (Tidak Suka - Merah)...")
+	# --- TEST ITEM 5: DYNAMIC NPC MET THEN FAILED DEBATE (MENOLAK / TIDAK SUKA) ---
+	print("\n[TEST 5] Verifying Dynamic NPC Met then Failed Debate (Tidak Suka - Merah)...")
+	# MC meets Kak Rina
+	world.on_npc_talked("npc_ibu_desa")
+	await get_tree().process_frame
+
+	char_book.goto_page(7)
+	await get_tree().process_frame
+	assert(char_book.left_photo.texture.resource_path.get_file() == "kak_rina_neutral.png", "Kak Rina photo MUST open upon meeting!")
+	assert(char_book.left_name.text == "Kak Rina", "Kak Rina name MUST open upon meeting!")
+	assert(char_book.left_status.text == "", "Kak Rina status MUST remain empty before action taken!")
+	assert(char_book.left_notes.text == "???", "Kak Rina notes MUST remain '???' before action taken!")
+
 	# Simulate player failing debate with Kak Rina
 	GameState.record_choice("rina_peduli", false)
 	await get_tree().process_frame
@@ -119,7 +144,7 @@ func _ready() -> void:
 	assert(char_book.left_status.text == "Tidak Suka", "Kak Rina status must now be 'Tidak Suka'!")
 	assert(char_book.left_status.get_theme_color("font_color") == Color(0.80, 0.22, 0.20, 1.0), "Kak Rina status color must be red!")
 	assert(char_book.left_notes.text.contains("Dia benar-benar marah"), "Kak Rina notes must display Fase 2B regret narrative!")
-	print("  -> PASS: Kak Rina berhasil berubah ke status 'Tidak Suka' (Merah) dengan foto cemberut dan catatan penyesalan.")
+	print("  -> PASS: Kak Rina setelah ditemui terbuka foto & nama, lalu setelah debat gagal berubah ke 'Tidak Suka' (Merah).")
 
 	# --- TEST ITEM 5: UI LAYOUT, CENTERING & LEAF BOUNDS ---
 	print("\n[TEST 5] Verifying UI Centering, Status Padding, & Leaf Motif Safety...")

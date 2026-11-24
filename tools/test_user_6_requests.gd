@@ -30,12 +30,12 @@ func _ready() -> void:
 
 	# ─── TEST 2 & 3: Pohon Ditanam & Pemandangan Pohon Ditebang ───
 	print("\n[TEST 2 & 3] Testing Felled Trees & Planting Spots in Hill and South...")
-	assert(world.HULU_FOREST_SPOTS.size() == 10, "HULU_FOREST_SPOTS must have exactly 10 spots! Got %d" % world.HULU_FOREST_SPOTS.size())
-	assert(world.ZONE_TARGETS["hulu"]["trees"] == 10, "ZONE_TARGETS['hulu']['trees'] must be 10! Got %d" % world.ZONE_TARGETS["hulu"]["trees"])
+	assert(world.HULU_FOREST_SPOTS.size() == 15, "HULU_FOREST_SPOTS must have exactly 15 spots! Got %d" % world.HULU_FOREST_SPOTS.size())
+	assert(world.ZONE_TARGETS["hulu"]["trees"] == 15, "ZONE_TARGETS['hulu']['trees'] must be 15! Got %d" % world.ZONE_TARGETS["hulu"]["trees"])
 	for spot in world.HULU_FOREST_SPOTS:
-		assert(spot.y <= 11, "Tree spot %s is at y=%d, encroaching or on the dirt road (y>=13)!" % [str(spot), spot.y])
+		assert(spot.y <= 12, "Tree spot %s is at y=%d, encroaching or on the dirt road (y>=13)!" % [str(spot), spot.y])
 		assert(spot.x >= 40 and spot.x <= 52, "Tree spot %s is outside hill clearing!" % str(spot))
-	print("  -> PASS: Tepat 10 titik penanaman pohon tertata rapi di bukit reboisasi (bebas dari jalan raya).")
+	print("  -> PASS: Tepat 15 titik penanaman pohon tertata rapi di bukit reboisasi (bebas dari jalan raya).")
 
 	# Check tree stumps in world
 	var stump_count: int = 0

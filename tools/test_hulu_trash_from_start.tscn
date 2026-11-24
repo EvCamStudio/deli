@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://bdidawt8xtsou"]
+
+[ext_resource type="Script" path="res://tools/test_hulu_trash_from_start.gd" id="1_script"]
+
+[node name="TestHuluTrashFromStart" type="Node"]
+script = ExtResource("1_script")
+

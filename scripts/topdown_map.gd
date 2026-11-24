@@ -109,6 +109,15 @@ static func build_curated_tileset(layers: Array) -> TileSet:
 			for x in range(8):
 				city_source.create_tile(Vector2i(x, y))
 		ts.add_source(city_source, 2)
+	var mud_tex: Texture2D = load("res://assets/tilesets/hilir_mud_tileset.png")
+	if mud_tex != null:
+		var mud_source := TileSetAtlasSource.new()
+		mud_source.texture = mud_tex
+		mud_source.texture_region_size = Vector2i(32, 32)
+		for y in range(8):
+			for x in range(8):
+				mud_source.create_tile(Vector2i(x, y))
+		ts.add_source(mud_source, 3)
 	for layer in layers:
 		if layer is TileMapLayer:
 			layer.tile_set = ts
@@ -433,23 +442,32 @@ func _paint_hilir_ground() -> void:
 	for p in [Vector2i(23, 9), Vector2i(52, 10)]:
 		ground.set_cell(p, 2, T_MANHOLE, 0)
 
-	# Jalur dari jembatan ke pantai selatan (tanah & papan kayu pantai).
-	for y in range(18, 23):
-		for x in [20, 21, 22]:
-			ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
+	# Hamparan tanah berlumpur alami kawasan mangrove muara (y=18..27, habitat asli pohon bakau pesisir diperluas).
+	# Menggantikan rumput hijau & pasir dengan ubin lumpur organik mulus dari hilir_mud_tileset (Source 3) sampai tempat MC berdiri.
+	for y in range(18, 28):
+		for x in range(MAP_W):
+			if x in [20, 21, 22]:
+				# Jalur dari jembatan ke pantai selatan (tanah & papan kayu pantai).
+				ground.set_cell(Vector2i(x, y), 0, Vector2i(4 + _hash(x, y) % 2, 0), 0)
+			else:
+				var roll: int = _hash(x, y, 17)
+				var mud_atlas: Vector2i
+				if roll < 700:
+					mud_atlas = Vector2i(_hash(x, y) % 8, 1)  # lumpur pasang surut bertekstur mulus
+				elif roll < 840:
+					mud_atlas = Vector2i(_hash(x, y) % 8, 4)  # tanah lumpur lempung basah
+				elif roll < 930:
+					mud_atlas = Vector2i(_hash(x, y) % 8, 6)  # variasi lumpur pesisir
+				else:
+					mud_atlas = Vector2i(_hash(x, y) % 8, 2)  # genangan becek & kerikil kecil alami
+				ground.set_cell(Vector2i(x, y), 3, mud_atlas, 0)
 
-	# Jalan setapak di sepanjang pantai mangrove (y=24)
-	for x in range(4, 42):
-		ground.set_cell(Vector2i(x, 24), 0, Vector2i(4 + _hash(x, 24) % 2, 0), 0)
-	for x in range(50, 56):
-		ground.set_cell(Vector2i(x, 24), 0, Vector2i(4 + _hash(x, 24) % 2, 0), 0)
-
-	# Garis tepi rumput-pasir organik di perbatasan pantai (ditangani 47-blob autotile pasir).
+	# Garis tepi perbatasan pantai pasir (y=28)
 	for x in range(MAP_W):
-		_paint_sand_cell(x, 23)
-	# Pantai berpasir pesisir selatan (y=24 sampai ujung bawah peta, bersih tanpa potongan air laut).
+		_paint_sand_cell(x, 28)
+	# Sisa pantai berpasir pesisir selatan (y=28 sampai ujung bawah peta, disisakan sedikit sesuai instruksi user).
 	for x in range(MAP_W):
-		for y in range(24, MAP_H):
+		for y in range(28, MAP_H):
 			var roll: int = _hash(x, y, 29)
 			var atlas := Vector2i(4 + _hash(x, y) % 2, 1)
 			if (y % 5 == 0) and roll < 75:
@@ -592,7 +610,7 @@ func _water_hilir() -> void:
 					continue
 				if n.x < 0 or n.x >= MAP_W or n.y < 0 or n.y >= MAP_H:
 					continue
-				if n.y in [8, 9, 10, 11]:
+				if n.y in [8, 9, 10, 11] or (n.y >= 18 and n.y <= 22):
 					continue
 				_paint_sand_cell(n.x, n.y)
 
@@ -803,16 +821,12 @@ func _spawn_props() -> void:
 				[Vector2(325, 75), "beringin"], # Menjulang di sudut kanan belakang rumah merah
 				[Vector2(30, 120), "broadleaf"],# Sudut pekarangan kiri barat rumah MC
 
-				# ─── Hutan Selatan Lebat (Padang Rumput & Rimba Selatan Kampung Barat) ───
-				# Baris 1: Tepian hutan pekarangan selatan (y=350..365)
-				[Vector2(25, 350), "cemara"], [Vector2(65, 360), "palem"], [Vector2(105, 350), "forest"],
-				[Vector2(145, 365), "rindang"], [Vector2(185, 350), "willow"], [Vector2(225, 365), "broadleaf"],
-				[Vector2(265, 350), "beringin"], [Vector2(305, 365), "pinus"], [Vector2(325, 350), "kelapa"],
+				# ─── Hutan Selatan Hulu (Pemandangan Pohon Ditebang di Belakang/Selatan Rumah MC, Gambar 2 User) ───
+				# Baris 1: Sebagian besar ditebang, disisakan sedikit pohon berdiri alami di tepi
+				[Vector2(25, 350), "cemara"], [Vector2(185, 350), "willow"], [Vector2(325, 350), "kelapa"],
 
-				# Baris 2: Lapis dalam hutan selatan (y=410..415)
-				[Vector2(35, 410), "rindang"], [Vector2(75, 415), "beringin"], [Vector2(120, 410), "willow"],
-				[Vector2(165, 415), "forest"], [Vector2(210, 410), "pinus"], [Vector2(255, 415), "leafy"],
-				[Vector2(300, 410), "cemara"], [Vector2(320, 415), "rindang"],
+				# Baris 2: Lapis dalam hutan selatan (sebagian ditebang menyisakan tunggul & kayu)
+				[Vector2(35, 410), "rindang"], [Vector2(165, 415), "forest"], [Vector2(300, 410), "cemara"],
 
 				# Baris 3: Lapis lebat bawah hutan selatan (y=455..460)
 				[Vector2(20, 455), "broadleaf"], [Vector2(60, 460), "cemara"], [Vector2(100, 455), "forest"],
@@ -854,7 +868,21 @@ func _spawn_props() -> void:
 				[Vector2(202, 126), "bush_small_green.png", 0.35],
 				[Vector2(195, 185), "bush_flowering_white.png", 0.35],
 
-				# Hutan rimba selatan barat (menghidupkan bawah kanopi pohon lebat, x <= 325)
+				# ─── Pemandangan Pohon Ditebang di Hutan Selatan MC (Tunggul, Kayu Gelondongan, Ranting, Gambar 2 User) ───
+				[Vector2(65, 355), "prop_stump_tree.png", 0.38],
+				[Vector2(95, 365), "prop_log_wood.png", 0.35],
+				[Vector2(105, 350), "prop_stump_tree.png", 0.38],
+				[Vector2(145, 365), "prop_stump_tree.png", 0.38],
+				[Vector2(205, 365), "prop_log_wood.png", 0.35],
+				[Vector2(225, 355), "prop_stump_tree.png", 0.38],
+				[Vector2(265, 350), "prop_stump_tree.png", 0.38],
+				[Vector2(285, 365), "prop_fallen_branches.png", 0.38],
+				[Vector2(305, 360), "prop_stump_tree.png", 0.38],
+				[Vector2(75, 415), "prop_stump_tree.png", 0.38],
+				[Vector2(120, 415), "prop_log_wood.png", 0.35],
+				[Vector2(210, 415), "prop_fallen_branches.png", 0.38],
+				[Vector2(255, 415), "prop_stump_tree.png", 0.38],
+				[Vector2(320, 415), "prop_log_wood.png", 0.35],
 				[Vector2(85, 345), "flora_flower_yellow.png", 0.30],
 				[Vector2(150, 365), "flora_flower_red.png", 0.30],
 				[Vector2(225, 340), "flora_flower_purple.png", 0.30],
@@ -908,6 +936,33 @@ func _spawn_props() -> void:
 				[Vector2(750, 475), "prop_fallen_branches.png", 0.38],
 				[Vector2(840, 480), "bush_round_green.png", 0.35],
 			])
+
+			# Lumpur becek di jalan bekas banjir di dekat rumah MC (Visual pasca-banjir, Gambar 1 steril dari tumpukan):
+			# 1. Becek lumpur di jalan depan halaman rumah MC (tanpa kolisi, z_index -1 agar diinjak alami)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_mud_puddle_becek.png", Vector2(112, 235), 0.24, false, Vector2.ZERO, Vector2.ZERO, -1)
+			# 2. Becek lumpur di jalan utama menuju jembatan timur
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_dirt_patch_becek.png", Vector2(185, 248), 0.24, false, Vector2.ZERO, Vector2.ZERO, -1)
+			# 3. Becek di jalan barat
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_mud_puddle_becek.png", Vector2(65, 245), 0.20, false, Vector2.ZERO, Vector2.ZERO, -1)
+
+			# Hamparan lumpur organik alami (aset lumpur tanam mangrove) di sela-sela pohon ditebang di Hulu (Gambar 3 User):
+			# z_index = -1 & has_collision = false agar MC menginjak di atas tanah/lumpur secara alami (tidak tenggelam).
+			# 1. Padang rumput selatan hulu (Gambar 3 User: menggantikan 2 gundukan tanah dengan lumpur tanam mangrove)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_spot_0.png", Vector2(610, 270), 0.40, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_decor_1.png", Vector2(705, 340), 0.35, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_spot_1.png", Vector2(825, 275), 0.40, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_decor_2.png", Vector2(880, 335), 0.35, false, Vector2.ZERO, Vector2.ZERO, -1)
+
+			# 2. Kawasan bukit reboisasi atas (tempat MC menanam pohon, di dekat pohon-pohon yang sudah ditebang)
+			# Tersebar di sekitar tunggul dan batang kayu tepi plot tanpa menimpa 15 titik tanam bibit pohon
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_decor_0.png", Vector2(690, 92), 0.32, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_spot_2.png", Vector2(815, 88), 0.38, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_decor_3.png", Vector2(865, 120), 0.32, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/soil_patch_spot_3.png", Vector2(640, 155), 0.38, false, Vector2.ZERO, Vector2.ZERO, -1)
+
+			# 3. Sampah plastik & kantong sampah di Hulu (Gambar 2 User: Kantong Sampah Hitam & Biru/Putih):
+			# Sampah di dekat pekarangan MC (45, 175), dekat jembatan/papan pantun (290, 235), dan dekat gundukan tanah (635, 290) dihapus sesuai gambar user.
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_bags_blue_white.png", Vector2(765, 345), 0.25, true, Vector2(34, 10), Vector2(0, -5))
 		"desa":
 			# Deret utara: Toko Jaya Pak Darwis dan deretan rumah warga berjarak lega (tidak mepet)
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_toko_jaya.png", Vector2(180, 160), Vector2(96, 22), 0.4)
@@ -916,29 +971,88 @@ func _spawn_props() -> void:
 			spawn_building(get_parent(), "res://assets/sprites/props/house_cozy_red.png", Vector2(660, 160), Vector2(104, 22), 0.44)
 			spawn_building(get_parent(), "res://assets/sprites/props/building_mesjid_desa.png", Vector2(820, 160), Vector2(110, 22), 0.40)
 
+			# Tembok transparan pembatas hutan utara Desa (tepat di belakang gedung, y <= 72):
+			# Dimundurkan ke belakang gedung (y <= 72), sehingga MC bebas berjalan di samping gedung,
+			# dan batasnya tepat berada di belakang gedung agar MC tidak bisa masuk ke daerah pepohonan hutan.
+			_add_collision(Vector2(480, 36), Vector2(960, 72))
+
 			# Deret selatan: warung dan rumah menghadap jalan utama & sungai selatan
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_madura.png", Vector2(110, 368), Vector2(92, 22), 0.4)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_brick.png", Vector2(270, 368), Vector2(92, 22), 0.5)
-			spawn_building(get_parent(), "res://assets/sprites/props/warung_sayur_fresh.png", Vector2(430, 368), Vector2(100, 22), 0.42)
+			spawn_building(get_parent(), "res://assets/sprites/props/warung_sayur_fresh.png", Vector2(460, 364), Vector2(100, 22), 0.42)
 			spawn_building(get_parent(), "res://assets/sprites/props/warung_bu_sri.png", Vector2(650, 368), Vector2(100, 22), 0.36)
 			spawn_building(get_parent(), "res://assets/sprites/props/house_modern_2story.png", Vector2(850, 368), Vector2(110, 22), 0.42)
 
-			# Pohon di sekitar rumah utara & sudut pekarangan (posisi diatur logis di belakang/celah antar-rumah, tidak pernah menimpa badan rumah)
+			# Pohon Desa: Sedikit pohon peneduh yang tersisa di latar belakang & sela-sela atap rumah
 			_spawn_typed_trees([
-				# Di pintu masuk kampung barat & hutan utara di belakang rumah
-				[Vector2(60, 85), "beringin"],
-				[Vector2(260, 75), "pinus"],
-				[Vector2(420, 75), "spruce_tall"],
-				[Vector2(580, 75), "cemara"],
-				[Vector2(740, 75), "spruce"],
-				[Vector2(910, 75), "cemara"],
-				# Pekarangan selatan: celah luas antar-bangunan (pohon kelapa barat digeser ke x=26 agar tidak menimpa atap/dinding warung madura)
+				# ─── Baris 1: Pohon latar belakang atas yang tersisa (y=18..22) ───
+				[Vector2(30, 22), "pinus"],
+				[Vector2(140, 20), "beringin"],
+				[Vector2(260, 22), "rindang"],
+				[Vector2(380, 18), "cemara"],
+				[Vector2(500, 22), "forest"],
+				[Vector2(620, 18), "broadleaf"],
+				[Vector2(750, 22), "pinus"],
+				[Vector2(880, 20), "willow"],
+
+				# ─── Baris 2: Pohon lapis tengah yang tersisa (y=44..48) ───
+				[Vector2(85, 45), "willow"],
+				[Vector2(320, 46), "leafy"],
+				[Vector2(570, 44), "rindang"],
+				[Vector2(820, 48), "cemara"],
+
+				# ─── Baris 3: Peneduh atap & celah antar-rumah warga Desa (y=70..80) ───
+				[Vector2(35, 75), "beringin"],
+				[Vector2(265, 80), "pinus"],
+				[Vector2(425, 78), "cemara"],
+				[Vector2(585, 80), "rindang"],
+				[Vector2(745, 80), "beringin"],
+				[Vector2(930, 78), "pinus"],
+
+				# Pekarangan selatan: celah luas antar-bangunan
 				[Vector2(26, 360), "kelapa"],
 				[Vector2(745, 360), "beringin"],
 				[Vector2(935, 360), "kelapa"],
 			])
-			# Rumput dan semak berbunga pekarangan warga Desa (hanya di kantong rumput hijau, bebas dari jalan tanah & pintu rumah)
+			# Flora Desa: Pemandangan hutan ditebang di belakang rumah warga (tunggul, kayu gelondongan, ranting, rumput liar) & taman pekarangan
 			_spawn_flora_entries([
+				# ─── Pemandangan Pohon Ditebang di Hutan Utara Desa (Tunggul, Kayu Gelondongan, Ranting Patah) ───
+				# Area Barat (belakang Toko Jaya & pekarangan barat)
+				[Vector2(60, 32), "prop_stump_tree.png", 0.38],
+				[Vector2(95, 24), "prop_log_wood.png", 0.35],
+				[Vector2(110, 58), "prop_fallen_branches.png", 0.38],
+				[Vector2(175, 42), "prop_stump_tree.png", 0.38],
+				[Vector2(215, 34), "prop_log_wood.png", 0.35],
+				[Vector2(245, 62), "prop_stump_tree.png", 0.38],
+				[Vector2(160, 82), "flora_grass_tall.png", 0.35],
+
+				# Area Tengah (belakang Cottage, Kantor Desa & Cozy Red)
+				[Vector2(300, 34), "prop_log_wood.png", 0.35],
+				[Vector2(340, 48), "prop_stump_tree.png", 0.38],
+				[Vector2(370, 72), "prop_fallen_branches.png", 0.38],
+				[Vector2(440, 32), "prop_stump_tree.png", 0.38],
+				[Vector2(470, 52), "prop_log_wood.png", 0.35],
+				[Vector2(515, 72), "prop_stump_tree.png", 0.38],
+				[Vector2(550, 38), "prop_fallen_branches.png", 0.38],
+				[Vector2(600, 58), "prop_stump_tree.png", 0.38],
+				[Vector2(645, 36), "prop_log_wood.png", 0.35],
+				[Vector2(675, 68), "prop_stump_tree.png", 0.38],
+				[Vector2(480, 82), "flora_grass_dense.png", 0.35],
+				[Vector2(630, 82), "flora_grass_tall.png", 0.35],
+
+				# Area Timur (belakang & sudut samping Mesjid)
+				[Vector2(715, 38), "prop_log_wood.png", 0.35],
+				[Vector2(770, 52), "prop_stump_tree.png", 0.38],
+				[Vector2(805, 72), "prop_fallen_branches.png", 0.38],
+				[Vector2(845, 36), "prop_stump_tree.png", 0.38],
+				[Vector2(865, 62), "prop_log_wood.png", 0.35],
+				[Vector2(895, 42), "prop_stump_tree.png", 0.38],
+				[Vector2(935, 38), "prop_log_wood.png", 0.35],
+				[Vector2(940, 72), "prop_stump_tree.png", 0.38],
+				[Vector2(865, 92), "prop_fallen_branches.png", 0.38],
+				[Vector2(915, 88), "flora_grass_tall.png", 0.35],
+
+				# ─── Pekarangan Warga Depan Rumah ───
 				# Pekarangan utara
 				[Vector2(75, 185), "bush_flowering_pink.png", 0.35],
 				[Vector2(265, 185), "flora_grass_medium.png", 0.35],
@@ -947,14 +1061,25 @@ func _spawn_props() -> void:
 				[Vector2(580, 185), "flora_flower_white.png", 0.30],
 				[Vector2(740, 185), "bush_round_green.png", 0.35],
 				[Vector2(915, 185), "flora_flower_yellow.png", 0.30],
-				# Pekarangan selatan (di sela-sela rumput luas antar-toko, tidak menimpa batu alam di x=200)
+				# Pekarangan selatan (di sela-sela rumput luas antar-toko & pekarangan seimbang Warung Sayur Fresh)
 				[Vector2(40, 375), "flora_grass_dense.png", 0.35],
 				[Vector2(150, 360), "bush_small_green.png", 0.35],
-				[Vector2(530, 360), "bush_flowering_pink.png", 0.35],
-				[Vector2(565, 360), "flora_flower_purple.png", 0.30],
+				[Vector2(395, 364), "bush_small_flower.png", 0.35], # Sisi kiri pekarangan seimbang Warung Sayur
+				[Vector2(525, 364), "bush_flowering_pink.png", 0.35], # Sisi kanan pekarangan Warung Sayur (di rumput, bukan di jalan)
 				[Vector2(775, 360), "flora_grass_medium.png", 0.35],
 				[Vector2(945, 375), "bush_small_flower.png", 0.35],
 			])
+
+			# Gundukan tanah di sekitar hutan yang ditebang di belakang rumah warga Desa (z_idx = -1):
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_dirt_mound_forest.png", Vector2(140, 50), 0.26, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_dirt_mound_soil.png", Vector2(395, 45), 0.26, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_dirt_mound_forest.png", Vector2(620, 50), 0.26, false, Vector2.ZERO, Vector2.ZERO, -1)
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_dirt_mound_soil.png", Vector2(790, 42), 0.26, false, Vector2.ZERO, Vector2.ZERO, -1)
+
+			# Sampah lingkungan Desa di pekarangan barat dan lorong utara:
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_pile_box.png", Vector2(50, 370), 0.25, true, Vector2(32, 10), Vector2(0, -5))
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_bags_blue_white.png", Vector2(115, 175), 0.25, true, Vector2(34, 10), Vector2(0, -5))
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_pile_box.png", Vector2(585, 165), 0.25, true, Vector2(32, 10), Vector2(0, -5))
 		"hilir":
 			# Kampung pesisir muara
 			spawn_building(get_parent(), "res://assets/sprites/props/house_coastal.png", Vector2(112, 64), Vector2(78, 22), 0.5)
@@ -970,27 +1095,66 @@ func _spawn_props() -> void:
 			_spawn_typed_trees([
 				[Vector2(40, 50), "kelapa"], [Vector2(178, 56), "kelapa"], [Vector2(336, 50), "pisang"],
 				[Vector2(496, 50), "pepaya"], [Vector2(945, 50), "kelapa"],
-				# Padang rumput pesisir hijau selatan (di daratan rumput, di atas pantai pasir)
-				[Vector2(100, 310), "kelapa"], [Vector2(260, 310), "kelapa"],
-				[Vector2(560, 310), "kelapa"], [Vector2(880, 310), "kelapa"],
+				# Pohon kelapa pesisir selatan dimajukan ke sisa pantai pasir selatan (Gambar 11 User)
+				[Vector2(100, 470), "kelapa"], [Vector2(280, 475), "kelapa"],
+				[Vector2(620, 470), "kelapa"], [Vector2(880, 475), "kelapa"],
 			])
-			# Rumput pesisir & bunga HANYA di padang rumput hijau; pantai pasir hanya kayu terdampar (driftwood)
+			# Rumput pesisir & bunga diatur rapi di luar kawasan pembibitan mangrove
 			_spawn_flora_entries([
 				# Pekarangan rumput utara
 				[Vector2(60, 95), "bush_small_green.png", 0.35],
 				[Vector2(925, 95), "bush_round_green.png", 0.35],
-				# Padang rumput pesisir selatan (y=320..335, murni di atas rumput hijau sebelum garis pasir)
+				# Vegetasi pesisir (posisi rapi di luar area pembibitan)
 				[Vector2(160, 325), "flora_grass_tall.png", 0.35],
-				[Vector2(220, 335), "flora_flower_yellow.png", 0.30],
-				[Vector2(460, 325), "flora_grass_medium.png", 0.35],
-				[Vector2(630, 325), "flora_grass_dense.png", 0.35],
+				[Vector2(650, 325), "flora_grass_dense.png", 0.35],
 				[Vector2(820, 335), "flora_plant_leafy.png", 0.35],
-				# Pantai pasir selatan (y=420, kayu terdampar/driftwood alami pantai, sama sekali tidak ada rumput hijau)
-				[Vector2(220, 420), "prop_log_wood.png", 0.35],
-				[Vector2(640, 420), "prop_fallen_branches.png", 0.35],
+				# Sisa pantai pasir selatan (kayu terdampar / driftwood alami pantai)
+				[Vector2(220, 480), "prop_log_wood.png", 0.35],
+				[Vector2(640, 480), "prop_fallen_branches.png", 0.35],
 			])
-			for pos in [Vector2(120, 360), Vector2(480, 360), Vector2(720, 360), Vector2(60, 350)]:
-				_spawn_mangrove(pos)
+			# Rumpun pohon bakau alami mengitari kawasan pembibitan & diperluas ke selatan hingga tempat MC (Gambar 11 User):
+			# Sisi Barat muara:
+			_spawn_mangrove(Vector2(60, 350), "mature")
+			_spawn_mangrove(Vector2(110, 355), "young")
+			_spawn_mangrove(Vector2(145, 335), "sprout")
+			_spawn_mangrove(Vector2(180, 350), "mature")
+			_spawn_mangrove(Vector2(215, 345), "young")
+			_spawn_mangrove(Vector2(80, 405), "young")
+			_spawn_mangrove(Vector2(135, 420), "sprout")
+			_spawn_mangrove(Vector2(180, 410), "mature")
+			_spawn_mangrove(Vector2(235, 420), "young")
+
+			# Sisi Tengah selatan (perluasan lumpur coklat di sekitar tempat MC berdiri, lorong jalan kayu steril dari pohon):
+			_spawn_mangrove(Vector2(420, 425), "sprout")
+			_spawn_mangrove(Vector2(500, 420), "young")
+			_spawn_mangrove(Vector2(575, 425), "sprout")
+
+			# Sisi Timur muara:
+			_spawn_mangrove(Vector2(680, 350), "mature")
+			_spawn_mangrove(Vector2(735, 345), "young")
+			_spawn_mangrove(Vector2(775, 335), "sprout")
+			_spawn_mangrove(Vector2(830, 350), "mature")
+			_spawn_mangrove(Vector2(880, 345), "young")
+			_spawn_mangrove(Vector2(665, 410), "young")
+			_spawn_mangrove(Vector2(725, 420), "sprout")
+			_spawn_mangrove(Vector2(790, 415), "mature")
+			_spawn_mangrove(Vector2(850, 420), "young")
+			_spawn_mangrove(Vector2(910, 410), "young")
+
+			# Hamparan tanah lumpur alami pesisir mangrove (Gambar 4 & Gambar 11 User)
+			var soil_decor_list: Array = [
+				[Vector2(80, 355), "res://assets/sprites/props/soil_patch_decor_0.png", 0.35],
+				[Vector2(140, 360), "res://assets/sprites/props/soil_patch_decor_1.png", 0.38],
+				[Vector2(200, 355), "res://assets/sprites/props/soil_patch_decor_2.png", 0.35],
+				[Vector2(670, 355), "res://assets/sprites/props/soil_patch_decor_3.png", 0.38],
+				[Vector2(750, 360), "res://assets/sprites/props/soil_patch_decor_4.png", 0.38],
+				[Vector2(110, 420), "res://assets/sprites/props/soil_patch_decor_0.png", 0.35],
+				[Vector2(540, 420), "res://assets/sprites/props/soil_patch_decor_2.png", 0.35],
+				[Vector2(760, 425), "res://assets/sprites/props/soil_patch_decor_3.png", 0.38],
+				[Vector2(880, 420), "res://assets/sprites/props/soil_patch_decor_4.png", 0.38],
+			]
+			for sd in soil_decor_list:
+				spawn_environment_prop(get_parent(), sd[1], sd[0], sd[2], false, Vector2.ZERO, Vector2.ZERO, -1)
 
 			# Lampu jalan aspal pesisir, hidran, dan bangku (berkolisi solid di pangkalnya, Gambar 9)
 			for lx in [80, 320, 500, 720]:
@@ -998,7 +1162,16 @@ func _spawn_props() -> void:
 			for lx in [140, 440, 680]:
 				_spawn_city_prop("lamp.png", Vector2(lx, 194))
 			_spawn_city_prop("hydrant.png", Vector2(340, 194))
-			_spawn_city_prop("bench.png", Vector2(640, 194))
+			_spawn_city_prop("bench.png", Vector2(640, 208))
+
+			# ─── Sampah Lingkungan Pesisir Hilir Muara (Gambar 4 User: Tumpukan Kantong Sampah Hitam & Biru/Putih) ───
+			# 1. Lorong perkampungan nelayan & Pasar Ikan (aman & berjarak lega > 120px dari tong sampah pilah):
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_bags_blue_white.png", Vector2(345, 95), 0.25, true, Vector2(34, 10), Vector2(0, -5))
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_pile_box.png", Vector2(500, 95), 0.25, true, Vector2(32, 10), Vector2(0, -5))
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_pile_box.png", Vector2(655, 95), 0.25, true, Vector2(32, 10), Vector2(0, -5))
+
+			# 2. Tepi jalan & trotoar pesisir (jauh dari tong sampah):
+			spawn_environment_prop(get_parent(), "res://assets/sprites/props/prop_trash_bags_blue_white.png", Vector2(680, 205), 0.25, true, Vector2(34, 10), Vector2(0, -5))
 
 func _spawn_wood_bridge_rail_vertical(pos: Vector2, is_left: bool) -> void:
 	var tex_path := "res://assets/sprites/props/bridge_rail_wood_left.png" if is_left else "res://assets/sprites/props/bridge_rail_wood_right.png"
@@ -1320,23 +1493,74 @@ static func spawn_tree(parent: Node, pos: Vector2, kind: String = "rindang") -> 
 	body.add_child(col)
 	parent.add_child.call_deferred(body)
 
-func _spawn_mangrove(pos: Vector2) -> void:
+func _spawn_mangrove(pos: Vector2, variant_type: String = "auto") -> void:
 	if is_in_water(pos):
 		return
-	var texture: Texture2D = load("res://assets/sprites/props/mangrove.png")
+	var tree_idx: int = abs(int(pos.x * 73 + pos.y * 37)) % 5
+	var texture: Texture2D = null
+	var tree_scale: float = 0.32
+	var col_size := Vector2(24, 10)
+	var col_offset := Vector2(0, -5)
+	var has_soil_base: bool = true
+
+	match variant_type:
+		"mature":
+			texture = load("res://assets/sprites/props/mangrove_tree_mature_%d.png" % tree_idx)
+			tree_scale = 0.32
+			col_size = Vector2(24, 10)
+			col_offset = Vector2(0, -5)
+		"young":
+			var young_sprites := [
+				"res://assets/sprites/props/mangrove_tree_young_0.png",
+				"res://assets/sprites/props/mangrove_tree_young_1.png",
+				"res://assets/sprites/props/mangrove_tree_adolescent_0.png",
+			]
+			texture = load(young_sprites[tree_idx % young_sprites.size()])
+			tree_scale = 0.44
+			col_size = Vector2(14, 8)
+			col_offset = Vector2(0, -4)
+		"sprout":
+			var sprout_sprites := [
+				"res://assets/sprites/props/mangrove_tree_sprout_0.png",
+				"res://assets/sprites/props/mangrove_tree_sapling_tall.png",
+			]
+			texture = load(sprout_sprites[tree_idx % sprout_sprites.size()])
+			tree_scale = 0.44
+			col_size = Vector2(8, 4)
+			col_offset = Vector2(0, -2)
+			has_soil_base = false
+		_:
+			texture = load("res://assets/sprites/props/mangrove_tree_mature_%d.png" % tree_idx)
+			tree_scale = 0.32
+			col_size = Vector2(24, 10)
+			col_offset = Vector2(0, -5)
+
+	if texture == null:
+		texture = load("res://assets/sprites/props/mangrove.png")
 	var body := StaticBody2D.new()
 	body.position = pos
 	body.collision_layer = 1
 	body.collision_mask = 0
+
+	# Alas tanah lumpur alami untuk rumpun akar mangrove dari Gambar 4
+	if has_soil_base:
+		var soil_sprite := Sprite2D.new()
+		soil_sprite.texture = load("res://assets/sprites/props/soil_patch_tree_%d.png" % (tree_idx % 4))
+		soil_sprite.scale = Vector2(0.32, 0.28) if variant_type != "young" else Vector2(0.24, 0.20)
+		soil_sprite.position = Vector2(0, -6)
+		soil_sprite.z_index = -1
+		body.add_child(soil_sprite)
+
 	var sprite := Sprite2D.new()
 	sprite.texture = texture
-	sprite.position = Vector2(0, -texture.get_height() * 0.5)
+	sprite.scale = Vector2(tree_scale, tree_scale)
+	sprite.position = Vector2(0, -texture.get_height() * 0.5 * tree_scale)
 	body.add_child(sprite)
 	var shape := RectangleShape2D.new()
-	shape.size = Vector2(12, 8)
+	shape.size = col_size
 	var col := CollisionShape2D.new()
 	col.shape = shape
-	col.position = Vector2(0, -4)
+	col.position = col_offset
 	body.add_child(col)
 	get_parent().add_child.call_deferred(body)
 
@@ -1386,3 +1610,44 @@ func _spawn_reed(pos: Vector2) -> void:
 	reed.scale = Vector2(0.8, 1.0)
 	reed.z_index = -1
 	get_parent().add_child.call_deferred(reed)
+
+## Memunculkan prop lingkungan/polusi/sungai dengan skala proporsional & opsi kolisi dasar
+static func spawn_environment_prop(parent: Node, path: String, pos: Vector2, scale_factor: float = 0.3, has_collision: bool = false, col_size: Vector2 = Vector2.ZERO, col_offset: Vector2 = Vector2.ZERO, z_idx: int = 0) -> void:
+	var texture: Texture2D = null
+	if ResourceLoader.exists(path):
+		texture = load(path) as Texture2D
+	if texture == null:
+		var global_path := ProjectSettings.globalize_path(path)
+		var img := Image.load_from_file(global_path)
+		if img != null:
+			texture = ImageTexture.create_from_image(img)
+			texture.resource_path = path
+	if texture == null:
+		return
+	if has_collision:
+		var body := StaticBody2D.new()
+		body.position = pos
+		body.collision_layer = 1
+		body.collision_mask = 0
+		body.z_index = z_idx
+
+		var sprite := Sprite2D.new()
+		sprite.texture = texture
+		sprite.scale = Vector2(scale_factor, scale_factor)
+		sprite.position = Vector2(0, -texture.get_height() * scale_factor * 0.5)
+		body.add_child(sprite)
+
+		var col := CollisionShape2D.new()
+		var shape := RectangleShape2D.new()
+		shape.size = col_size
+		col.shape = shape
+		col.position = col_offset
+		body.add_child(col)
+		parent.add_child.call_deferred(body)
+	else:
+		var sprite := Sprite2D.new()
+		sprite.texture = texture
+		sprite.scale = Vector2(scale_factor, scale_factor)
+		sprite.position = Vector2(pos.x, pos.y - texture.get_height() * scale_factor * 0.5)
+		sprite.z_index = z_idx
+		parent.add_child.call_deferred(sprite)

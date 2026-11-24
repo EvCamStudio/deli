@@ -32,8 +32,29 @@ func _ready() -> void:
 	marker.scale = Vector2.ONE
 
 	var is_mangrove := kind == "mangrove"
-	var tree_path: String = "res://assets/sprites/props/mangrove.png"
-	if not is_mangrove:
+	if is_mangrove:
+		var soil_idx: int = abs(spot_id.hash()) % 4
+		var soil_tex: Texture2D = load("res://assets/sprites/props/soil_patch_spot_%d.png" % soil_idx)
+		if soil_tex != null:
+			var soil := Sprite2D.new()
+			soil.name = "SoilBed"
+			soil.texture = soil_tex
+			soil.scale = Vector2(0.42, 0.38)
+			soil.z_index = -2
+			add_child(soil)
+	var tree_path: String = "res://assets/sprites/props/mangrove_tree_mature_1.png" if is_mangrove else "res://assets/sprites/props/tree.png"
+	if is_mangrove:
+		var mature_mangroves := [
+			"res://assets/sprites/props/mangrove_tree_mature_0.png",
+			"res://assets/sprites/props/mangrove_tree_mature_1.png",
+			"res://assets/sprites/props/mangrove_tree_mature_2.png",
+			"res://assets/sprites/props/mangrove_tree_mature_3.png",
+			"res://assets/sprites/props/mangrove_tree_mature_4.png",
+			"res://assets/sprites/props/mangrove_tree_adolescent_0.png",
+		]
+		var idx: int = abs(spot_id.hash()) % mature_mangroves.size()
+		tree_path = mature_mangroves[idx]
+	else:
 		var forest_trees := [
 			"res://assets/sprites/props/tree_beringin.png",
 			"res://assets/sprites/props/tree_cemara.png",
@@ -44,8 +65,8 @@ func _ready() -> void:
 		var idx: int = abs(spot_id.hash()) % forest_trees.size()
 		tree_path = forest_trees[idx]
 
-	var seedling_path: String = "res://assets/sprites/props/seedling_mangrove.png" if is_mangrove else "res://assets/sprites/props/seedling_tree.png"
-	_target_scale = Vector2.ONE if is_mangrove else Vector2(0.5, 0.5)
+	var seedling_path: String = "res://assets/sprites/props/mangrove_sapling.png" if is_mangrove else "res://assets/sprites/props/seedling_tree.png"
+	_target_scale = Vector2(0.32, 0.32) if is_mangrove else Vector2(0.5, 0.5)
 	planted_sprite.texture = load(tree_path)
 	_tree_height = float(planted_sprite.texture.get_height())
 	_apply_tree_scale(1.0)
@@ -167,25 +188,35 @@ func _apply_stage(stage: int, animate: bool) -> void:
 			_blocker_active = false
 			_show_seedling(animate)
 		Stage.SAPLING:
-			_blocker_active = true
-			_show_tree(SAPLING_SCALE, animate and grew)
+			if kind == "mangrove":
+				_blocker_active = false
+				_show_seedling(animate and grew)
+			else:
+				_blocker_active = true
+				_show_tree(SAPLING_SCALE, animate and grew)
 		_:
 			_blocker_active = true
 			_show_tree(1.0, animate and grew)
 	_update_blocker()
 
 ## Bibit muncul dengan animasi "pop" kecil dan tetap jadi bibit hari itu.
+## Untuk mangrove, sprite berpangkal pada akar tunjang di tanah (Gambar 4).
 func _show_seedling(animate: bool) -> void:
 	planted_sprite.hide()
 	seedling_sprite.show()
 	seedling_sprite.modulate.a = 1.0
+	var base_scale := Vector2(0.65, 0.65) if kind == "mangrove" else Vector2.ONE
+	var h: float = float(seedling_sprite.texture.get_height()) if seedling_sprite.texture else 16.0
+	seedling_sprite.position = Vector2(0, -h * 0.5 * base_scale.y)
 	if not animate:
-		seedling_sprite.scale = Vector2.ONE
+		seedling_sprite.scale = base_scale
 		return
-	seedling_sprite.scale = Vector2(0.35, 0.35)
+	seedling_sprite.scale = base_scale * 0.35
+	seedling_sprite.position = Vector2(0, -h * 0.5 * base_scale.y * 0.35)
 	var tween := create_tween()
-	tween.tween_property(seedling_sprite, "scale", Vector2.ONE, 0.35) \
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(seedling_sprite, "scale", base_scale, 0.35)
+	tween.parallel().tween_property(seedling_sprite, "position", Vector2(0, -h * 0.5 * base_scale.y), 0.35)
 
 func _show_tree(scale_factor: float, animate: bool) -> void:
 	seedling_sprite.hide()

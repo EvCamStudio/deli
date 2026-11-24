@@ -57,8 +57,8 @@
         "effect": {
           "quest": {
             "id": "tanam_pohon_hulu",
-            "description": "Tanam 10 bibit pohon di bukit Hulu",
-            "target": 10
+            "description": "Tanam 15 bibit pohon di bukit Hulu",
+            "target": 15
           }
         }
       },
@@ -71,8 +71,8 @@
         "effect": {
           "quest": {
             "id": "tanam_pohon_hulu",
-            "description": "Tanam 10 bibit pohon di bukit Hulu",
-            "target": 10
+            "description": "Tanam 15 bibit pohon di bukit Hulu",
+            "target": 15
           }
         }
       }

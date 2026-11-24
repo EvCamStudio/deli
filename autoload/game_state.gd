@@ -341,16 +341,16 @@ func prepare_world_chapter(zone: String) -> void:
 		"desa":
 			current_level = 2
 			river_health = 45.0
-			active_quests = {"tanam_pohon_hulu": 5, "pilah_desa": 10, "gotong_royong": 2}
-			zone_progress["hulu"]["trees"] = 5
+			active_quests = {"tanam_pohon_hulu": 15, "pilah_desa": 10, "gotong_royong": 2}
+			zone_progress["hulu"]["trees"] = 15
 		"kota":
 			current_level = 3
 			river_health = 65.0
 			active_quests = {
-				"tanam_pohon_hulu": 5, "pilah_desa": 10, "gotong_royong": 2,
+				"tanam_pohon_hulu": 15, "pilah_desa": 10, "gotong_royong": 2,
 				"pilah_sampah_kota": 6,
 			}
-			zone_progress["hulu"]["trees"] = 5
+			zone_progress["hulu"]["trees"] = 15
 			zone_progress["desa"]["sorted"] = 10
 			zone_progress["desa"]["talked"] = 2
 			zone_progress["desa"]["talked_keys"] = ["npc_petani_1", "npc_ibu_desa"]
@@ -358,10 +358,10 @@ func prepare_world_chapter(zone: String) -> void:
 			current_level = 4
 			river_health = 82.0
 			active_quests = {
-				"tanam_pohon_hulu": 5, "pilah_desa": 10, "gotong_royong": 2,
+				"tanam_pohon_hulu": 15, "pilah_desa": 10, "gotong_royong": 2,
 				"pilah_sampah_kota": 6, "tanam_mangrove": 8, "pilah_hilir": 10,
 			}
-			zone_progress["hulu"]["trees"] = 5
+			zone_progress["hulu"]["trees"] = 15
 			zone_progress["desa"]["sorted"] = 10
 			zone_progress["desa"]["talked"] = 2
 			zone_progress["desa"]["talked_keys"] = ["npc_petani_1", "npc_ibu_desa"]

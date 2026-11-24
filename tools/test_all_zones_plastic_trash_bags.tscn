@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://j1u5w4l8a24o"]
+
+[ext_resource type="Script" path="res://tools/test_all_zones_plastic_trash_bags.gd" id="1_script"]
+
+[node name="TestAllZonesPlasticBags" type="Node"]
+script = ExtResource("1_script")
+
