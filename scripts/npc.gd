@@ -64,7 +64,7 @@ func is_interactable_now() -> bool:
 		"npc_penjaga_hutan":
 			if step == "tanam_pohon_hulu":
 				return true
-			if step == "menanam_pohon_hulu" and GameState.zone_stat("hulu", "trees") >= 5:
+			if step == "menanam_pohon_hulu" and GameState.zone_stat("hulu", "trees") >= 15:
 				return not bool(GameState.choices.get("penjaga_hutan_selesai", false))
 			return false
 
@@ -107,9 +107,7 @@ func is_interactable_now() -> bool:
 			return false
 
 		"npc_anak_sekolah": # Budi
-			if step in ["tanya_budi", "pintu_air_dan_b3", "ke_hilir_muara"]:
-				return "npc_anak_sekolah" not in talked_kota
-			return false
+			return true
 
 		"npc_penjaga_sungai":
 			if step in ["pos_penjaga_muara", "pilah_sampah_muara"]:
@@ -143,7 +141,7 @@ func _get_default_dialog_id() -> String:
 				return "h1_datuk_dejavu"
 			return "h1_datuk"
 		"npc_penjaga_hutan":
-			if GameState.zone_stat("hulu", "trees") >= 5:
+			if GameState.zone_stat("hulu", "trees") >= 15:
 				return "h1_penjaga_hutan_selesai"
 			return "h1_penjaga_hutan"
 		"npc_petani_1":
@@ -171,6 +169,8 @@ func _get_default_dialog_id() -> String:
 		"npc_ibu_rumah":
 			return "h3_ibu_rumah"
 		"npc_anak_sekolah":
+			if bool(GameState.choices.get("budi_done", false)):
+				return "h3_budi_selesai"
 			return "h3_budi"
 		"npc_tokoh_masyarakat":
 			return "h3_pak_rt"

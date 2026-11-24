@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/npc_topdown.gd" id="1_npc"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/shadow.png" id="2_shadow"]
@@ -6,9 +6,13 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 8)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_click"]
+size = Vector2(24, 32)
+
 [node name="NPC" type="CharacterBody2D"]
 collision_layer = 2
 collision_mask = 0
+input_pickable = true
 motion_mode = 1
 script = ExtResource("1_npc")
 
@@ -22,6 +26,14 @@ position = Vector2(0, -12)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_body")
+
+[node name="ClickArea" type="Area2D" parent="."]
+position = Vector2(0, -12)
+collision_layer = 2
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClickArea"]
+shape = SubResource("RectangleShape2D_click")
 
 [node name="ExclaimLabel" type="Label" parent="."]
 z_index = 5

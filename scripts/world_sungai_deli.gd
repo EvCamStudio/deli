@@ -17,10 +17,10 @@ const ZONE_LABELS: Dictionary = {
 
 ## Target misi tiap zona. Dibaca dari progres nyata, bukan teks statis.
 const ZONE_TARGETS: Dictionary = {
-	"hulu": {"trees": 15},
-	"desa": {"sorted": 10, "talked": 2},
-	"kota": {"sorted": 6, "talked": 4},
-	"hilir": {"mangroves": 8, "sorted": 6, "talked": 2},
+	"hulu": {"trees": 15, "sorted": 15},
+	"desa": {"sorted": 16, "talked": 2},
+	"kota": {"sorted": 20, "talked": 4},
+	"hilir": {"mangroves": 8, "sorted": 16, "talked": 2},
 }
 
 const NEXT_ZONE: Dictionary = {
@@ -284,7 +284,7 @@ func _spawn_npcs() -> void:
 	# Budi di dekat papan pantun alun-alun timur, Pak RT di depan gedung perumahan timur.
 	_create_npc("kota", "npc_pedagang", "pedagang", Vector2(10.5, 12.8) * TILE, 3, "h2_jali")
 	_create_npc("kota", "npc_ibu_rumah", "ibu_rumah", Vector2(31.5, 12.5) * TILE, 3)
-	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(48.2, 12.5) * TILE, 3)
+	_create_npc("kota", "npc_anak_sekolah", "budi", Vector2(40.5, 12.8) * TILE, 3)
 	_create_npc("kota", "npc_tokoh_masyarakat", "pakrt", Vector2(51.0, 5.2) * TILE, 3)
 
 	# Hilir: Penjaga Sungai di dekat pangkal jembatan muara, Pak Nelayan di pesisir pantai selatan dekat area tanam mangrove.
@@ -368,7 +368,7 @@ func _sync_hulu_story_state() -> void:
 	elif not bool(GameState.choices.get("datuk_bencana_revealed", false)):
 		GameState.record_choice("datuk_bencana_revealed", true)
 		if GameState.meter_bencana <= 0.0:
-			GameState.meter_bencana = 55.0
+			GameState.meter_bencana = 70.0
 
 	# Jika step cerita baru belum dimulai, pastikan warung siap untuk percakapan pembuka
 	if step.is_empty() and "npc_ibu_mc" in talked_hulu:
@@ -506,7 +506,8 @@ func _sync_hulu_story_state() -> void:
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(false)
 		elif key == "npc_anak_sekolah":
-			if step in ["tanya_budi", "pintu_air_dan_b3", "ke_hilir_muara"] and "npc_anak_sekolah" not in talked_kota:
+			var budi_done: bool = bool(GameState.choices.get("budi_done", false))
+			if step in ["tanya_budi", "pintu_air_dan_b3", "ke_hilir_muara"] and not budi_done:
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(true)
 			else:
@@ -885,19 +886,24 @@ func _spawn_hulu_riverbank_trash() -> void:
 	_trash_spawned_hulu_river = true
 	var trash_scene := preload("res://scenes/world/trash_topdown.tscn")
 	var river_spots: Array[Vector2] = [
-		# Bantaran barat sungai hulu (tersebar rapi dan berjarak lega, tidak menumpuk):
-		Vector2(23.5, 8.0),   # Tepi pasir utara dekat mata air
-		Vector2(23.8, 11.5),  # Bantaran pasir utara
-		Vector2(23.5, 15.0),  # Sisi barat dekat jembatan
-		Vector2(23.8, 19.0),  # Bantaran pasir selatan bawah jembatan
-		Vector2(24.0, 23.5),  # Ujung pasir selatan
+		# Bantaran barat sungai hulu (7 titik tersebar rapi di sepanjang tepi air):
+		Vector2(23.5, 6.0),   # Tepi pasir utara dekat mata air
+		Vector2(23.5, 8.5),   # Bantaran pasir utara atas
+		Vector2(23.8, 11.5),  # Bantaran pasir utara tengah
+		Vector2(23.5, 14.5),  # Sisi barat dekat jembatan
+		Vector2(23.8, 17.5),  # Bantaran pasir selatan bawah jembatan
+		Vector2(23.8, 20.5),  # Bantaran pasir selatan bawah
+		Vector2(24.0, 23.5),  # Ujung pasir barat daya
 
-		# Bantaran timur sungai hulu (tersebar rapi di tepi air, tidak berkerumun di pohon/railing):
-		Vector2(35.5, 7.5),   # Tepi pasir utara seberang jembatan
-		Vector2(36.0, 11.0),  # Tepi air timur (berjarak lega dari pohon & pagar teras)
-		Vector2(35.5, 14.5),  # Tepi jembatan timur
-		Vector2(36.0, 18.5),  # Tepi air selatan bawah jembatan
-		Vector2(38.0, 22.0),  # Tikungan pasir selatan
+		# Bantaran timur sungai hulu (8 titik tersebar rapi di sepanjang tepi air):
+		Vector2(35.5, 6.5),   # Tepi pasir utara seberang jembatan
+		Vector2(36.0, 9.5),   # Tepi air timur atas
+		Vector2(36.0, 12.0),  # Tepi air timur tengah
+		Vector2(35.5, 15.0),  # Tepi jembatan timur
+		Vector2(36.0, 18.0),  # Tepi air timur bawah jembatan
+		Vector2(36.5, 21.0),  # Tepi pasir tenggara
+		Vector2(37.5, 23.5),  # Tikungan pasir tenggara
+		Vector2(38.0, 26.0),  # Ujung pasir selatan timur
 	]
 	var cats: Array[String] = ["plastik", "organik", "plastik", "b3", "organik", "plastik"]
 	for i in range(river_spots.size()):
@@ -913,7 +919,7 @@ func _spawn_hulu_riverbank_trash() -> void:
 
 func _get_hulu_riverbank_trash_cleaned_count() -> int:
 	var count: int = 0
-	for i in range(30):
+	for i in range(15):
 		var tid: String = "hulu_river_trash_%d" % i
 		if tid in GameState.picked_trash_ids:
 			count += 1
@@ -967,6 +973,7 @@ func _on_hulu_riverbank_investigated() -> void:
 func _on_dialog_selesai(id_dialog: String) -> void:
 	match id_dialog:
 		"h1_warung":
+			on_npc_talked("npc_ibu_mc")
 			play_two_days_later_cutscene()
 		"h1_narasi_2hari":
 			GameState.record_choice("hulu_story_step", "butuh_pesan_kasur")
@@ -976,10 +983,16 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Bicara lagi dengan Mak di warung.", true)
 		"h1_warung_kasur":
+			on_npc_talked("npc_ibu_mc")
 			GameState.record_choice("hulu_story_step", "menuju_toko_jaya")
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_update_guidance()
+			# Muncul otomatis 1 KALI saja di sini setelah bicara dengan Mak dan disuruh beli kasur
+			if not bool(GameState.choices.get("mission_first_auto_opened", false)):
+				GameState.record_choice("mission_first_auto_opened", true)
+				if hud and hud.has_method("show_mission"):
+					hud.show_mission()
 			GameState.save_game()
 			toast("Tujuan: Toko Jaya di desa sebelah untuk memesan kasur baru.", true)
 		"h1_jembatan_suara":
@@ -990,21 +1003,23 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Suara siapa itu tadi? Cari di sekitar jembatan!", true)
 		"h1_datuk":
+			on_npc_talked("npc_datuk")
 			GameState.record_choice("datuk_bencana_revealed", true)
-			GameState.meter_bencana = 55.0
+			GameState.meter_bencana = 70.0
 			GameState.record_choice("hulu_story_step", "bersihkan_sungai")
 			_sync_hulu_story_state()
 			_spawn_hulu_riverbank_trash()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
-			toast("Datuk Sampan memperingatkan: Ancaman bencana sungai sudah 55%! Bersihkan sampah di pinggiran sungai.", true)
+			toast("Datuk Sampan memperingatkan: Ancaman bencana sungai melonjak ke 70%! Bersihkan sampah di pinggiran sungai.", true)
 			var sorted: int = GameState.zone_stat("hulu", "sorted")
 			var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
 			var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
 			if sorted >= 5 or (carry_cnt == 0 and cleaned >= 5):
 				call_deferred("_trigger_selesai_sungai")
 		"h1_selesai_sungai":
+			on_npc_talked("npc_datuk")
 			GameState.record_choice("hulu_story_step", "tanam_pohon_hulu")
 			_sync_hulu_story_state()
 			_refresh_mission()
@@ -1012,6 +1027,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Temui Penjaga Hutan di bukit hulu untuk reboisasi.", true)
 		"h1_penjaga_hutan":
+			on_npc_talked("npc_penjaga_hutan")
 			GameState.record_choice("hulu_story_step", "menanam_pohon_hulu")
 			_sync_hulu_story_state()
 			_refresh_mission()
@@ -1019,8 +1035,10 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Tanam 15 bibit pohon hutan di titik-titik bertanda!", true)
 		"h1_penjaga_hutan_selesai":
+			on_npc_talked("npc_penjaga_hutan")
 			GameState.record_choice("penjaga_hutan_selesai", true)
 			GameState.record_choice("hulu_story_step", "ke_toko_jaya")
+			GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 4.0)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_refresh_gates()
@@ -1028,10 +1046,13 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Hutan kembali rimbun! Lanjutkan ke Toko Jaya di Desa.", true)
 		"h1_toko_jaya", "h6_darwis":
+			on_npc_talked("npc_petani_1")
+			on_npc_talked("npc_pemilik_toko")
 			if bool(GameState.choices.get("darwis_peduli", false)):
 				GameState.record_choice("darwis_done", true)
 				GameState.record_choice("pemilik_toko_done", true)
 				GameState.record_choice("hulu_story_step", "pulang_istirahat")
+				GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 6.0)
 				toast("Pak Darwis paham! Kembali ke warung hulu untuk beristirahat.", true)
 			elif bool(GameState.choices.get("mencari_solusi_darwis", false)) and not bool(GameState.choices.get("unlock_solusi_darwis", false)):
 				GameState.record_choice("hulu_story_step", "pantun_kasur_darwis")
@@ -1050,6 +1071,8 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			_update_guidance()
 			GameState.save_game()
 		"h1_darwis_menunggu":
+			on_npc_talked("npc_petani_1")
+			on_npc_talked("npc_pemilik_toko")
 			_update_guidance()
 		"h1_pantun_darwis":
 			GameState.record_choice("unlock_solusi_darwis", true)
@@ -1067,6 +1090,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Bicara dengan Ibu di warung.", true)
 		"h2_warung_gorengan":
+			on_npc_talked("npc_ibu_mc")
 			GameState.record_choice("hulu_story_step", "ke_warung_rina")
 			_sync_hulu_story_state()
 			_refresh_mission()
@@ -1074,6 +1098,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Beli gorengan di warung Kak Rina di Desa.", true)
 		"h4_rina":
+			on_npc_talked("npc_ibu_desa")
 			if bool(GameState.choices.get("mencari_solusi_rina", false)):
 				GameState.record_choice("hulu_story_step", "pantun_jelantah_rina")
 				toast("Periksa Papan Pantun Desa untuk mencari solusi minyak jelantah.", true)
@@ -1094,6 +1119,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Inspirasi didapat! Temui Pemuka Desa untuk meminta jeriken.", true)
 		"h2_pemuka_desa":
+			on_npc_talked("npc_pemuka_desa")
 			GameState.record_choice("has_jeriken_and_info", true)
 			GameState.record_choice("pemuka_desa_done", true)
 			GameState.record_choice("hulu_story_step", "serahkan_jeriken_rina")
@@ -1103,15 +1129,18 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Dapat Jeriken Kosong & Info Biodiesel! Antar ke Kak Rina.", true)
 		"h5_rina":
+			on_npc_talked("npc_ibu_desa")
 			GameState.record_choice("rina_done", true)
 			GameState.record_choice("h5_rina_done", true)
 			GameState.record_choice("hulu_story_step", "antar_gorengan")
+			GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 6.0)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
 			toast("Kak Rina peduli! Antar gorengan ke Ibu di warung.", true)
 		"h2_warung_gorengan_selesai":
+			on_npc_talked("npc_ibu_mc")
 			GameState.record_choice("hulu_story_step", "ke_kota_medan")
 			_sync_hulu_story_state()
 			_refresh_mission()
@@ -1120,6 +1149,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Gorengan diantar! Pergi ke Kota Medan melalui gerbang timur Desa.", true)
 		"h2_jali":
+			on_npc_talked("npc_pedagang")
 			if bool(GameState.choices.get("mencari_solusi_jali", false)):
 				GameState.record_choice("hulu_story_step", "pantun_gang_jali")
 				toast("Periksa Papan Pantun di dekat zebra cross jalan raya.", true)
@@ -1140,6 +1170,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Inspirasi didapat! Temui Pak RT untuk fasilitas gerobak roda.", true)
 		"h3_pak_rt":
+			on_npc_talked("npc_tokoh_masyarakat")
 			GameState.record_choice("has_rt_cart_approval", true)
 			GameState.record_choice("pak_rt_done", true)
 			GameState.record_choice("hulu_story_step", "serahkan_gerobak_jali")
@@ -1149,15 +1180,18 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Dapat Bahan Gerobak Roda RT! Serahkan ke Bang Jali.", true)
 		"h3_jali":
+			on_npc_talked("npc_pedagang")
 			GameState.record_choice("jali_done", true)
 			GameState.record_choice("h3_jali_done", true)
 			GameState.record_choice("hulu_story_step", "periksa_saluran_kota")
+			GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 6.0)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
 			toast("Bang Jali peduli! Periksa saluran air dan pintu air kota.", true)
 		"h3_ibu_rumah":
+			on_npc_talked("npc_ibu_rumah")
 			GameState.record_choice("ibu_rumah_done", true)
 			GameState.record_choice("hulu_story_step", "pintu_air_dan_b3")
 			_sync_hulu_story_state()
@@ -1172,7 +1206,8 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			_update_guidance()
 			GameState.save_game()
 			toast("Sandi terpecahkan: Urutan Tuas 1 -> Tuas 3 -> Tuas 2!", true)
-		"h3_budi":
+		"h3_budi", "h3_budi_selesai":
+			on_npc_talked("npc_anak_sekolah")
 			GameState.record_choice("budi_done", true)
 			GameState.record_choice("hulu_story_step", "ke_hilir_muara")
 			_sync_hulu_story_state()
@@ -1182,6 +1217,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Aturan pantun dipahami! Lanjutkan ke Muara Hilir.", true)
 		"h7_penjaga_sungai":
+			on_npc_talked("npc_penjaga_sungai")
 			GameState.record_choice("penjaga_sungai_done", true)
 			GameState.record_choice("hulu_story_step", "pilah_sampah_muara")
 			_sync_hulu_story_state()
@@ -1197,6 +1233,7 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Pantun selesai dipulihkan! Temui Pak Nelayan di pesisir.", true)
 		"h7_nelayan":
+			on_npc_talked("npc_nelayan")
 			GameState.record_choice("hulu_story_step", "tanam_mangrove_muara")
 			_sync_hulu_story_state()
 			_refresh_mission()
@@ -1204,8 +1241,10 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 			GameState.save_game()
 			toast("Tanam 8 bibit bakau (mangrove) di pesisir pantai!", true)
 		"h7_nelayan_selesai":
+			on_npc_talked("npc_nelayan")
 			GameState.record_choice("nelayan_selesai", true)
 			GameState.record_choice("hulu_story_step", "selesai_perjalanan")
+			GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 5.0)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_refresh_gates()
@@ -1377,7 +1416,7 @@ func _spawn_zone_bins(zone: String, _categories: Array = []) -> void:
 			Vector2(17.0, 5.0),  # Nempel sejajar garis dinding Gedung Office utara (y=60px)
 			Vector2(13.0, 22.0), # Nempel sejajar dinding kanan Pasar Sayur Bang Jali di plaza selatan (y=350px)
 			Vector2(25.0, 13.0), # Di tepi tanggul kanal dekat jembatan barat
-			Vector2(49.0, 13.0), # Di tepi tanggul kanal dekat tuas pintu air
+			Vector2(55.0, 13.0), # Di tepi tanggul kanal timur dekat tuas pintu air 2
 		],
 		"hilir": [
 			{"pos": Vector2(10.2, 5.0), "cat": "organik"},  # Rumah Pesisir barat (Tong Hijau Organik)
@@ -1626,171 +1665,287 @@ func _refresh_mission() -> void:
 		"hulu":
 			var step: String = str(GameState.choices.get("hulu_story_step", ""))
 			var trees: int = mini(GameState.zone_stat("hulu", "trees"), 15)
+			var sorted: int = mini(GameState.zone_stat("hulu", "sorted"), 15)
+			var trash_line: String = "- Bersihkan seluruh sampah bantaran: %d/15" % sorted if sorted < 15 else "- Sampah bantaran hulu bersih (15/15)"
 
 			if step.is_empty() or step == "butuh_pesan_kasur":
 				title = "WARUNG HULU"
-				lines = ["Bicara dengan Mak dan Bapak di warung."]
+				lines = ["- Bicara dengan Mak dan Bapak di warung."]
 			elif step == "menuju_toko_jaya":
 				title = "MENUJU DESA"
-				lines = ["Pergi ke Toko Jaya di seberang jembatan."]
+				lines = ["- Pergi ke Toko Jaya di seberang jembatan."]
 			elif step == "cari_suara_jembatan":
 				title = "JEMBATAN SUNGAI"
-				lines = ["Periksa suara misterius di sekitar jembatan."]
+				lines = ["- Periksa suara misterius di sekitar jembatan."]
 			elif step == "bersihkan_sungai":
-				var sorted_count: int = GameState.zone_stat("hulu", "sorted")
-				var carry_cnt: int = GameState.get_pending_trash_count() if GameState.has_method("get_pending_trash_count") else GameState.get_meta("pending_trash", []).size()
 				title = "PINGGIRAN SUNGAI"
-				if carry_cnt >= 5:
+				if sorted < 5:
 					lines = [
-						"Kantong penuh (5/5)! Buang sampah ke tong di dekat jembatan.",
-						"Telah dibuang: %d/5" % sorted_count
-					]
-				elif carry_cnt > 0:
-					lines = [
-						"Pungut sampah sungai lalu buang ke tong sampah.",
-						"Di kantong: %d/5 · Telah dibuang: %d/5" % [carry_cnt, sorted_count]
+						"- Kumpulkan & buang 5 sampah ke tong: %d/5" % sorted,
+						trash_line
 					]
 				else:
 					lines = [
-						"Pungut sampah di sepanjang bantaran sungai.",
-						"Telah dibuang ke tong: %d/5" % sorted_count
+						"- Bicara lagi dengan Datuk Sampan di jembatan.",
+						trash_line
 					]
 			elif step == "tanam_pohon_hulu":
 				title = "BUKIT HULU"
-				lines = ["Temui Penjaga Hutan di perbukitan hulu."]
+				lines = [
+					"- Temui Penjaga Hutan di perbukitan hulu.",
+					trash_line
+				]
 			elif step == "menanam_pohon_hulu":
-				title = "PENANAMAN POHON"
-				lines = ["Tanam bibit pohon di titik bertanda: %d/15" % trees if trees < 15 else "Semua pohon tertanam (%d/15)! Temui Penjaga Hutan." % trees]
+				title = "REBOISASI HULU"
+				var tree_line: String = "- Tanam bibit di petak reboisasi: %d/15" % trees if trees < 15 else "- Reboisasi lengkap (15/15)! Temui Penjaga Hutan."
+				lines = [
+					tree_line,
+					trash_line
+				]
 			elif step == "ke_toko_jaya":
 				title = "MENUJU DESA"
-				lines = ["Lanjutkan ke Toko Jaya di Desa Suka Maju."]
+				lines = [
+					"- Lanjutkan ke Toko Jaya di Desa Suka Maju.",
+					trash_line
+				]
 			elif step == "pulang_istirahat":
 				title = "PULANG KE RUMAH"
-				lines = ["Kembali ke warung hulu untuk beristirahat."]
+				lines = [
+					"- Kembali ke warung hulu untuk beristirahat.",
+					trash_line
+				]
 			elif step == "pesan_gorengan":
 				title = "WARUNG HULU"
-				lines = ["Bicara dengan Mak di warung."]
+				lines = [
+					"- Bicara dengan Mak di warung.",
+					trash_line
+				]
 			elif step in ["ke_warung_rina", "cari_solusi_jelantah", "serahkan_jeriken_rina"]:
 				title = "DESA SUKA MAJU"
-				lines = ["Lanjutkan urusan di Desa Suka Maju."]
+				lines = [
+					"- Lanjutkan urusan di Desa Suka Maju.",
+					trash_line
+				]
 			elif step == "antar_gorengan":
 				title = "ANTAR GORENGAN"
-				lines = ["Bicara dengan Mak di warung."]
+				lines = [
+					"- Antar gorengan dari Mak ke warga desa.",
+					trash_line
+				]
 			elif step in ["ke_kota_medan", "kota_gang_sempit", "cari_solusi_rt", "serahkan_gerobak_jali", "periksa_saluran_kota", "pintu_air_dan_b3", "tanya_budi"]:
 				title = "MENUJU KOTA"
-				lines = ["Lanjutkan ke Kota Medan melalui gerbang timur."]
+				lines = [
+					"- Lanjutkan ke Kota Medan melalui gerbang timur.",
+					trash_line
+				]
 			else:
 				title = "HULU PULIH"
-				lines = ["Lanjutkan perjalanan melalui jembatan ke Desa."]
+				lines = [
+					"- Lanjutkan perjalanan melalui jembatan ke Desa.",
+					trash_line
+				]
 
 		"desa":
 			var step_desa: String = str(GameState.choices.get("hulu_story_step", ""))
+			var sorted_desa: int = mini(GameState.zone_stat("desa", "sorted"), 16)
+			var trash_line_desa: String = "- Pilah sampah di Desa Suka Maju: %d/16" % sorted_desa if sorted_desa < 16 else "- Sampah Desa Suka Maju bersih (16/16)"
 
 			if step_desa in ["pulang_istirahat", "pesan_gorengan", "antar_gorengan"]:
 				title = "WARUNG HULU"
-				lines = ["Kembali ke warung Mak di Hulu."]
+				lines = [
+					"- Kembali ke warung Mak di Hulu.",
+					trash_line_desa
+				]
 			elif step_desa == "ke_toko_jaya":
 				if bool(GameState.choices.get("unlock_solusi_darwis", false)):
 					title = "KASUR PAK DARWIS"
-					lines = ["Bicara kembali dengan Pak Darwis di depan Toko Jaya."]
+					lines = [
+						"- Bicara kembali dengan Pak Darwis di Toko Jaya.",
+						trash_line_desa
+					]
 				else:
 					title = "TOKO JAYA"
-					lines = ["Bicara dengan orang di depan Toko Jaya."]
+					lines = [
+						"- Bicara dengan orang di depan Toko Jaya.",
+						trash_line_desa
+					]
 			elif step_desa == "pantun_kasur_darwis":
 				title = "PAPAN PANTUN"
-				lines = ["Cari petunjuk solusi di Papan Pantun dekat Toko Jaya."]
+				lines = [
+					"- Cari petunjuk solusi di Papan Pantun Toko Jaya.",
+					trash_line_desa
+				]
 			elif step_desa == "ke_warung_rina":
 				title = "WARUNG GORENGAN"
-				lines = ["Temui Kak Rina di Desa Suka Maju."]
+				lines = [
+					"- Temui Kak Rina di Desa Suka Maju.",
+					trash_line_desa
+				]
 			elif step_desa == "pantun_jelantah_rina":
 				title = "PAPAN PANTUN"
-				lines = ["Cari petunjuk solusi di Papan Pantun Desa."]
+				lines = [
+					"- Cari petunjuk solusi di Papan Pantun Desa.",
+					trash_line_desa
+				]
 			elif step_desa == "cari_solusi_jelantah":
 				title = "PEMUKA DESA"
-				lines = ["Temui Pemuka Desa di Desa Suka Maju."]
+				lines = [
+					"- Temui Pemuka Desa di balai desa.",
+					trash_line_desa
+				]
 			elif step_desa == "serahkan_jeriken_rina":
 				title = "WARUNG GORENGAN"
-				lines = ["Kembali temui Kak Rina di warung gorengan."]
+				lines = [
+					"- Kembalikan jeriken jelantah ke Kak Rina.",
+					trash_line_desa
+				]
 			elif step_desa in ["ke_kota_medan", "kota_gang_sempit", "pantun_gang_jali", "cari_solusi_rt", "serahkan_gerobak_jali", "periksa_saluran_kota", "pintu_air_dan_b3", "tanya_budi"]:
 				title = "MENUJU KOTA"
-				lines = ["Pergi ke Kota Medan melalui gerbang timur."]
+				lines = [
+					"- Pergi ke Kota Medan melalui gerbang timur.",
+					trash_line_desa
+				]
 			elif step_desa.is_empty() or step_desa in ["butuh_pesan_kasur", "menuju_toko_jaya", "cari_suara_jembatan", "bersihkan_sungai", "tanam_pohon_hulu", "menanam_pohon_hulu"]:
 				title = "HULU SUNGAI DELI"
-				lines = ["Kembali ke Hulu melalui jembatan barat."]
+				lines = [
+					"- Kembali ke Hulu melalui jembatan barat.",
+					trash_line_desa
+				]
 			else:
 				title = "DESA SUKA MAJU"
-				lines = ["Jelajahi Desa atau lanjutkan perjalanan."]
+				lines = [
+					"- Jelajahi Desa Suka Maju.",
+					trash_line_desa
+				]
 
 		"kota":
 			var step_kota: String = str(GameState.choices.get("hulu_story_step", ""))
+			var sorted_kota: int = mini(GameState.zone_stat("kota", "sorted"), 20)
+			var trash_line_kota: String = "- Pilah sampah di Kota Medan: %d/20" % sorted_kota if sorted_kota < 20 else "- Sampah Kota Medan bersih (20/20)"
 
 			if step_kota in ["ke_toko_jaya", "pantun_kasur_darwis", "pulang_istirahat", "pesan_gorengan", "ke_warung_rina", "pantun_jelantah_rina", "cari_solusi_jelantah", "serahkan_jeriken_rina", "antar_gorengan"]:
 				title = "DESA SUKA MAJU"
-				lines = ["Kembali ke Desa Suka Maju melalui gerbang barat."]
+				lines = [
+					"- Kembali ke Desa Suka Maju melalui gerbang barat.",
+					trash_line_kota
+				]
 			elif step_kota in ["ke_kota_medan", "kota_gang_sempit"]:
 				title = "GANG SEMPIT"
-				lines = ["Periksa warga di mulut gang sempit."]
+				lines = [
+					"- Periksa warga di mulut gang sempit.",
+					trash_line_kota
+				]
 			elif step_kota == "pantun_gang_jali":
 				title = "PAPAN PANTUN"
-				lines = ["Cari petunjuk solusi di Papan Pantun dekat zebra cross."]
+				lines = [
+					"- Cari petunjuk solusi di Papan Pantun zebra cross.",
+					trash_line_kota
+				]
 			elif step_kota == "cari_solusi_rt":
 				title = "TEMUI PAK RT"
-				lines = ["Temui Pak RT di Kota Medan."]
+				lines = [
+					"- Temui Pak RT di balai kota Medan.",
+					trash_line_kota
+				]
 			elif step_kota == "serahkan_gerobak_jali":
 				title = "GANG SEMPIT"
-				lines = ["Bicara kembali dengan Bang Jali di mulut gang."]
+				lines = [
+					"- Bicara kembali dengan Bang Jali di mulut gang.",
+					trash_line_kota
+				]
 			elif step_kota == "periksa_saluran_kota":
 				title = "SALURAN KOTA"
-				lines = ["Periksa warga di dekat saluran air."]
+				lines = [
+					"- Periksa warga di dekat saluran air.",
+					trash_line_kota
+				]
 			elif step_kota == "pintu_air_dan_b3":
 				if not bool(GameState.choices.get("sandi_tuas_terbuka", false)):
 					title = "PAPAN PANTUN"
-					lines = ["Cari sandi urutan tuas di Papan Pantun dekat zebra cross."]
+					lines = [
+						"- Cari sandi urutan tuas di Papan Pantun kanal.",
+						trash_line_kota
+					]
 				else:
 					title = "PINTU AIR"
 					lines = [
-						"Buka 3 tuas pintu air di dekat kanal (urutan 1-3-2).",
-						"Tuas ditarik: %d/3" % _lever_pressed.size()
+						"- Buka 3 tuas kanal (urutan 1-3-2): %d/3" % _lever_pressed.size(),
+						trash_line_kota
 					]
 			elif step_kota == "tanya_budi":
 				title = "ANAK SEKOLAH"
-				lines = ["Bicara dengan Budi di trotoar kota."]
+				lines = [
+					"- Bicara dengan Budi di trotoar kota.",
+					trash_line_kota
+				]
 			elif step_kota in ["ke_hilir_muara", "pos_penjaga_muara", "pilah_sampah_muara", "papan_pantun_muara", "temui_pak_nelayan", "tanam_mangrove_muara", "selesai_mangrove"]:
 				title = "MENUJU HILIR"
-				lines = ["Lanjutkan perjalanan ke Muara Hilir melalui gerbang timur."]
+				lines = [
+					"- Lanjutkan ke Muara Hilir melalui gerbang timur.",
+					trash_line_kota
+				]
 			else:
 				title = "KOTA MEDAN"
-				lines = ["Jelajahi Kota Medan atau lanjutkan perjalanan."]
+				lines = [
+					"- Jelajahi Kota Medan.",
+					trash_line_kota
+				]
 
 		"hilir":
 			var step_hilir: String = str(GameState.choices.get("hulu_story_step", ""))
 			var mangroves: int = mini(GameState.zone_stat("hilir", "mangroves"), 8)
-			var sorted: int = mini(GameState.zone_stat("hilir", "sorted"), 6)
+			var sorted_hilir: int = mini(GameState.zone_stat("hilir", "sorted"), 16)
+			var trash_line_hilir: String = "- Bersihkan sampah pesisir: %d/16" % sorted_hilir if sorted_hilir < 16 else "- Sampah pesisir muara bersih (16/16)"
 
 			if step_hilir in ["ke_toko_jaya", "pulang_istirahat", "pesan_gorengan", "ke_warung_rina", "cari_solusi_jelantah", "serahkan_jeriken_rina", "antar_gorengan", "ke_kota_medan", "kota_gang_sempit", "cari_solusi_rt", "serahkan_gerobak_jali", "periksa_saluran_kota", "pintu_air_dan_b3", "tanya_budi"]:
 				title = "KOTA MEDAN"
-				lines = ["Kembali ke Kota Medan melalui gerbang barat."]
+				lines = [
+					"- Kembali ke Kota Medan melalui gerbang barat.",
+					trash_line_hilir
+				]
 			elif step_hilir in ["ke_hilir_muara", "pos_penjaga_muara"]:
 				title = "POS PENJAGA"
-				lines = ["Bicara dengan Penjaga Sungai di pos muara."]
+				lines = [
+					"- Bicara dengan Penjaga Sungai di pos muara.",
+					trash_line_hilir
+				]
 			elif step_hilir == "pilah_sampah_muara":
 				title = "PILAH PESISIR"
-				lines = ["Pilah sampah pesisir muara ke tong sampah: %d/6" % sorted]
+				lines = [
+					"- Pilah sampah pesisir muara ke tong sampah.",
+					trash_line_hilir
+				]
 			elif step_hilir == "temui_pak_nelayan":
 				title = "PAK NELAYAN"
-				lines = ["Temui Pak Nelayan di pesisir pantai."]
+				lines = [
+					"- Temui Pak Nelayan di pesisir pantai.",
+					trash_line_hilir
+				]
 			elif step_hilir == "tanam_mangrove_muara":
 				title = "REBOISASI PESISIR"
-				lines = ["Tanam bibit pohon bakau di pesisir: %d/8" % mangroves]
+				var mangrove_line: String = "- Tanam bibit bakau di pesisir: %d/8" % mangroves if mangroves < 8 else "- Bakau lengkap (8/8)! Temui Pak Nelayan."
+				lines = [
+					mangrove_line,
+					trash_line_hilir
+				]
 			elif step_hilir == "selesai_mangrove":
 				title = "PAK NELAYAN"
-				lines = ["Bicara kembali dengan Pak Nelayan di pesisir pantai."]
+				lines = [
+					"- Bicara kembali dengan Pak Nelayan di pesisir.",
+					trash_line_hilir
+				]
 			elif step_hilir == "papan_pantun_muara":
 				title = "PANTUN DELI"
-				lines = ["Bicara dengan Datuk Sampan di muara."]
+				lines = [
+					"- Bicara dengan Datuk Sampan di muara.",
+					trash_line_hilir
+				]
 			else:
 				title = "MUARA BELAWAN"
-				lines = ["Dengarkan petuah terakhir Datuk Sampan."]
+				lines = [
+					"- Dengarkan petuah terakhir Datuk Sampan.",
+					trash_line_hilir
+				]
 
 	var text: String = title
 	for line in lines:
@@ -1823,10 +1978,9 @@ func on_trash_picked(category: String, trash_id: String) -> void:
 		toast("Sampah %s dipungut." % category, true)
 
 	if _current_zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
-		# Setiap sampah yang dipungut sedikit mengurangi ancaman bencana (dari 55% turun bertahap)
-		GameState.meter_bencana = maxf(40.0, GameState.meter_bencana - 1.5)
 		var cleaned: int = _get_hulu_riverbank_trash_cleaned_count()
-		if carry_cnt == 0 and cleaned >= 5:
+		var sorted: int = GameState.zone_stat("hulu", "sorted")
+		if carry_cnt == 0 and (cleaned >= 5 or sorted >= 5):
 			call_deferred("_trigger_selesai_sungai")
 
 	_refresh_mission()
@@ -1841,14 +1995,17 @@ func on_bin_sorted(category: String) -> void:
 	if target > 0 and count == target:
 		GameState.rupiah += 1000
 		match zone:
+			"hulu": GameState.unlock_card("card_kearifan_01")
 			"desa": GameState.unlock_card("card_pertanian_01")
 			"kota": GameState.unlock_card("card_plastik_01")
 			"hilir": GameState.unlock_card("card_pesisir_01")
 	toast("Sampah %s terpilah. Sungai membaik." % category, true)
 
+	# Setiap sampah yang berhasil dipilah mengurangi ancaman bencana secara seimbang dan perlahan
+	var delta_meter: float = 0.8 if zone == "hulu" else (0.6 if zone == "desa" else 0.5)
+	GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - delta_meter)
+
 	if zone == "hulu" and GameState.choices.get("hulu_story_step") == "bersihkan_sungai":
-		# Memilah sampah ke tong juga membantu sedikit menurunkan ancaman bencana
-		GameState.meter_bencana = maxf(35.0, GameState.meter_bencana - 1.5)
 		var sorted: int = GameState.zone_stat("hulu", "sorted")
 		if sorted >= 5:
 			call_deferred("_trigger_selesai_sungai")
@@ -1865,23 +2022,25 @@ func on_tree_planted(kind: String) -> void:
 	if kind == "mangrove" and _current_zone == "hilir":
 		GameState.add_zone_stat("hilir", "mangroves")
 		var count: int = GameState.zone_stat("hilir", "mangroves")
+		GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 1.0)
 		if count >= 8:
 			GameState.unlock_card("card_mangrove_01")
 			toast("Mangrove lengkap! Pesisir terlindungi.", true)
 			GameState.record_choice("hulu_story_step", "selesai_mangrove")
 			_sync_hulu_story_state()
 		else:
-			toast("Bibit mangrove ditanam! (%d/8) · tumbuh dalam 1–2 hari" % mini(count, 8), true)
+			toast("Bibit mangrove ditanam! (%d/8) · Bencana berkurang" % mini(count, 8), true)
 	elif kind == "tree" and _current_zone == "hulu":
 		GameState.add_zone_stat("hulu", "trees")
 		var count: int = GameState.zone_stat("hulu", "trees")
+		GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 0.4)
 		if count >= 15:
 			GameState.unlock_card("card_hutan_01")
 			GameState.unlock_card("card_sungai_deli_01")
 			toast("Semua 15 pohon tertanam! Temui Penjaga Hutan.", true)
 			_sync_hulu_story_state()
 		else:
-			toast("Bibit pohon ditanam! (%d/15) · tumbuh dalam 1–2 hari" % mini(count, 15), true)
+			toast("Bibit pohon ditanam! (%d/15) · Bencana berkurang" % mini(count, 15), true)
 	else:
 		toast("%s ditanam. Sungai membaik." % label, true)
 	_refresh_mission()
@@ -1909,6 +2068,7 @@ func lever_pressed(lever_id: int) -> void:
 	if _lever_pressed.size() == _lever_sequence.size():
 		GameState.record_choice("pintu_air_terbuka", true)
 		GameState.add_river_health(10.0)
+		GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 5.0)
 		GameState.unlock_card("card_drainase_01")
 		AudioManager.play_sfx("correct")
 		toast("Drainase pintu air terbuka! Aliran lancar.", true)
@@ -1928,7 +2088,28 @@ func _reset_kota_levers() -> void:
 			lever.reset_lever()
 
 func on_npc_talked(npc_key: String) -> void:
-	var zone: String = _current_zone
+	var npc_to_zone := {
+		"npc_ibu_mc": "hulu",
+		"npc_pak_hendra": "hulu",
+		"npc_datuk": "hulu",
+		"npc_penjaga_hutan": "hulu",
+		"npc_petani_1": "desa",
+		"npc_darwis": "desa",
+		"npc_pemilik_toko": "desa",
+		"npc_ibu_desa": "desa",
+		"npc_rina": "desa",
+		"npc_pemuka_desa": "desa",
+		"npc_pedagang": "kota",
+		"npc_jali": "kota",
+		"npc_tokoh_masyarakat": "kota",
+		"npc_pak_rt": "kota",
+		"npc_ibu_rumah": "kota",
+		"npc_anak_sekolah": "kota",
+		"npc_budi": "kota",
+		"npc_penjaga_sungai": "hilir",
+		"npc_nelayan": "hilir",
+	}
+	var zone: String = npc_to_zone.get(npc_key, _current_zone)
 	# Pak Hendra dan Bu Mira memakai dialog warung hulu yang sama.
 	var effective_key: String = "npc_ibu_mc" if (zone == "hulu" and npc_key == "npc_pak_hendra") else npc_key
 	GameState.mark_character_talked(npc_key)
@@ -2001,9 +2182,56 @@ func on_npc_talked(npc_key: String) -> void:
 
 # ─── Pantun Melayu Deli ──────────────────────────────────────────────────────
 
+func _is_pantun_solved(board_dialog_id: String) -> bool:
+	match board_dialog_id:
+		"h1_pantun_darwis":
+			return bool(GameState.choices.get("unlock_solusi_darwis", false)) or bool(GameState.choices.get("darwis_done", false))
+		"h2_pantun_rina":
+			return bool(GameState.choices.get("unlock_solusi_rina", false)) or bool(GameState.choices.get("rina_done", false))
+		"h3_pantun_jali":
+			return bool(GameState.choices.get("unlock_solusi_jali", false)) or bool(GameState.choices.get("jali_done", false))
+		"h3_pantun_kota":
+			return bool(GameState.choices.get("sandi_tuas_terbuka", false)) or bool(GameState.choices.get("pintu_air_terbuka", false))
+		"h7_pantun":
+			return bool(GameState.choices.get("pantun_muara_selesai", false)) or GameState.pantun_completed or bool(GameState.choices.get("nelayan_selesai", false))
+		_:
+			return false
+
+func _show_solved_pantun(board_dialog_id: String) -> void:
+	var text: String = ""
+	match board_dialog_id:
+		"h1_pantun_darwis":
+			text = "Pohon rumbia tumbuh di hulu,\nDitebang orang diambil sagu.\nKasur yang berat cincanglah dulu,\nDijual kiloan tak bikin ragu.\n\n(Solusi: Busa kasur dipotong kecil lalu dijual kiloan ke pengepul)"
+		"h2_pantun_rina":
+			text = "Pergi ke pasar membeli santan,\nSinggah sebentar membawa nampan.\nMinyak jelantah jangan di selokan,\nDi Bank Sampah jeriken disiapkan.\n\n(Solusi: Minyak jelantah ditampung di jeriken untuk Bank Sampah)"
+		"h3_pantun_jali":
+			text = "Pasang pelita di malam gulita,\nCahaya terang sampai ke pekan.\nJika gang sempit truk tak muat kita,\nGerobak beroda mari gilirkan.\n\n(Solusi: Sediakan gerobak roda komunal bergilir untuk gang sempit)"
+		"h3_pantun_kota":
+			text = "Pergi berlayar ke Pulau Satu,\nSinggah berlabuh di Tanjung Tiga.\nBuka pintu air jangan keliru,\nTarikan ke-Dua penutupnya juga.\n\n(Sandi Pintu Air: Urutan tuas 1 -> tuas 3 -> tuas 2)"
+		"h7_pantun":
+			text = "Anak Melayu menjala ikan,\nSinggah berteduh di pohon jati.\nSungai Deli pusaka kehidupan,\nMari dijaga sepenuh hati.\n\n(Petuah Datuk: Menjaga kelestarian Sungai Deli bersama-sama)"
+		_:
+			text = "Pohon rumbia tumbuh di hulu,\nAirnya jernih mengalir tenang.\nJaga sungai seperti dahulu,\nAnak cucu hidupnya senang.\n\n(Kearifan Deli: Sungai bersih, kehidupan lestari)"
+
+	DialogueManager.start_dialogue([
+		{
+			"id": "start",
+			"speaker": "Papan Pantun",
+			"emosi": "happy",
+			"teks": text,
+			"next": "end"
+		}
+	], "papan_pantun", "pantun_selesai")
+
 func open_pantun_board(board_dialog_id: String = "") -> void:
 	if not board_dialog_id.is_empty():
+		if _is_pantun_solved(board_dialog_id):
+			_show_solved_pantun(board_dialog_id)
+			return
 		DialogueManager.mulai(board_dialog_id)
+		return
+	if _current_zone == "hulu":
+		_show_solved_pantun("")
 		return
 	open_pantun()
 
@@ -2017,7 +2245,10 @@ func open_pantun() -> void:
 			DialogueManager.mulai("h2_pantun_rina")
 			return
 		else:
-			toast("Papan Pantun Desa Suka Maju: 'Pohon rumbia tumbuh di hulu...'", true)
+			if _is_pantun_solved("h1_pantun_darwis"):
+				_show_solved_pantun("h1_pantun_darwis")
+			else:
+				_show_solved_pantun("h2_pantun_rina")
 			return
 	elif _current_zone == "kota":
 		if (step in ["ke_kota_medan", "kota_gang_sempit", "pantun_gang_jali"]) and not bool(GameState.choices.get("unlock_solusi_jali", false)):
@@ -2025,16 +2256,22 @@ func open_pantun() -> void:
 			return
 		elif step == "pintu_air_dan_b3":
 			if bool(GameState.choices.get("sandi_tuas_terbuka", false)):
-				toast("Sandi pantun pintu air sudah terpecahkan: Urutan 1 - 3 - 2!", true)
+				_show_solved_pantun("h3_pantun_kota")
 				return
 			DialogueManager.mulai("h3_pantun_kota")
 			return
 		else:
-			toast("Papan Pantun Kota Medan: 'Pasang pelita di malam gulita...'", true)
+			if _is_pantun_solved("h3_pantun_kota"):
+				_show_solved_pantun("h3_pantun_kota")
+			else:
+				_show_solved_pantun("h3_pantun_jali")
 			return
 	elif _current_zone == "hilir":
 		if step == "papan_pantun_muara":
-			DialogueManager.mulai("h7_pantun")
+			if _is_pantun_solved("h7_pantun"):
+				_show_solved_pantun("h7_pantun")
+			else:
+				DialogueManager.mulai("h7_pantun")
 			return
 
 	if GameState.pantun_completed:

@@ -111,11 +111,12 @@ func _ready() -> void:
 		hint_card.hide()
 	if compass_panel:
 		compass_panel.hide()
-	# Kotak misi langsung terbuka di awal jika ada misi aktif (player opsional bisa menutup)
-	if mission_card and mission_label and not mission_label.text.strip_edges().is_empty():
-		show_mission()
-	else:
-		hide_mission()
+	# Kotak misi tertutup secara default saat inisialisasi, tombol toggle siap digunakan
+	if mission_card:
+		mission_card.hide()
+	if mission_toggle_btn:
+		mission_toggle_btn.show()
+	_update_mission_toggle_icon()
 	update_all()
 	_update_sikap_visibility()
 
@@ -282,7 +283,7 @@ func _update_carry() -> void:
 
 # ─── Misi ─────────────────────────────────────────────────────────────────────
 
-func update_mission(text: String) -> void:
+func update_mission(text: String, force_open: bool = false) -> void:
 	if not mission_card or not mission_label or not mission_title:
 		return
 	if text.strip_edges().is_empty():
@@ -296,8 +297,15 @@ func update_mission(text: String) -> void:
 		mission_title.text = "MISI AKTIF"
 		mission_label.text = text
 	mission_card.reset_size()
-	# Kotak misi langsung muncul terbuka saat misi baru diterima (opsional player bisa menutup via tombol toggle)
-	show_mission()
+	# Tombol toggle selalu ditampilkan jika ada misi agar user bebas membuka/menutup sendiri
+	if mission_toggle_btn:
+		mission_toggle_btn.show()
+	# Hanya buka otomatis jika force_open bernilai true (1x saat beli kasur).
+	# Jika user sudah menutup (tanda >), kotak misi TETAP tertutup dan tidak boleh membuka sendiri.
+	if force_open:
+		show_mission()
+	else:
+		_update_mission_toggle_icon()
 
 func show_mission() -> void:
 	if mission_card:
@@ -310,7 +318,10 @@ func hide_mission() -> void:
 	if mission_card:
 		mission_card.hide()
 	if mission_toggle_btn:
-		mission_toggle_btn.hide()
+		if mission_label == null or mission_label.text.strip_edges().is_empty():
+			mission_toggle_btn.hide()
+		else:
+			mission_toggle_btn.show()
 	_update_mission_toggle_icon()
 
 func _on_mission_toggle_pressed() -> void:

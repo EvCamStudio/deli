@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://clprjbt4jmgcy"]
+
+[ext_resource type="Script" path="res://tools/test_proximity_and_all_npc_book.gd" id="1_test"]
+
+[node name="TestProximityCharBook" type="Node"]
+script = ExtResource("1_test")
+

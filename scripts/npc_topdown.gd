@@ -17,6 +17,22 @@ func _ready() -> void:
 	super._ready()
 	if not _dialogue_data.is_empty():
 		show_exclaim(true)
+	var click_area = get_node_or_null("ClickArea") as Area2D
+	if click_area:
+		click_area.input_event.connect(_on_click_area_input_event)
+
+func _input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) -> void:
+	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed) or (event is InputEventScreenTouch and event.pressed):
+		_try_direct_interaction()
+
+func _on_click_area_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed) or (event is InputEventScreenTouch and event.pressed):
+		_try_direct_interaction()
+
+func _try_direct_interaction() -> void:
+	var player = get_tree().get_first_node_in_group("player")
+	if player and global_position.distance_to(player.global_position) <= 64.0:
+		interact()
 
 func _build_sprite() -> void:
 	var texture: Texture2D = load("res://assets/sprites/characters/%s.png" % sprite_key)

@@ -159,8 +159,11 @@ func _refresh_interactable() -> void:
 	if _is_dialog_active:
 		action_label.visible = false
 		return
-	var nearest: Node = null
-	var nearest_dist: float = 999999.0
+	var nearest_npc: Node = null
+	var nearest_npc_dist: float = 999999.0
+	var nearest_other: Node = null
+	var nearest_other_dist: float = 999999.0
+
 	for node in _candidates:
 		if not is_instance_valid(node):
 			continue
@@ -170,11 +173,17 @@ func _refresh_interactable() -> void:
 		if node.has_method("get_action_label") and str(node.get_action_label()).is_empty():
 			continue
 		var dist: float = global_position.distance_squared_to(node_2d.global_position)
-		if dist < nearest_dist:
-			nearest_dist = dist
-			nearest = node
+		var is_npc: bool = node.is_in_group("world_npc") or (node is CharacterBody2D and node != self)
+		if is_npc:
+			if dist < nearest_npc_dist:
+				nearest_npc_dist = dist
+				nearest_npc = node
+		else:
+			if dist < nearest_other_dist:
+				nearest_other_dist = dist
+				nearest_other = node
 
-	_interactable = nearest
+	_interactable = nearest_npc if nearest_npc != null else nearest_other
 	if _interactable == null:
 		action_label.visible = false
 		return

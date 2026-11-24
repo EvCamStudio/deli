@@ -203,7 +203,7 @@ func _spawn_city_props() -> void:
 	# Lampu jalan di kedua sisi jalan raya utama (kolisi solid di pangkal, Gambar 9).
 	for x in [96, 240, 440, 624, 820]:
 		_spawn_prop("lamp.png", Vector2(x, 114))
-	for x in [96, 288, 480, 660, 864]:
+	for x in [96, 288, 430, 660, 864]:
 		_spawn_prop("lamp.png", Vector2(x, 194))
 	# Lampu di plaza selatan dan alun-alun timur.
 	for p in [Vector2(64, 370), Vector2(525, 370), Vector2(832, 370)]:

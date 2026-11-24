@@ -315,6 +315,55 @@ func has_talked_to_npc(char_key: String) -> bool:
 		for k in check_keys:
 			if k in z_keys or talked_characters.get(k, false):
 				return true
+
+	# Story progress fallbacks (retroactive unlocking):
+	match char_key:
+		"ibu_mc", "bapak":
+			var step := str(choices.get("hulu_story_step", ""))
+			if not step.is_empty() or bool(choices.get("mission_first_auto_opened", false)):
+				return true
+		"datuk":
+			if bool(choices.get("datuk_bencana_revealed", false)):
+				return true
+			var step := str(choices.get("hulu_story_step", ""))
+			if not step.is_empty() and step not in ["menuju_toko_jaya", "cari_suara_jembatan"]:
+				return true
+		"penjaga_hutan":
+			if bool(choices.get("penjaga_hutan_selesai", false)) or zone_stat("hulu", "trees") > 0:
+				return true
+			var step := str(choices.get("hulu_story_step", ""))
+			if step in ["menanam_pohon_hulu", "ke_toko_jaya", "pantun_kasur_darwis", "pulang_istirahat", "pesan_gorengan", "ke_warung_rina", "pantun_jelantah_rina", "cari_solusi_jelantah", "serahkan_jeriken_rina", "antar_gorengan", "ke_kota_medan", "kota_gang_sempit", "pantun_gang_jali", "cari_solusi_rt", "serahkan_gerobak_jali", "periksa_saluran_kota", "pintu_air_dan_b3", "tanya_budi", "ke_hilir_muara", "pos_penjaga_muara", "pilah_sampah_muara", "pulihkan_pantun_muara", "temui_pak_nelayan", "tanam_mangrove_muara", "selesai_perjalanan"]:
+				return true
+		"darwis":
+			if bool(choices.get("darwis_done", false)) or bool(choices.get("mencari_solusi_darwis", false)) or bool(choices.get("unlock_solusi_darwis", false)) or has_decided_npc("darwis"):
+				return true
+		"pemilik_toko":
+			if bool(choices.get("darwis_done", false)) or bool(choices.get("pemilik_toko_done", false)) or bool(choices.get("mencari_solusi_darwis", false)) or bool(choices.get("unlock_solusi_darwis", false)):
+				return true
+		"rina":
+			if bool(choices.get("rina_done", false)) or bool(choices.get("h5_rina_done", false)) or bool(choices.get("mencari_solusi_rina", false)) or bool(choices.get("unlock_solusi_rina", false)) or has_decided_npc("rina"):
+				return true
+		"pemuka_desa":
+			if bool(choices.get("has_jeriken_and_info", false)) or bool(choices.get("pemuka_desa_done", false)):
+				return true
+		"jali":
+			if bool(choices.get("jali_done", false)) or bool(choices.get("h3_jali_done", false)) or bool(choices.get("mencari_solusi_jali", false)) or bool(choices.get("unlock_solusi_jali", false)) or has_decided_npc("jali"):
+				return true
+		"pak_rt":
+			if bool(choices.get("has_rt_cart_approval", false)) or bool(choices.get("pak_rt_done", false)):
+				return true
+		"ibu_rumah":
+			if bool(choices.get("ibu_rumah_done", false)) or bool(choices.get("sandi_tuas_terbuka", false)) or bool(choices.get("pintu_air_terbuka", false)):
+				return true
+		"budi":
+			if bool(choices.get("budi_done", false)):
+				return true
+		"penjaga_sungai":
+			if bool(choices.get("penjaga_sungai_done", false)):
+				return true
+		"nelayan":
+			if bool(choices.get("nelayan_selesai", false)) or zone_stat("hilir", "mangroves") > 0:
+				return true
 	return false
 
 func has_decided_npc(char_key: String) -> bool:
@@ -614,7 +663,7 @@ func hitung_kode_ending() -> String:
 	var peduli: int = get_jumlah_npc_peduli()
 	var trees_hulu: int = zone_stat("hulu", "trees")
 	var mangroves_hilir: int = zone_stat("hilir", "mangroves")
-	var trees_done: bool = (trees_hulu >= 5 and mangroves_hilir >= 8)
+	var trees_done: bool = (trees_hulu >= 15 and mangroves_hilir >= 8)
 
 	if m <= 20 and peduli >= 3 and trees_done:
 		return "A"
@@ -626,7 +675,7 @@ func hitung_kode_ending() -> String:
 
 ## Menghitung alasan kegagalan dominan untuk petunjuk Datuk Sampan saat Rewind
 func hitung_alasan_kegagalan() -> String:
-	if zone_stat("hulu", "trees") < 5 or zone_stat("hilir", "mangroves") < 8:
+	if zone_stat("hulu", "trees") < 15 or zone_stat("hilir", "mangroves") < 8:
 		return "pohon"
 	if get_sikap("darwis") == SIKAP_MENOLAK or get_sikap("rina") == SIKAP_MENOLAK or get_sikap("jali") == SIKAP_MENOLAK:
 		return "menuduh"
@@ -720,6 +769,9 @@ func unlock_card(card_id: String) -> void:
 	if card_id not in collected_cards:
 		collected_cards.append(card_id)
 		card_unlocked.emit(card_id)
+
+func has_card(card_id: String) -> bool:
+	return card_id in collected_cards
 
 func record_choice(key: String, value: Variant) -> void:
 	choices[key] = value
@@ -1034,7 +1086,7 @@ func delete_save() -> void:
 func prepare_epilog_preview() -> void:
 	reset()
 	river_health = 88.0
-	trees_planted = 5
+	trees_planted = 15
 	mangroves_planted = 8
 	trash_collected = { "organik": 12, "plastik": 18, "b3": 4 }
 	rupiah = 32000

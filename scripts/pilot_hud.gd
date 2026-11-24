@@ -135,7 +135,7 @@ func _on_river_health_changed(value: float) -> void:
 	else:
 		river_bar.add_theme_stylebox_override("fill", _low_style)
 
-func update_mission(text: String) -> void:
+func update_mission(text: String, force_open: bool = false) -> void:
 	if not mission_card or not mission_label or not mission_title:
 		return
 	if text.strip_edges().is_empty():
@@ -148,8 +148,14 @@ func update_mission(text: String) -> void:
 	else:
 		mission_title.text = "MISI"
 		mission_label.text = text
-	# Kotak misi langsung muncul terbuka saat misi baru diterima
-	show_mission()
+	if mission_toggle_btn:
+		mission_toggle_btn.show()
+	# Hanya buka otomatis jika force_open bernilai true (1x saat beli kasur).
+	# Jika user sudah menutup (tanda >), kotak misi TETAP tertutup dan tidak boleh membuka sendiri.
+	if force_open:
+		show_mission()
+	else:
+		_update_mission_toggle_icon()
 
 func show_mission() -> void:
 	if mission_card:
@@ -162,7 +168,10 @@ func hide_mission() -> void:
 	if mission_card:
 		mission_card.hide()
 	if mission_toggle_btn:
-		mission_toggle_btn.hide()
+		if mission_label == null or mission_label.text.strip_edges().is_empty():
+			mission_toggle_btn.hide()
+		else:
+			mission_toggle_btn.show()
 	_update_mission_toggle_icon()
 
 func _on_mission_toggle_pressed() -> void:
