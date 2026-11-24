@@ -156,6 +156,7 @@ func _build_ui() -> void:
 	row_meter.add_child(_make_btn("35% (B)", func(): GameState.meter_bencana = 35))
 	row_meter.add_child(_make_btn("50% (C)", func(): GameState.meter_bencana = 50))
 	row_meter.add_child(_make_btn("75% (D)", func(): GameState.meter_bencana = 75))
+	row_meter.add_child(_make_btn("100% (Banjir)", func(): GameState.meter_bencana = 100))
 
 	# Baris 2: Sikap 3 NPC
 	var row_npc := HBoxContainer.new()

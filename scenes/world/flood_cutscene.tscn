@@ -1,0 +1,144 @@
+[gd_scene load_steps=8 format=3 uid="uid://flood_cutscene"]
+
+[ext_resource type="Script" path="res://scripts/flood_cutscene.gd" id="1_script"]
+[ext_resource type="Shader" path="res://shaders/flood_water.gdshader" id="2_shader"]
+[ext_resource type="FontFile" path="res://assets/fonts/PixelifySans.ttf" id="3_font"]
+[ext_resource type="Texture2D" path="res://assets/ui/panel_dialog.png" id="4_dialog"]
+[ext_resource type="AudioStream" path="res://assets/audio/sfx/rain_thunder.wav" id="5_audio"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_water"]
+shader = ExtResource("2_shader")
+shader_parameter/water_level = 1.08
+shader_parameter/wave_amplitude = 0.022
+shader_parameter/wave_frequency = 16.0
+shader_parameter/flow_speed = 6.0
+shader_parameter/mud_color_deep = Color(0.24, 0.16, 0.1, 0.9)
+shader_parameter/mud_color_shallow = Color(0.4, 0.29, 0.18, 0.78)
+shader_parameter/foam_color = Color(0.88, 0.82, 0.72, 0.95)
+shader_parameter/turbulence = 0.85
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_alert"]
+bg_color = Color(0.14, 0.04, 0.04, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.95, 0.25, 0.25, 0.98)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+shadow_color = Color(0, 0, 0, 0.6)
+shadow_size = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBox_subtitle"]
+bg_color = Color(0.06, 0.05, 0.04, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.85, 0.72, 0.52, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+shadow_color = Color(0, 0, 0, 0.7)
+shadow_size = 6
+
+[node name="FloodCutscene" type="CanvasLayer"]
+layer = 30
+visible = false
+script = ExtResource("1_script")
+
+[node name="WaterRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_water")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DebrisContainer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="DarknessOverlay" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0.1, 0.06, 0.04, 0)
+
+[node name="AlertBanner" type="PanelContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -300.0
+offset_top = 16.0
+offset_right = 300.0
+offset_bottom = 62.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_alert")
+
+[node name="Margin" type="MarginContainer" parent="AlertBanner"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 6
+
+[node name="Label" type="Label" parent="AlertBanner/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.4, 0.4, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 19
+text = "⚠️ PERINGATAN DARURAT: BANJIR BANDANG MELUAP DARI HULU!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SubtitlePanel" type="PanelContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -360.0
+offset_top = -84.0
+offset_right = 360.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBox_subtitle")
+
+[node name="Margin" type="MarginContainer" parent="SubtitlePanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="SubtitleLabel" type="RichTextLabel" parent="SubtitlePanel/Margin"]
+layout_mode = 2
+theme_override_colors/default_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("3_font")
+theme_override_font_sizes/normal_font_size = 18
+bbcode_enabled = true
+text = "[center][b][color=#ffffff]Air bah meluap dari hulu Sungai Deli...![/color][/b][/center]"
+fit_content = true
+scroll_active = false
+
+[node name="SFXThunder" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_audio")
+volume_db = 2.0

@@ -651,6 +651,10 @@ func tentukan_ending(buka_layar: bool = true) -> String:
 
 	if buka_layar and is_inside_tree():
 		var current_scene := get_tree().current_scene
+		if kode == "D" and current_scene and current_scene.has_method("play_catastrophic_flood_cutscene") and not current_scene.get("_flood_triggered"):
+			current_scene.set("_flood_triggered", true)
+			current_scene.play_catastrophic_flood_cutscene()
+			return kode
 		if current_scene and current_scene.scene_file_path == "res://scenes/levels/level_5_epilog.tscn" and current_scene.has_method("_show_ending"):
 			current_scene._show_ending()
 		else:

@@ -120,6 +120,8 @@ var _hulu_sampan: Sprite2D = null
 var _last_zone_switch_ms: int = -1000
 var _is_cutscene_active: bool = false
 var _cutscene_advance_cb: Callable = Callable()
+var _flood_cutscene: CanvasLayer = null
+var _flood_triggered: bool = false
 var _bridge_talk_spot: Node2D = null
 var _trash_spawned_hulu_river: bool = false
 var _has_triggered_bridge_voice: bool = false
@@ -146,6 +148,7 @@ func _ready() -> void:
 	DialogueManager.dialogue_finished.connect(_on_dialogue_finished)
 	DialogueManager.dialog_selesai.connect(_on_dialog_selesai)
 	GameState.river_health_changed.connect(func(_value: float): _refresh_mission())
+	GameState.meter_changed.connect(_on_meter_changed)
 	GameState.rupiah_changed.connect(func(_value: int): _refresh_mission())
 	GameState.quest_started.connect(_on_quest_started)
 
@@ -922,6 +925,26 @@ func _trigger_selesai_sungai() -> void:
 		return
 	DialogueManager.mulai("h1_selesai_sungai")
 
+func _on_meter_changed(new_val: float) -> void:
+	_refresh_mission()
+	if new_val >= 100.0 and not _is_cutscene_active and not _flood_triggered:
+		_flood_triggered = true
+		call_deferred("play_catastrophic_flood_cutscene")
+
+func play_catastrophic_flood_cutscene() -> void:
+	if _flood_cutscene == null:
+		var scn: PackedScene = load("res://scenes/world/flood_cutscene.tscn")
+		if scn:
+			_flood_cutscene = scn.instantiate() as CanvasLayer
+			add_child(_flood_cutscene)
+	if _flood_cutscene:
+		_is_cutscene_active = true
+		if hud:
+			hud.visible = false
+		if touch_controls:
+			touch_controls.visible = false
+		_flood_cutscene.start_flood(camera, player)
+
 func _trigger_final_ending() -> void:
 	if _dialogue_active or DialogueManager.is_active():
 		return
@@ -931,7 +954,12 @@ func _trigger_final_ending() -> void:
 	GameState.world_completed = true
 	GameState.in_world = false
 	GameState.current_level = 5
-	GameState.tentukan_ending(true)
+	var kode: String = GameState.hitung_kode_ending()
+	if kode == "D" and not _flood_triggered:
+		_flood_triggered = true
+		play_catastrophic_flood_cutscene()
+	else:
+		GameState.tentukan_ending(true)
 
 func _on_hulu_riverbank_investigated() -> void:
 	pass
