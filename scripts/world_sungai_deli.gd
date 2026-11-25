@@ -197,7 +197,7 @@ func _ready() -> void:
 	GameState.save_game()
 
 	if hud:
-		hud.show_hint("Joystick / WASD untuk bergerak · Dekati objek & tekan (B/E)", 4.0)
+		hud.show_hint("Gunakan Joystick untuk bergerak · Dekati warga/objek & ketuk tombol Aksi", 4.0)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if _is_cutscene_active and _cutscene_advance_cb.is_valid():
@@ -747,6 +747,17 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "", au
 		title_label.add_theme_font_override("italics_font", pixel_font)
 	vbox.add_child(title_label)
 
+	var next_hint_lbl := Label.new()
+	next_hint_lbl.text = "Next ▶"
+	next_hint_lbl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	next_hint_lbl.add_theme_color_override("font_color", Color(0.75, 0.68, 0.55, 0.85))
+	next_hint_lbl.add_theme_font_size_override("font_size", 11)
+	if pixel_font:
+		next_hint_lbl.add_theme_font_override("font", pixel_font)
+	next_hint_lbl.visible = (not is_pure_loading) and (auto_close_delay <= 0.0)
+	next_hint_lbl.modulate.a = 0.0
+	vbox.add_child(next_hint_lbl)
+
 	var input_btn := Button.new()
 	input_btn.name = "CutsceneInputBtn"
 	input_btn.set_anchors_preset(Control.PRESET_FULL_RECT)
@@ -770,6 +781,7 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "", au
 			state.is_typing = false
 			title_label.visible_ratio = 1.0
 			progress.value = 100.0
+			next_hint_lbl.modulate.a = 1.0
 			AudioManager.play_sfx("tap_b")
 			return
 
@@ -800,6 +812,7 @@ func play_time_skip_cutscene(slide_text: String, next_dialog_id: String = "", au
 	tw0.parallel().tween_property(progress, "value", 100.0, dur).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	tw0.tween_callback(func():
 		state.is_typing = false
+		next_hint_lbl.modulate.a = 1.0
 		if auto_close_delay > 0.0:
 			var tw_close := cl.create_tween()
 			tw_close.tween_interval(auto_close_delay)

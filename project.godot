@@ -12,8 +12,11 @@ config_version=5
 
 config/name="Deli Rewind"
 config/version="0.1.0"
-run/main_scene="res://scenes/main_menu/main_menu.tscn"
-config/features=PackedStringArray("4.6", "Mobile")
+run/main_scene="res://scenes/ui/splash_screen.tscn"
+config/features=PackedStringArray("4.7", "Mobile")
+boot_splash/bg_color=Color(0.0509804, 0.0431373, 0.0392157, 1)
+boot_splash/stretch_mode=0
+boot_splash/image="res://assets/ui/boot_splash.png"
 config/icon="res://assets/ui/app_icon.png"
 
 [autoload]
@@ -32,7 +35,6 @@ window/size/viewport_height=360
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="canvas_items"
-window/stretch/aspect="keep"
 window/handheld/orientation=4
 
 [gui]
@@ -90,8 +92,8 @@ pause={
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0
-textures/vram_compression/import_etc2_astc=true
 renderer/rendering_method="mobile"
 renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true

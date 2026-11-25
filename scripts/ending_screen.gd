@@ -351,8 +351,8 @@ func _build_comic_epilogue_ui() -> void:
 	cin_vbox.add_child(_cinematic_body)
 
 	_cinematic_hint = Label.new()
-	_cinematic_hint.text = "Tap / Tekan Spasi untuk membuka kisah epilog ▶"
-	_cinematic_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_cinematic_hint.text = "Next ▶"
+	_cinematic_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_cinematic_hint.add_theme_color_override("font_color", Color(0.86, 0.74, 0.48, 0.90))
 	_cinematic_hint.add_theme_font_size_override("font_size", 10)
 	if pixel_font:
@@ -510,7 +510,7 @@ func _build_comic_epilogue_ui() -> void:
 	text_vbox.add_child(_comic_text)
 
 	_comic_next_hint = Label.new()
-	_comic_next_hint.text = "Tap / Tekan Spasi untuk panel berikutnya ▶"
+	_comic_next_hint.text = "Next ▶"
 	_comic_next_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_comic_next_hint.add_theme_color_override("font_color", Color(0.50, 0.36, 0.22, 0.95))
 	_comic_next_hint.add_theme_font_size_override("font_size", 10)
@@ -729,10 +729,7 @@ func _render_comic_step() -> void:
 			_comic_portrait_frame.visible = false
 		_comic_portrait.texture = null
 
-	if _comic_step + 1 < _comic_slides.size():
-		_comic_next_hint.text = "Tap / Tekan Spasi untuk panel berikutnya ▶"
-	else:
-		_comic_next_hint.text = "Tap / Tekan Spasi untuk hasil akhir ▶"
+	_comic_next_hint.text = "Next ▶"
 
 	_start_typewriter_on(_comic_text, _comic_next_hint, str(slide.get("text", "")))
 

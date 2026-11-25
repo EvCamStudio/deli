@@ -313,8 +313,8 @@ func _show_current_page() -> void:
 			dialogue_container.hide()
 			_black_screen_container.show()
 			if _black_screen_hint:
-				_black_screen_hint.hide()
-			_start_typewriter(_black_screen_label, null, "[center][b]%s[/b][/center]" % page_text)
+				_black_screen_hint.show()
+			_start_typewriter(_black_screen_label, _black_screen_hint, "[center][b]%s[/b][/center]" % page_text)
 
 		"narasi":
 			# Tampilkan Narasi dalam format plakat terpusat
@@ -537,7 +537,12 @@ func _ensure_black_screen_node() -> void:
 
 	_black_screen_hint = Label.new()
 	_black_screen_hint.name = "BlackScreenHint"
-	_black_screen_hint.visible = false
+	_black_screen_hint.text = "Next ▶"
+	_black_screen_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_black_screen_hint.add_theme_color_override("font_color", Color(0.75, 0.68, 0.55, 0.85))
+	_black_screen_hint.add_theme_font_size_override("font_size", 11)
+	if ResourceLoader.exists("res://assets/fonts/PixelifySans.ttf"):
+		_black_screen_hint.add_theme_font_override("font", load("res://assets/fonts/PixelifySans.ttf"))
 	_black_screen_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	vbox.add_child(_black_screen_hint)
 

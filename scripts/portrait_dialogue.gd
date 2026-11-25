@@ -90,6 +90,10 @@ func _ready() -> void:
 		text_label.bbcode_enabled = true
 	if narration_text_label:
 		narration_text_label.bbcode_enabled = true
+	if dialog_hint:
+		dialog_hint.text = "Next ▶"
+	if narration_continue_hint:
+		narration_continue_hint.text = "Next ▶"
 	dialogue_frame.hide()
 	choice_modal.hide()
 	if narration_center:

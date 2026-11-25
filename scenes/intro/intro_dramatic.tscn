@@ -199,7 +199,7 @@ grow_vertical = 0
 theme_override_colors/font_color = Color(0.55, 0.42, 0.28, 0.9)
 theme_override_fonts/font = ExtResource("5_pixel")
 theme_override_font_sizes/font_size = 10
-text = "Tap / Tekan Spasi ▶"
+text = "Next ▶"
 horizontal_alignment = 2
 vertical_alignment = 1
 
@@ -348,7 +348,7 @@ offset_bottom = 138.0
 theme_override_colors/font_color = Color(0.55, 0.42, 0.28, 0.9)
 theme_override_fonts/font = ExtResource("5_pixel")
 theme_override_font_sizes/font_size = 10
-text = "Tap / Tekan Spasi ▶"
+text = "Next ▶"
 horizontal_alignment = 2
 vertical_alignment = 1
 

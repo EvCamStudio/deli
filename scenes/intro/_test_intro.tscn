@@ -120,7 +120,7 @@ size_flags_vertical = 4
 theme_override_colors/font_color = Color(0.227451, 0.164706, 0.117647, 1)
 theme_override_colors/font_placeholder_color = Color(0.451, 0.369, 0.29, 1)
 theme_override_colors/caret_color = Color(0.227451, 0.164706, 0.117647, 1)
-placeholder_text = "Ketik namamu, lalu tekan Enter..."
+placeholder_text = "Ketik nama karaktermu..."
 max_length = 20
 
 [node name="NextBtn" type="Button" parent="MarginContainer/VBox/StoryPanel/VBox/ActionRow"]
