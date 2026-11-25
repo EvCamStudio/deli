@@ -529,13 +529,15 @@ func _sync_hulu_story_state() -> void:
 					npc.show_exclaim(false)
 		elif key == "npc_nelayan":
 			var mangroves: int = GameState.zone_stat("hilir", "mangroves")
+			var trash_done: bool = GameState.zone_stat("hilir", "sorted") >= zone_target("hilir", "sorted")
+			var pantun_done: bool = bool(GameState.choices.get("pantun_muara_selesai", false))
 			var nelayan_done: bool = bool(GameState.choices.get("nelayan_selesai", false))
-			if step == "temui_pak_nelayan" and not bool(GameState.choices.get("nelayan_awal_done", false)):
+			if step == "temui_pak_nelayan" and trash_done and pantun_done and not bool(GameState.choices.get("nelayan_awal_done", false)):
 				if npc.has_method("set_dialog_id"):
 					npc.set_dialog_id("h7_nelayan")
 				if npc.has_method("show_exclaim"):
 					npc.show_exclaim(true)
-			elif (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and mangroves >= 12 and not nelayan_done:
+			elif (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and trash_done and pantun_done and mangroves >= 12 and not nelayan_done:
 				if npc.has_method("set_dialog_id"):
 					npc.set_dialog_id("h7_nelayan_selesai")
 				if npc.has_method("show_exclaim"):
@@ -1227,12 +1229,20 @@ func _on_dialog_selesai(id_dialog: String) -> void:
 		"h7_penjaga_sungai":
 			on_npc_talked("npc_penjaga_sungai")
 			GameState.record_choice("penjaga_sungai_done", true)
-			GameState.record_choice("hulu_story_step", "pilah_sampah_muara")
+			if GameState.zone_stat("hilir", "sorted") >= zone_target("hilir", "sorted"):
+				if bool(GameState.choices.get("pantun_muara_selesai", false)):
+					GameState.record_choice("hulu_story_step", "temui_pak_nelayan")
+					toast("Sampah pesisir & pantun sudah tuntas! Temui Pak Nelayan di pesisir pantai.", true)
+				else:
+					GameState.record_choice("hulu_story_step", "papan_pantun_muara")
+					toast("Semua sampah pesisir sudah bersih! Periksa Papan Pantun di muara.", true)
+			else:
+				GameState.record_choice("hulu_story_step", "pilah_sampah_muara")
+				toast("Bersihkan seluruh sampah pesisir muara ke tempat sampah!", true)
 			_sync_hulu_story_state()
 			_refresh_mission()
 			_update_guidance()
 			GameState.save_game()
-			toast("Pilah sampah pesisir muara ke tong yang sesuai!", true)
 		"h7_pantun":
 			_complete_pantun_step("h7_pantun", true)
 		"pantun_selesai":
@@ -2193,8 +2203,8 @@ func on_npc_talked(npc_key: String) -> void:
 			GameState.unlock_card("card_nelayan_01")
 		"npc_penjaga_sungai":
 			if not GameState.has_quest("pilah_hilir"):
-				GameState.start_quest("pilah_hilir", 10)
-				QuestManager.trigger_npc_quest("pilah_hilir", "Pilah 10 sampah pesisir", 10)
+				GameState.start_quest("pilah_hilir", 16)
+				QuestManager.trigger_npc_quest("pilah_hilir", "Bersihkan 16 sampah pesisir muara", 16)
 			GameState.unlock_card("card_pesisir_01")
 
 	var target: int = zone_target(zone, "talked")
@@ -2260,11 +2270,13 @@ func _complete_pantun_step(board_id: String, from_quiz: bool) -> void:
 				toast("Sandi terpecahkan: Urutan Tuas 1 -> Tuas 3 -> Tuas 2!", true)
 		"h7_pantun":
 			GameState.record_choice("pantun_muara_selesai", true)
-			if step == "papan_pantun_muara" or from_quiz:
+			var hilir_trash_done: bool = GameState.zone_stat("hilir", "sorted") >= zone_target("hilir", "sorted")
+			if hilir_trash_done and (step in ["papan_pantun_muara", "pilah_sampah_muara"] or from_quiz):
 				GameState.record_choice("hulu_story_step", "temui_pak_nelayan")
 				changed = true
-			if from_quiz or changed:
 				toast("Pantun selesai dipulihkan! Temui Pak Nelayan di pesisir.", true)
+			elif not hilir_trash_done:
+				toast("Pantun selesai! Sekarang tuntaskan membersihkan sampah pesisir muara.", true)
 	if from_quiz or changed:
 		_sync_hulu_story_state()
 		_refresh_mission()
@@ -2299,6 +2311,15 @@ func _show_solved_pantun(board_dialog_id: String) -> void:
 	], "papan_pantun", "pantun_selesai")
 
 func open_pantun_board(board_dialog_id: String = "") -> void:
+	if board_dialog_id == "h7_pantun":
+		if not bool(GameState.choices.get("penjaga_sungai_done", false)):
+			toast("Bicara dulu dengan Penjaga Sungai di dekat pangkal jembatan muara!", false)
+			return
+		var sorted_hilir: int = GameState.zone_stat("hilir", "sorted")
+		var target_hilir: int = zone_target("hilir", "sorted")
+		if sorted_hilir < target_hilir:
+			toast("Bersihkan dulu sampah pesisir muara (%d/%d) sebelum membuka Papan Pantun Tua!" % [sorted_hilir, target_hilir], false)
+			return
 	if not board_dialog_id.is_empty():
 		if _is_pantun_solved(board_dialog_id):
 			_show_solved_pantun(board_dialog_id)

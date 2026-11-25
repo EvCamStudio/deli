@@ -37,8 +37,8 @@
     "effect": {
       "quest": {
         "id": "pilah_hilir",
-        "description": "Pilah 10 sampah pesisir muara ke tong yang benar",
-        "target": 10
+        "description": "Bersihkan 16 sampah pesisir muara ke tempat sampah",
+        "target": 16
       }
     }
   }

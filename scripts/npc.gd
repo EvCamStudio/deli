@@ -117,6 +117,10 @@ func is_interactable_now() -> bool:
 			return false
 
 		"npc_nelayan":
+			var trash_done: bool = GameState.zone_stat("hilir", "sorted") >= 16
+			var pantun_done: bool = bool(GameState.choices.get("pantun_muara_selesai", false))
+			if not bool(GameState.choices.get("penjaga_sungai_done", false)) or not trash_done or not pantun_done:
+				return false
 			if step == "temui_pak_nelayan":
 				return not bool(GameState.choices.get("nelayan_awal_done", false))
 			if (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and GameState.zone_stat("hilir", "mangroves") >= 12:

@@ -59,6 +59,7 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("action"):
 		AudioManager.play_sfx("tap_b")
+		get_tree().call_group("touch_controls", "reset_joystick")
 		if _interactable != null and _interactable.has_method("interact"):
 			_interactable.interact()
 
@@ -201,8 +202,14 @@ func _refresh_interactable() -> void:
 
 func _on_dialogue_started() -> void:
 	_is_dialog_active = true
+	velocity = Vector2.ZERO
 	action_label.visible = false
+	Input.action_release("action")
+	get_tree().call_group("touch_controls", "reset_joystick")
 
 func _on_dialogue_finished() -> void:
 	_is_dialog_active = false
+	velocity = Vector2.ZERO
+	Input.action_release("action")
+	get_tree().call_group("touch_controls", "reset_joystick")
 	_refresh_interactable()
