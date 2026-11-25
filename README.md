@@ -26,10 +26,10 @@ Berbekal pesan Datuk Sampan—*"Jangan mulai dengan amarah, mulailah dengan teli
 ## ✨ Fitur Utama & Mekanik Gameplay
 
 ### 1. 🗺️ Eksplorasi 4 Zona Aliran Sungai Deli
-- **Zona 1 — Hutan & Tepian Hulu**: Membersihkan sampah tepian hulu dan menanam **Bibit Pohon Hutan** bersama Penjaga Hutan sebagai daerah resapan air hujan.
+- **Zona 1 — Hutan & Tepian Hulu**: Membersihkan sampah tepian sungai dan menanam **Bibit Pohon Hutan** bersama Penjaga Hutan sebagai daerah resapan air hujan.
 - **Zona 2 — Desa Deli**: Berinteraksi dengan warga desa, menyelesaikan persoalan limbah kasur bekas di Toko Jaya dan limbah minyak jelantah warung gorengan.
-- **Zona 3 — Pemukiman Padat Kota Medan**: Mengatasi permasalahan sampah gang sempit, mengatur **Teka-Teki 3 Tuas Pintu Air**, dan memilah limbah berbahaya (B3).
-- **Zona 4 — Pesisir Muara Hilir**: Memilah sampah muara, memecahkan papan pantun tua, dan menanam **Bibit Mangrove (Bakau)** bersama Pak Nelayan untuk menahan abrasi pesisir.
+- **Zona 3 — Pemukiman Padat Kota Medan**: Mengatasi permasalahan sampah gang sempit, mengatur **Teka-Teki 3 Tuas Pintu Air**, dan membersihkan bantaran kanal kota.
+- **Zona 4 — Pesisir Muara Hilir**: Membersihkan sampah muara, memecahkan papan pantun tua, dan menanam **Bibit Mangrove (Bakau)** bersama Pak Nelayan untuk menahan abrasi pesisir.
 
 ### 2. 🤝 Dialog Empati & Solusi Nyata Warga
 Setiap warga memiliki kesulitan hidup yang membuat mereka terpaksa membuang limbah ke sungai. Pemain tidak bisa sekadar memarahi atau menggurui warga, melainkan harus **mendengarkan alasan mereka dan mencari solusi nyata**:
@@ -37,12 +37,10 @@ Setiap warga memiliki kesulitan hidup yang membuat mereka terpaksa membuang limb
 - **Kak Rina & Pemuka Desa**: Mencari jeriken penampung dari Balai Desa dan menghubungkan warung gorengan dengan Bank Sampah pengolah biodiesel minyak jelantah.
 - **Bang Jali & Pak RT**: Mengusulkan pengadaan gerobak sampah roda di mulut gang sempit bersama Pak RT.
 
-### 3. ♻️ Pemilahan Sampah 3 Kategori & Meter Bencana
-- Pilah sampah yang dipungut di sepanjang bantaran sungai ke dalam tiga tong sampah sesuai jenisnya:
-  - 🟢 **Organik (Hijau)**: Sisa makanan, daun, dan ranting.
-  - 🟡 **Anorganik (Kuning)**: Botol plastik, kaleng, dan kemasan.
-  - 🔴 **B3 — Bahan Berbahaya & Beracun (Merah)**: Baterai bekas, lampu pecah, dan limbah kimia.
-- Setiap tindakan positif menurunkan **Meter Bencana**, sedangkan kesalahan pemilahan atau sikap menghakimi warga akan memperparah kondisi sungai.
+### 3. 🗑️ Pembersihan Sampah Sungai, Reboisasi, & Meter Bencana
+- **Pembersihan Sampah Bantaran Sungai**: Pungut sampah yang mencemari bantaran sungai di setiap zona dan buang ke tempat sampah yang tersedia untuk mengembalikan kejernihan air.
+- **Reboisasi Hutan Hulu & Mangrove Muara**: Tanam bibit pohon hutan di kawasan hulu sebagai penahan tanah longsor, serta bibit pohon bakau (*mangrove*) di pesisir muara untuk menahan abrasi laut.
+- **Meter Bencana**: Setiap aksi membersihkan sungai, menanam pohon, dan membantu warga akan menurunkan **Meter Bencana**, sedangkan sikap menghakimi atau membiarkan warga membuang limbah akan memperparah ancaman banjir.
 
 ### 4. 📜 Teka-Teki Pantun Melayu Deli & Buku Jurnal
 - **Papan Pantun Melayu Deli**: Lengkapi bait pantun berima `a-b-a-b` di setiap zona dengan petunjuk dari Budi.
