@@ -105,7 +105,7 @@
         "tipe": "C",
         "teks": "Bilang saja Abang malas! Gara-gara warga gang sini jorok, satu kota kebanjiran!",
         "delta_sikap": -1,
-        "delta_meter": 20,
+        "delta_meter": 30,
         "next": "gagal_jali",
         "effect": {
           "choice": {

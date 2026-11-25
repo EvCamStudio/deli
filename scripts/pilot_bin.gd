@@ -80,7 +80,6 @@ func interact() -> void:
 		last_cat = item_cat
 		pending.remove_at(0)
 		GameState.collect_trash(item_cat)
-		GameState.add_river_health(5.0)
 		GameState.rupiah += 2000
 		total_reward += 2000
 		if level and level.has_method("on_bin_sorted"):

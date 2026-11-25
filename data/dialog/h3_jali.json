@@ -9,7 +9,7 @@
         "tipe": "A",
         "teks": "Gimana kalau kita pasang gerobak sampah roda di depan mulut gang ini, Bang?",
         "delta_sikap": 2,
-        "delta_meter": -10,
+        "delta_meter": -5,
         "next": "penjelasan_solusi_jali",
         "effect": {
           "choice": {
@@ -21,7 +21,7 @@
         "tipe": "A",
         "teks": "Warga gang sini gak perlu jalan jauh lagi kalau pakai gerobak komunal dari Pak RT ini, Bang!",
         "delta_sikap": 2,
-        "delta_meter": -10,
+        "delta_meter": -5,
         "next": "penjelasan_solusi_jali",
         "effect": {
           "choice": {

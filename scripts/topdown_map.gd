@@ -10,7 +10,7 @@ const PATH_ROW: int = 15
 const BUILDING_BAND_SRC_PX: int = 8
 const BUILDING_ROOF_TUCK_PX: float = 12.0
 const BUILDING_WALL_BOTTOM_TUCK_PX: float = 6.0
-cownst BUILDING_SIDE_INSET_PX: float = 2.0
+const BUILDING_SIDE_INSET_PX: float = 2.0
 
 const TREE_SPECS: Dictionary = {
 	"kelapa": {"path": "res://assets/sprites/props/tree_tall_kelapa.png", "scale": 0.5, "col": Vector2(14, 8)},

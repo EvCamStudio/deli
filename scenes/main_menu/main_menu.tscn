@@ -166,10 +166,10 @@ text = ""
 layout_mode = 1
 anchors_preset = 10
 anchor_right = 1.0
-offset_top = 24.0
-offset_bottom = 199.0
+offset_top = 31.0
+offset_bottom = 191.0
 grow_horizontal = 2
-theme_override_constants/separation = 5
+theme_override_constants/separation = 8
 
 [node name="StartBtn" type="Button" parent="VBox/Buttons"]
 custom_minimum_size = Vector2(0, 24)
@@ -208,25 +208,6 @@ theme_override_styles/pressed = SubResource("StyleBox_btn_press")
 theme_override_styles/focus = SubResource("StyleBox_btn_hover")
 theme_override_styles/disabled = SubResource("StyleBox_btn_empty")
 text = "Lanjutkan"
-
-[node name="LevelSelectBtn" type="Button" parent="VBox/Buttons"]
-custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.26, 0.15, 0.07, 1)
-theme_override_colors/font_hover_color = Color(0.68, 0.28, 0.06, 1)
-theme_override_colors/font_pressed_color = Color(0.15, 0.08, 0.04, 1)
-theme_override_colors/font_disabled_color = Color(0.55, 0.46, 0.38, 0.45)
-theme_override_colors/font_shadow_color = Color(1, 0.96, 0.85, 0.5)
-theme_override_constants/shadow_offset_x = 1
-theme_override_constants/shadow_offset_y = 1
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 12
-theme_override_styles/normal = SubResource("StyleBox_btn_empty")
-theme_override_styles/hover = SubResource("StyleBox_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_btn_press")
-theme_override_styles/focus = SubResource("StyleBox_btn_hover")
-theme_override_styles/disabled = SubResource("StyleBox_btn_empty")
-text = "Pilih Bab"
 
 [node name="CardsBtn" type="Button" parent="VBox/Buttons"]
 custom_minimum_size = Vector2(0, 24)
@@ -450,120 +431,6 @@ button_pressed = true
 
 [node name="CloseBtn" type="Button" parent="SettingsPanel/Panel/VBox"]
 custom_minimum_size = Vector2(0, 24)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Tutup"
-
-[node name="LevelSelectPanel" type="Control" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-
-[node name="Dim" type="ColorRect" parent="LevelSelectPanel"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-color = Color(0.09, 0.12, 0.1, 0.62)
-
-[node name="Panel" type="PanelContainer" parent="LevelSelectPanel"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -240.0
-offset_top = -135.0
-offset_right = 240.0
-offset_bottom = 135.0
-theme_override_styles/panel = SubResource("StyleBox_plaque")
-
-[node name="VBox" type="VBoxContainer" parent="LevelSelectPanel/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 4
-
-[node name="Title" type="Label" parent="LevelSelectPanel/Panel/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.42, 0.28, 0.14, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 16
-text = "PILIH BAB"
-horizontal_alignment = 1
-
-[node name="Sep" type="HSeparator" parent="LevelSelectPanel/Panel/VBox"]
-layout_mode = 2
-
-[node name="L1Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Bab 1 · Hulu Sungai"
-
-[node name="L2Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Bab 2 · Desa Pertanian"
-
-[node name="L3Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Bab 3 · Kota Medan"
-
-[node name="L4Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Bab 4 · Hilir & Muara"
-
-[node name="L5Btn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
-theme_override_fonts/font = ExtResource("3_pixel")
-theme_override_font_sizes/font_size = 11
-theme_override_styles/normal = SubResource("StyleBox_plaque_btn")
-theme_override_styles/hover = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/pressed = SubResource("StyleBox_plaque_btn_hover")
-theme_override_styles/focus = SubResource("StyleBox_plaque_btn_hover")
-text = "Bab 5 · Epilog"
-
-[node name="CloseSelectBtn" type="Button" parent="LevelSelectPanel/Panel/VBox"]
-custom_minimum_size = Vector2(0, 22)
 layout_mode = 2
 theme_override_colors/font_color = Color(0.28, 0.16, 0.08, 1)
 theme_override_fonts/font = ExtResource("3_pixel")

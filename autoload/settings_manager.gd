@@ -9,7 +9,7 @@ const SETTINGS_PATH: String = "user://settings.cfg"
 const DEFAULTS: Dictionary = {
 	"bgm_volume":      0.8,
 	"sfx_volume":      1.0,
-	"touch_size":      1,    # 0=kecil, 1=sedang, 2=besar
+	"touch_size":      2,    # 0=kecil, 1=sedang, 2=besar
 	"touch_opacity":   0.7,
 	"vibration":       true,
 }
@@ -49,11 +49,11 @@ func load_settings() -> void:
 
 # ─── Ukuran Tombol Sentuh ─────────────────────────────────────────────────────
 
-## Kembalikan skala tombol sentuh (0.8 / 1.0 / 1.25) berdasarkan pengaturan.
+## Kembalikan skala tombol sentuh (0.8 / 1.0 / 1.35) berdasarkan pengaturan.
 func get_touch_scale() -> float:
-	match _settings.get("touch_size", 1):
+	match _settings.get("touch_size", 2):
 		0: return 0.8
-		2: return 1.25
+		2: return 1.35
 		_: return 1.0
 
 func get_touch_opacity() -> float:

@@ -52,7 +52,7 @@
         "tipe": "A",
         "teks": "Baiklah Pak, biar saya bantu menanam bibitnya.",
         "delta_sikap": 1,
-        "delta_meter": -3,
+        "delta_meter": 0,
         "next": "instruksi_tanam",
         "effect": {
           "quest": {
@@ -66,7 +66,7 @@
         "tipe": "A",
         "teks": "Yah, daripada rumahku kerendam lumpur lagi, sini saya bantu, Pak.",
         "delta_sikap": 1,
-        "delta_meter": -3,
+        "delta_meter": 0,
         "next": "instruksi_tanam",
         "effect": {
           "quest": {

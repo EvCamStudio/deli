@@ -107,17 +107,19 @@ func is_interactable_now() -> bool:
 			return false
 
 		"npc_anak_sekolah": # Budi
-			return true
+			if step in ["tanya_budi", "ke_hilir_muara"]:
+				return true
+			return bool(GameState.choices.get("budi_done", false)) and step == "tanya_budi"
 
 		"npc_penjaga_sungai":
-			if step in ["pos_penjaga_muara", "pilah_sampah_muara"]:
-				return "npc_penjaga_sungai" not in talked_hilir
+			if step in ["ke_hilir_muara", "pos_penjaga_muara", "pilah_sampah_muara"]:
+				return not bool(GameState.choices.get("penjaga_sungai_done", false))
 			return false
 
 		"npc_nelayan":
 			if step == "temui_pak_nelayan":
-				return "npc_nelayan" not in talked_hilir
-			if (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and GameState.zone_stat("hilir", "mangroves") >= 8:
+				return not bool(GameState.choices.get("nelayan_awal_done", false))
+			if (step in ["tanam_mangrove_muara", "selesai_mangrove"]) and GameState.zone_stat("hilir", "mangroves") >= 12:
 				return not bool(GameState.choices.get("nelayan_selesai", false))
 			return false
 
@@ -175,7 +177,7 @@ func _get_default_dialog_id() -> String:
 		"npc_tokoh_masyarakat":
 			return "h3_pak_rt"
 		"npc_nelayan":
-			if GameState.zone_stat("hilir", "mangroves") >= 8:
+			if GameState.zone_stat("hilir", "mangroves") >= 12:
 				return "h7_nelayan_selesai"
 			return "h7_nelayan"
 		"npc_penjaga_sungai":

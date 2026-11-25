@@ -20,7 +20,8 @@
         "next": "pantun_benar",
         "effect": {
           "choice": {
-            "baca_sandi_pantun_kota": true
+            "baca_sandi_pantun_kota": true,
+            "sandi_tuas_terbuka": true
           }
         }
       },

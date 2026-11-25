@@ -163,11 +163,9 @@ func interact() -> void:
 
 	if kind == "mangrove":
 		GameState.plant_mangrove()
-		GameState.add_river_health(5.0)
 		GameState.rupiah += 2000
 	else:
 		GameState.plant_tree()
-		GameState.add_river_health(4.0)
 		GameState.rupiah += 500
 
 	AudioManager.play_sfx("plant")

@@ -21,7 +21,7 @@ func _ready() -> void:
 	# Muat nilai saat ini
 	bgm_slider.value = SettingsManager.get_setting("bgm_volume", 0.8)
 	sfx_slider.value = SettingsManager.get_setting("sfx_volume", 1.0)
-	touch_size_options.selected = SettingsManager.get_setting("touch_size", 1)
+	touch_size_options.selected = SettingsManager.get_setting("touch_size", 2)
 	opacity_slider.value = SettingsManager.get_setting("touch_opacity", 0.7)
 	vibration_check.button_pressed = SettingsManager.get_setting("vibration", true)
 

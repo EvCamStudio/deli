@@ -4,6 +4,7 @@ extends TextureButton
 @onready var icon_rect: TextureRect = get_node_or_null("Icon") as TextureRect
 
 var _press_tween: Tween = null
+var _base_scale: float = 1.0
 
 func _ready() -> void:
 	add_to_group("touch_controls")
@@ -13,10 +14,9 @@ func _ready() -> void:
 	resized.connect(_update_pivot)
 	_update_pivot()
 	modulate = Color.WHITE
-	var opacity: float = SettingsManager.get_setting("touch_opacity", 0.7)
-	self_modulate = Color(1, 1, 1, opacity)
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_refresh_textures()
+	apply_settings()
 
 ## Muat tekstur langsung dari PNG sumber supaya perubahan aset langsung terlihat
 ## tanpa menunggu cache impor Godot diperbarui.
@@ -48,11 +48,11 @@ func _update_pivot() -> void:
 
 func _on_down() -> void:
 	Input.action_press("action")
-	_animate_scale(0.9, 0.07)
+	_animate_scale(_base_scale * 0.9, 0.07)
 
 func _on_up() -> void:
 	Input.action_release("action")
-	_animate_scale(1.0, 0.14)
+	_animate_scale(_base_scale, 0.14)
 
 func _animate_scale(target: float, duration: float) -> void:
 	if _press_tween:
@@ -62,5 +62,10 @@ func _animate_scale(target: float, duration: float) -> void:
 	_press_tween.tween_property(self, "scale", Vector2(target, target), duration)
 
 func apply_settings() -> void:
+	_base_scale = SettingsManager.get_touch_scale()
+	_update_pivot()
+	if _press_tween:
+		_press_tween.kill()
+	scale = Vector2(_base_scale, _base_scale)
 	var opacity: float = SettingsManager.get_setting("touch_opacity", 0.7)
 	self_modulate = Color(1, 1, 1, opacity)

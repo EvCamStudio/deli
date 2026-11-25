@@ -96,7 +96,7 @@
         "teks": "Kenapa busanya gak Bapak potong-potong saja dulu pakai parang? Dijual kiloan pun laku!",
         "requires_flag": "unlock_solusi_darwis",
         "delta_sikap": 2,
-        "delta_meter": -10,
+        "delta_meter": -5,
         "next": "solusi_berhasil",
         "effect": {
           "choice": {
@@ -133,7 +133,7 @@
         "tipe": "C",
         "teks": "Orang tua zaman sekarang memang keras kepala! Kalau buang lagi saya laporkan ke Lurah!",
         "delta_sikap": -1,
-        "delta_meter": 20,
+        "delta_meter": 30,
         "next": "cabang_gagal",
         "effect": {
           "choice": {

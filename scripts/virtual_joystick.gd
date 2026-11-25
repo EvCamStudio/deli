@@ -17,9 +17,19 @@ func _ready() -> void:
 	resized.connect(_on_resized)
 	_recenter()
 	call_deferred("_recenter")
+	apply_settings()
 
 func _on_resized() -> void:
 	_recenter()
+	pivot_offset = size * 0.5
+
+func apply_settings() -> void:
+	var s: float = SettingsManager.get_touch_scale()
+	var joy_scale: float = clampf(s, 0.8, 1.25)
+	pivot_offset = size * 0.5
+	scale = Vector2(joy_scale, joy_scale)
+	var opacity: float = SettingsManager.get_setting("touch_opacity", 0.7)
+	modulate = Color(1, 1, 1, opacity)
 
 func _recenter() -> void:
 	_center = size * 0.5
@@ -80,6 +90,3 @@ func _center_knob() -> void:
 
 func get_direction() -> Vector2:
 	return _vector
-
-func apply_settings() -> void:
-	modulate.a = SettingsManager.get_setting("touch_opacity", 0.7)

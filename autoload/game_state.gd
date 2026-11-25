@@ -408,7 +408,7 @@ func prepare_world_chapter(zone: String) -> void:
 			river_health = 82.0
 			active_quests = {
 				"tanam_pohon_hulu": 15, "pilah_desa": 10, "gotong_royong": 2,
-				"pilah_sampah_kota": 6, "tanam_mangrove": 8, "pilah_hilir": 10,
+				"pilah_sampah_kota": 6, "tanam_mangrove": 12, "pilah_hilir": 10,
 			}
 			zone_progress["hulu"]["trees"] = 15
 			zone_progress["desa"]["sorted"] = 10
@@ -648,7 +648,10 @@ func _turunkan_satu_npc(sikap_asal: int, sikap_tujuan: int) -> void:
 func get_jumlah_npc_peduli() -> int:
 	var count: int = 0
 	for npc_key in ["jali", "rina", "darwis"]:
-		if int(npc_sikap.get(npc_key, SIKAP_ACUH)) == SIKAP_PEDULI:
+		var is_peduli: bool = int(npc_sikap.get(npc_key, SIKAP_ACUH)) == SIKAP_PEDULI
+		if not is_peduli:
+			is_peduli = bool(choices.get(npc_key + "_peduli", false)) or bool(choices.get(npc_key + "_done", false))
+		if is_peduli:
 			count += 1
 	return count
 
@@ -657,25 +660,22 @@ func get_persen_utang_lunas() -> float:
 		return 1.0
 	return clampf(float(UTANG_AWAL - utang) / float(UTANG_AWAL), 0.0, 1.0)
 
-## Menghitung kode ending ("A", "B", "C", atau "D") tanpa memancarkan sinyal/pindah scene
+## Menghitung kode ending: Hanya 2 Ending Utama (Happy Ending "A" vs Bad Ending "D" dengan Rewind)
+## Ending D (Banjir Bandang & Rewind) HANYA jika:
+## 1. Meter Bencana mencapai 100% (bencana total meluap), ATAU
+## 2. Meter Bencana kritis (> 60%) DAN warga yang peduli kurang dari 2.
+## Selain itu (termasuk Meter <= 60% seperti 5%), SELALU Happy Ending "A"!
 func hitung_kode_ending() -> String:
 	var m: int = int(round(meter_bencana))
 	var peduli: int = get_jumlah_npc_peduli()
-	var trees_hulu: int = zone_stat("hulu", "trees")
-	var mangroves_hilir: int = zone_stat("hilir", "mangroves")
-	var trees_done: bool = (trees_hulu >= 15 and mangroves_hilir >= 8)
 
-	if m <= 20 and peduli >= 3 and trees_done:
-		return "A"
-	elif m <= 40 and peduli >= 2:
-		return "B"
-	elif m <= 60 and peduli >= 1:
-		return "C"
-	return "D"
+	if m >= 100 or (m > 60 and peduli < 2):
+		return "D"
+	return "A"
 
 ## Menghitung alasan kegagalan dominan untuk petunjuk Datuk Sampan saat Rewind
 func hitung_alasan_kegagalan() -> String:
-	if zone_stat("hulu", "trees") < 15 or zone_stat("hilir", "mangroves") < 8:
+	if zone_stat("hulu", "trees") < 15 or zone_stat("hilir", "mangroves") < 12:
 		return "pohon"
 	if get_sikap("darwis") == SIKAP_MENOLAK or get_sikap("rina") == SIKAP_MENOLAK or get_sikap("jali") == SIKAP_MENOLAK:
 		return "menuduh"
@@ -1087,7 +1087,7 @@ func prepare_epilog_preview() -> void:
 	reset()
 	river_health = 88.0
 	trees_planted = 15
-	mangroves_planted = 8
+	mangroves_planted = 12
 	trash_collected = { "organik": 12, "plastik": 18, "b3": 4 }
 	rupiah = 32000
 	day = 3

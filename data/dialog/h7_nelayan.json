@@ -38,13 +38,13 @@
         "tipe": "A",
         "teks": "Saya siap membantu menanam bibit mangrove-nya, Pak!",
         "delta_sikap": 1,
-        "delta_meter": -3,
+        "delta_meter": 0,
         "next": "instruksi_mangrove",
         "effect": {
           "quest": {
             "id": "tanam_mangrove",
-            "description": "Tanam 8 mangrove di pesisir muara",
-            "target": 8
+            "description": "Tanam 12 mangrove di pesisir muara",
+            "target": 12
           }
         }
       },
@@ -52,13 +52,13 @@
         "tipe": "A",
         "teks": "Sudah tanggung jalan dari hulu sampai ke laut, sini saya bantu tanam, Pak!",
         "delta_sikap": 1,
-        "delta_meter": -3,
+        "delta_meter": 0,
         "next": "instruksi_mangrove",
         "effect": {
           "quest": {
             "id": "tanam_mangrove",
-            "description": "Tanam 8 mangrove di pesisir muara",
-            "target": 8
+            "description": "Tanam 12 mangrove di pesisir muara",
+            "target": 12
           }
         }
       }
