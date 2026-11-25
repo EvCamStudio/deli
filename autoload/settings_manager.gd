@@ -19,6 +19,13 @@ var _settings: Dictionary = {}
 func _ready() -> void:
 	_settings = DEFAULTS.duplicate()
 	load_settings()
+	if is_instance_valid(AudioManager) and AudioManager.has_method("apply_volume"):
+		AudioManager.apply_volume()
+	call_deferred("_sync_audio_on_startup")
+
+func _sync_audio_on_startup() -> void:
+	if is_instance_valid(AudioManager) and AudioManager.has_method("apply_volume"):
+		AudioManager.apply_volume()
 
 # ─── Getter / Setter ──────────────────────────────────────────────────────────
 

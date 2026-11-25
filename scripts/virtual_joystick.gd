@@ -18,15 +18,16 @@ func _ready() -> void:
 	_recenter()
 	call_deferred("_recenter")
 	apply_settings()
+	call_deferred("apply_settings")
 
 func _on_resized() -> void:
 	_recenter()
-	pivot_offset = size * 0.5
+	pivot_offset = Vector2(0.0, size.y)
 
 func apply_settings() -> void:
 	var s: float = SettingsManager.get_touch_scale()
 	var joy_scale: float = clampf(s, 0.8, 1.25)
-	pivot_offset = size * 0.5
+	pivot_offset = Vector2(0.0, size.y)
 	scale = Vector2(joy_scale, joy_scale)
 	var opacity: float = SettingsManager.get_setting("touch_opacity", 0.7)
 	modulate = Color(1, 1, 1, opacity)

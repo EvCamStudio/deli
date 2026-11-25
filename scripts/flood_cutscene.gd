@@ -150,6 +150,7 @@ func _run_flood_sequence() -> void:
 	# ─── FASE 1: Alarm & Gemuruh (0.0s - 1.2s) ───
 	_shake_intensity = 0.45
 	_set_water_level(1.06)
+	SettingsManager.vibrate(220)
 
 	if alert_banner:
 		var tw_alert := create_tween()
@@ -163,6 +164,7 @@ func _run_flood_sequence() -> void:
 	# ─── FASE 2: Air Meluap Menenggelamkan Bantaran (1.2s - 4.2s) ───
 	_shake_intensity = 0.85
 	_play_sfx("footstep_water")
+	SettingsManager.vibrate(320)
 
 	_show_subtitle("[b][color=#ffffff]Arus air bah menerjang daratan... Bantaran dan jalanan mulai terendam![/color][/b]")
 
@@ -175,6 +177,7 @@ func _run_flood_sequence() -> void:
 	# ─── FASE 3: Seluruh Map Tenggelam (4.2s - 6.5s) ───
 	_shake_intensity = 1.0
 	_play_sfx("rain_thunder")
+	SettingsManager.vibrate(450)
 	_show_subtitle("[b][color=#ffaaaa]Air meluap menenggelamkan rumah dan pepohonan! Seluruh kawasan tenggelam![/color][/b]")
 
 	# Air naik sepenuhnya menenggelamkan seluruh layar (0.42 -> -0.15)

@@ -2078,6 +2078,7 @@ func lever_pressed(lever_id: int) -> void:
 		return
 	if not bool(GameState.choices.get("sandi_tuas_terbuka", false)):
 		_reset_kota_levers()
+		SettingsManager.vibrate(100)
 		toast("Bahaya! Urutan tuas belum diketahui. Cek Papan Pantun di dekat zebra cross!", false)
 		return
 	_lever_pressed.append(lever_id)
@@ -2086,6 +2087,7 @@ func lever_pressed(lever_id: int) -> void:
 			_lever_pressed.clear()
 			GameState.add_river_health(-2.0)
 			_reset_kota_levers()
+			SettingsManager.vibrate(140)
 			toast("Urutan tuas salah! Air meluap sedikit. Mulai lagi dari tuas 1.", false)
 			_refresh_mission()
 			_update_guidance()
@@ -2095,6 +2097,7 @@ func lever_pressed(lever_id: int) -> void:
 		GameState.meter_bencana = maxf(5.0, GameState.meter_bencana - 5.0)
 		GameState.unlock_card("card_drainase_01")
 		AudioManager.play_sfx("correct")
+		SettingsManager.vibrate(120)
 		toast("Drainase pintu air terbuka! Aliran lancar.", true)
 		GameState.record_choice("hulu_story_step", "tanya_budi")
 		_sync_hulu_story_state()
@@ -2102,6 +2105,7 @@ func lever_pressed(lever_id: int) -> void:
 		_update_guidance()
 		GameState.save_game()
 	else:
+		SettingsManager.vibrate(55)
 		toast("Tuas %d aktif. Lanjutkan urutan berikutnya!" % lever_id, true)
 		_refresh_mission()
 		_update_guidance()

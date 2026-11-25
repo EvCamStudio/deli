@@ -17,6 +17,7 @@ func _ready() -> void:
 	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	_refresh_textures()
 	apply_settings()
+	call_deferred("apply_settings")
 
 ## Muat tekstur langsung dari PNG sumber supaya perubahan aset langsung terlihat
 ## tanpa menunggu cache impor Godot diperbarui.
@@ -68,4 +69,5 @@ func apply_settings() -> void:
 		_press_tween.kill()
 	scale = Vector2(_base_scale, _base_scale)
 	var opacity: float = SettingsManager.get_setting("touch_opacity", 0.7)
-	self_modulate = Color(1, 1, 1, opacity)
+	self_modulate = Color.WHITE
+	modulate = Color(1, 1, 1, opacity)

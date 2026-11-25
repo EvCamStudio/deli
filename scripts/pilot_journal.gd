@@ -59,6 +59,10 @@ func is_open() -> bool:
 	return panel.visible
 
 func _refresh() -> void:
+	if bgm_slider:
+		bgm_slider.set_value_no_signal(float(SettingsManager.get_setting("bgm_volume", 0.8)))
+	if sfx_slider:
+		sfx_slider.set_value_no_signal(float(SettingsManager.get_setting("sfx_volume", 1.0)))
 	var zone_text: String = ""
 	if GameState.in_world:
 		var loc_map: Dictionary = {

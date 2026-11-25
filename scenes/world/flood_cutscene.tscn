@@ -142,3 +142,4 @@ scroll_active = false
 [node name="SFXThunder" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_audio")
 volume_db = 2.0
+bus = &"SFX"

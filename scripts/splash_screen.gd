@@ -375,6 +375,7 @@ func _play_skit_sequence() -> void:
 		_datuk_bubble.modulate.a = 1.0
 		_jali_state = "shocked"
 		_jali_bubble_lbl.text = "😱 \"ALAMAK!! HANTU DATUK!!\""
+		SettingsManager.vibrate(80)
 		if AudioManager and AudioManager.has_method("play_sfx"):
 			AudioManager.play_sfx("wrong")
 	)
@@ -398,6 +399,7 @@ func _play_skit_sequence() -> void:
 		_jali_state = "dizzy"
 		_jali_sprite.position.y = 136.0
 		_jali_bubble_lbl.text = "💫 \"ADUH!! Ampun Tok...!\""
+		SettingsManager.vibrate(90)
 		if AudioManager and AudioManager.has_method("play_sfx"):
 			AudioManager.play_sfx("lever")
 	)

@@ -75,6 +75,7 @@ func _ready() -> void:
 
 	# Terapkan volume dari SettingsManager
 	_apply_volume()
+	call_deferred("_apply_volume")
 
 	# Otomatis pasang suara klik/switch ke seluruh tombol UI yang ada & yang baru muncul
 	get_tree().node_added.connect(_on_node_added)
@@ -129,6 +130,7 @@ func _get_stream(path: String) -> AudioStream:
 # ─── BGM ──────────────────────────────────────────────────────────────────────
 
 func play_bgm(key: Variant) -> void:
+	_apply_volume()
 	var path: String = BGM_PATHS.get(key, "")
 	var stream: AudioStream = _get_stream(path)
 	if stream == null:
@@ -152,6 +154,7 @@ func stop_bgm() -> void:
 # ─── SFX ──────────────────────────────────────────────────────────────────────
 
 func play_sfx(key: String, volume_db: float = 0.0, pitch_scale: float = 1.0) -> void:
+	_apply_volume()
 	var path: String = SFX_PATHS.get(key, "")
 	var stream: AudioStream = _get_stream(path)
 	if stream == null:

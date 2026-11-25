@@ -19,11 +19,11 @@ func _ready() -> void:
 		touch_size_options.add_item("Besar")
 
 	# Muat nilai saat ini
-	bgm_slider.value = SettingsManager.get_setting("bgm_volume", 0.8)
-	sfx_slider.value = SettingsManager.get_setting("sfx_volume", 1.0)
-	touch_size_options.selected = SettingsManager.get_setting("touch_size", 2)
-	opacity_slider.value = SettingsManager.get_setting("touch_opacity", 0.7)
-	vibration_check.button_pressed = SettingsManager.get_setting("vibration", true)
+	_sync_from_settings()
+	visibility_changed.connect(func():
+		if visible:
+			_sync_from_settings()
+	)
 
 	bgm_slider.value_changed.connect(_on_bgm_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
@@ -31,6 +31,14 @@ func _ready() -> void:
 	opacity_slider.value_changed.connect(_on_opacity_changed)
 	vibration_check.toggled.connect(_on_vibration_changed)
 	close_btn.pressed.connect(func(): hide())
+
+func _sync_from_settings() -> void:
+	bgm_slider.set_value_no_signal(float(SettingsManager.get_setting("bgm_volume", 0.8)))
+	sfx_slider.set_value_no_signal(float(SettingsManager.get_setting("sfx_volume", 1.0)))
+	touch_size_options.selected = int(SettingsManager.get_setting("touch_size", 2))
+	opacity_slider.set_value_no_signal(float(SettingsManager.get_setting("touch_opacity", 0.7)))
+	vibration_check.set_pressed_no_signal(bool(SettingsManager.get_setting("vibration", true)))
+	AudioManager.apply_volume()
 
 func _on_bgm_changed(value: float) -> void:
 	SettingsManager.set_setting("bgm_volume", value)
@@ -51,3 +59,5 @@ func _on_opacity_changed(value: float) -> void:
 
 func _on_vibration_changed(enabled: bool) -> void:
 	SettingsManager.set_setting("vibration", enabled)
+	if enabled:
+		SettingsManager.vibrate(75)
